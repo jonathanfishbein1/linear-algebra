@@ -1,10 +1,13 @@
-module LinearAlgebra exposing (Vector2(..))
+module LinearAlgebra exposing
+    ( Vector(..)
+    , add
+    )
 
 
 type Vector a
     = Vector (List a)
 
 
-add : Vector a -> Vector a -> Vector a
-add vectorOne vectorTwo =
-    List.map2 (+) vectorOne vectorTwo
+add : Vector number -> Vector number -> Vector number
+add (Vector vectorOne) (Vector vectorTwo) =
+    Vector <| List.map2 (+) vectorOne vectorTwo

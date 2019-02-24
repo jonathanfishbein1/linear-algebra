@@ -3,22 +3,21 @@ module LinearAlgebraTests exposing (suite)
 import Expect
 import Fuzz
 import LinearAlgebra
-import Monoid
 import Test
 
 
 suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
-        [ Test.fuzz2 Fuzz.float Fuzz.float "tests ComplexNumbers add" <|
-            \real imaginary ->
+        [ Test.fuzz2 Fuzz.int Fuzz.int "tests ComplexNumbers add" <|
+            \one two ->
                 let
                     testValue =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real real) (ComplexNumbers.Imaginary imaginary)
+                        LinearAlgebra.Vector [ one, two ]
 
                     expected =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real <| 2 * real) (ComplexNumbers.Imaginary <| 2 * imaginary)
+                        LinearAlgebra.Vector [ 2 * one, 2 * two ]
                 in
-                ComplexNumbers.add testValue testValue
+                LinearAlgebra.add (+) testValue testValue
                     |> Expect.equal expected
         ]

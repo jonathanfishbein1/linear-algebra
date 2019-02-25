@@ -118,4 +118,25 @@ suite =
                 in
                 LinearAlgebra.add ComplexNumbers.add v w
                     |> Expect.equal (LinearAlgebra.add ComplexNumbers.add w v)
+        , Test.fuzz Fuzz.int "tests zero Vector is identity" <|
+            \one ->
+                let
+                    v =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            ]
+
+                    zeroComplex =
+                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0)
+                in
+                LinearAlgebra.add ComplexNumbers.add
+                    v
+                    (LinearAlgebra.Vector [ zeroComplex ])
+                    |> Expect.equal v
         ]

@@ -1,5 +1,6 @@
 module LinearAlgebraTests exposing (suite)
 
+import ComplexNumbers
 import Expect
 import Fuzz
 import LinearAlgebra
@@ -13,11 +14,41 @@ suite =
             \one two ->
                 let
                     v =
-                        LinearAlgebra.Vector [ one, two ]
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    two
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
 
                     w =
-                        LinearAlgebra.Vector [ one, two ]
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    two
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
                 in
-                LinearAlgebra.add (+) v w
-                    |> Expect.equal (LinearAlgebra.add (+) w v)
+                LinearAlgebra.add ComplexNumbers.add v w
+                    |> Expect.equal (LinearAlgebra.add ComplexNumbers.add w v)
         ]

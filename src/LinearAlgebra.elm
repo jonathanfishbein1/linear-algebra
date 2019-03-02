@@ -1,7 +1,6 @@
 module LinearAlgebra exposing
     ( Vector(..)
     , add
-    , zero
     )
 
 

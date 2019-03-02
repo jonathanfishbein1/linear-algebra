@@ -123,13 +123,7 @@ suite =
                 let
                     v =
                         LinearAlgebra.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    0
-                                )
-                                (ComplexNumbers.Imaginary
-                                    0
-                                )
+                            [ ComplexNumbers.zero
                             ]
 
                     w =

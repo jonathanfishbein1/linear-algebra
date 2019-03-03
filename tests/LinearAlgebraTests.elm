@@ -175,4 +175,50 @@ suite =
                 in
                 LinearAlgebra.map (ComplexNumbers.multiply ComplexNumbers.one) v
                     |> Expect.equal v
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests scalar multiplication respects complex multiplication" <|
+            \one two ->
+                let
+                    c1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    c2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                two
+                            )
+                            (ComplexNumbers.Imaginary
+                                one
+                            )
+
+                    v =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
+
+                    c2V =
+                        LinearAlgebra.map (ComplexNumbers.multiply c2) v
+
+                    c2VThenc1 =
+                        LinearAlgebra.map (ComplexNumbers.multiply c1) c2V
+
+                    c1c2 =
+                        ComplexNumbers.multiply c1 c2
+
+                    c1c2ThenV =
+                        LinearAlgebra.map (ComplexNumbers.multiply c1c2) v
+                in
+                c2VThenc1
+                    |> Expect.equal c1c2ThenV
         ]

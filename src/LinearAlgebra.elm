@@ -9,6 +9,8 @@ module LinearAlgebra exposing
     , scalarMultiply
     , sum
     , sumEmpty
+    , sumEmptyMatrix
+    , sumMatrices
     )
 
 import Monoid
@@ -94,3 +96,15 @@ sum defaultValue addF =
 addMatrices : a -> (a -> a -> a) -> Matrix a -> Matrix a -> Matrix a
 addMatrices defaultValue addFunction (Matrix matrixOne) (Matrix matrixTwo) =
     Matrix <| smartMapMatrix2 defaultValue addFunction matrixOne matrixTwo []
+
+
+sumEmptyMatrix : Matrix a
+sumEmptyMatrix =
+    Matrix []
+
+
+{-| Monoidally add two Matrices together
+-}
+sumMatrices : a -> (a -> a -> a) -> Monoid.Monoid (Matrix a)
+sumMatrices defaultValue addF =
+    Monoid.monoid sumEmptyMatrix (addMatrices defaultValue addF)

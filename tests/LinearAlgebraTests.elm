@@ -221,4 +221,57 @@ suite =
                 in
                 c2VThenc1
                     |> Expect.equal c1c2ThenV
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests scalar multiplication distributes over addition" <|
+            \one two ->
+                let
+                    c =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    w =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    two
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            ]
+
+                    v =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
+
+                    vPlusW =
+                        LinearAlgebra.add ComplexNumbers.add v w
+
+                    cvPlusW =
+                        LinearAlgebra.map (ComplexNumbers.multiply c) vPlusW
+
+                    cW =
+                        LinearAlgebra.map (ComplexNumbers.multiply c) w
+
+                    cV =
+                        LinearAlgebra.map (ComplexNumbers.multiply c) v
+
+                    cVPluscW =
+                        LinearAlgebra.add ComplexNumbers.add cW cV
+
+                    result =
+                        LinearAlgebra.equal ComplexNumbers.equal cvPlusW cVPluscW
+                in
+                Expect.true "All elements equal" result
         ]

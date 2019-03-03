@@ -1,6 +1,7 @@
 module LinearAlgebra exposing
     ( Vector(..)
     , add
+    , equal
     , map
     , multiply
     )
@@ -23,3 +24,8 @@ map f (Vector vector) =
 multiply : (a -> a -> a) -> Vector a -> Vector a -> Vector a
 multiply multiplyFunction (Vector vectorOne) (Vector vectorTwo) =
     Vector <| List.map2 multiplyFunction vectorOne vectorTwo
+
+
+equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
+equal comparator (Vector vectorOne) (Vector vectorTwo) =
+    List.all ((==) True) <| List.map2 comparator vectorOne vectorTwo

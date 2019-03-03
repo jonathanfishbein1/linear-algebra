@@ -360,4 +360,51 @@ suite =
                 in
                 Monoid.concat (LinearAlgebra.sum ComplexNumbers.zero ComplexNumbers.add) listOfMonoids
                     |> Expect.equal expected
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests Matrix add is commutative" <|
+            \one two ->
+                let
+                    v =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    two
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
+
+                    w =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    two
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            ]
+
+                    m1 =
+                        LinearAlgebra.Matrix [ v, w ]
+
+                    m2 =
+                        LinearAlgebra.Matrix [ w, v ]
+                in
+                LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m1 m2
+                    |> Expect.equal (LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m2 m1)
         ]

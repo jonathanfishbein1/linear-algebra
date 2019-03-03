@@ -521,4 +521,30 @@ suite =
                 in
                 Monoid.concat (LinearAlgebra.sumMatrices ComplexNumbers.zero ComplexNumbers.add) listOfMonoids
                     |> Expect.equal expected
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests matrix inverse" <|
+            \one two ->
+                let
+                    v =
+                        LinearAlgebra.Matrix
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.one
+                                ]
+                            ]
+
+                    w =
+                        LinearAlgebra.Matrix
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.negate ComplexNumbers.one
+                                ]
+                            ]
+
+                    zero =
+                        LinearAlgebra.Matrix
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.zero
+                                ]
+                            ]
+                in
+                LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add v w
+                    |> Expect.equal zero
         ]

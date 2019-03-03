@@ -483,4 +483,42 @@ suite =
                 in
                 m1Plusm2AndThenPlusm3
                     |> Expect.equal m2Plusm3AndThenm1
+        , Test.fuzz2 Fuzz.float Fuzz.float "tests Matrix empty or identity value for sum" <|
+            \one two ->
+                let
+                    m =
+                        LinearAlgebra.Matrix <|
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                ]
+                            ]
+                in
+                Monoid.append (LinearAlgebra.sumMatrices ComplexNumbers.zero ComplexNumbers.add) m (Monoid.empty <| LinearAlgebra.sumMatrices ComplexNumbers.zero ComplexNumbers.add)
+                    |> Expect.equal m
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add matricies" <|
+            \one two three ->
+                let
+                    a =
+                        LinearAlgebra.Matrix [ LinearAlgebra.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two) ] ]
+
+                    b =
+                        LinearAlgebra.Matrix [ LinearAlgebra.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three) ] ]
+
+                    c =
+                        LinearAlgebra.Matrix [ LinearAlgebra.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three) ] ]
+
+                    expected =
+                        LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add (LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add a b) c
+
+                    listOfMonoids =
+                        [ a, b, c ]
+                in
+                Monoid.concat (LinearAlgebra.sumMatrices ComplexNumbers.zero ComplexNumbers.add) listOfMonoids
+                    |> Expect.equal expected
         ]

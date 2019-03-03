@@ -10,6 +10,7 @@ module LinearAlgebra exposing
     , sum
     , sumEmpty
     , sumEmptyMatrix
+    , sumMatrices
     )
 
 import Monoid
@@ -100,3 +101,10 @@ addMatrices defaultValue addFunction (Matrix matrixOne) (Matrix matrixTwo) =
 sumEmptyMatrix : Matrix a
 sumEmptyMatrix =
     Matrix []
+
+
+{-| Monoidally add two Matrices together
+-}
+sumMatrices : a -> (a -> a -> a) -> Monoid.Monoid (Matrix a)
+sumMatrices defaultValue addF =
+    Monoid.monoid sumEmptyMatrix (addMatrices defaultValue addF)

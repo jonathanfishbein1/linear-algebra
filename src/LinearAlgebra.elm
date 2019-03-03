@@ -1,6 +1,7 @@
 module LinearAlgebra exposing
     ( Vector(..)
     , add
+    , multiply
     )
 
 
@@ -16,3 +17,8 @@ add addFunction (Vector vectorOne) (Vector vectorTwo) =
 map : (a -> b) -> Vector a -> Vector b
 map f (Vector vector) =
     Vector <| List.map f vector
+
+
+multiply : (a -> a -> a) -> Vector a -> Vector a -> Vector a
+multiply multiplyFunction (Vector vectorOne) (Vector vectorTwo) =
+    Vector <| List.map2 multiplyFunction vectorOne vectorTwo

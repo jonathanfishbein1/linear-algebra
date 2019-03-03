@@ -144,24 +144,12 @@ suite =
                 let
                     v =
                         LinearAlgebra.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    one
-                                )
-                                (ComplexNumbers.Imaginary
-                                    one
-                                )
+                            [ ComplexNumbers.one
                             ]
 
                     w =
                         LinearAlgebra.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real <|
-                                    negate one
-                                )
-                                (ComplexNumbers.Imaginary <|
-                                    negate one
-                                )
+                            [ ComplexNumbers.negate ComplexNumbers.one
                             ]
 
                     zero =
@@ -171,4 +159,25 @@ suite =
                 in
                 LinearAlgebra.add ComplexNumbers.add v w
                     |> Expect.equal zero
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests one is product identity" <|
+            \one two ->
+                let
+                    v =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.one
+                            ]
+
+                    w =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
+                in
+                LinearAlgebra.multiply ComplexNumbers.multiply v w
+                    |> Expect.equal w
         ]

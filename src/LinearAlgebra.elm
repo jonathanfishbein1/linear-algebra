@@ -1,6 +1,8 @@
 module LinearAlgebra exposing
-    ( Vector(..)
+    ( Matrix(..)
+    , Vector(..)
     , add
+    , addMatrices
     , equal
     , map
     , multiply
@@ -16,6 +18,10 @@ type Vector a
     = Vector (List a)
 
 
+type Matrix a
+    = Matrix (List (Vector a))
+
+
 smartMap2 : a -> (a -> a -> a) -> List a -> List a -> List a -> List a
 smartMap2 defaultValue f left right acc =
     case ( left, right ) of
@@ -27,6 +33,22 @@ smartMap2 defaultValue f left right acc =
 
         ( [], r :: rs ) ->
             smartMap2 defaultValue f [] rs (f defaultValue r :: acc)
+
+        ( [], [] ) ->
+            List.reverse acc
+
+
+smartMapMatrix2 : a -> (a -> a -> a) -> List (Vector a) -> List (Vector a) -> List (Vector a) -> List (Vector a)
+smartMapMatrix2 defaultValue f left right acc =
+    case ( left, right ) of
+        ( (Vector l) :: ls, (Vector r) :: rs ) ->
+            smartMapMatrix2 defaultValue f ls rs ((Vector <| smartMap2 defaultValue f l r []) :: acc)
+
+        ( (Vector l) :: ls, [] ) ->
+            smartMapMatrix2 defaultValue f ls [] ((Vector <| smartMap2 defaultValue f l [] []) :: acc)
+
+        ( [], (Vector r) :: rs ) ->
+            smartMapMatrix2 defaultValue f [] rs ((Vector <| smartMap2 defaultValue f [] r []) :: acc)
 
         ( [], [] ) ->
             List.reverse acc
@@ -67,3 +89,8 @@ sumEmpty =
 sum : a -> (a -> a -> a) -> Monoid.Monoid (Vector a)
 sum defaultValue addF =
     Monoid.monoid sumEmpty (add defaultValue addF)
+
+
+addMatrices : a -> (a -> a -> a) -> Matrix a -> Matrix a -> Matrix a
+addMatrices defaultValue addFunction (Matrix matrixOne) (Matrix matrixTwo) =
+    Matrix <| smartMapMatrix2 defaultValue addFunction matrixOne matrixTwo []

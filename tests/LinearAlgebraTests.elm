@@ -360,4 +360,127 @@ suite =
                 in
                 Monoid.concat (LinearAlgebra.sum ComplexNumbers.zero ComplexNumbers.add) listOfMonoids
                     |> Expect.equal expected
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Matrix add is commutative" <|
+            \one two three ->
+                let
+                    v =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    three
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    three
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
+
+                    w =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    two
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    three
+                                )
+                            ]
+
+                    m1 =
+                        LinearAlgebra.Matrix [ v, w ]
+
+                    m2 =
+                        LinearAlgebra.Matrix [ w, v ]
+                in
+                LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m1 m2
+                    |> Expect.equal (LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m2 m1)
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Matrix add is associative" <|
+            \one two three ->
+                let
+                    v =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    three
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    three
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
+
+                    w =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    two
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    three
+                                )
+                            ]
+
+                    x =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    three
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            ]
+
+                    m1 =
+                        LinearAlgebra.Matrix [ v, w, x ]
+
+                    m2 =
+                        LinearAlgebra.Matrix [ w, v, x ]
+
+                    m3 =
+                        LinearAlgebra.Matrix [ x, w, v ]
+
+                    m1Plusm2AndThenPlusm3 =
+                        LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m1 m2
+                            |> LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m3
+
+                    m2Plusm3AndThenm1 =
+                        LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m2 m3
+                            |> LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m1
+                in
+                m1Plusm2AndThenPlusm3
+                    |> Expect.equal m2Plusm3AndThenm1
         ]

@@ -172,7 +172,7 @@ suite =
                                 )
                             ]
                 in
-                LinearAlgebra.map (ComplexNumbers.multiply ComplexNumbers.one) v
+                LinearAlgebra.scalarMultiply (ComplexNumbers.multiply ComplexNumbers.one) v
                     |> Expect.equal v
         , Test.fuzz2 Fuzz.int Fuzz.int "tests scalar multiplication respects complex multiplication" <|
             \one two ->
@@ -207,16 +207,16 @@ suite =
                             ]
 
                     c2V =
-                        LinearAlgebra.map (ComplexNumbers.multiply c2) v
+                        LinearAlgebra.scalarMultiply (ComplexNumbers.multiply c2) v
 
                     c2VThenc1 =
-                        LinearAlgebra.map (ComplexNumbers.multiply c1) c2V
+                        LinearAlgebra.scalarMultiply (ComplexNumbers.multiply c1) c2V
 
                     c1c2 =
                         ComplexNumbers.multiply c1 c2
 
                     c1c2ThenV =
-                        LinearAlgebra.map (ComplexNumbers.multiply c1c2) v
+                        LinearAlgebra.scalarMultiply (ComplexNumbers.multiply c1c2) v
                 in
                 c2VThenc1
                     |> Expect.equal c1c2ThenV
@@ -258,13 +258,13 @@ suite =
                         LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add v w
 
                     cvPlusW =
-                        LinearAlgebra.map (ComplexNumbers.multiply c) vPlusW
+                        LinearAlgebra.scalarMultiply (ComplexNumbers.multiply c) vPlusW
 
                     cW =
-                        LinearAlgebra.map (ComplexNumbers.multiply c) w
+                        LinearAlgebra.scalarMultiply (ComplexNumbers.multiply c) w
 
                     cV =
-                        LinearAlgebra.map (ComplexNumbers.multiply c) v
+                        LinearAlgebra.scalarMultiply (ComplexNumbers.multiply c) v
 
                     cVPluscW =
                         LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add cW cV
@@ -309,13 +309,13 @@ suite =
                         ComplexNumbers.add c1 c2
 
                     c1Plusc2V =
-                        LinearAlgebra.map (ComplexNumbers.multiply c1Plusc2) v
+                        LinearAlgebra.scalarMultiply (ComplexNumbers.multiply c1Plusc2) v
 
                     c1V =
-                        LinearAlgebra.map (ComplexNumbers.multiply c1) v
+                        LinearAlgebra.scalarMultiply (ComplexNumbers.multiply c1) v
 
                     c2V =
-                        LinearAlgebra.map (ComplexNumbers.multiply c2) v
+                        LinearAlgebra.scalarMultiply (ComplexNumbers.multiply c2) v
 
                     c1VPlusc2V =
                         LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add c1V c2V

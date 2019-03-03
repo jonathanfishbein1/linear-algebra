@@ -4,6 +4,7 @@ module LinearAlgebra exposing
     , equal
     , map
     , multiply
+    , scalarMultiply
     , sum
     , sumEmpty
     )
@@ -39,6 +40,11 @@ add defaultValue addFunction (Vector listOone) (Vector listTwo) =
 map : (a -> b) -> Vector a -> Vector b
 map f (Vector vector) =
     Vector <| List.map f vector
+
+
+scalarMultiply : (a -> b) -> Vector a -> Vector b
+scalarMultiply =
+    map
 
 
 multiply : (a -> a -> a) -> Vector a -> Vector a -> Vector a

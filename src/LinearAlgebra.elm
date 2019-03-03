@@ -6,6 +6,8 @@ module LinearAlgebra exposing
     , multiply
     )
 
+import Monoid
+
 
 type Vector a
     = Vector (List a)
@@ -29,3 +31,8 @@ multiply multiplyFunction (Vector vectorOne) (Vector vectorTwo) =
 equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
 equal comparator (Vector vectorOne) (Vector vectorTwo) =
     List.all ((==) True) <| List.map2 comparator vectorOne vectorTwo
+
+
+sumEmpty : Vector a
+sumEmpty =
+    Vector []

@@ -4,8 +4,10 @@ module LinearAlgebra exposing
     , add
     , addMatrices
     , equal
+    , equalMatrix
     , map
     , multiply
+    , scalarMatrixMultiply
     , scalarMultiply
     , sum
     , sumEmpty
@@ -108,3 +110,18 @@ sumEmptyMatrix =
 sumMatrices : a -> (a -> a -> a) -> Monoid.Monoid (Matrix a)
 sumMatrices defaultValue addF =
     Monoid.monoid sumEmptyMatrix (addMatrices defaultValue addF)
+
+
+mapMatrix : (a -> b) -> Matrix a -> Matrix b
+mapMatrix f (Matrix matrix) =
+    Matrix <| List.map (map f) matrix
+
+
+scalarMatrixMultiply : (a -> b) -> Matrix a -> Matrix b
+scalarMatrixMultiply =
+    mapMatrix
+
+
+equalMatrix : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
+equalMatrix comparator (Matrix matrixOne) (Matrix matrixTwo) =
+    List.all ((==) True) <| List.map2 (equal comparator) matrixOne matrixTwo

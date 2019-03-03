@@ -547,4 +547,61 @@ suite =
                 in
                 LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add v w
                     |> Expect.equal zero
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scalar multiplication distributes over addition" <|
+            \one two ->
+                let
+                    c =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    w =
+                        LinearAlgebra.Matrix
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        two
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                ]
+                            ]
+
+                    v =
+                        LinearAlgebra.Matrix
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    vPlusW =
+                        LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add v w
+
+                    cvPlusW =
+                        LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c) vPlusW
+
+                    cW =
+                        LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c) w
+
+                    cV =
+                        LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c) v
+
+                    cVPluscW =
+                        LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add cW cV
+
+                    result =
+                        LinearAlgebra.equalMatrix ComplexNumbers.equal cvPlusW cVPluscW
+                in
+                Expect.true "All elements equal" result
         ]

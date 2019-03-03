@@ -1,6 +1,7 @@
 module LinearAlgebra exposing
     ( Vector(..)
     , add
+    , map
     , multiply
     )
 

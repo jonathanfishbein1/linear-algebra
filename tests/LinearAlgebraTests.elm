@@ -164,11 +164,6 @@ suite =
                 let
                     v =
                         LinearAlgebra.Vector
-                            [ ComplexNumbers.one
-                            ]
-
-                    w =
-                        LinearAlgebra.Vector
                             [ ComplexNumbers.ComplexNumberCartesian
                                 (ComplexNumbers.Real
                                     one
@@ -178,6 +173,6 @@ suite =
                                 )
                             ]
                 in
-                LinearAlgebra.multiply ComplexNumbers.multiply v w
-                    |> Expect.equal w
+                LinearAlgebra.map (ComplexNumbers.multiply ComplexNumbers.one) v
+                    |> Expect.equal v
         ]

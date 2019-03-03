@@ -93,8 +93,4 @@ sum defaultValue addF =
 
 addMatrices : a -> (a -> a -> a) -> Matrix a -> Matrix a -> Matrix a
 addMatrices defaultValue addFunction (Matrix matrixOne) (Matrix matrixTwo) =
-    let
-        result =
-            smartMapMatrix2 defaultValue addFunction matrixOne matrixTwo [ Vector [] ]
-    in
-    Matrix result
+    Matrix <| smartMapMatrix2 defaultValue addFunction matrixOne matrixTwo [ Vector [] ]

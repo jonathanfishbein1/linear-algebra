@@ -360,21 +360,21 @@ suite =
                 in
                 Monoid.concat (LinearAlgebra.sum ComplexNumbers.zero ComplexNumbers.add) listOfMonoids
                     |> Expect.equal expected
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests Matrix add is commutative" <|
-            \one two ->
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Matrix add is commutative" <|
+            \one two three ->
                 let
                     v =
                         LinearAlgebra.Vector
                             [ ComplexNumbers.ComplexNumberCartesian
                                 (ComplexNumbers.Real
-                                    one
+                                    three
                                 )
                                 (ComplexNumbers.Imaginary
                                     one
                                 )
                             , ComplexNumbers.ComplexNumberCartesian
                                 (ComplexNumbers.Real
-                                    two
+                                    three
                                 )
                                 (ComplexNumbers.Imaginary
                                     two
@@ -395,7 +395,7 @@ suite =
                                     one
                                 )
                                 (ComplexNumbers.Imaginary
-                                    one
+                                    three
                                 )
                             ]
 

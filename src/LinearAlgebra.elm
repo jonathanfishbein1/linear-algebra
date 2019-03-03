@@ -19,13 +19,13 @@ smartMap2 : a -> (a -> a -> a) -> List a -> List a -> List a -> List a
 smartMap2 defaultValue f left right acc =
     case ( left, right ) of
         ( l :: ls, r :: rs ) ->
-            smartMap2 defaultValue f ls rs [ f l r ]
+            smartMap2 defaultValue f ls rs (f l r :: acc)
 
         ( l :: ls, [] ) ->
-            smartMap2 defaultValue f ls [] [ f l defaultValue ]
+            smartMap2 defaultValue f ls [] (f l defaultValue :: acc)
 
         ( [], r :: rs ) ->
-            smartMap2 defaultValue f [] rs [ f defaultValue r ]
+            smartMap2 defaultValue f [] rs (f defaultValue r :: acc)
 
         ( [], [] ) ->
             List.reverse acc

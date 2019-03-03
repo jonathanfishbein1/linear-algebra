@@ -166,13 +166,7 @@ suite =
 
                     zero =
                         LinearAlgebra.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real <|
-                                    0
-                                )
-                                (ComplexNumbers.Imaginary <|
-                                    0
-                                )
+                            [ ComplexNumbers.zero
                             ]
                 in
                 LinearAlgebra.add ComplexNumbers.add v w

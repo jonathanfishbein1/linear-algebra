@@ -340,4 +340,24 @@ suite =
                 in
                 Monoid.append (LinearAlgebra.sum ComplexNumbers.zero ComplexNumbers.add) v (Monoid.empty <| LinearAlgebra.sum ComplexNumbers.zero ComplexNumbers.add)
                     |> Expect.equal v
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add" <|
+            \one two three ->
+                let
+                    a =
+                        LinearAlgebra.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two) ]
+
+                    b =
+                        LinearAlgebra.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three) ]
+
+                    c =
+                        LinearAlgebra.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three) ]
+
+                    expected =
+                        LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add (LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add a b) c
+
+                    listOfMonoids =
+                        [ a, b, c ]
+                in
+                Monoid.concat (LinearAlgebra.sum ComplexNumbers.zero ComplexNumbers.add) listOfMonoids
+                    |> Expect.equal expected
         ]

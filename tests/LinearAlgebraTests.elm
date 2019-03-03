@@ -50,8 +50,8 @@ suite =
                                 )
                             ]
                 in
-                LinearAlgebra.add ComplexNumbers.add v w
-                    |> Expect.equal (LinearAlgebra.add ComplexNumbers.add w v)
+                LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add v w
+                    |> Expect.equal (LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add w v)
         , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Vector add is associative" <|
             \one two three ->
                 let
@@ -110,15 +110,15 @@ suite =
                             ]
 
                     vPlusWPlusX =
-                        LinearAlgebra.add ComplexNumbers.add v w
-                            |> LinearAlgebra.add ComplexNumbers.add x
+                        LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add v w
+                            |> LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add x
 
                     wPlusXPlusV =
-                        LinearAlgebra.add ComplexNumbers.add w x
-                            |> LinearAlgebra.add ComplexNumbers.add v
+                        LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add w x
+                            |> LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add v
                 in
-                LinearAlgebra.add ComplexNumbers.add v w
-                    |> Expect.equal (LinearAlgebra.add ComplexNumbers.add w v)
+                LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add v w
+                    |> Expect.equal (LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add w v)
         , Test.fuzz2 Fuzz.int Fuzz.int "tests zero is additive identity" <|
             \one two ->
                 let
@@ -136,7 +136,7 @@ suite =
                                 )
                             ]
                 in
-                LinearAlgebra.add ComplexNumbers.add v w
+                LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add v w
                     |> Expect.equal w
         , Test.fuzz2 Fuzz.int Fuzz.int "tests vector inverse" <|
             \one two ->
@@ -156,7 +156,7 @@ suite =
                             [ ComplexNumbers.zero
                             ]
                 in
-                LinearAlgebra.add ComplexNumbers.add v w
+                LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add v w
                     |> Expect.equal zero
         , Test.fuzz2 Fuzz.int Fuzz.int "tests one is product identity" <|
             \one two ->
@@ -255,7 +255,7 @@ suite =
                             ]
 
                     vPlusW =
-                        LinearAlgebra.add ComplexNumbers.add v w
+                        LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add v w
 
                     cvPlusW =
                         LinearAlgebra.map (ComplexNumbers.multiply c) vPlusW
@@ -267,7 +267,7 @@ suite =
                         LinearAlgebra.map (ComplexNumbers.multiply c) v
 
                     cVPluscW =
-                        LinearAlgebra.add ComplexNumbers.add cW cV
+                        LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add cW cV
 
                     result =
                         LinearAlgebra.equal ComplexNumbers.equal cvPlusW cVPluscW
@@ -318,7 +318,7 @@ suite =
                         LinearAlgebra.map (ComplexNumbers.multiply c2) v
 
                     c1VPlusc2V =
-                        LinearAlgebra.add ComplexNumbers.add c1V c2V
+                        LinearAlgebra.add ComplexNumbers.zero ComplexNumbers.add c1V c2V
 
                     result =
                         LinearAlgebra.equal ComplexNumbers.equal c1VPlusc2V c1Plusc2V
@@ -338,6 +338,6 @@ suite =
                                 )
                             ]
                 in
-                Monoid.append (LinearAlgebra.sum ComplexNumbers.add) v (Monoid.empty <| LinearAlgebra.sum ComplexNumbers.add)
+                Monoid.append (LinearAlgebra.sum ComplexNumbers.zero ComplexNumbers.add) v (Monoid.empty <| LinearAlgebra.sum ComplexNumbers.zero ComplexNumbers.add)
                     |> Expect.equal v
         ]

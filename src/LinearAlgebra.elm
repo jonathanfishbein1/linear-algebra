@@ -16,6 +16,10 @@ type Vector a
     = Vector (List a)
 
 
+type Matrix a
+    = List (Vector (List a))
+
+
 smartMap2 : a -> (a -> a -> a) -> List a -> List a -> List a -> List a
 smartMap2 defaultValue f left right acc =
     case ( left, right ) of

@@ -4,6 +4,7 @@ import ComplexNumbers
 import Expect
 import Fuzz
 import LinearAlgebra
+import Monoid
 import Test
 
 
@@ -122,9 +123,7 @@ suite =
             \one two ->
                 let
                     v =
-                        LinearAlgebra.Vector
-                            [ ComplexNumbers.zero
-                            ]
+                        LinearAlgebra.sumEmpty
 
                     w =
                         LinearAlgebra.Vector
@@ -325,4 +324,20 @@ suite =
                         LinearAlgebra.equal ComplexNumbers.equal c1VPlusc2V c1Plusc2V
                 in
                 Expect.true "All elements equal" result
+        , Test.fuzz2 Fuzz.float Fuzz.float "tests Vector empty or identity value for sum" <|
+            \one two ->
+                let
+                    v =
+                        LinearAlgebra.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            ]
+                in
+                Monoid.append (LinearAlgebra.sum ComplexNumbers.add) v (Monoid.empty <| LinearAlgebra.sum ComplexNumbers.add)
+                    |> Expect.equal v
         ]

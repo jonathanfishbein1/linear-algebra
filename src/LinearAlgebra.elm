@@ -4,6 +4,8 @@ module LinearAlgebra exposing
     , equal
     , map
     , multiply
+    , sum
+    , sumEmpty
     )
 
 import Monoid
@@ -36,3 +38,10 @@ equal comparator (Vector vectorOne) (Vector vectorTwo) =
 sumEmpty : Vector a
 sumEmpty =
     Vector []
+
+
+{-| Monoidally add two Vectors together
+-}
+sum : (a -> a -> a) -> Monoid.Monoid (Vector a)
+sum addF =
+    Monoid.monoid sumEmpty (add addF)

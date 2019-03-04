@@ -697,4 +697,25 @@ suite =
                             |> LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c)
                 in
                 Expect.equal cAThenTranspose cTransposeOfA
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix conjugate conjugate is idempotent" <|
+            \one two ->
+                let
+                    m =
+                        LinearAlgebra.Matrix
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    mConjugateConjugate =
+                        LinearAlgebra.matrixConjugate m
+                            |> LinearAlgebra.matrixConjugate
+                in
+                Expect.equal m mConjugateConjugate
         ]

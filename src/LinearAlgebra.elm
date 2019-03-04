@@ -15,6 +15,7 @@ module LinearAlgebra exposing
     , sumMatrices
     )
 
+import List.Extra
 import Monoid
 
 
@@ -125,3 +126,15 @@ scalarMatrixMultiply =
 equalMatrix : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
 equalMatrix comparator (Matrix matrixOne) (Matrix matrixTwo) =
     List.all ((==) True) <| List.map2 (equal comparator) matrixOne matrixTwo
+
+
+transpose : Matrix a -> Matrix a
+transpose (Matrix matrix) =
+    let
+        listOfLists : List (List a)
+        listOfLists =
+            List.map (\(Vector x) -> x) matrix
+    in
+    List.Extra.transpose listOfLists
+        |> List.map (\x -> Vector x)
+        |> Matrix

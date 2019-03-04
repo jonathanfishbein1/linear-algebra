@@ -6,6 +6,7 @@ module LinearAlgebra exposing
     , equal
     , equalMatrix
     , map
+    , matrixConjugate
     , multiply
     , scalarMatrixMultiply
     , scalarMultiply
@@ -16,6 +17,7 @@ module LinearAlgebra exposing
     , transpose
     )
 
+import ComplexNumbers
 import List.Extra
 import Monoid
 
@@ -136,3 +138,10 @@ transpose (Matrix matrix) =
         |> List.Extra.transpose
         |> List.map (\x -> Vector x)
         |> Matrix
+
+
+matrixConjugate : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+matrixConjugate matrix =
+    matrix
+        |> mapMatrix ComplexNumbers.conjugate
+        |> transpose

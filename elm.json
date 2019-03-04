@@ -10,6 +10,7 @@
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
         "elm/core": "1.0.2 <= v < 2.0.0",
+        "elm-community/list-extra": "8.1.0 <= v < 9.0.0",
         "jonathanfishbein1/complex-numbers": "2.3.0 <= v < 3.0.0",
         "jonathanfishbein1/elm-monoid": "1.0.1 <= v < 2.0.0"
     },

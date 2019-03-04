@@ -625,4 +625,42 @@ suite =
                             |> LinearAlgebra.transpose
                 in
                 Expect.equal m mTransposeTranspose
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose respects addition" <|
+            \one two ->
+                let
+                    m1 =
+                        LinearAlgebra.Matrix
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    m2 =
+                        LinearAlgebra.Matrix
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        two
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                ]
+                            ]
+
+                    m1Plusm2Transpose =
+                        LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m1 m2
+                            |> LinearAlgebra.transpose
+
+                    m1TransposePlusm2Transpose =
+                        LinearAlgebra.transpose m1
+                            |> LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add (LinearAlgebra.transpose m2)
+                in
+                Expect.equal m1Plusm2Transpose m1TransposePlusm2Transpose
         ]

@@ -130,11 +130,8 @@ equalMatrix comparator (Matrix matrixOne) (Matrix matrixTwo) =
 
 transpose : Matrix a -> Matrix a
 transpose (Matrix matrix) =
-    let
-        listOfLists : List (List a)
-        listOfLists =
-            List.map (\(Vector x) -> x) matrix
-    in
-    List.Extra.transpose listOfLists
+    matrix
+        |> List.map (\(Vector x) -> x)
+        |> List.Extra.transpose
         |> List.map (\x -> Vector x)
         |> Matrix

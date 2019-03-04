@@ -13,6 +13,7 @@ module LinearAlgebra exposing
     , sumEmpty
     , sumEmptyMatrix
     , sumMatrices
+    , transpose
     )
 
 import List.Extra

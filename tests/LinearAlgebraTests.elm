@@ -604,4 +604,25 @@ suite =
                         LinearAlgebra.equalMatrix ComplexNumbers.equal cvPlusW cVPluscW
                 in
                 Expect.true "All elements equal" result
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose transpose is idempotent" <|
+            \one two ->
+                let
+                    m =
+                        LinearAlgebra.Matrix
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    mTransposeTranspose =
+                        LinearAlgebra.transpose m
+                            |> LinearAlgebra.transpose
+                in
+                Expect.equal m mTransposeTranspose
         ]

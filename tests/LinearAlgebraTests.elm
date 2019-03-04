@@ -663,4 +663,38 @@ suite =
                             |> LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add (LinearAlgebra.transpose m2)
                 in
                 Expect.equal m1Plusm2Transpose m1TransposePlusm2Transpose
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose respects scalar multiplication" <|
+            \one two ->
+                let
+                    c =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    m1 =
+                        LinearAlgebra.Matrix
+                            [ LinearAlgebra.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    cAThenTranspose =
+                        LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c) m1
+                            |> LinearAlgebra.transpose
+
+                    cTransposeOfA =
+                        LinearAlgebra.transpose m1
+                            |> LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c)
+                in
+                Expect.equal cAThenTranspose cTransposeOfA
         ]

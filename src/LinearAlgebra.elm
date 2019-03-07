@@ -46,41 +46,46 @@ makeMatrix listOfVectors =
         Err "list has differnt inner list length: Malformed input"
 
 
-smartMap2 : a -> (a -> a -> a) -> List a -> List a -> List a -> List a
-smartMap2 defaultValue f left right acc =
+smartMap2 : a -> (a -> a -> a) -> Vector a -> Vector a -> Vector a -> Vector a
+smartMap2 defaultValue f (Vector left) (Vector right) (Vector acc) =
     case ( left, right ) of
         ( l :: ls, r :: rs ) ->
-            smartMap2 defaultValue f ls rs (f l r :: acc)
+            smartMap2 defaultValue f (Vector ls) (Vector rs) (Vector (f l r :: acc))
 
         ( l :: ls, [] ) ->
-            smartMap2 defaultValue f ls [] (f l defaultValue :: acc)
+            smartMap2 defaultValue f (Vector ls) (Vector []) (Vector (f l defaultValue :: acc))
 
         ( [], r :: rs ) ->
-            smartMap2 defaultValue f [] rs (f defaultValue r :: acc)
+            smartMap2 defaultValue f (Vector []) (Vector rs) (Vector (f defaultValue r :: acc))
 
         ( [], [] ) ->
-            List.reverse acc
+            Vector <| List.reverse acc
 
 
-smartMapMatrix2 : a -> (a -> a -> a) -> List (Vector a) -> List (Vector a) -> List (Vector a) -> List (Vector a)
-smartMapMatrix2 defaultValue f left right acc =
+smartMapMatrix2 : a -> (a -> a -> a) -> Matrix a -> Matrix a -> Matrix a -> Matrix a
+smartMapMatrix2 defaultValue f (Matrix left) (Matrix right) (Matrix acc) =
     case ( left, right ) of
         ( (Vector l) :: ls, (Vector r) :: rs ) ->
-            smartMapMatrix2 defaultValue f ls rs ((Vector <| smartMap2 defaultValue f l r []) :: acc)
+            smartMapMatrix2 defaultValue f (Matrix ls) (Matrix rs) (Matrix <| smartMap2 defaultValue f (Vector l) (Vector r) (Vector []) :: acc)
 
         ( (Vector l) :: ls, [] ) ->
-            smartMapMatrix2 defaultValue f ls [] ((Vector <| smartMap2 defaultValue f l [] []) :: acc)
+            smartMapMatrix2 defaultValue f (Matrix ls) (Matrix []) (Matrix <| smartMap2 defaultValue f (Vector l) (Vector []) (Vector []) :: acc)
 
         ( [], (Vector r) :: rs ) ->
-            smartMapMatrix2 defaultValue f [] rs ((Vector <| smartMap2 defaultValue f [] r []) :: acc)
+            smartMapMatrix2 defaultValue f (Matrix []) (Matrix rs) (Matrix <| smartMap2 defaultValue f (Vector []) (Vector r) (Vector []) :: acc)
 
         ( [], [] ) ->
-            List.reverse acc
+            Matrix <| List.reverse acc
 
 
 add : a -> (a -> a -> a) -> Vector a -> Vector a -> Vector a
-add defaultValue addFunction (Vector listOone) (Vector listTwo) =
-    Vector <| smartMap2 defaultValue addFunction listOone listTwo []
+add defaultValue addFunction listOone listTwo =
+    smartMap2 defaultValue addFunction listOone listTwo (Vector [])
+
+
+add2 : Vector number -> Vector number -> Vector number
+add2 =
+    liftA2 (+)
 
 
 map : (a -> b) -> Vector a -> Vector b
@@ -116,8 +121,8 @@ sum defaultValue addF =
 
 
 addMatrices : a -> (a -> a -> a) -> Matrix a -> Matrix a -> Matrix a
-addMatrices defaultValue addFunction (Matrix matrixOne) (Matrix matrixTwo) =
-    Matrix <| smartMapMatrix2 defaultValue addFunction matrixOne matrixTwo []
+addMatrices defaultValue addFunction matrixOne matrixTwo =
+    smartMapMatrix2 defaultValue addFunction matrixOne matrixTwo (Matrix [])
 
 
 sumEmptyMatrix : Matrix a
@@ -161,3 +166,13 @@ matrixConjugate matrix =
     matrix
         |> mapMatrix ComplexNumbers.conjugate
         |> transpose
+
+
+apply : Vector (a -> b) -> Vector a -> Vector b
+apply (Vector fVector) (Vector vector) =
+    Vector <| List.map2 (\f x -> f x) fVector vector
+
+
+liftA2 : (a -> b -> c) -> Vector a -> Vector b -> Vector c
+liftA2 f a b =
+    apply (map f a) b

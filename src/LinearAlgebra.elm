@@ -83,8 +83,8 @@ add defaultValue addFunction listOone listTwo =
     smartMap2 defaultValue addFunction listOone listTwo (Vector [])
 
 
-add2 : Vector number -> Vector number -> Vector number
-add2 =
+addReal : Vector number -> Vector number -> Vector number
+addReal =
     liftA2 (+)
 
 
@@ -93,8 +93,8 @@ map f (Vector vector) =
     Vector <| List.map f vector
 
 
-scalarMultiply : (a -> b) -> Vector a -> Vector b
-scalarMultiply =
+realScalarMultiply : (number -> number) -> Vector number -> Vector number
+realScalarMultiply =
     map
 
 

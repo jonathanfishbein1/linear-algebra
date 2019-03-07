@@ -9,7 +9,6 @@ module LinearAlgebra exposing
     , map
     , matrixConjugate
     , multiply
-    , realScalarMultiply
     , scalarMatrixMultiply
     , sum
     , sumEmpty
@@ -91,11 +90,6 @@ addReal =
 map : (a -> b) -> Vector a -> Vector b
 map f (Vector vector) =
     Vector <| List.map f vector
-
-
-realScalarMultiply : (number -> number) -> Vector number -> Vector number
-realScalarMultiply =
-    map
 
 
 multiply : (a -> a -> a) -> Vector a -> Vector a -> Vector a

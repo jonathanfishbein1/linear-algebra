@@ -9,8 +9,8 @@ module LinearAlgebra exposing
     , map
     , matrixConjugate
     , multiply
+    , realScalarMultiply
     , scalarMatrixMultiply
-    , scalarMultiply
     , sum
     , sumEmpty
     , sumEmptyMatrix
@@ -104,8 +104,12 @@ multiply multiplyFunction (Vector vectorOne) (Vector vectorTwo) =
 
 
 equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
-equal comparator (Vector vectorOne) (Vector vectorTwo) =
-    List.all ((==) True) <| List.map2 comparator vectorOne vectorTwo
+equal comparator vectorOne vectorTwo =
+    let
+        (Vector list) =
+            liftA2 comparator vectorOne vectorTwo
+    in
+    List.all ((==) True) <| list
 
 
 sumEmpty : Vector a

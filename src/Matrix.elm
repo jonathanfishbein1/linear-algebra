@@ -3,7 +3,6 @@ module Matrix exposing
        -- , addMatrices
 
     , equalMatrix
-    , makeMatrix
     , matrixConjugate
     , scalarMatrixMultiply
     ,  sumEmptyMatrix
@@ -22,10 +21,9 @@ type Matrix a
     = Matrix (List (Vector.Vector a))
 
 
-
--- addMatrices : a -> (a -> a -> a) -> Matrix a -> Matrix a -> Matrix a
--- addMatrices defaultValue addFunction matrixOne matrixTwo =
---     smartMapMatrix2 defaultValue addFunction matrixOne matrixTwo (Matrix [])
+addMatrices : Matrix number -> Matrix number -> Matrix number
+addMatrices =
+    liftA2 (+)
 
 
 sumEmptyMatrix : Matrix a
@@ -72,3 +70,13 @@ matrixConjugate matrix =
     matrix
         |> mapMatrix ComplexNumbers.conjugate
         |> transpose
+
+
+apply : Matrix (a -> b) -> Matrix a -> Matrix b
+apply (Matrix fMatrix) (Matrix matrix) =
+    Matrix <| List.map2 (\fVector xVector -> Vector.apply fVector xVector) fMatrix matrix
+
+
+liftA2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
+liftA2 f a b =
+    apply (mapMatrix f a) b

@@ -2,6 +2,7 @@ module Vector exposing
     ( Vector(..)
     , addComplexVectors
     , addRealVectors
+    , apply
     , equal
     , map
     , multiply
@@ -66,11 +67,11 @@ sumComplex a =
     Monoid.monoid (sumEmpty a) addComplexVectors
 
 
-applyVector : Vector (a -> b) -> Vector a -> Vector b
-applyVector (Vector fVector) (Vector vector) =
+apply : Vector (a -> b) -> Vector a -> Vector b
+apply (Vector fVector) (Vector vector) =
     Vector <| List.map2 (\f x -> f x) fVector vector
 
 
 liftA2 : (a -> b -> c) -> Vector a -> Vector b -> Vector c
 liftA2 f a b =
-    applyVector (map f a) b
+    apply (map f a) b

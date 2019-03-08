@@ -4,6 +4,7 @@ module LinearAlgebra exposing
     ,  addComplexVectors
        -- , addMatrices
 
+    , addRealVectors
     , equal
     , equalMatrix
     , makeMatrix
@@ -85,7 +86,7 @@ sumEmpty =
 -}
 sum : Monoid.Monoid (Vector number)
 sum =
-    Monoid.monoid sumEmpty addReal
+    Monoid.monoid sumEmpty addRealVectors
 
 
 

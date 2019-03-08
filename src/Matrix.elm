@@ -22,21 +22,6 @@ type Matrix a
     = Matrix (List (Vector.Vector a))
 
 
-allSameBy : (a -> comparable) -> List a -> Bool
-allSameBy f list =
-    List.length (List.Extra.uniqueBy f list) == 1
-
-
-makeMatrix : List (Vector.Vector a) -> Result String (Matrix a)
-makeMatrix listOfVectors =
-    if allSameBy (\(Vector.Vector x) -> List.length x) listOfVectors then
-        Ok <|
-            Matrix listOfVectors
-
-    else
-        Err "list has differnt inner list length: Malformed input"
-
-
 
 -- addMatrices : a -> (a -> a -> a) -> Matrix a -> Matrix a -> Matrix a
 -- addMatrices defaultValue addFunction matrixOne matrixTwo =

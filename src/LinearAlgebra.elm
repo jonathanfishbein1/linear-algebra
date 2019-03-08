@@ -52,8 +52,8 @@ addComplexVectors =
     liftA2 ComplexNumbers.add
 
 
-addReal : Vector number -> Vector number -> Vector number
-addReal =
+addRealVectors : Vector number -> Vector number -> Vector number
+addRealVectors =
     liftA2 (+)
 
 

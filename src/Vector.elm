@@ -11,31 +11,11 @@ module Vector exposing
     )
 
 import ComplexNumbers
-import List.Extra
 import Monoid
 
 
 type Vector a
     = Vector (List a)
-
-
-type Matrix a
-    = Matrix (List (Vector a))
-
-
-allSameBy : (a -> comparable) -> List a -> Bool
-allSameBy f list =
-    List.length (List.Extra.uniqueBy f list) == 1
-
-
-makeMatrix : List (Vector a) -> Result String (Matrix a)
-makeMatrix listOfVectors =
-    if allSameBy (\(Vector x) -> List.length x) listOfVectors then
-        Ok <|
-            Matrix listOfVectors
-
-    else
-        Err "list has differnt inner list length: Malformed input"
 
 
 addComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number)

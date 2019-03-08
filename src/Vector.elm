@@ -5,8 +5,9 @@ module Vector exposing
     , equal
     , map
     , multiply
-    , sum
+    , sumComplex
     , sumEmpty
+    , sumReal
     )
 
 import ComplexNumbers
@@ -71,11 +72,18 @@ sumEmpty =
     Vector []
 
 
-{-| Monoidally add two Vectors together
+{-| Monoidally add Real Vectors together
 -}
-sum : Monoid.Monoid (Vector number)
-sum =
+sumReal : Monoid.Monoid (Vector number)
+sumReal =
     Monoid.monoid sumEmpty addRealVectors
+
+
+{-| Monoidally add Complex Vectors together
+-}
+sumComplex : Monoid.Monoid (Vector (ComplexNumbers.ComplexNumberCartesian number))
+sumComplex =
+    Monoid.monoid sumEmpty addComplexVectors
 
 
 applyVector : Vector (a -> b) -> Vector a -> Vector b

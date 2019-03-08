@@ -1,13 +1,13 @@
 module Matrix exposing
-    (  Matrix(..)
-       -- , addMatrices
+    ( Matrix(..)
+    ,  addComplexMatrices
+       --  , sumMatrices
 
+    , addRealMatrices
     , equalMatrix
     , matrixConjugate
     , scalarMatrixMultiply
-    ,  sumEmptyMatrix
-       --  , sumMatrices
-
+    , sumEmptyMatrix
     , transpose
     )
 
@@ -21,9 +21,14 @@ type Matrix a
     = Matrix (List (Vector.Vector a))
 
 
-addMatrices : Matrix number -> Matrix number -> Matrix number
-addMatrices =
+addRealMatrices : Matrix number -> Matrix number -> Matrix number
+addRealMatrices =
     liftA2 (+)
+
+
+addComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+addComplexMatrices =
+    liftA2 ComplexNumbers.add
 
 
 sumEmptyMatrix : Matrix a

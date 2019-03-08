@@ -67,23 +67,23 @@ equal comparator vectorOne vectorTwo =
     List.all ((==) True) <| list
 
 
-sumEmpty : Vector a
+sumEmpty : List a -> Vector a
 sumEmpty =
-    Vector []
+    Vector
 
 
 {-| Monoidally add Real Vectors together
 -}
-sumReal : Monoid.Monoid (Vector number)
-sumReal =
-    Monoid.monoid sumEmpty addRealVectors
+sumReal : List number -> Monoid.Monoid (Vector number)
+sumReal a =
+    Monoid.monoid (sumEmpty a) addRealVectors
 
 
 {-| Monoidally add Complex Vectors together
 -}
-sumComplex : Monoid.Monoid (Vector (ComplexNumbers.ComplexNumberCartesian number))
-sumComplex =
-    Monoid.monoid sumEmpty addComplexVectors
+sumComplex : List (ComplexNumbers.ComplexNumberCartesian number) -> Monoid.Monoid (Vector (ComplexNumbers.ComplexNumberCartesian number))
+sumComplex a =
+    Monoid.monoid (sumEmpty a) addComplexVectors
 
 
 applyVector : Vector (a -> b) -> Vector a -> Vector b

@@ -123,7 +123,7 @@ suite =
             \one two ->
                 let
                     v =
-                        Vector.sumEmpty
+                        Vector.sumEmpty [ ComplexNumbers.zero ]
 
                     w =
                         Vector.Vector
@@ -338,7 +338,7 @@ suite =
                                 )
                             ]
                 in
-                Monoid.append Vector.sumComplex v (Monoid.empty <| Vector.sumComplex)
+                Monoid.append (Vector.sumComplex [ ComplexNumbers.zero ]) v (Monoid.empty <| Vector.sumComplex [ ComplexNumbers.zero ])
                     |> Expect.equal v
         , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add" <|
             \one two three ->
@@ -358,6 +358,6 @@ suite =
                     listOfMonoids =
                         [ a, b, c ]
                 in
-                Monoid.concat Vector.sumComplex listOfMonoids
+                Monoid.concat (Vector.sumComplex [ ComplexNumbers.zero ]) listOfMonoids
                     |> Expect.equal expected
         ]

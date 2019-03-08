@@ -1,23 +1,12 @@
-module LinearAlgebra exposing
-    ( Matrix(..)
-    , Vector(..)
-    ,  addComplexVectors
-       -- , addMatrices
-
+module Vector exposing
+    ( Vector(..)
+    , addComplexVectors
     , addRealVectors
     , equal
-    , equalMatrix
-    , makeMatrix
     , map
-    , matrixConjugate
     , multiply
-    , scalarMatrixMultiply
     , sum
     , sumEmpty
-    ,  sumEmptyMatrix
-       --  , sumMatrices
-
-    , transpose
     )
 
 import ComplexNumbers
@@ -89,63 +78,11 @@ sum =
     Monoid.monoid sumEmpty addRealVectors
 
 
-
--- addMatrices : a -> (a -> a -> a) -> Matrix a -> Matrix a -> Matrix a
--- addMatrices defaultValue addFunction matrixOne matrixTwo =
---     smartMapMatrix2 defaultValue addFunction matrixOne matrixTwo (Matrix [])
-
-
-sumEmptyMatrix : Matrix a
-sumEmptyMatrix =
-    Matrix []
-
-
-{-| Monoidally add two Matrices together
--}
-
-
-
--- sumMatrices : a -> (a -> a -> a) -> Monoid.Monoid (Matrix a)
--- sumMatrices defaultValue addF =
---     Monoid.monoid sumEmptyMatrix (addMatrices defaultValue addF)
-
-
-mapMatrix : (a -> b) -> Matrix a -> Matrix b
-mapMatrix f (Matrix matrix) =
-    Matrix <| List.map (map f) matrix
-
-
-scalarMatrixMultiply : (a -> b) -> Matrix a -> Matrix b
-scalarMatrixMultiply =
-    mapMatrix
-
-
-equalMatrix : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
-equalMatrix comparator (Matrix matrixOne) (Matrix matrixTwo) =
-    List.all ((==) True) <| List.map2 (equal comparator) matrixOne matrixTwo
-
-
-transpose : Matrix a -> Matrix a
-transpose (Matrix matrix) =
-    matrix
-        |> List.map (\(Vector x) -> x)
-        |> List.Extra.transpose
-        |> List.map (\x -> Vector x)
-        |> Matrix
-
-
-matrixConjugate : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-matrixConjugate matrix =
-    matrix
-        |> mapMatrix ComplexNumbers.conjugate
-        |> transpose
-
-
-apply : Vector (a -> b) -> Vector a -> Vector b
-apply (Vector fVector) (Vector vector) =
+applyVector : Vector (a -> b) -> Vector a -> Vector b
+applyVector (Vector fVector) (Vector vector) =
     Vector <| List.map2 (\f x -> f x) fVector vector
 
 
 liftA2 : (a -> b -> c) -> Vector a -> Vector b -> Vector c
 liftA2 f a b =
-    apply (map f a) b
+    applyVector (map f a) b

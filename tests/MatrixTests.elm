@@ -59,76 +59,83 @@ suite =
                 in
                 Matrix.addComplexMatrices m1 m2
                     |> Expect.equal (Matrix.addComplexMatrices m2 m1)
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Matrix add is associative" <|
+            \one two three ->
+                let
+                    v =
+                        Vector.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    three
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    three
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
 
-        -- , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Matrix add is associative" <|
-        --     \one two three ->
-        --         let
-        --             v =
-        --                 Vector.Vector
-        --                     [ ComplexNumbers.ComplexNumberCartesian
-        --                         (ComplexNumbers.Real
-        --                             three
-        --                         )
-        --                         (ComplexNumbers.Imaginary
-        --                             one
-        --                         )
-        --                     , ComplexNumbers.ComplexNumberCartesian
-        --                         (ComplexNumbers.Real
-        --                             three
-        --                         )
-        --                         (ComplexNumbers.Imaginary
-        --                             two
-        --                         )
-        --                     ]
-        --             w =
-        --                 Vector.Vector
-        --                     [ ComplexNumbers.ComplexNumberCartesian
-        --                         (ComplexNumbers.Real
-        --                             two
-        --                         )
-        --                         (ComplexNumbers.Imaginary
-        --                             two
-        --                         )
-        --                     , ComplexNumbers.ComplexNumberCartesian
-        --                         (ComplexNumbers.Real
-        --                             one
-        --                         )
-        --                         (ComplexNumbers.Imaginary
-        --                             three
-        --                         )
-        --                     ]
-        --             x =
-        --                 Vector.Vector
-        --                     [ ComplexNumbers.ComplexNumberCartesian
-        --                         (ComplexNumbers.Real
-        --                             one
-        --                         )
-        --                         (ComplexNumbers.Imaginary
-        --                             two
-        --                         )
-        --                     , ComplexNumbers.ComplexNumberCartesian
-        --                         (ComplexNumbers.Real
-        --                             three
-        --                         )
-        --                         (ComplexNumbers.Imaginary
-        --                             one
-        --                         )
-        --                     ]
-        --             m1 =
-        --                 Matrix.Matrix [ v, w, x ]
-        --             m2 =
-        --                 Matrix.Matrix [ w, v, x ]
-        --             m3 =
-        --                 Matrix.Matrix [ x, w, v ]
-        --             m1Plusm2AndThenPlusm3 =
-        --                 LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m1 m2
-        --                     |> LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m3
-        --             m2Plusm3AndThenm1 =
-        --                 LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m2 m3
-        --                     |> LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m1
-        --         in
-        --         m1Plusm2AndThenPlusm3
-        --             |> Expect.equal m2Plusm3AndThenm1
+                    w =
+                        Vector.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    two
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    three
+                                )
+                            ]
+
+                    x =
+                        Vector.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    three
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            ]
+
+                    m1 =
+                        Matrix.Matrix [ v, w, x ]
+
+                    m2 =
+                        Matrix.Matrix [ w, v, x ]
+
+                    m3 =
+                        Matrix.Matrix [ x, w, v ]
+
+                    m1Plusm2AndThenPlusm3 =
+                        Matrix.addComplexMatrices m1 m2
+                            |> Matrix.addComplexMatrices m3
+
+                    m2Plusm3AndThenm1 =
+                        Matrix.addComplexMatrices m2 m3
+                            |> Matrix.addComplexMatrices m1
+                in
+                m1Plusm2AndThenPlusm3
+                    |> Expect.equal m2Plusm3AndThenm1
+
         -- , Test.fuzz2 Fuzz.float Fuzz.float "tests Matrix empty or identity value for sum" <|
         --     \one two ->
         --         let

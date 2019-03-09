@@ -376,4 +376,42 @@ suite =
                             |> Matrix.conjugate
                 in
                 Expect.equal m mConjugateConjugate
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix conjugate respects addition" <|
+            \one two ->
+                let
+                    m1 =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    m2 =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        two
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                ]
+                            ]
+
+                    m1Plusm2Conjugate =
+                        Matrix.addComplexMatrices m1 m2
+                            |> Matrix.conjugate
+
+                    m1ConjugatePlusm2Conjugate =
+                        Matrix.conjugate m1
+                            |> Matrix.addComplexMatrices (Matrix.conjugate m2)
+                in
+                Expect.equal m1Plusm2Conjugate m1ConjugatePlusm2Conjugate
         ]

@@ -2,9 +2,9 @@ module Matrix exposing
     ( Matrix(..)
     , addComplexMatrices
     , addRealMatrices
-    , equalMatrix
-    , matrixConjugate
-    , scalarMatrixMultiply
+    , conjugate
+    , equal
+    , map
     , sumComplexMatrices
     , sumRealMatrices
     , transpose
@@ -44,18 +44,13 @@ sumComplexMatrices sumEmptyMatrix =
     Monoid.monoid sumEmptyMatrix addComplexMatrices
 
 
-mapMatrix : (a -> b) -> Matrix a -> Matrix b
-mapMatrix f (Matrix matrix) =
+map : (a -> b) -> Matrix a -> Matrix b
+map f (Matrix matrix) =
     Matrix <| List.map (Vector.map f) matrix
 
 
-scalarMatrixMultiply : (a -> b) -> Matrix a -> Matrix b
-scalarMatrixMultiply =
-    mapMatrix
-
-
-equalMatrix : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
-equalMatrix comparator (Matrix matrixOne) (Matrix matrixTwo) =
+equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
+equal comparator (Matrix matrixOne) (Matrix matrixTwo) =
     List.all ((==) True) <| List.map2 (Vector.equal comparator) matrixOne matrixTwo
 
 
@@ -68,10 +63,10 @@ transpose (Matrix matrix) =
         |> Matrix
 
 
-matrixConjugate : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-matrixConjugate matrix =
+conjugate : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+conjugate matrix =
     matrix
-        |> mapMatrix ComplexNumbers.conjugate
+        |> map ComplexNumbers.conjugate
         |> transpose
 
 
@@ -82,4 +77,4 @@ apply (Matrix fMatrix) (Matrix matrix) =
 
 liftA2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
 liftA2 f a b =
-    apply (mapMatrix f a) b
+    apply (map f a) b

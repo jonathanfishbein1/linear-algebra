@@ -150,203 +150,230 @@ suite =
                                     )
                                 ]
                             ]
-                in
-                Monoid.append (Matrix.sumComplexMatrices <| Matrix.Matrix [ Vector.Vector [ ComplexNumbers.zero ] ]) m (Monoid.empty <| Matrix.sumComplexMatrices <| Matrix.Matrix [ Vector.Vector [ ComplexNumbers.zero ] ])
-                    |> Expect.equal m
 
-        -- , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add matricies" <|
-        --     \one two three ->
-        --         let
-        --             a =
-        --                 Matrix.Matrix [ Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two) ] ]
-        --             b =
-        --                 Matrix.Matrix [ Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three) ] ]
-        --             c =
-        --                 Matrix.Matrix [ Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three) ] ]
-        --             expected =
-        --                 LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add (LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add a b) c
-        --             listOfMonoids =
-        --                 [ a, b, c ]
-        --         in
-        --         Monoid.concat (LinearAlgebra.sumMatrices ComplexNumbers.zero ComplexNumbers.add) listOfMonoids
-        --             |> Expect.equal expected
-        -- , Test.fuzz2 Fuzz.int Fuzz.int "tests matrix inverse" <|
-        --     \one two ->
-        --         let
-        --             v =
-        --                 Matrix.Matrix
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.one
-        --                         ]
-        --                     ]
-        --             w =
-        --                 Matrix.Matrix
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.negate ComplexNumbers.one
-        --                         ]
-        --                     ]
-        --             zero =
-        --                 Matrix.Matrix
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.zero
-        --                         ]
-        --                     ]
-        --         in
-        --         LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add v w
-        --             |> Expect.equal zero
-        -- , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scalar multiplication distributes over addition" <|
-        --     \one two ->
-        --         let
-        --             c =
-        --                 ComplexNumbers.ComplexNumberCartesian
-        --                     (ComplexNumbers.Real
-        --                         one
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         two
-        --                     )
-        --             w =
-        --                 Matrix.Matrix
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.ComplexNumberCartesian
-        --                             (ComplexNumbers.Real
-        --                                 two
-        --                             )
-        --                             (ComplexNumbers.Imaginary
-        --                                 one
-        --                             )
-        --                         ]
-        --                     ]
-        --             v =
-        --                 Matrix.Matrix
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.ComplexNumberCartesian
-        --                             (ComplexNumbers.Real
-        --                                 one
-        --                             )
-        --                             (ComplexNumbers.Imaginary
-        --                                 two
-        --                             )
-        --                         ]
-        --                     ]
-        --             vPlusW =
-        --                 LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add v w
-        --             cvPlusW =
-        --                 LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c) vPlusW
-        --             cW =
-        --                 LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c) w
-        --             cV =
-        --                 LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c) v
-        --             cVPluscW =
-        --                 LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add cW cV
-        --             result =
-        --                 LinearAlgebra.equalMatrix ComplexNumbers.equal cvPlusW cVPluscW
-        --         in
-        --         Expect.true "All elements equal" result
-        -- , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose transpose is idempotent" <|
-        --     \one two ->
-        --         let
-        --             m =
-        --                 Matrix.Matrix
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.ComplexNumberCartesian
-        --                             (ComplexNumbers.Real
-        --                                 one
-        --                             )
-        --                             (ComplexNumbers.Imaginary
-        --                                 two
-        --                             )
-        --                         ]
-        --                     ]
-        --             mTransposeTranspose =
-        --                 LinearAlgebra.transpose m
-        --                     |> LinearAlgebra.transpose
-        --         in
-        --         Expect.equal m mTransposeTranspose
-        -- , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose respects addition" <|
-        --     \one two ->
-        --         let
-        --             m1 =
-        --                 Matrix.Matrix
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.ComplexNumberCartesian
-        --                             (ComplexNumbers.Real
-        --                                 one
-        --                             )
-        --                             (ComplexNumbers.Imaginary
-        --                                 two
-        --                             )
-        --                         ]
-        --                     ]
-        --             m2 =
-        --                 Matrix.Matrix
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.ComplexNumberCartesian
-        --                             (ComplexNumbers.Real
-        --                                 two
-        --                             )
-        --                             (ComplexNumbers.Imaginary
-        --                                 one
-        --                             )
-        --                         ]
-        --                     ]
-        --             m1Plusm2Transpose =
-        --                 LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add m1 m2
-        --                     |> LinearAlgebra.transpose
-        --             m1TransposePlusm2Transpose =
-        --                 LinearAlgebra.transpose m1
-        --                     |> LinearAlgebra.addMatrices ComplexNumbers.zero ComplexNumbers.add (LinearAlgebra.transpose m2)
-        --         in
-        --         Expect.equal m1Plusm2Transpose m1TransposePlusm2Transpose
-        -- , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose respects scalar multiplication" <|
-        --     \one two ->
-        --         let
-        --             c =
-        --                 ComplexNumbers.ComplexNumberCartesian
-        --                     (ComplexNumbers.Real
-        --                         one
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         two
-        --                     )
-        --             m1 =
-        --                 Matrix.Matrix
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.ComplexNumberCartesian
-        --                             (ComplexNumbers.Real
-        --                                 one
-        --                             )
-        --                             (ComplexNumbers.Imaginary
-        --                                 two
-        --                             )
-        --                         ]
-        --                     ]
-        --             cAThenTranspose =
-        --                 LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c) m1
-        --                     |> LinearAlgebra.transpose
-        --             cTransposeOfA =
-        --                 LinearAlgebra.transpose m1
-        --                     |> LinearAlgebra.scalarMatrixMultiply (ComplexNumbers.multiply c)
-        --         in
-        --         Expect.equal cAThenTranspose cTransposeOfA
-        -- , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix conjugate conjugate is idempotent" <|
-        --     \one two ->
-        --         let
-        --             m =
-        --                 Matrix.Matrix
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.ComplexNumberCartesian
-        --                             (ComplexNumbers.Real
-        --                                 one
-        --                             )
-        --                             (ComplexNumbers.Imaginary
-        --                                 two
-        --                             )
-        --                         ]
-        --                     ]
-        --             mConjugateConjugate =
-        --                 Matrix.MatrixConjugate m
-        --                     |> Matrix.MatrixConjugate
-        --         in
-        --         Expect.equal m mConjugateConjugate
+                    sumEmptyComplexMatrix =
+                        Matrix.Matrix [ Vector.Vector [ ComplexNumbers.zero ] ]
+                in
+                Monoid.append (Matrix.sumComplexMatrices sumEmptyComplexMatrix) m (Monoid.empty <| Matrix.sumComplexMatrices sumEmptyComplexMatrix)
+                    |> Expect.equal m
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add matricies" <|
+            \one two three ->
+                let
+                    a =
+                        Matrix.Matrix [ Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two) ] ]
+
+                    b =
+                        Matrix.Matrix [ Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three) ] ]
+
+                    c =
+                        Matrix.Matrix [ Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three) ] ]
+
+                    expected =
+                        Matrix.addComplexMatrices (Matrix.addComplexMatrices a b) c
+
+                    sumEmptyComplexMatrix =
+                        Matrix.Matrix [ Vector.Vector [ ComplexNumbers.zero ] ]
+
+                    listOfMonoids =
+                        [ a, b, c ]
+                in
+                Monoid.concat (Matrix.sumComplexMatrices sumEmptyComplexMatrix) listOfMonoids
+                    |> Expect.equal expected
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests matrix inverse" <|
+            \one two ->
+                let
+                    v =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.one
+                                ]
+                            ]
+
+                    w =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.negate ComplexNumbers.one
+                                ]
+                            ]
+
+                    zero =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.zero
+                                ]
+                            ]
+                in
+                Matrix.addComplexMatrices v w
+                    |> Expect.equal zero
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scalar multiplication distributes over addition" <|
+            \one two ->
+                let
+                    c =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    w =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        two
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                ]
+                            ]
+
+                    v =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    vPlusW =
+                        Matrix.addComplexMatrices v w
+
+                    cvPlusW =
+                        Matrix.map (ComplexNumbers.multiply c) vPlusW
+
+                    cW =
+                        Matrix.map (ComplexNumbers.multiply c) w
+
+                    cV =
+                        Matrix.map (ComplexNumbers.multiply c) v
+
+                    cVPluscW =
+                        Matrix.addComplexMatrices cW cV
+
+                    result =
+                        Matrix.equal ComplexNumbers.equal cvPlusW cVPluscW
+                in
+                Expect.true "All elements equal" result
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose transpose is idempotent" <|
+            \one two ->
+                let
+                    m =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    mTransposeTranspose =
+                        Matrix.transpose m
+                            |> Matrix.transpose
+                in
+                Expect.equal m mTransposeTranspose
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose respects addition" <|
+            \one two ->
+                let
+                    m1 =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    m2 =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        two
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                ]
+                            ]
+
+                    m1Plusm2Transpose =
+                        Matrix.addComplexMatrices m1 m2
+                            |> Matrix.transpose
+
+                    m1TransposePlusm2Transpose =
+                        Matrix.transpose m1
+                            |> Matrix.addComplexMatrices (Matrix.transpose m2)
+                in
+                Expect.equal m1Plusm2Transpose m1TransposePlusm2Transpose
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose respects scalar multiplication" <|
+            \one two ->
+                let
+                    c =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    m1 =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    cAThenTranspose =
+                        Matrix.map (ComplexNumbers.multiply c) m1
+                            |> Matrix.transpose
+
+                    cTransposeOfA =
+                        Matrix.transpose m1
+                            |> Matrix.map (ComplexNumbers.multiply c)
+                in
+                Expect.equal cAThenTranspose cTransposeOfA
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix conjugate conjugate is idempotent" <|
+            \one two ->
+                let
+                    m =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    mConjugateConjugate =
+                        Matrix.conjugate m
+                            |> Matrix.conjugate
+                in
+                Expect.equal m mConjugateConjugate
         ]

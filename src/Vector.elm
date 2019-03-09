@@ -35,8 +35,8 @@ map f (Vector vector) =
 
 
 multiply : (a -> a -> a) -> Vector a -> Vector a -> Vector a
-multiply multiplyFunction (Vector vectorOne) (Vector vectorTwo) =
-    Vector <| List.map2 multiplyFunction vectorOne vectorTwo
+multiply multiplyFunction vectorOne vectorTwo =
+    liftA2 multiplyFunction vectorOne vectorTwo
 
 
 equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool

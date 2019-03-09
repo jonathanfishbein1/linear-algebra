@@ -135,25 +135,25 @@ suite =
                 in
                 m1Plusm2AndThenPlusm3
                     |> Expect.equal m2Plusm3AndThenm1
+        , Test.fuzz2 Fuzz.float Fuzz.float "tests Matrix empty or identity value for sum" <|
+            \one two ->
+                let
+                    m =
+                        Matrix.Matrix <|
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                ]
+                            ]
+                in
+                Monoid.append (Matrix.sumComplexMatrices <| Matrix.Matrix [ Vector.Vector [ ComplexNumbers.zero ] ]) m (Monoid.empty <| Matrix.sumComplexMatrices <| Matrix.Matrix [ Vector.Vector [ ComplexNumbers.zero ] ])
+                    |> Expect.equal m
 
-        -- , Test.fuzz2 Fuzz.float Fuzz.float "tests Matrix empty or identity value for sum" <|
-        --     \one two ->
-        --         let
-        --             m =
-        --                 Matrix.Matrix <|
-        --                     [ Vector.Vector
-        --                         [ ComplexNumbers.ComplexNumberCartesian
-        --                             (ComplexNumbers.Real
-        --                                 one
-        --                             )
-        --                             (ComplexNumbers.Imaginary
-        --                                 one
-        --                             )
-        --                         ]
-        --                     ]
-        --         in
-        --         Monoid.append (LinearAlgebra.sumMatrices ComplexNumbers.zero ComplexNumbers.add) m (Monoid.empty <| LinearAlgebra.sumMatrices ComplexNumbers.zero ComplexNumbers.add)
-        --             |> Expect.equal m
         -- , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add matricies" <|
         --     \one two three ->
         --         let

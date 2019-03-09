@@ -1,13 +1,12 @@
 module Matrix exposing
     ( Matrix(..)
-    ,  addComplexMatrices
-       --  , sumMatrices
-
+    , addComplexMatrices
     , addRealMatrices
     , equalMatrix
     , matrixConjugate
     , scalarMatrixMultiply
-    , sumEmptyMatrix
+    , sumComplexMatrices
+    , sumRealMatrices
     , transpose
     )
 
@@ -31,19 +30,18 @@ addComplexMatrices =
     liftA2 ComplexNumbers.add
 
 
-sumEmptyMatrix : Matrix a
-sumEmptyMatrix =
-    Matrix []
-
-
-{-| Monoidally add two Matrices together
+{-| Monoidally add two Real numbered Matrices together
 -}
+sumRealMatrices : Matrix number -> Monoid.Monoid (Matrix number)
+sumRealMatrices sumEmptyMatrix =
+    Monoid.monoid sumEmptyMatrix addRealMatrices
 
 
-
--- sumMatrices : a -> (a -> a -> a) -> Monoid.Monoid (Matrix a)
--- sumMatrices defaultValue addF =
---     Monoid.monoid sumEmptyMatrix (addMatrices defaultValue addF)
+{-| Monoidally add two Complex numbered Matrices together
+-}
+sumComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumberCartesian number))
+sumComplexMatrices sumEmptyMatrix =
+    Monoid.monoid sumEmptyMatrix addComplexMatrices
 
 
 mapMatrix : (a -> b) -> Matrix a -> Matrix b

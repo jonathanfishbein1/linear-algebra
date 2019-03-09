@@ -414,4 +414,41 @@ suite =
                             |> Matrix.addComplexMatrices (Matrix.conjugate m2)
                 in
                 Expect.equal m1Plusm2Conjugate m1ConjugatePlusm2Conjugate
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix conjugate respects scalar multiplication" <|
+            \one two ->
+                let
+                    c =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    cConjugate =
+                        ComplexNumbers.conjugate c
+
+                    m1 =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    cAThenConjugate =
+                        Matrix.map (ComplexNumbers.multiply c) m1
+                            |> Matrix.conjugate
+
+                    cConjugateOfA =
+                        Matrix.conjugate m1
+                            |> Matrix.map (ComplexNumbers.multiply cConjugate)
+                in
+                Expect.equal cAThenConjugate cConjugateOfA
         ]

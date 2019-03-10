@@ -547,4 +547,32 @@ suite =
                             |> Matrix.map (ComplexNumbers.multiply cConjugate)
                 in
                 Expect.equal cAThenAdjoint cAdjointOfA
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Matrix multiplication is associative" <|
+            \one two three ->
+                let
+                    v =
+                        Vector.Vector
+                            [ three
+                            , one
+                            , three
+                            , two
+                            ]
+
+                    m1 =
+                        Matrix.Matrix <|
+                            [ v ]
+
+                    m1Timesm3 =
+                        Matrix.multiplyRealMatrices m1 m1
+
+                    m1Plusm2AndThenPlusm3 =
+                        m1Timesm3
+                            |> Matrix.multiplyRealMatrices m1
+
+                    m2Plusm3AndThenm1 =
+                        Matrix.multiplyRealMatrices m1 m1
+                            |> Matrix.multiplyRealMatrices m1
+                in
+                m1Plusm2AndThenPlusm3
+                    |> Expect.equal m2Plusm3AndThenm1
         ]

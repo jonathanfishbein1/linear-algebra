@@ -6,6 +6,8 @@ module Matrix exposing
     , conjugate
     , equal
     , map
+    , multiplyComplexMatrices
+    , multiplyRealMatrices
     , sumComplexMatrices
     , sumRealMatrices
     , transpose
@@ -87,6 +89,11 @@ liftA2 f a b =
     apply (map f a) b
 
 
-multiplyMatrices : Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))
-multiplyMatrices matrixOne matrixTwo =
+multiplyComplexMatrices : Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))
+multiplyComplexMatrices matrixOne matrixTwo =
     liftA2 Vector.multiplyComplexVectors matrixOne (transpose matrixTwo)
+
+
+multiplyRealMatrices : Matrix number -> Matrix number -> Matrix number
+multiplyRealMatrices matrixOne matrixTwo =
+    liftA2 (*) matrixOne (transpose matrixTwo)

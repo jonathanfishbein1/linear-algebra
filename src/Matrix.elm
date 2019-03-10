@@ -8,11 +8,11 @@ module Matrix exposing
     , equal
     , transpose
     , conjugate
+    , adjoint
     , apply
     , liftA2
     , multiplyComplexMatrices
     , multiplyRealMatrices
-    , adjoint
     )
 
 {-| A module for Matrix
@@ -30,6 +30,7 @@ module Matrix exposing
 @docs equal
 @docs transpose
 @docs conjugate
+@docs adjoint
 @docs apply
 @docs liftA2
 @docs multiplyComplexMatrices

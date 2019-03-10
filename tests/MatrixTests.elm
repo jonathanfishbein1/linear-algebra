@@ -451,4 +451,100 @@ suite =
                             |> Matrix.map (ComplexNumbers.multiply cConjugate)
                 in
                 Expect.equal cAThenConjugate cConjugateOfA
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix adjoint is idempotent" <|
+            \one two ->
+                let
+                    m =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    mAdjoint =
+                        Matrix.adjoint m
+                            |> Matrix.adjoint
+                in
+                Expect.equal m mAdjoint
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix adjoint respects addition" <|
+            \one two ->
+                let
+                    m1 =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    m2 =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        two
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                ]
+                            ]
+
+                    m1Plusm2Adjoint =
+                        Matrix.addComplexMatrices m1 m2
+                            |> Matrix.adjoint
+
+                    m1ConjugatePlusm2Adjoint =
+                        Matrix.adjoint m1
+                            |> Matrix.addComplexMatrices (Matrix.conjugate m2)
+                in
+                Expect.equal m1Plusm2Adjoint m1ConjugatePlusm2Adjoint
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix adjoint respects scalar multiplication" <|
+            \one two ->
+                let
+                    c =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    cConjugate =
+                        ComplexNumbers.conjugate c
+
+                    m1 =
+                        Matrix.Matrix
+                            [ Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
+                            ]
+
+                    cAThenAdjoint =
+                        Matrix.map (ComplexNumbers.multiply c) m1
+                            |> Matrix.adjoint
+
+                    cAdjointOfA =
+                        Matrix.adjoint m1
+                            |> Matrix.map (ComplexNumbers.multiply cConjugate)
+                in
+                Expect.equal cAThenAdjoint cAdjointOfA
         ]

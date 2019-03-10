@@ -2,6 +2,7 @@ module Matrix exposing
     ( Matrix(..)
     , addComplexMatrices
     , addRealMatrices
+    , adjoint
     , conjugate
     , equal
     , map
@@ -65,6 +66,12 @@ transpose (Matrix matrix) =
 
 conjugate : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
 conjugate matrix =
+    matrix
+        |> map ComplexNumbers.conjugate
+
+
+adjoint : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+adjoint matrix =
     matrix
         |> map ComplexNumbers.conjugate
         |> transpose

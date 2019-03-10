@@ -5,7 +5,8 @@ module Vector exposing
     , apply
     , equal
     , map
-    , multiply
+    , multiplyComplexVectors
+    , multiplyRealVectors
     , sumComplex
     , sumEmpty
     , sumReal
@@ -34,9 +35,14 @@ map f (Vector vector) =
     Vector <| List.map f vector
 
 
-multiply : (a -> a -> a) -> Vector a -> Vector a -> Vector a
-multiply multiplyFunction vectorOne vectorTwo =
-    liftA2 multiplyFunction vectorOne vectorTwo
+multiplyRealVectors : Vector number -> Vector number -> Vector number
+multiplyRealVectors vectorOne vectorTwo =
+    liftA2 (*) vectorOne vectorTwo
+
+
+multiplyComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number)
+multiplyComplexVectors vectorOne vectorTwo =
+    liftA2 ComplexNumbers.multiply vectorOne vectorTwo
 
 
 equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool

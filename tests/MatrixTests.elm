@@ -597,39 +597,41 @@ suite =
                         Matrix.equal (Float.Extra.equalWithin 0.000000001) m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
                 in
                 Expect.true "Matrices are equal " result
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests complex Matrix multiplication is associative" <|
+            \one two three ->
+                let
+                    v : Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)
+                    v =
+                        Vector.Vector
+                            [ ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    three
+                                )
+                                (ComplexNumbers.Imaginary
+                                    one
+                                )
+                            , ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    three
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
 
-        -- , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests complex Matrix multiplication is associative" <|
-        --     \one two three ->
-        --         let
-        --             v : Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)
-        --             v =
-        --                 Vector.Vector
-        --                     [ ComplexNumbers.ComplexNumberCartesian
-        --                         (ComplexNumbers.Real
-        --                             three
-        --                         )
-        --                         (ComplexNumbers.Imaginary
-        --                             one
-        --                         )
-        --                     , ComplexNumbers.ComplexNumberCartesian
-        --                         (ComplexNumbers.Real
-        --                             three
-        --                         )
-        --                         (ComplexNumbers.Imaginary
-        --                             two
-        --                         )
-        --                     ]
-        --             m1 : Matrix.Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))
-        --             m1 =
-        --                 Matrix.Matrix <|
-        --                     [ v ]
-        --             m1Plusm2AndThenPlusm3 =
-        --                 Matrix.multiplyComplexMatrices m1 m1
-        --                     |> Matrix.multiplyComplexMatrices m1
-        --             m2Plusm3AndThenm1 =
-        --                 Matrix.multiplyComplexMatrices m1 m1
-        --                     |> Matrix.multiplyComplexMatrices m1
-        --         in
-        --         m1Plusm2AndThenPlusm3
-        --             |> Expect.equal m2Plusm3AndThenm1
+                    m1 : Matrix.Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))
+                    m1 =
+                        Matrix.Matrix <|
+                            [ v ]
+
+                    m1Plusm2AndThenPlusm3 =
+                        Matrix.multiplyComplexMatrices m1 m1
+                            |> Matrix.multiplyComplexMatrices m1
+
+                    m2Plusm3AndThenm1 =
+                        Matrix.multiplyComplexMatrices m1 m1
+                            |> Matrix.multiplyComplexMatrices m1
+                in
+                m1Plusm2AndThenPlusm3
+                    |> Expect.equal m2Plusm3AndThenm1
         ]

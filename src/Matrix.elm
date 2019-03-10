@@ -85,3 +85,12 @@ apply (Matrix fMatrix) (Matrix matrix) =
 liftA2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
 liftA2 f a b =
     apply (map f a) b
+
+
+multiplyMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix
+multiplyMatrices (Matrix matrixOne) (Matrix matrixTwo) =
+    let
+        matrixTwoTranspose =
+            transpose (Matrix matrixTwo)
+    in
+    Matrix <| List.map2 Vector.multiplyComplexVectors matrixOne matrixTwoTranspose

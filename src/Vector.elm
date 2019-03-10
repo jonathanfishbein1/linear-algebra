@@ -10,6 +10,7 @@ module Vector exposing
     , sumReal
     , sumComplex
     , apply
+    , liftA2
     )
 
 {-| A module for Vectors

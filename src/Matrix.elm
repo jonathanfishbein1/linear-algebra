@@ -8,6 +8,7 @@ module Matrix exposing
     , equal
     , transpose
     , conjugate
+    , apply
     , liftA2
     , multiplyComplexMatrices
     , multiplyRealMatrices

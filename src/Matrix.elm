@@ -41,6 +41,8 @@ import Monoid
 import Vector
 
 
+{-| Matrix type
+-}
 type Matrix a
     = Matrix (List (Vector.Vector a))
 

@@ -38,6 +38,8 @@ import ComplexNumbers
 import Monoid
 
 
+{-| Vector type
+-}
 type Vector a
     = Vector (List a)
 

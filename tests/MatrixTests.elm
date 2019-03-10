@@ -2,6 +2,7 @@ module MatrixTests exposing (suite)
 
 import ComplexNumbers
 import Expect
+import Float.Extra
 import Fuzz
 import Matrix
 import Monoid
@@ -547,10 +548,10 @@ suite =
                             |> Matrix.map (ComplexNumbers.multiply cConjugate)
                 in
                 Expect.equal cAThenAdjoint cAdjointOfA
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Matrix multiplication is associative" <|
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication is associative" <|
             \one two three ->
                 let
-                    v =
+                    v1 =
                         Vector.Vector
                             [ three
                             , one
@@ -558,21 +559,77 @@ suite =
                             , two
                             ]
 
+                    v2 =
+                        Vector.Vector
+                            [ one
+                            , three
+                            , three
+                            , two
+                            ]
+
+                    v3 =
+                        Vector.Vector
+                            [ two
+                            , three
+                            , one
+                            , two
+                            ]
+
                     m1 =
-                        Matrix.Matrix <|
-                            [ v ]
+                        Matrix.Matrix
+                            [ v1 ]
 
-                    m1Timesm3 =
-                        Matrix.multiplyRealMatrices m1 m1
+                    m2 =
+                        Matrix.Matrix [ v2 ]
 
-                    m1Plusm2AndThenPlusm3 =
-                        m1Timesm3
+                    m3 =
+                        Matrix.Matrix [ v3 ]
+
+                    m1Timesm2AndThenTimesm3 =
+                        Matrix.multiplyRealMatrices m1 m2
+                            |> Matrix.multiplyRealMatrices m3
+
+                    m2Timesm3AndThenTimesm1 =
+                        Matrix.multiplyRealMatrices m2 m3
                             |> Matrix.multiplyRealMatrices m1
 
-                    m2Plusm3AndThenm1 =
-                        Matrix.multiplyRealMatrices m1 m1
-                            |> Matrix.multiplyRealMatrices m1
+                    result =
+                        Matrix.equal (Float.Extra.equalWithin 0.000000001) m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
                 in
-                m1Plusm2AndThenPlusm3
-                    |> Expect.equal m2Plusm3AndThenm1
+                Expect.true "Matrices are equal " result
+
+        -- , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests complex Matrix multiplication is associative" <|
+        --     \one two three ->
+        --         let
+        --             v : Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)
+        --             v =
+        --                 Vector.Vector
+        --                     [ ComplexNumbers.ComplexNumberCartesian
+        --                         (ComplexNumbers.Real
+        --                             three
+        --                         )
+        --                         (ComplexNumbers.Imaginary
+        --                             one
+        --                         )
+        --                     , ComplexNumbers.ComplexNumberCartesian
+        --                         (ComplexNumbers.Real
+        --                             three
+        --                         )
+        --                         (ComplexNumbers.Imaginary
+        --                             two
+        --                         )
+        --                     ]
+        --             m1 : Matrix.Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))
+        --             m1 =
+        --                 Matrix.Matrix <|
+        --                     [ v ]
+        --             m1Plusm2AndThenPlusm3 =
+        --                 Matrix.multiplyComplexMatrices m1 m1
+        --                     |> Matrix.multiplyComplexMatrices m1
+        --             m2Plusm3AndThenm1 =
+        --                 Matrix.multiplyComplexMatrices m1 m1
+        --                     |> Matrix.multiplyComplexMatrices m1
+        --         in
+        --         m1Plusm2AndThenPlusm3
+        --             |> Expect.equal m2Plusm3AndThenm1
         ]

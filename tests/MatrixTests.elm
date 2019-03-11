@@ -629,4 +629,36 @@ suite =
                         Matrix.multiplyRealMatrices m1 (Matrix.identityMatrix 3)
                 in
                 Expect.equal m1TimeI m1
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests real Matrix multiplication is with identity matrix is itself" <|
+            \one two three ->
+                let
+                    v1 =
+                        Vector.Vector
+                            [ three
+                            , one
+                            , three
+                            ]
+
+                    v2 =
+                        Vector.Vector
+                            [ one
+                            , three
+                            , three
+                            ]
+
+                    v3 =
+                        Vector.Vector
+                            [ two
+                            , three
+                            , one
+                            ]
+
+                    m1 =
+                        Matrix.Matrix
+                            [ v1, v2, v3 ]
+
+                    m1TimeI =
+                        Matrix.multiplyRealMatrices m1 (Matrix.identityMatrix 3)
+                in
+                Expect.equal m1TimeI m1
         ]

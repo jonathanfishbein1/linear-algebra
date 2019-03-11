@@ -597,4 +597,36 @@ suite =
                         Matrix.equal (Float.Extra.equalWithin 0.000000001) m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
                 in
                 Expect.true "Matrices are equal " result
+        , Test.test "tests identityMatrix is an identity matrix" <|
+            \_ ->
+                let
+                    v1 =
+                        Vector.Vector
+                            [ 1
+                            , 0
+                            , 0
+                            ]
+
+                    v2 =
+                        Vector.Vector
+                            [ 0
+                            , 1
+                            , 0
+                            ]
+
+                    v3 =
+                        Vector.Vector
+                            [ 0
+                            , 0
+                            , 1
+                            ]
+
+                    m1 =
+                        Matrix.Matrix
+                            [ v1, v2, v3 ]
+
+                    m1TimeI =
+                        Matrix.multiplyRealMatrices m1 (Matrix.identityMatrix 3)
+                in
+                Expect.equal m1TimeI m1
         ]

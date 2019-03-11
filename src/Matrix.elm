@@ -13,6 +13,7 @@ module Matrix exposing
     , liftA2
     , multiplyComplexMatrices
     , multiplyRealMatrices
+    , identityMatrix
     )
 
 {-| A module for Matrix
@@ -149,8 +150,8 @@ multiplyRealMatrices matrixOne matrixTwo =
 
 
 diagonal : Int -> Int -> number
-diagonal rowIndex columnIndex =
-    if rowIndex == columnIndex then
+diagonal columnIndex rowIndex =
+    if columnIndex == rowIndex then
         1
 
     else
@@ -159,4 +160,4 @@ diagonal rowIndex columnIndex =
 
 identityMatrix : Int -> Matrix Int
 identityMatrix dimension =
-    Matrix (List.Extra.initialize dimension (\rowIndex -> Vector.Vector <| List.Extra.initialize dimension (diagonal rowIndex)))
+    Matrix (List.Extra.initialize dimension (\columnIndex -> Vector.Vector <| List.Extra.initialize dimension (diagonal columnIndex)))

@@ -167,18 +167,6 @@ identityMatrix dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> Vector.Vector <| List.Extra.initialize dimension (diagonal columnIndex)))
 
 
-addSumVectors : List number -> List number -> number
-addSumVectors fVector xVector =
-    let
-        intermediateList =
-            List.map2 (*) fVector xVector
-
-        value =
-            List.sum intermediateList
-    in
-    value
-
-
 
 -- multiplyMatr : Matrix number -> Matrix number -> Matrix number
 -- matrixFunc (Matrix matrixOne) (Matrix matrixTwo) =
@@ -188,6 +176,12 @@ addSumVectors fVector xVector =
 -- applyTwo : Matrix number -> Matrix number -> Matrix number
 -- applyTwo fMatrix matrix =
 --     matrixFunc fMatrix matrix
+
+
+addSumVectors : List number -> List number -> number
+addSumVectors fVector xVector =
+    List.map2 (*) fVector xVector
+        |> List.sum
 
 
 smartMapMatrix2 : List (Vector.Vector number) -> List (Vector.Vector number) -> List (Vector.Vector number) -> List number -> List (Vector.Vector number) -> List (Vector.Vector number)

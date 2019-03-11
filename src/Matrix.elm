@@ -146,3 +146,17 @@ multiplyComplexMatrices matrixOne matrixTwo =
 multiplyRealMatrices : Matrix number -> Matrix number -> Matrix number
 multiplyRealMatrices matrixOne matrixTwo =
     liftA2 (*) matrixOne (transpose matrixTwo)
+
+
+diagonal : Int -> Int -> number
+diagonal rowIndex columnIndex =
+    if rowIndex == columnIndex then
+        1
+
+    else
+        0
+
+
+identityMatrix : Int -> Matrix Int
+identityMatrix dimension =
+    Matrix (List.Extra.initialize dimension (\rowIndex -> Vector.Vector <| List.Extra.initialize dimension (diagonal rowIndex)))

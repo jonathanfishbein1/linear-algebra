@@ -145,8 +145,12 @@ multiplyComplexMatrices matrixOne matrixTwo =
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
 -}
 multiplyRealMatrices : Matrix number -> Matrix number -> Matrix number
-multiplyRealMatrices matrixOne matrixTwo =
-    liftA2 (*) matrixOne (transpose matrixTwo)
+multiplyRealMatrices (Matrix matrixOne) matrixTwo =
+    let
+        (Matrix transposedMatrix) =
+            transpose matrixTwo
+    in
+    Matrix <| smartMapMatrix2 matrixOne transposedMatrix transposedMatrix [] []
 
 
 diagonal : Int -> Int -> number
@@ -161,3 +165,39 @@ diagonal columnIndex rowIndex =
 identityMatrix : Int -> Matrix Int
 identityMatrix dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> Vector.Vector <| List.Extra.initialize dimension (diagonal columnIndex)))
+
+
+addSumVectors : List number -> List number -> number
+addSumVectors fVector xVector =
+    let
+        intermediateList =
+            List.map2 (*) fVector xVector
+
+        value =
+            List.sum intermediateList
+    in
+    value
+
+
+
+-- multiplyMatr : Matrix number -> Matrix number -> Matrix number
+-- matrixFunc (Matrix matrixOne) (Matrix matrixTwo) =
+--     Matrix <| smartMapMatrix2 matrixOne matrixTwo []
+-- {-| Apply for Matrix
+-- -}
+-- applyTwo : Matrix number -> Matrix number -> Matrix number
+-- applyTwo fMatrix matrix =
+--     matrixFunc fMatrix matrix
+
+
+smartMapMatrix2 : List (Vector.Vector number) -> List (Vector.Vector number) -> List (Vector.Vector number) -> List number -> List (Vector.Vector number) -> List (Vector.Vector number)
+smartMapMatrix2 left right currentRight intermediateList acc =
+    case ( left, currentRight ) of
+        ( (Vector.Vector l) :: ls, (Vector.Vector r) :: rs ) ->
+            smartMapMatrix2 left right rs (intermediateList ++ [ addSumVectors l r ]) acc
+
+        ( (Vector.Vector l) :: ls, [] ) ->
+            smartMapMatrix2 ls right right [] (acc ++ [ Vector.Vector intermediateList ])
+
+        ( [], _ ) ->
+            acc

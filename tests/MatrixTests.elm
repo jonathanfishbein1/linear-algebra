@@ -586,17 +586,12 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m1Timesm2AndThenTimesm3 =
-                        Matrix.multiplyRealMatrices m1 m2
-                            |> Matrix.multiplyRealMatrices m3
+                        Matrix.multiplyRealMatrices (Matrix.multiplyRealMatrices m1 m2) m3
 
                     m2Timesm3AndThenTimesm1 =
-                        Matrix.multiplyRealMatrices m2 m3
-                            |> Matrix.multiplyRealMatrices m1
-
-                    result =
-                        Matrix.equal (Float.Extra.equalWithin 0.000000001) m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
+                        Matrix.multiplyRealMatrices m1 (Matrix.multiplyRealMatrices m2 m3)
                 in
-                Expect.true "Matrices are equal " result
+                Expect.equal m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
         , Test.test "tests identityMatrix is an identity matrix" <|
             \_ ->
                 let

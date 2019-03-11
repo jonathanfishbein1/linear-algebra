@@ -178,16 +178,16 @@ identityMatrix dimension =
 --     matrixFunc fMatrix matrix
 
 
-addSumVectors : List number -> List number -> number
-addSumVectors fVector xVector =
-    List.map2 (*) fVector xVector
+addSumVectors : Vector.Vector number -> Vector.Vector number -> number
+addSumVectors (Vector.Vector vectorOne) (Vector.Vector vectorTwo) =
+    List.map2 (*) vectorOne vectorTwo
         |> List.sum
 
 
 smartMapMatrix2 : List (Vector.Vector number) -> List (Vector.Vector number) -> List (Vector.Vector number) -> List number -> List (Vector.Vector number) -> List (Vector.Vector number)
 smartMapMatrix2 left right currentRight intermediateList acc =
     case ( left, currentRight ) of
-        ( (Vector.Vector l) :: ls, (Vector.Vector r) :: rs ) ->
+        ( l :: ls, r :: rs ) ->
             smartMapMatrix2 left right rs (intermediateList ++ [ addSumVectors l r ]) acc
 
         ( (Vector.Vector l) :: ls, [] ) ->

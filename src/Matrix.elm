@@ -146,11 +146,7 @@ multiplyComplexMatrices matrixOne matrixTwo =
 -}
 multiplyRealMatrices : Matrix number -> Matrix number -> Matrix number
 multiplyRealMatrices matrixOne matrixTwo =
-    let
-        (Matrix transposedMatrix) =
-            transpose matrixTwo
-    in
-    Matrix <| smartMapMatrix2 matrixOne transposedMatrix transposedMatrix [] []
+    Matrix <| smartMapMatrix2 matrixOne (transpose matrixTwo) transposedMatrix [] []
 
 
 diagonal : Int -> Int -> number
@@ -184,14 +180,14 @@ addSumVectors (Vector.Vector vectorOne) (Vector.Vector vectorTwo) =
         |> List.sum
 
 
-smartMapMatrix2 : Matrix number -> List (Vector.Vector number) -> List (Vector.Vector number) -> List number -> List (Vector.Vector number) -> List (Vector.Vector number)
-smartMapMatrix2 (Matrix left) right currentRight intermediateList acc =
+smartMapMatrix2 : Matrix number -> Matrix number -> List (Vector.Vector number) -> List number -> List (Vector.Vector number) -> List (Vector.Vector number)
+smartMapMatrix2 (Matrix left) (Matrix right) currentRight intermediateList acc =
     case ( left, currentRight ) of
         ( l :: ls, r :: rs ) ->
-            smartMapMatrix2 (Matrix left) right rs (intermediateList ++ [ addSumVectors l r ]) acc
+            smartMapMatrix2 (Matrix left) (Matrix right) rs (intermediateList ++ [ addSumVectors l r ]) acc
 
         ( (Vector.Vector l) :: ls, [] ) ->
-            smartMapMatrix2 (Matrix ls) right right [] (acc ++ [ Vector.Vector intermediateList ])
+            smartMapMatrix2 (Matrix ls) (Matrix right) right [] (acc ++ [ Vector.Vector intermediateList ])
 
         ( [], _ ) ->
             acc

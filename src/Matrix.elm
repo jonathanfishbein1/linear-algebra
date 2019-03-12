@@ -11,9 +11,11 @@ module Matrix exposing
     , adjoint
     , apply
     , liftA2
-    , multiplyComplexMatrices
     , multiplyRealMatrices
-    , identityMatrix
+    ,  RowVector(..)
+      , identityMatrix
+        --, multiplyComplexMatrices
+
     )
 
 {-| A module for Matrix
@@ -45,8 +47,8 @@ import Monoid
 import Vector
 
 
-type alias RowVector a =
-    Vector.Vector a
+type RowVector a
+    = RowVector (Vector.Vector a)
 
 
 {-| Matrix type
@@ -86,25 +88,25 @@ sumComplexMatrices sumEmptyMatrix =
 {-| Map over a Matrix
 -}
 map : (a -> b) -> Matrix a -> Matrix b
-map f (Matrix matrix) =
-    Matrix <| List.map (Vector.map f) matrix
+map f (Matrix listOfRowVectors) =
+    Matrix <| List.map (\(RowVector vector) -> RowVector <| Vector.map f vector) listOfRowVectors
 
 
 {-| Compare two Matrices for equality
 -}
 equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
-equal comparator (Matrix matrixOne) (Matrix matrixTwo) =
-    List.all ((==) True) <| List.map2 (Vector.equal comparator) matrixOne matrixTwo
+equal comparator (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
+    List.all ((==) True) <| List.map2 (\(RowVector vectorOne) (RowVector vectorTwo) -> Vector.equal comparator vectorOne vectorTwo) listOfRowVectorsOne listOfRowVectorsTwo
 
 
 {-| Transpose a Matrix
 -}
 transpose : Matrix a -> Matrix a
-transpose (Matrix matrix) =
-    matrix
-        |> List.map (\(Vector.Vector x) -> x)
+transpose (Matrix listOfRowVectors) =
+    listOfRowVectors
+        |> List.map (\(RowVector (Vector.Vector x)) -> x)
         |> List.Extra.transpose
-        |> List.map (\x -> Vector.Vector x)
+        |> List.map (\x -> RowVector <| Vector.Vector x)
         |> Matrix
 
 
@@ -128,8 +130,8 @@ adjoint matrix =
 {-| Apply for Matrix
 -}
 apply : Matrix (a -> b) -> Matrix a -> Matrix b
-apply (Matrix fMatrix) (Matrix matrix) =
-    Matrix <| List.map2 (\fVector xVector -> Vector.apply fVector xVector) fMatrix matrix
+apply (Matrix listOfRowVectorsWithFunctions) (Matrix listOfRowVectors) =
+    Matrix <| List.map2 (\(RowVector fVector) (RowVector xVector) -> RowVector <| Vector.apply fVector xVector) listOfRowVectorsWithFunctions listOfRowVectors
 
 
 {-| Lift a function to work on Matrix
@@ -139,11 +141,12 @@ liftA2 f a b =
     apply (map f a) b
 
 
-{-| Matrix Matrix multiplication for a Complex Numbered Matrix
--}
-multiplyComplexMatrices : Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number))
-multiplyComplexMatrices matrixOne matrixTwo =
-    liftA2 Vector.multiplyComplexVectors matrixOne (transpose matrixTwo)
+
+-- {-| Matrix Matrix multiplication for a Complex Numbered Matrix
+-- -}
+-- multiplyComplexMatrices : Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number))
+-- multiplyComplexMatrices matrixOne matrixTwo =
+--     smartMapMatrix2 matrixOne (transpose matrixTwo) (transpose matrixTwo) [] (Matrix [])
 
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
@@ -164,7 +167,7 @@ diagonal columnIndex rowIndex =
 
 identityMatrix : Int -> Matrix Int
 identityMatrix dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> Vector.Vector <| List.Extra.initialize dimension (diagonal columnIndex)))
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (diagonal columnIndex)))
 
 
 
@@ -179,7 +182,7 @@ identityMatrix dimension =
 
 
 addSumVectors : RowVector number -> RowVector number -> number
-addSumVectors (Vector.Vector vectorOne) (Vector.Vector vectorTwo) =
+addSumVectors (RowVector (Vector.Vector vectorOne)) (RowVector (Vector.Vector vectorTwo)) =
     List.map2 (*) vectorOne vectorTwo
         |> List.sum
 
@@ -191,7 +194,7 @@ smartMapMatrix2 (Matrix left) (Matrix right) (Matrix currentRight) intermediateL
             smartMapMatrix2 (Matrix left) (Matrix right) (Matrix rs) (intermediateList ++ [ addSumVectors l r ]) (Matrix acc)
 
         ( _ :: ls, [] ) ->
-            smartMapMatrix2 (Matrix ls) (Matrix right) (Matrix right) [] (Matrix (acc ++ [ Vector.Vector intermediateList ]))
+            smartMapMatrix2 (Matrix ls) (Matrix right) (Matrix right) [] (Matrix (acc ++ [ RowVector <| Vector.Vector intermediateList ]))
 
         ( [], _ ) ->
             Matrix acc

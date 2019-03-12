@@ -179,8 +179,9 @@ identityMatrix dimension =
 
 
 addSumVectors : RowVector number -> RowVector number -> number
-addSumVectors (RowVector (Vector.Vector vectorOne)) (RowVector (Vector.Vector vectorTwo)) =
-    List.map2 (*) vectorOne vectorTwo
+addSumVectors (RowVector vectorOne) (RowVector vectorTwo) =
+    Vector.liftA2 (*) vectorOne vectorTwo
+        |> (\(Vector.Vector x) -> x)
         |> List.sum
 
 

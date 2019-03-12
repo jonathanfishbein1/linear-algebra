@@ -183,10 +183,10 @@ addSumVectors (Vector.Vector vectorOne) (Vector.Vector vectorTwo) =
 smartMapMatrix2 : Matrix number -> Matrix number -> Matrix number -> List number -> Matrix number -> Matrix number
 smartMapMatrix2 (Matrix left) (Matrix right) (Matrix currentRight) intermediateList (Matrix acc) =
     case ( left, currentRight ) of
-        ( l :: ls, r :: rs ) ->
+        ( l :: _, r :: rs ) ->
             smartMapMatrix2 (Matrix left) (Matrix right) (Matrix rs) (intermediateList ++ [ addSumVectors l r ]) (Matrix acc)
 
-        ( (Vector.Vector l) :: ls, [] ) ->
+        ( _ :: ls, [] ) ->
             smartMapMatrix2 (Matrix ls) (Matrix right) (Matrix right) [] (Matrix (acc ++ [ Vector.Vector intermediateList ]))
 
         ( [], _ ) ->

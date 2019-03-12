@@ -850,4 +850,31 @@ suite =
                         Matrix.multiplyRealMatrices (Matrix.map ((*) one) m1) m2
                 in
                 Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication relates to the transpose" <|
+            \one two three ->
+                let
+                    v1 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ three, one ]
+
+                    v2 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ one, two ]
+
+                    a =
+                        Matrix.Matrix [ v1 ]
+
+                    b =
+                        Matrix.Matrix [ v2 ]
+
+                    aTimebThenTranspose =
+                        Matrix.multiplyRealMatrices a b
+                            |> Matrix.transpose
+
+                    cTimesm1ThenTimesm2 =
+                        Matrix.multiplyRealMatrices (Matrix.transpose b) (Matrix.transpose a)
+                in
+                Expect.equal aTimebThenTranspose cTimesm1ThenTimesm2
         ]

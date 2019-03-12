@@ -11,11 +11,9 @@ module Matrix exposing
     , adjoint
     , apply
     , liftA2
+    , multiplyComplexMatrices
     , multiplyRealMatrices
-    ,  RowVector(..)
-      , identityMatrix
-        --, multiplyComplexMatrices
-
+    , RowVector(..), identityMatrix
     )
 
 {-| A module for Matrix
@@ -141,12 +139,11 @@ liftA2 f a b =
     apply (map f a) b
 
 
-
--- {-| Matrix Matrix multiplication for a Complex Numbered Matrix
--- -}
--- multiplyComplexMatrices : Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number))
--- multiplyComplexMatrices matrixOne matrixTwo =
---     smartMapMatrix2 matrixOne (transpose matrixTwo) (transpose matrixTwo) [] (Matrix [])
+{-| Matrix Matrix multiplication for a Complex Numbered Matrix
+-}
+multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+multiplyComplexMatrices matrixOne matrixTwo =
+    smartMapComplexMatrix2 matrixOne (transpose matrixTwo) (transpose matrixTwo) [] (Matrix [])
 
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
@@ -195,6 +192,25 @@ smartMapMatrix2 (Matrix left) (Matrix right) (Matrix currentRight) intermediateL
 
         ( _ :: ls, [] ) ->
             smartMapMatrix2 (Matrix ls) (Matrix right) (Matrix right) [] (Matrix (acc ++ [ RowVector <| Vector.Vector intermediateList ]))
+
+        ( [], _ ) ->
+            Matrix acc
+
+
+addSumComplexVectors : RowVector (ComplexNumbers.ComplexNumberCartesian number) -> RowVector (ComplexNumbers.ComplexNumberCartesian number) -> ComplexNumbers.ComplexNumberCartesian number
+addSumComplexVectors (RowVector (Vector.Vector vectorOne)) (RowVector (Vector.Vector vectorTwo)) =
+    List.map2 ComplexNumbers.multiply vectorOne vectorTwo
+        |> Monoid.concat ComplexNumbers.sum
+
+
+smartMapComplexMatrix2 : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> List (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+smartMapComplexMatrix2 (Matrix left) (Matrix right) (Matrix currentRight) intermediateList (Matrix acc) =
+    case ( left, currentRight ) of
+        ( l :: _, r :: rs ) ->
+            smartMapComplexMatrix2 (Matrix left) (Matrix right) (Matrix rs) (intermediateList ++ [ addSumComplexVectors l r ]) (Matrix acc)
+
+        ( _ :: ls, [] ) ->
+            smartMapComplexMatrix2 (Matrix ls) (Matrix right) (Matrix right) [] (Matrix (acc ++ [ RowVector <| Vector.Vector intermediateList ]))
 
         ( [], _ ) ->
             Matrix acc

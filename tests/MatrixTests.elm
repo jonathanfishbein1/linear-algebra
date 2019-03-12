@@ -685,4 +685,92 @@ suite =
                         Matrix.multiplyRealMatrices (Matrix.identityMatrix 3) m1
                 in
                 Expect.equal m1TimeI m1
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition" <|
+            \one two three ->
+                let
+                    v1 =
+                        Vector.Vector
+                            [ three
+                            , one
+                            , three
+                            , two
+                            ]
+
+                    v2 =
+                        Vector.Vector
+                            [ one
+                            , three
+                            , three
+                            , two
+                            ]
+
+                    v3 =
+                        Vector.Vector
+                            [ two
+                            , three
+                            , one
+                            , two
+                            ]
+
+                    m1 =
+                        Matrix.Matrix
+                            [ v1 ]
+
+                    m2 =
+                        Matrix.Matrix [ v2 ]
+
+                    m3 =
+                        Matrix.Matrix [ v3 ]
+
+                    m1Timesm2Plus3 =
+                        Matrix.multiplyRealMatrices m1 (Matrix.addRealMatrices m2 m3)
+
+                    m1Timesm2Plusem1Timesm3 =
+                        Matrix.addRealMatrices (Matrix.multiplyRealMatrices m1 m2) (Matrix.multiplyRealMatrices m1 m3)
+                in
+                Expect.equal m1Timesm2Plus3 m1Timesm2Plusem1Timesm3
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition second test" <|
+            \one two three ->
+                let
+                    v1 =
+                        Vector.Vector
+                            [ three
+                            , one
+                            , three
+                            , two
+                            ]
+
+                    v2 =
+                        Vector.Vector
+                            [ one
+                            , three
+                            , three
+                            , two
+                            ]
+
+                    v3 =
+                        Vector.Vector
+                            [ two
+                            , three
+                            , one
+                            , two
+                            ]
+
+                    m1 =
+                        Matrix.Matrix
+                            [ v1 ]
+
+                    m2 =
+                        Matrix.Matrix [ v2 ]
+
+                    m3 =
+                        Matrix.Matrix [ v3 ]
+
+                    m2Plusm3Timesm1 =
+                        Matrix.multiplyRealMatrices (Matrix.addRealMatrices m2 m3) m1
+
+                    m2Timesm1Plusm3Timesm1 =
+                        Matrix.addRealMatrices (Matrix.multiplyRealMatrices m2 m1) (Matrix.multiplyRealMatrices m3 m1)
+                in
+                Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
         ]

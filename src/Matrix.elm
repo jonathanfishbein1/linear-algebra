@@ -45,10 +45,14 @@ import Monoid
 import Vector
 
 
+type alias RowVector a =
+    Vector.Vector a
+
+
 {-| Matrix type
 -}
 type Matrix a
-    = Matrix (List (Vector.Vector a))
+    = Matrix (List (RowVector a))
 
 
 {-| Add two Real Matrices together
@@ -137,7 +141,7 @@ liftA2 f a b =
 
 {-| Matrix Matrix multiplication for a Complex Numbered Matrix
 -}
-multiplyComplexMatrices : Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))
+multiplyComplexMatrices : Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number)) -> Matrix (RowVector (ComplexNumbers.ComplexNumberCartesian number))
 multiplyComplexMatrices matrixOne matrixTwo =
     liftA2 Vector.multiplyComplexVectors matrixOne (transpose matrixTwo)
 
@@ -174,7 +178,7 @@ identityMatrix dimension =
 --     matrixFunc fMatrix matrix
 
 
-addSumVectors : Vector.Vector number -> Vector.Vector number -> number
+addSumVectors : RowVector number -> RowVector number -> number
 addSumVectors (Vector.Vector vectorOne) (Vector.Vector vectorTwo) =
     List.map2 (*) vectorOne vectorTwo
         |> List.sum

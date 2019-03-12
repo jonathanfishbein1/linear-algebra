@@ -877,4 +877,36 @@ suite =
                         Matrix.multiplyRealMatrices (Matrix.transpose b) (Matrix.transpose a)
                 in
                 Expect.equal aTimebThenTranspose cTimesm1ThenTimesm2
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication respects the conjugate" <|
+            \one two three ->
+                let
+                    v1 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ three, one ]
+
+                    v2 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ one, two ]
+
+                    a =
+                        Matrix.Matrix [ v1 ]
+
+                    b =
+                        Matrix.Matrix [ v2 ]
+
+                    aTimebThenConjugate : Matrix.Matrix (ComplexNumbers.ComplexNumberCartesian number)
+                    aTimebThenConjugate =
+                        Matrix.multiplyComplexMatrices a b
+                            |> Matrix.conjugate
+
+                    cTimesm1ThenTimesm2 : Matrix.Matrix (ComplexNumbers.ComplexNumberCartesian number)
+                    cTimesm1ThenTimesm2 =
+                        Matrix.multiplyComplexMatrices (Matrix.conjugate a) (Matrix.conjugate b)
+
+                    result =
+                        Matrix.equal ComplexNumbers.equal aTimebThenConjugate cTimesm1ThenTimesm2
+                in
+                Expect.true "AB conjugate equals A conjugate time B conjugate" result
         ]

@@ -773,4 +773,38 @@ suite =
                         Matrix.addRealMatrices (Matrix.multiplyRealMatrices m2 m1) (Matrix.multiplyRealMatrices m3 m1)
                 in
                 Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication respects scalar multiplication" <|
+            \one two three ->
+                let
+                    v1 =
+                        Vector.Vector
+                            [ three
+                            , one
+                            , three
+                            , two
+                            ]
+
+                    v2 =
+                        Vector.Vector
+                            [ one
+                            , three
+                            , three
+                            , two
+                            ]
+
+                    m1 =
+                        Matrix.Matrix
+                            [ v1 ]
+
+                    m2 =
+                        Matrix.Matrix [ v2 ]
+
+                    cTimesm1Timem2 =
+                        Matrix.multiplyRealMatrices m1 m2
+                            |> Matrix.map ((*) one)
+
+                    cTimesm1ThenTimesm2 =
+                        Matrix.multiplyRealMatrices (Matrix.map ((*) one) m1) m2
+                in
+                Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
         ]

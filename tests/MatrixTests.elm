@@ -614,6 +614,7 @@ suite =
                     m1Timesm2AndThenTimesm3 =
                         Matrix.multiplyRealMatrices (Matrix.multiplyRealMatrices m1 m2) m3
 
+                    m2Timesm3AndThenTimesm1 : Matrix.Matrix number
                     m2Timesm3AndThenTimesm1 =
                         Matrix.multiplyRealMatrices m1 (Matrix.multiplyRealMatrices m2 m3)
                 in

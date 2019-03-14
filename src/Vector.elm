@@ -11,7 +11,7 @@ module Vector exposing
     , sumComplex
     , apply
     , liftA2
-    , complexVectorDotProduct, foldl, realVectorDotProduct
+    , complexVectorDotProduct, concat, foldl, realVectorDotProduct
     )
 
 {-| A module for Vectors
@@ -141,3 +141,8 @@ realVectorDotProduct : Vector number -> Vector number -> number
 realVectorDotProduct vectorOne vectorTwo =
     liftA2 (*) vectorOne vectorTwo
         |> foldl (+) 0
+
+
+concat : Vector a -> Vector a -> Vector a
+concat (Vector listOne) (Vector listTwo) =
+    Vector <| listOne ++ listTwo

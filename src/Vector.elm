@@ -11,6 +11,7 @@ module Vector exposing
     , sumComplex
     , apply
     , liftA2
+    , foldl
     )
 
 {-| A module for Vectors
@@ -123,3 +124,8 @@ apply (Vector fVector) (Vector vector) =
 liftA2 : (a -> b -> c) -> Vector a -> Vector b -> Vector c
 liftA2 f a b =
     apply (map f a) b
+
+
+foldl : (a -> b -> b) -> b -> Vector a -> b
+foldl foldFunction acc (Vector list) =
+    List.foldl foldFunction acc list

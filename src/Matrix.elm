@@ -199,9 +199,9 @@ smartMapMatrix2 (Matrix left) (Matrix right) (Matrix currentRight) intermediateL
 
 
 addSumComplexVectors : RowVector (ComplexNumbers.ComplexNumberCartesian number) -> RowVector (ComplexNumbers.ComplexNumberCartesian number) -> ComplexNumbers.ComplexNumberCartesian number
-addSumComplexVectors (RowVector (Vector.Vector vectorOne)) (RowVector (Vector.Vector vectorTwo)) =
-    List.map2 ComplexNumbers.multiply vectorOne vectorTwo
-        |> Monoid.concat ComplexNumbers.sum
+addSumComplexVectors (RowVector vectorOne) (RowVector vectorTwo) =
+    Vector.liftA2 ComplexNumbers.multiply vectorOne vectorTwo
+        |> Vector.foldl ComplexNumbers.add ComplexNumbers.zero
 
 
 smartMapComplexMatrix2 : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> List (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)

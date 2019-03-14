@@ -178,18 +178,11 @@ identityMatrix dimension =
 --     matrixFunc fMatrix matrix
 
 
-addSumVectors : RowVector number -> RowVector number -> number
-addSumVectors (RowVector vectorOne) (RowVector vectorTwo) =
-    Vector.liftA2 (*) vectorOne vectorTwo
-        |> (\(Vector.Vector x) -> x)
-        |> List.sum
-
-
 smartMapMatrix2 : Matrix number -> Matrix number -> Matrix number -> List number -> Matrix number -> Matrix number
 smartMapMatrix2 (Matrix left) (Matrix right) (Matrix currentRight) intermediateList (Matrix acc) =
     case ( left, currentRight ) of
-        ( l :: _, r :: rs ) ->
-            smartMapMatrix2 (Matrix left) (Matrix right) (Matrix rs) (intermediateList ++ [ addSumVectors l r ]) (Matrix acc)
+        ( (RowVector l) :: _, (RowVector r) :: rs ) ->
+            smartMapMatrix2 (Matrix left) (Matrix right) (Matrix rs) (intermediateList ++ [ Vector.realVectorDotProduct l r ]) (Matrix acc)
 
         ( _ :: ls, [] ) ->
             smartMapMatrix2 (Matrix ls) (Matrix right) (Matrix right) [] (Matrix (acc ++ [ RowVector <| Vector.Vector intermediateList ]))
@@ -202,7 +195,7 @@ smartMapComplexMatrix2 : Matrix (ComplexNumbers.ComplexNumberCartesian number) -
 smartMapComplexMatrix2 (Matrix left) (Matrix right) (Matrix currentRight) intermediateList (Matrix acc) =
     case ( left, currentRight ) of
         ( (RowVector l) :: _, (RowVector r) :: rs ) ->
-            smartMapComplexMatrix2 (Matrix left) (Matrix right) (Matrix rs) (intermediateList ++ [ Vector.dot l r ]) (Matrix acc)
+            smartMapComplexMatrix2 (Matrix left) (Matrix right) (Matrix rs) (intermediateList ++ [ Vector.complexVectorDotProduct l r ]) (Matrix acc)
 
         ( _ :: ls, [] ) ->
             smartMapComplexMatrix2 (Matrix ls) (Matrix right) (Matrix right) [] (Matrix (acc ++ [ RowVector <| Vector.Vector intermediateList ]))

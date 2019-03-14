@@ -198,17 +198,11 @@ smartMapMatrix2 (Matrix left) (Matrix right) (Matrix currentRight) intermediateL
             Matrix acc
 
 
-addSumComplexVectors : RowVector (ComplexNumbers.ComplexNumberCartesian number) -> RowVector (ComplexNumbers.ComplexNumberCartesian number) -> ComplexNumbers.ComplexNumberCartesian number
-addSumComplexVectors (RowVector vectorOne) (RowVector vectorTwo) =
-    Vector.liftA2 ComplexNumbers.multiply vectorOne vectorTwo
-        |> Vector.foldl ComplexNumbers.add ComplexNumbers.zero
-
-
 smartMapComplexMatrix2 : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> List (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
 smartMapComplexMatrix2 (Matrix left) (Matrix right) (Matrix currentRight) intermediateList (Matrix acc) =
     case ( left, currentRight ) of
-        ( l :: _, r :: rs ) ->
-            smartMapComplexMatrix2 (Matrix left) (Matrix right) (Matrix rs) (intermediateList ++ [ addSumComplexVectors l r ]) (Matrix acc)
+        ( (RowVector l) :: _, (RowVector r) :: rs ) ->
+            smartMapComplexMatrix2 (Matrix left) (Matrix right) (Matrix rs) (intermediateList ++ [ Vector.dot l r ]) (Matrix acc)
 
         ( _ :: ls, [] ) ->
             smartMapComplexMatrix2 (Matrix ls) (Matrix right) (Matrix right) [] (Matrix (acc ++ [ RowVector <| Vector.Vector intermediateList ]))

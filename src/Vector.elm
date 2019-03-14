@@ -11,7 +11,7 @@ module Vector exposing
     , sumComplex
     , apply
     , liftA2
-    , foldl
+    , dot, foldl
     )
 
 {-| A module for Vectors
@@ -129,3 +129,9 @@ liftA2 f a b =
 foldl : (a -> b -> b) -> b -> Vector a -> b
 foldl foldFunction acc (Vector list) =
     List.foldl foldFunction acc list
+
+
+dot : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> ComplexNumbers.ComplexNumberCartesian number
+dot vectorOne vectorTwo =
+    liftA2 ComplexNumbers.multiply vectorOne vectorTwo
+        |> foldl ComplexNumbers.add ComplexNumbers.zero

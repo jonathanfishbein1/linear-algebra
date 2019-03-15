@@ -1,5 +1,6 @@
 module Matrix exposing
     ( Matrix(..)
+    , RowVector(..)
     , addRealMatrices
     , addComplexMatrices
     , sumRealMatrices
@@ -14,7 +15,6 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , RowVector(..)
     )
 
 {-| A module for Matrix
@@ -23,6 +23,7 @@ module Matrix exposing
 # Types
 
 @docs Matrix
+@docs RowVector
 
 @docs addRealMatrices
 @docs addComplexMatrices
@@ -47,6 +48,8 @@ import Monoid
 import Vector
 
 
+{-| Row Vector
+-}
 type RowVector a
     = RowVector (Vector.Vector a)
 

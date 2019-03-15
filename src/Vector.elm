@@ -11,6 +11,10 @@ module Vector exposing
     , sumComplex
     , apply
     , liftA2
+    , foldl
+    , realVectorDotProduct
+    , complexVectorDotProduct
+    , concat
     )
 
 {-| A module for Vectors
@@ -31,6 +35,10 @@ module Vector exposing
 @docs sumComplex
 @docs apply
 @docs liftA2
+@docs foldl
+@docs realVectorDotProduct
+@docs complexVectorDotProduct
+@docs concat
 
 -}
 
@@ -123,3 +131,33 @@ apply (Vector fVector) (Vector vector) =
 liftA2 : (a -> b -> c) -> Vector a -> Vector b -> Vector c
 liftA2 f a b =
     apply (map f a) b
+
+
+{-| Left fold over a Vector
+-}
+foldl : (a -> b -> b) -> b -> Vector a -> b
+foldl foldFunction acc (Vector list) =
+    List.foldl foldFunction acc list
+
+
+{-| Dot product on two Complex Numbered Vectors
+-}
+complexVectorDotProduct : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> ComplexNumbers.ComplexNumberCartesian number
+complexVectorDotProduct vectorOne vectorTwo =
+    liftA2 ComplexNumbers.multiply vectorOne vectorTwo
+        |> foldl ComplexNumbers.add ComplexNumbers.zero
+
+
+{-| Dot product on two Real Numbered Vectors
+-}
+realVectorDotProduct : Vector number -> Vector number -> number
+realVectorDotProduct vectorOne vectorTwo =
+    liftA2 (*) vectorOne vectorTwo
+        |> foldl (+) 0
+
+
+{-| Concat two Vectors together
+-}
+concat : Vector a -> Vector a -> Vector a
+concat (Vector listOne) (Vector listTwo) =
+    Vector <| listOne ++ listTwo

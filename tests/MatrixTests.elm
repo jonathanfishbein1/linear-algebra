@@ -17,40 +17,42 @@ suite =
             \one two three ->
                 let
                     v =
-                        Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    three
-                                )
-                                (ComplexNumbers.Imaginary
-                                    one
-                                )
-                            , ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    three
-                                )
-                                (ComplexNumbers.Imaginary
-                                    two
-                                )
-                            ]
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        three
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                , ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        three
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
 
                     w =
-                        Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    two
-                                )
-                                (ComplexNumbers.Imaginary
-                                    two
-                                )
-                            , ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    one
-                                )
-                                (ComplexNumbers.Imaginary
-                                    three
-                                )
-                            ]
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        two
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                , ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        three
+                                    )
+                                ]
 
                     m1 =
                         Matrix.Matrix [ v, w ]
@@ -64,58 +66,61 @@ suite =
             \one two three ->
                 let
                     v =
-                        Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    three
-                                )
-                                (ComplexNumbers.Imaginary
-                                    one
-                                )
-                            , ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    three
-                                )
-                                (ComplexNumbers.Imaginary
-                                    two
-                                )
-                            ]
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        three
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                , ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        three
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                ]
 
                     w =
-                        Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    two
-                                )
-                                (ComplexNumbers.Imaginary
-                                    two
-                                )
-                            , ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    one
-                                )
-                                (ComplexNumbers.Imaginary
-                                    three
-                                )
-                            ]
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        two
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                , ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        three
+                                    )
+                                ]
 
                     x =
-                        Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    one
-                                )
-                                (ComplexNumbers.Imaginary
-                                    two
-                                )
-                            , ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    three
-                                )
-                                (ComplexNumbers.Imaginary
-                                    one
-                                )
-                            ]
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        one
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        two
+                                    )
+                                , ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        three
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        one
+                                    )
+                                ]
 
                     m1 =
                         Matrix.Matrix [ v, w, x ]
@@ -141,19 +146,20 @@ suite =
                 let
                     m =
                         Matrix.Matrix <|
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        one
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            one
+                                        )
+                                    ]
                             ]
 
                     sumEmptyComplexMatrix =
-                        Matrix.Matrix [ Vector.Vector [ ComplexNumbers.zero ] ]
+                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero ] ]
                 in
                 Monoid.append (Matrix.sumComplexMatrices sumEmptyComplexMatrix) m (Monoid.empty <| Matrix.sumComplexMatrices sumEmptyComplexMatrix)
                     |> Expect.equal m
@@ -161,19 +167,19 @@ suite =
             \one two three ->
                 let
                     a =
-                        Matrix.Matrix [ Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two) ] ]
+                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two) ] ]
 
                     b =
-                        Matrix.Matrix [ Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three) ] ]
+                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three) ] ]
 
                     c =
-                        Matrix.Matrix [ Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three) ] ]
+                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three) ] ]
 
                     expected =
                         Matrix.addComplexMatrices (Matrix.addComplexMatrices a b) c
 
                     sumEmptyComplexMatrix =
-                        Matrix.Matrix [ Vector.Vector [ ComplexNumbers.zero ] ]
+                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero ] ]
 
                     listOfMonoids =
                         [ a, b, c ]
@@ -185,23 +191,26 @@ suite =
                 let
                     v =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.one
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.one
+                                    ]
                             ]
 
                     w =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.negate ComplexNumbers.one
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.negate ComplexNumbers.one
+                                    ]
                             ]
 
                     zero =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.zero
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.zero
+                                    ]
                             ]
                 in
                 Matrix.addComplexMatrices v w
@@ -220,28 +229,30 @@ suite =
 
                     w =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        two
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        one
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            two
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            one
+                                        )
+                                    ]
                             ]
 
                     v =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        two
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     vPlusW =
@@ -268,15 +279,16 @@ suite =
                 let
                     m =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        two
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     mTransposeTranspose =
@@ -289,28 +301,30 @@ suite =
                 let
                     m1 =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        two
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     m2 =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        two
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        one
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            two
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            one
+                                        )
+                                    ]
                             ]
 
                     m1Plusm2Transpose =
@@ -336,15 +350,16 @@ suite =
 
                     m1 =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        two
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     cAThenTranspose =
@@ -361,15 +376,16 @@ suite =
                 let
                     m =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        two
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     mConjugateConjugate =
@@ -382,28 +398,30 @@ suite =
                 let
                     m1 =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        two
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     m2 =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        two
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        one
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            two
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            one
+                                        )
+                                    ]
                             ]
 
                     m1Plusm2Conjugate =
@@ -432,15 +450,16 @@ suite =
 
                     m1 =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        two
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     cAThenConjugate =
@@ -457,15 +476,16 @@ suite =
                 let
                     m =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        two
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     mAdjoint =
@@ -478,28 +498,30 @@ suite =
                 let
                     m1 =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        two
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     m2 =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        two
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        one
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            two
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            one
+                                        )
+                                    ]
                             ]
 
                     m1Plusm2Adjoint =
@@ -528,15 +550,16 @@ suite =
 
                     m1 =
                         Matrix.Matrix
-                            [ Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        one
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        two
-                                    )
-                                ]
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     cAThenAdjoint =
@@ -548,90 +571,322 @@ suite =
                             |> Matrix.map (ComplexNumbers.multiply cConjugate)
                 in
                 Expect.equal cAThenAdjoint cAdjointOfA
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication is associative" <|
-            \one two three ->
-                let
-                    v1 =
-                        Vector.Vector
-                            [ three
-                            , one
-                            , three
-                            , two
-                            ]
 
-                    v2 =
-                        Vector.Vector
-                            [ one
-                            , three
-                            , three
-                            , two
-                            ]
-
-                    v3 =
-                        Vector.Vector
-                            [ two
-                            , three
-                            , one
-                            , two
-                            ]
-
-                    m1 =
-                        Matrix.Matrix
-                            [ v1 ]
-
-                    m2 =
-                        Matrix.Matrix [ v2 ]
-
-                    m3 =
-                        Matrix.Matrix [ v3 ]
-
-                    m1Timesm2AndThenTimesm3 =
-                        Matrix.multiplyRealMatrices m1 m2
-                            |> Matrix.multiplyRealMatrices m3
-
-                    m2Timesm3AndThenTimesm1 =
-                        Matrix.multiplyRealMatrices m2 m3
-                            |> Matrix.multiplyRealMatrices m1
-
-                    result =
-                        Matrix.equal (Float.Extra.equalWithin 0.000000001) m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
-                in
-                Expect.true "Matrices are equal " result
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests complex Matrix multiplication is associative" <|
-            \one two three ->
-                let
-                    v : Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)
-                    v =
-                        Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    three
-                                )
-                                (ComplexNumbers.Imaginary
-                                    one
-                                )
-                            , ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    three
-                                )
-                                (ComplexNumbers.Imaginary
-                                    two
-                                )
-                            ]
-
-                    m1 : Matrix.Matrix (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))
-                    m1 =
-                        Matrix.Matrix <|
-                            [ v ]
-
-                    m1Plusm2AndThenPlusm3 =
-                        Matrix.multiplyComplexMatrices m1 m1
-                            |> Matrix.multiplyComplexMatrices m1
-
-                    m2Plusm3AndThenm1 =
-                        Matrix.multiplyComplexMatrices m1 m1
-                            |> Matrix.multiplyComplexMatrices m1
-                in
-                m1Plusm2AndThenPlusm3
-                    |> Expect.equal m2Plusm3AndThenm1
+        -- , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication is associative" <|
+        --     \one two three ->
+        --         let
+        --             v1 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ three
+        --                         , one
+        --                         , three
+        --                         , two
+        --                         ]
+        --             v2 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ one
+        --                         , three
+        --                         , three
+        --                         , two
+        --                         ]
+        --             v3 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ two
+        --                         , three
+        --                         , one
+        --                         , two
+        --                         ]
+        --             m1 =
+        --                 Matrix.Matrix
+        --                     [ v1 ]
+        --             m2 =
+        --                 Matrix.Matrix [ v2 ]
+        --             m3 =
+        --                 Matrix.Matrix [ v3 ]
+        --             m1Timesm2AndThenTimesm3 =
+        --                 Matrix.multiplyRealMatrices (Matrix.multiplyRealMatrices m1 m2) m3
+        --             m2Timesm3AndThenTimesm1 : Matrix.Matrix number
+        --             m2Timesm3AndThenTimesm1 =
+        --                 Matrix.multiplyRealMatrices m1 (Matrix.multiplyRealMatrices m2 m3)
+        --         in
+        --         Expect.equal m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
+        -- , Test.test "tests identityMatrix is an identity matrix" <|
+        --     \_ ->
+        --         let
+        --             v1 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ 1
+        --                         , 0
+        --                         , 0
+        --                         ]
+        --             v2 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ 0
+        --                         , 1
+        --                         , 0
+        --                         ]
+        --             v3 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ 0
+        --                         , 0
+        --                         , 1
+        --                         ]
+        --             m1 =
+        --                 Matrix.Matrix
+        --                     [ v1, v2, v3 ]
+        --         in
+        --         Expect.equal (Matrix.identityMatrix 3) m1
+        -- , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests In*A = A" <|
+        --     \one two three ->
+        --         let
+        --             v1 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ three
+        --                         , one
+        --                         , three
+        --                         ]
+        --             v2 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ one
+        --                         , three
+        --                         , three
+        --                         ]
+        --             v3 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ two
+        --                         , three
+        --                         , one
+        --                         ]
+        --             m1 =
+        --                 Matrix.Matrix
+        --                     [ v1, v2, v3 ]
+        --             m1TimeI =
+        --                 Matrix.multiplyRealMatrices m1 (Matrix.identityMatrix 3)
+        --         in
+        --         Expect.equal m1TimeI m1
+        -- , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests A*In = a" <|
+        --     \one two three ->
+        --         let
+        --             v1 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ three
+        --                         , one
+        --                         , three
+        --                         ]
+        --             v2 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ one
+        --                         , three
+        --                         , three
+        --                         ]
+        --             v3 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ two
+        --                         , three
+        --                         , one
+        --                         ]
+        --             m1 =
+        --                 Matrix.Matrix
+        --                     [ v1, v2, v3 ]
+        --             m1TimeI =
+        --                 Matrix.multiplyRealMatrices (Matrix.identityMatrix 3) m1
+        --         in
+        --         Expect.equal m1TimeI m1
+        -- , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition" <|
+        --     \one two three ->
+        --         let
+        --             v1 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ three
+        --                         , one
+        --                         , three
+        --                         , two
+        --                         ]
+        --             v2 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ one
+        --                         , three
+        --                         , three
+        --                         , two
+        --                         ]
+        --             v3 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ two
+        --                         , three
+        --                         , one
+        --                         , two
+        --                         ]
+        --             m1 =
+        --                 Matrix.Matrix
+        --                     [ v1 ]
+        --             m2 =
+        --                 Matrix.Matrix [ v2 ]
+        --             m3 =
+        --                 Matrix.Matrix [ v3 ]
+        --             m1Timesm2Plus3 =
+        --                 Matrix.multiplyRealMatrices m1 (Matrix.addRealMatrices m2 m3)
+        --             m1Timesm2Plusem1Timesm3 =
+        --                 Matrix.addRealMatrices (Matrix.multiplyRealMatrices m1 m2) (Matrix.multiplyRealMatrices m1 m3)
+        --         in
+        --         Expect.equal m1Timesm2Plus3 m1Timesm2Plusem1Timesm3
+        -- , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition second test" <|
+        --     \one two three ->
+        --         let
+        --             v1 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ three
+        --                         , one
+        --                         , three
+        --                         , two
+        --                         ]
+        --             v2 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ one
+        --                         , three
+        --                         , three
+        --                         , two
+        --                         ]
+        --             v3 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ two
+        --                         , three
+        --                         , one
+        --                         , two
+        --                         ]
+        --             m1 =
+        --                 Matrix.Matrix
+        --                     [ v1 ]
+        --             m2 =
+        --                 Matrix.Matrix [ v2 ]
+        --             m3 =
+        --                 Matrix.Matrix [ v3 ]
+        --             m2Plusm3Timesm1 =
+        --                 Matrix.multiplyRealMatrices (Matrix.addRealMatrices m2 m3) m1
+        --             m2Timesm1Plusm3Timesm1 =
+        --                 Matrix.addRealMatrices (Matrix.multiplyRealMatrices m2 m1) (Matrix.multiplyRealMatrices m3 m1)
+        --         in
+        --         Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
+        -- , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication respects scalar multiplication" <|
+        --     \one two three ->
+        --         let
+        --             v1 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ three
+        --                         , one
+        --                         , three
+        --                         , two
+        --                         ]
+        --             v2 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ one
+        --                         , three
+        --                         , three
+        --                         , two
+        --                         ]
+        --             m1 =
+        --                 Matrix.Matrix
+        --                     [ v1 ]
+        --             m2 =
+        --                 Matrix.Matrix [ v2 ]
+        --             cTimesm1Timem2 =
+        --                 Matrix.multiplyRealMatrices m1 m2
+        --                     |> Matrix.map ((*) one)
+        --             cTimesm1ThenTimesm2 =
+        --                 Matrix.multiplyRealMatrices (Matrix.map ((*) one) m1) m2
+        --         in
+        --         Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
+        -- , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication relates to the transpose" <|
+        --     \one two three ->
+        --         let
+        --             v1 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ three, one ]
+        --             v2 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ one, two ]
+        --             a =
+        --                 Matrix.Matrix [ v1 ]
+        --             b =
+        --                 Matrix.Matrix [ v2 ]
+        --             aTimebThenTranspose =
+        --                 Matrix.multiplyRealMatrices a b
+        --                     |> Matrix.transpose
+        --             cTimesm1ThenTimesm2 =
+        --                 Matrix.multiplyRealMatrices (Matrix.transpose b) (Matrix.transpose a)
+        --         in
+        --         Expect.equal aTimebThenTranspose cTimesm1ThenTimesm2
+        -- , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication respects the conjugate" <|
+        --     \one two three ->
+        --         let
+        --             v1 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ three, one ]
+        --             v2 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ one, two ]
+        --             a =
+        --                 Matrix.Matrix [ v1 ]
+        --             b =
+        --                 Matrix.Matrix [ v2 ]
+        --             aTimebThenConjugate : Matrix.Matrix (ComplexNumbers.ComplexNumberCartesian number)
+        --             aTimebThenConjugate =
+        --                 Matrix.multiplyComplexMatrices a b
+        --                     |> Matrix.conjugate
+        --             cTimesm1ThenTimesm2 : Matrix.Matrix (ComplexNumbers.ComplexNumberCartesian number)
+        --             cTimesm1ThenTimesm2 =
+        --                 Matrix.multiplyComplexMatrices (Matrix.conjugate a) (Matrix.conjugate b)
+        --             result =
+        --                 Matrix.equal ComplexNumbers.equal aTimebThenConjugate cTimesm1ThenTimesm2
+        --         in
+        --         Expect.true "AB conjugate equals A conjugate time B conjugate" result
+        -- , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication relates to the adjoin" <|
+        --     \one two three ->
+        --         let
+        --             v1 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ three, one ]
+        --             v2 =
+        --                 Matrix.RowVector <|
+        --                     Vector.Vector
+        --                         [ one, two ]
+        --             a =
+        --                 Matrix.Matrix [ v1 ]
+        --             b =
+        --                 Matrix.Matrix [ v2 ]
+        --             aTimebThenAdjoint : Matrix.Matrix (ComplexNumbers.ComplexNumberCartesian number)
+        --             aTimebThenAdjoint =
+        --                 Matrix.multiplyComplexMatrices a b
+        --                     |> Matrix.adjoint
+        --             bAdjointTimesAAdjoint : Matrix.Matrix (ComplexNumbers.ComplexNumberCartesian number)
+        --             bAdjointTimesAAdjoint =
+        --                 Matrix.multiplyComplexMatrices (Matrix.adjoint a) (Matrix.adjoint b)
+        --             result =
+        --                 Matrix.equal ComplexNumbers.equal aTimebThenAdjoint bAdjointTimesAAdjoint
+        --         in
+        --         Expect.true "AB adjoint equals A conjugate time B adjoint" result
         ]

@@ -13,7 +13,8 @@ module Matrix exposing
     , liftA2
     , multiplyComplexMatrices
     , multiplyRealMatrices
-    , RowVector(..), identityMatrix
+    , identityMatrix
+    , RowVector(..)
     )
 
 {-| A module for Matrix
@@ -36,6 +37,7 @@ module Matrix exposing
 @docs liftA2
 @docs multiplyComplexMatrices
 @docs multiplyRealMatrices
+@docs identityMatrix
 
 -}
 
@@ -141,9 +143,9 @@ liftA2 f a b =
 
 {-| Matrix Matrix multiplication for a Complex Numbered Matrix
 -}
-multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+multiplyComplexMatrices : Matrix (a -> b) -> Matrix a -> Matrix b
 multiplyComplexMatrices matrixOne matrixTwo =
-    smartMapComplexMatrix2 matrixOne (transpose matrixTwo) (transpose matrixTwo) [] (Matrix [])
+    smartMapMatrix2Generic (transpose matrixTwo) (Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
 
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
@@ -162,6 +164,8 @@ diagonal columnIndex rowIndex =
         0
 
 
+{-| Create Identity Matrix with n dimension
+-}
 identityMatrix : Int -> Matrix Int
 identityMatrix dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (diagonal columnIndex)))
@@ -185,19 +189,6 @@ smartMapMatrix2Generic (Matrix currentRight) intermediateList (Matrix acc) (Matr
 
         ( _ :: ls, [] ) ->
             smartMapMatrix2Generic (Matrix right) (Vector.Vector []) (Matrix (acc ++ [ RowVector intermediateList ])) (Matrix ls) (Matrix right)
-
-        ( [], _ ) ->
-            Matrix acc
-
-
-smartMapComplexMatrix2 : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> List (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-smartMapComplexMatrix2 (Matrix left) (Matrix right) (Matrix currentRight) intermediateList (Matrix acc) =
-    case ( left, currentRight ) of
-        ( (RowVector l) :: _, (RowVector r) :: rs ) ->
-            smartMapComplexMatrix2 (Matrix left) (Matrix right) (Matrix rs) (intermediateList ++ [ Vector.complexVectorDotProduct l r ]) (Matrix acc)
-
-        ( _ :: ls, [] ) ->
-            smartMapComplexMatrix2 (Matrix ls) (Matrix right) (Matrix right) [] (Matrix (acc ++ [ RowVector <| Vector.Vector intermediateList ]))
 
         ( [], _ ) ->
             Matrix acc

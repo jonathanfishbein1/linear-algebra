@@ -197,7 +197,7 @@ smartMapMatrix2Generic (Matrix currentRight) intermediateList (Matrix acc) (Matr
             Matrix acc
 
 
-{-| Matrix Matrix multiplication for a Real Numbered Matrix
+{-| Multiply a Vector by a Matrix
 -}
 multiplyRealVectorRealMatrix : Matrix Int -> Vector.Vector Int -> Matrix number
 multiplyRealVectorRealMatrix matrix vector =

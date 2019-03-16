@@ -195,3 +195,10 @@ smartMapMatrix2Generic (Matrix currentRight) intermediateList (Matrix acc) (Matr
 
         ( [], _ ) ->
             Matrix acc
+
+
+{-| Matrix Matrix multiplication for a Real Numbered Matrix
+-}
+multiplyRealVectorRealMatrix : Matrix Int -> Vector.Vector Int -> Matrix number
+multiplyRealVectorRealMatrix matrix vector =
+    smartMapMatrix2Generic matrix (Vector.Vector []) (Matrix []) (map diagonal matrix) (Matrix <| [ RowVector vector ])

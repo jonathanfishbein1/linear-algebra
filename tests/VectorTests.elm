@@ -395,4 +395,21 @@ suite =
                 in
                 aPlusBDotc
                     |> Expect.equal aDotBPlusbDotC
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  "tests dot product respects scalar multiplication" <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    threeTimesADotB =
+                        Vector.realVectorDotProduct (Vector.map ((*)three) a) b
+
+                    aDotBTimesThree = (Vector.realVectorDotProduct a b) * three
+
+                in
+                threeTimesADotB
+                    |> Expect.equal aDotBTimesThree
         ]

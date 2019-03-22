@@ -360,4 +360,73 @@ suite =
                 in
                 Monoid.concat (Vector.sumComplex [ ComplexNumbers.zero ]) listOfMonoids
                     |> Expect.equal expected
+        , Test.fuzz Fuzz.int "tests dot product is nondegenerative" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    expected =
+                        Vector.realVectorDotProduct a a
+
+                in
+                expected
+                    |> Expect.atLeast 0
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  "tests dot product respects addition" <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    c =
+                        Vector.Vector [ three ]
+
+                    aPlusBDotc =
+                        Vector.realVectorDotProduct (Vector.addRealVectors a b) c
+                    aDotB = Vector.realVectorDotProduct a c
+
+                    bDotC = Vector.realVectorDotProduct b c
+
+                    aDotBPlusbDotC = aDotB + bDotC
+
+                in
+                aPlusBDotc
+                    |> Expect.equal aDotBPlusbDotC
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  "tests dot product respects scalar multiplication" <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    threeTimesADotB =
+                        Vector.realVectorDotProduct (Vector.map ((*)three) a) b
+
+                    aDotBTimesThree = (Vector.realVectorDotProduct a b) * three
+
+                in
+                threeTimesADotB
+                    |> Expect.equal aDotBTimesThree
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))   "tests dot product is symetric" <|
+            \one two  ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    aDotB =
+                        Vector.realVectorDotProduct a b
+
+                    bDotA = Vector.realVectorDotProduct b a
+
+                in
+                aDotB
+                    |> Expect.equal bDotA
         ]

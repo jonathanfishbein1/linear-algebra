@@ -372,4 +372,27 @@ suite =
                 in
                 expected
                     |> Expect.atLeast 0
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  "tests dot product respects addition" <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    c =
+                        Vector.Vector [ three ]
+
+                    aPlusBDotc =
+                        Vector.realVectorDotProduct (Vector.addRealVectors a b) c
+                    aDotB = Vector.realVectorDotProduct a c
+
+                    bDotC = Vector.realVectorDotProduct b c
+
+                    aDotBPlusbDotC = aDotB + bDotC
+
+                in
+                aPlusBDotc
+                    |> Expect.equal aDotBPlusbDotC
         ]

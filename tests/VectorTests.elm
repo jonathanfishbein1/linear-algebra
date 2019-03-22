@@ -412,4 +412,21 @@ suite =
                 in
                 threeTimesADotB
                     |> Expect.equal aDotBTimesThree
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))   "tests dot product is symetric" <|
+            \one two  ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    aDotB =
+                        Vector.realVectorDotProduct a b
+
+                    bDotA = Vector.realVectorDotProduct b a
+
+                in
+                aDotB
+                    |> Expect.equal bDotA
         ]

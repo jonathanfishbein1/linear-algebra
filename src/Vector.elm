@@ -15,6 +15,7 @@ module Vector exposing
     , realVectorDotProduct
     , complexVectorDotProduct
     , concat
+    , realLength
     )
 
 {-| A module for Vectors
@@ -161,3 +162,8 @@ realVectorDotProduct vectorOne vectorTwo =
 concat : Vector a -> Vector a -> Vector a
 concat (Vector listOne) (Vector listTwo) =
     Vector <| listOne ++ listTwo
+
+
+realLength : Vector number -> number
+realLength =
+    foldl (\x acc -> x ^ 2 + acc) 0

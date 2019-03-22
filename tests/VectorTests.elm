@@ -360,4 +360,16 @@ suite =
                 in
                 Monoid.concat (Vector.sumComplex [ ComplexNumbers.zero ]) listOfMonoids
                     |> Expect.equal expected
+        , Test.fuzz Fuzz.int "tests dot product is nondegenerative" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    expected =
+                        Vector.realVectorDotProduct a a
+
+                in
+                expected
+                    |> Expect.atLeast 0
         ]

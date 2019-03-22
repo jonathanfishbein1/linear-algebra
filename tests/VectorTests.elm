@@ -368,11 +368,10 @@ suite =
 
                     expected =
                         Vector.realVectorDotProduct a a
-
                 in
                 expected
                     |> Expect.atLeast 0
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  "tests dot product respects addition" <|
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests dot product respects addition" <|
             \one two three ->
                 let
                     a =
@@ -386,16 +385,19 @@ suite =
 
                     aPlusBDotc =
                         Vector.realVectorDotProduct (Vector.addRealVectors a b) c
-                    aDotB = Vector.realVectorDotProduct a c
 
-                    bDotC = Vector.realVectorDotProduct b c
+                    aDotB =
+                        Vector.realVectorDotProduct a c
 
-                    aDotBPlusbDotC = aDotB + bDotC
+                    bDotC =
+                        Vector.realVectorDotProduct b c
 
+                    aDotBPlusbDotC =
+                        aDotB + bDotC
                 in
                 aPlusBDotc
                     |> Expect.equal aDotBPlusbDotC
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))  "tests dot product respects scalar multiplication" <|
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests dot product respects scalar multiplication" <|
             \one two three ->
                 let
                     a =
@@ -405,15 +407,15 @@ suite =
                         Vector.Vector [ two ]
 
                     threeTimesADotB =
-                        Vector.realVectorDotProduct (Vector.map ((*)three) a) b
+                        Vector.realVectorDotProduct (Vector.map ((*) three) a) b
 
-                    aDotBTimesThree = (Vector.realVectorDotProduct a b) * three
-
+                    aDotBTimesThree =
+                        Vector.realVectorDotProduct a b * three
                 in
                 threeTimesADotB
                     |> Expect.equal aDotBTimesThree
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10))  (Fuzz.map toFloat (Fuzz.intRange -10 10))   "tests dot product is symetric" <|
-            \one two  ->
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests dot product is symetric" <|
+            \one two ->
                 let
                     a =
                         Vector.Vector [ one ]
@@ -424,9 +426,23 @@ suite =
                     aDotB =
                         Vector.realVectorDotProduct a b
 
-                    bDotA = Vector.realVectorDotProduct b a
-
+                    bDotA =
+                        Vector.realVectorDotProduct b a
                 in
                 aDotB
                     |> Expect.equal bDotA
+        , Test.fuzz (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector length equals square of dot product" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    squareRootADotA =
+                        Basics.sqrt (Vector.realVectorDotProduct a a)
+
+                    aLength =
+                        Vector.realLength a
+                in
+                squareRootADotA
+                    |> Expect.equal aLength
         ]

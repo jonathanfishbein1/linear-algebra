@@ -164,6 +164,7 @@ concat (Vector listOne) (Vector listTwo) =
     Vector <| listOne ++ listTwo
 
 
-realLength : Vector number -> number
+realLength : Vector Float -> Float
 realLength =
     foldl (\x acc -> x ^ 2 + acc) 0
+        >> Basics.sqrt

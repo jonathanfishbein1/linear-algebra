@@ -487,4 +487,55 @@ suite =
                 in
                 legnthOfTwoTimesA
                     |> Expect.within (Expect.Absolute 0.1) lengthOfATimesTwo
+        , Test.fuzz Fuzz.float "tests distance is nondegenerative" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    expected =
+                        Vector.distance a a
+                in
+                expected
+                    |> Expect.atLeast 0
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector distance satisfies triangle inequality" <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    c =
+                        Vector.Vector [ three ]
+
+                    distanceAB =
+                        Vector.distance a b
+
+                    distanceAC =
+                        Vector.distance a c
+
+                    distanceCB =
+                        Vector.distance c b
+                in
+                distanceAB
+                    |> Expect.atMost (distanceAC + distanceCB)
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests distance is symetric" <|
+            \one two ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    distanceAB =
+                        Vector.realVectorDotProduct a b
+
+                    distanceBA =
+                        Vector.realVectorDotProduct b a
+                in
+                distanceAB
+                    |> Expect.equal distanceBA
         ]

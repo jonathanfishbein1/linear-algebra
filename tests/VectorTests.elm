@@ -456,4 +456,21 @@ suite =
                 in
                 expected
                     |> Expect.atLeast 0
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector length satisfies triangle inequality" <|
+            \one two ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    aPlusBLength =
+                        Vector.realLength <| Vector.addRealVectors a b
+
+                    lengthAPlusLengthB =
+                        Vector.realLength a + Vector.realLength b
+                in
+                aPlusBLength
+                    |> Expect.atMost lengthAPlusLengthB
         ]

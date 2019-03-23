@@ -473,4 +473,18 @@ suite =
                 in
                 aPlusBLength
                     |> Expect.atMost lengthAPlusLengthB
+        , Test.fuzz2 (Fuzz.floatRange -10 10) (Fuzz.floatRange -10 10) "tests vector length respects scalar multiplication" <|
+            \one two ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    legnthOfTwoTimesA =
+                        Vector.realLength (Vector.map ((*) two) a)
+
+                    lengthOfATimesTwo =
+                        Basics.abs two * Vector.realLength a
+                in
+                legnthOfTwoTimesA
+                    |> Expect.within (Expect.Absolute 0.1) lengthOfATimesTwo
         ]

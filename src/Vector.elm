@@ -15,6 +15,7 @@ module Vector exposing
     , realVectorDotProduct
     , complexVectorDotProduct
     , concat
+    , complexVectorLength, realLength
     )
 
 {-| A module for Vectors
@@ -161,3 +162,18 @@ realVectorDotProduct vectorOne vectorTwo =
 concat : Vector a -> Vector a -> Vector a
 concat (Vector listOne) (Vector listTwo) =
     Vector <| listOne ++ listTwo
+
+
+realLength : Vector Float -> Float
+realLength =
+    foldl (\x acc -> x ^ 2 + acc) 0
+        >> Basics.sqrt
+
+
+complexVectorLength : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
+complexVectorLength complexNumbers =
+    let
+        complexNumbersPolar =
+            map ComplexNumbers.convertFromCartesianToPolar complexNumbers
+    in
+    foldl (\x acc -> ComplexNumbers.add (ComplexNumbers.power 2 x |> ComplexNumbers.convertFromPolarToCartesian) acc) ComplexNumbers.zero complexNumbersPolar

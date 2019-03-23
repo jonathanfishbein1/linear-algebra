@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , isSymmetric
+    , isHermitian, isSymmetric
     )
 
 {-| A module for Matrix
@@ -208,3 +208,8 @@ multiplyRealVectorRealMatrix matrix vector =
 isSymmetric : Matrix a -> Bool
 isSymmetric matrix =
     transpose matrix == matrix
+
+
+isHermitian : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Bool
+isHermitian matrix =
+    adjoint matrix == matrix

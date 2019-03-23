@@ -445,4 +445,15 @@ suite =
                 in
                 squareRootADotA
                     |> Expect.equal aLength
+        , Test.fuzz Fuzz.float "tests vector length is nondegenerative" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    expected =
+                        Vector.realLength a
+                in
+                expected
+                    |> Expect.atLeast 0
         ]

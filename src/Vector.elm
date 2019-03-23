@@ -177,3 +177,16 @@ complexVectorLength complexNumbers =
             map ComplexNumbers.convertFromCartesianToPolar complexNumbers
     in
     foldl (\x acc -> ComplexNumbers.add (ComplexNumbers.power 2 x |> ComplexNumbers.convertFromPolarToCartesian) acc) ComplexNumbers.zero complexNumbersPolar
+
+
+{-| Subtract Real Vectors together
+-}
+subtractRealVectors : Vector number -> Vector number -> Vector number
+subtractRealVectors =
+    liftA2 (-)
+
+
+distance : Vector Float -> Vector Float -> Float
+distance vectorOne vectorTwo =
+    subtractRealVectors vectorOne vectorTwo
+        |> realLength

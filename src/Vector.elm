@@ -15,7 +15,7 @@ module Vector exposing
     , realVectorDotProduct
     , complexVectorDotProduct
     , concat
-    , complexVectorLength, realLength
+    , complexVectorLength, distance, realLength, subtractRealVectors
     )
 
 {-| A module for Vectors

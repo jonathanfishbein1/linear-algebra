@@ -15,7 +15,7 @@ module Vector exposing
     , realVectorDotProduct
     , complexVectorDotProduct
     , concat
-    , complexVectorLength, distance, realLength, subtractRealVectors
+    , complexVectorLength, cross, distance, realLength, subtractRealVectors
     )
 
 {-| A module for Vectors
@@ -51,6 +51,10 @@ import Monoid
 -}
 type Vector a
     = Vector (List a)
+
+
+type Vector3 a
+    = Vector3 a a a
 
 
 {-| Add Complex Vectors together
@@ -190,3 +194,13 @@ distance : Vector Float -> Vector Float -> Float
 distance vectorOne vectorTwo =
     subtractRealVectors vectorOne vectorTwo
         |> realLength
+
+
+{-| Take the cross product of two 3D vectors
+-}
+cross : Vector3 number -> Vector3 number -> Vector3 number
+cross (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
+    Vector3
+        (y1 * z2 - y2 * z1)
+        (z1 * x2 - z2 * x1)
+        (x1 * y2 - x2 * y1)

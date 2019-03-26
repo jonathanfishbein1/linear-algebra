@@ -15,7 +15,7 @@ module Vector exposing
     , realVectorDotProduct
     , complexVectorDotProduct
     , concat
-    , complexVectorLength, cross, distance, realLength, subtractRealVectors
+    , complexVectorLength, cross, distance, normalise, realLength, subtractRealVectors
     )
 
 {-| A module for Vectors
@@ -204,3 +204,10 @@ cross (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
         (y1 * z2 - y2 * z1)
         (z1 * x2 - z2 * x1)
         (x1 * y2 - x2 * y1)
+
+
+{-| Adjust a vector so that its length is exactly one
+-}
+normalise : Vector Float -> Vector Float
+normalise v =
+    map ((*) (1 / realLength v)) v

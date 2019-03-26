@@ -53,6 +53,10 @@ type Vector a
     = Vector (List a)
 
 
+type Vector3 a
+    = Vector3 a a a
+
+
 {-| Add Complex Vectors together
 -}
 addComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number)

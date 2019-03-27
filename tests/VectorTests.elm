@@ -556,4 +556,16 @@ suite =
                 in
                 aDotACrossB
                     |> Expect.equal 0
+        , Test.fuzz (Fuzz.map toFloat (Fuzz.intRange 1 10)) "tests unit vector length is 1" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    normalisedALength =
+                        Vector.normalise a
+                            |> Vector.realLength
+                in
+                normalisedALength
+                    |> Expect.equal 1
         ]

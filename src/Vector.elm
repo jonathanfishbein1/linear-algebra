@@ -44,6 +44,7 @@ module Vector exposing
 -}
 
 import ComplexNumbers
+import Float.Extra
 import Monoid
 
 
@@ -215,4 +216,8 @@ vector3ToVector (Vector3 x y z) =
 -}
 normalise : Vector Float -> Vector Float
 normalise v =
-    map ((*) (1 / realLength v)) v
+    if Float.Extra.equalWithin 0.000000001 (realLength v) 0.0 then
+        v
+
+    else
+        map ((/) (realLength v)) v

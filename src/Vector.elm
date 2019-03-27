@@ -15,7 +15,7 @@ module Vector exposing
     , realVectorDotProduct
     , complexVectorDotProduct
     , concat
-    , complexVectorLength, cross, distance, normalise, realLength, subtractRealVectors
+    , Vector3(..), complexVectorLength, cross, distance, normalise, realLength, subtractRealVectors, vector3ToVector
     )
 
 {-| A module for Vectors
@@ -204,6 +204,11 @@ cross (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
         (y1 * z2 - y2 * z1)
         (z1 * x2 - z2 * x1)
         (x1 * y2 - x2 * y1)
+
+
+vector3ToVector : Vector3 number -> Vector number
+vector3ToVector (Vector3 x y z) =
+    Vector [ x, y, z ]
 
 
 {-| Adjust a vector so that its length is exactly one

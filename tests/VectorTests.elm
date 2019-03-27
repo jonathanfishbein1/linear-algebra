@@ -538,4 +538,22 @@ suite =
                 in
                 distanceAB
                     |> Expect.equal distanceBA
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests cross product is orthagonal to both vectors" <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector3 one two three
+
+                    b =
+                        Vector.Vector3 two three one
+
+                    aCrossB =
+                        Vector.cross a b
+                            |> Vector.vector3ToVector
+
+                    aDotACrossB =
+                        Vector.realVectorDotProduct (Vector.vector3ToVector a) aCrossB
+                in
+                aDotACrossB
+                    |> Expect.equal 0
         ]

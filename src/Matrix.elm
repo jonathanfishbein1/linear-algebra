@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , isHermitian, isSymmetric
+    , isHermitian, isSymmetric, swap
     )
 
 {-| A module for Matrix

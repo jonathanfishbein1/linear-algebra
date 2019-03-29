@@ -250,11 +250,11 @@ findPivot (Matrix matrix) initialRowIndex =
         findRow x =
             Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt x matrix)
 
-        findPivotValue nextDiagonalIndex rowIndex =
+        findPivotValue nextDiagonalIndex currentRowIndexIteration =
             let
-                (RowVector (Vector.Vector row)) =
-                    findRow rowIndex
+                (RowVector (Vector.Vector currentRowIteration)) =
+                    findRow currentRowIndexIteration
             in
-            Maybe.withDefault 0 (List.Extra.getAt nextDiagonalIndex row)
+            Maybe.withDefault 0 (List.Extra.getAt nextDiagonalIndex currentRowIteration)
     in
     List.head <| List.filter (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))

@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot, isHermitian, isSymmetric, swap
+    , findPivot, isHermitian, isSymmetric, subrow, swap
     )
 
 {-| A module for Matrix
@@ -268,3 +268,14 @@ scale rowIndex (RowVector (Vector.Vector rowVector)) =
 
         x :: xs ->
             RowVector <| Vector.map (\rowElement -> rowElement / x) (Vector.Vector <| x :: xs)
+
+
+subrow : RowVector Float -> RowVector Float -> Int -> RowVector Float
+subrow (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRow)) r =
+    let
+        k =
+            Maybe.withDefault 1 (List.Extra.getAt r nextRow)
+    in
+    List.map2 (\a b -> k * a - b) currentRow nextRow
+        |> Vector.Vector
+        |> RowVector

@@ -281,8 +281,8 @@ subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRo
         |> RowVector
 
 
-reduceRow : Matrix Float -> Int -> Matrix Float
-reduceRow matrix rowIndex =
+reduceRow : Int -> Matrix Float -> Matrix Float
+reduceRow rowIndex matrix =
     let
         firstPivot =
             Maybe.withDefault 0 (findPivot matrix rowIndex)
@@ -307,3 +307,8 @@ reduceRow matrix rowIndex =
         ++ [ scaledRow ]
         ++ nextRows
         |> Matrix
+
+
+gaussianReduce : Matrix Float -> Matrix Float
+gaussianReduce (Matrix matrix) =
+    List.foldl reduceRow (Matrix matrix) (List.range 0 (List.length matrix - 1))

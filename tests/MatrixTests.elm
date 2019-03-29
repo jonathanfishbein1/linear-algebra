@@ -1029,4 +1029,34 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix nextrows has zero under pivot entry" <|
+            \one two ->
+                let
+                    currentRow =
+                        Matrix.RowVector <| Vector.Vector [ one, two ]
+
+                    nextRow =
+                        Matrix.RowVector <| Vector.Vector [ two, two ]
+
+                    matrix =
+                        Matrix.Matrix
+                            [ currentRow
+                            , nextRow
+                            ]
+
+                    (Matrix.Matrix listOfRowVectors) =
+                        Matrix.nextrows 0 (Matrix.scale currentRow) matrix
+
+                    (Matrix.RowVector (Vector.Vector secondRow)) =
+                        Maybe.withDefault (Matrix.RowVector <| Vector.Vector []) (List.Extra.getAt 0 listOfRowVectors)
+
+                    firstElementSecondRow =
+                        List.Extra.getAt 0 secondRow
+                in
+                case firstElementSecondRow of
+                    Just element ->
+                        Expect.within (Expect.Absolute 0.000000001) element 0
+
+                    Nothing ->
+                        Expect.fail "error"
         ]

@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot, isHermitian, isSymmetric, scale, subrow, swap
+    , findPivot, isHermitian, isSymmetric, nextrows, scale, subrow, swap
     )
 
 {-| A module for Matrix

@@ -4,6 +4,7 @@ import ComplexNumbers
 import Expect
 import Float.Extra
 import Fuzz
+import List.Extra
 import Matrix
 import Monoid
 import Test
@@ -968,6 +969,42 @@ suite =
                 case pivotLocation of
                     Just location ->
                         Expect.equal location 2
+
+                    Nothing ->
+                        Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales first element to one" <|
+            \one two ->
+                let
+                    row =
+                        Matrix.RowVector <| Vector.Vector [ one, two ]
+
+                    (Matrix.RowVector (Vector.Vector scaledRow)) =
+                        Matrix.scale row
+
+                    firstElement =
+                        List.Extra.getAt 0 scaledRow
+                in
+                case firstElement of
+                    Just element ->
+                        Expect.equal element 1
+
+                    Nothing ->
+                        Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales second element by first" <|
+            \one two ->
+                let
+                    row =
+                        Matrix.RowVector <| Vector.Vector [ one, two ]
+
+                    (Matrix.RowVector (Vector.Vector scaledRow)) =
+                        Matrix.scale row
+
+                    secondElement =
+                        List.Extra.getAt 1 scaledRow
+                in
+                case secondElement of
+                    Just element ->
+                        Expect.within (Expect.Absolute 0.000000001) element (two / one)
 
                     Nothing ->
                         Expect.fail "error"

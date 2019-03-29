@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot, isHermitian, isSymmetric, subrow, swap
+    , findPivot, isHermitian, isSymmetric, scale, subrow, swap
     )
 
 {-| A module for Matrix
@@ -260,8 +260,8 @@ findPivot (Matrix matrix) initialRowIndex =
     List.head <| List.filter (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))
 
 
-scale : Int -> RowVector Float -> RowVector Float
-scale rowIndex (RowVector (Vector.Vector rowVector)) =
+scale : RowVector Float -> RowVector Float
+scale (RowVector (Vector.Vector rowVector)) =
     case rowVector of
         [] ->
             RowVector <| Vector.Vector []

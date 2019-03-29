@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , isHermitian, isSymmetric, swap
+    , findPivot, isHermitian, isSymmetric, swap
     )
 
 {-| A module for Matrix
@@ -242,3 +242,19 @@ swap (Matrix matrix) rowIndexOne rowIndexTwo =
 
         ( [], _, _ ) ->
             Matrix matrix
+
+
+findPivot : Matrix number -> Int -> Maybe Int
+findPivot (Matrix matrix) initialRowIndex =
+    let
+        findRow x =
+            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt x matrix)
+
+        findPivotValue nextDiagonalIndex rowIndex =
+            let
+                (RowVector (Vector.Vector row)) =
+                    findRow rowIndex
+            in
+            Maybe.withDefault 0 (List.Extra.getAt nextDiagonalIndex row)
+    in
+    List.head <| List.filter (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))

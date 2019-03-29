@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot, isHermitian, isSymmetric, nextrows, scale, subrow, swap
+    , findPivot, isHermitian, isSymmetric, scale, subrow, swap
     )
 
 {-| A module for Matrix
@@ -281,8 +281,29 @@ subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRo
         |> RowVector
 
 
-nextrows : Int -> RowVector Float -> Matrix Float -> Matrix Float
-nextrows r currentRow (Matrix matrix) =
-    List.drop (r + 1) matrix
-        |> List.map (subrow r currentRow)
+reduceRow : Matrix Float -> Int -> Matrix Float
+reduceRow matrix rowIndex =
+    let
+        firstPivot =
+            Maybe.withDefault 0 (findPivot matrix rowIndex)
+
+        (Matrix swappedListOfRowVectors) =
+            swap matrix rowIndex firstPivot
+
+        (Matrix listOfRowVectors) =
+            matrix
+
+        row =
+            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
+
+        scaledRow =
+            scale row
+
+        nextRows =
+            List.drop (rowIndex + 1) listOfRowVectors
+                |> List.map (subrow rowIndex row)
+    in
+    List.take rowIndex swappedListOfRowVectors
+        ++ [ scaledRow ]
+        ++ nextRows
         |> Matrix

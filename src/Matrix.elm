@@ -258,3 +258,13 @@ findPivot (Matrix matrix) initialRowIndex =
             Maybe.withDefault 0 (List.Extra.getAt nextDiagonalIndex currentRowIteration)
     in
     List.head <| List.filter (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))
+
+
+scale : Int -> RowVector Float -> RowVector Float
+scale rowIndex (RowVector (Vector.Vector rowVector)) =
+    case rowVector of
+        [] ->
+            RowVector <| Vector.Vector []
+
+        x :: xs ->
+            RowVector <| Vector.map (\rowElement -> rowElement / x) (Vector.Vector <| x :: xs)

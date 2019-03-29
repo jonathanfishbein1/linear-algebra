@@ -270,8 +270,8 @@ scale (RowVector (Vector.Vector rowVector)) =
             RowVector <| Vector.map (\rowElement -> rowElement / x) (Vector.Vector <| x :: xs)
 
 
-subrow : RowVector Float -> RowVector Float -> Int -> RowVector Float
-subrow (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRow)) r =
+subrow : Int -> RowVector Float -> RowVector Float -> RowVector Float
+subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRow)) =
     let
         k =
             Maybe.withDefault 1 (List.Extra.getAt r nextRow)
@@ -279,3 +279,10 @@ subrow (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRow)
     List.map2 (\a b -> k * a - b) currentRow nextRow
         |> Vector.Vector
         |> RowVector
+
+
+nextrows : Int -> RowVector Float -> Matrix Float -> Matrix Float
+nextrows r currentRow (Matrix matrix) =
+    List.drop (r + 1) matrix
+        |> List.map (subrow r currentRow)
+        |> Matrix

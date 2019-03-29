@@ -1018,7 +1018,7 @@ suite =
                         Matrix.RowVector <| Vector.Vector [ two, two ]
 
                     (Matrix.RowVector (Vector.Vector subRow)) =
-                        Matrix.subrow (Matrix.scale currentRow) nextRow 0
+                        Matrix.subrow 0 (Matrix.scale currentRow) nextRow
 
                     firstElementSecondRow =
                         List.Extra.getAt 0 subRow

@@ -979,7 +979,7 @@ suite =
                         Matrix.RowVector <| Vector.Vector [ one, two ]
 
                     (Matrix.RowVector (Vector.Vector scaledRow)) =
-                        Matrix.scale row
+                        Matrix.scale 0 row
 
                     firstElement =
                         List.Extra.getAt 0 scaledRow
@@ -997,7 +997,7 @@ suite =
                         Matrix.RowVector <| Vector.Vector [ one, two ]
 
                     (Matrix.RowVector (Vector.Vector scaledRow)) =
-                        Matrix.scale row
+                        Matrix.scale 0 row
 
                     secondElement =
                         List.Extra.getAt 1 scaledRow
@@ -1018,7 +1018,7 @@ suite =
                         Matrix.RowVector <| Vector.Vector [ two, two ]
 
                     (Matrix.RowVector (Vector.Vector subRow)) =
-                        Matrix.subrow 0 (Matrix.scale currentRow) nextRow
+                        Matrix.subrow 0 (Matrix.scale 0 currentRow) nextRow
 
                     firstElementSecondRow =
                         List.Extra.getAt 0 subRow

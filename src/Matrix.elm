@@ -260,14 +260,18 @@ findPivot (Matrix matrix) initialRowIndex =
     List.head <| List.filter (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))
 
 
-scale : RowVector Float -> RowVector Float
-scale (RowVector (Vector.Vector rowVector)) =
+scale : Int -> RowVector Float -> RowVector Float
+scale rowIndex (RowVector (Vector.Vector rowVector)) =
     case rowVector of
         [] ->
             RowVector <| Vector.Vector []
 
         x :: xs ->
-            RowVector <| Vector.map (\rowElement -> rowElement / x) (Vector.Vector <| x :: xs)
+            let
+                elementAtRowIndex =
+                    Maybe.withDefault 1 (List.Extra.getAt rowIndex (x :: xs))
+            in
+            RowVector <| Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector <| x :: xs)
 
 
 subrow : Int -> RowVector Float -> RowVector Float -> RowVector Float
@@ -297,7 +301,7 @@ reduceRow rowIndex matrix =
             Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
 
         scaledRow =
-            scale row
+            scale rowIndex row
 
         nextRows =
             List.drop (rowIndex + 1) listOfRowVectors

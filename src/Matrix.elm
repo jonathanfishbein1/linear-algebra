@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot, isHermitian, isSymmetric, scale, subrow, swap
+    , findPivot, gaussianReduce, isHermitian, isSymmetric, scale, subrow, swap
     )
 
 {-| A module for Matrix
@@ -291,7 +291,7 @@ reduceRow rowIndex matrix =
             swap matrix rowIndex firstPivot
 
         (Matrix listOfRowVectors) =
-            matrix
+            Matrix swappedListOfRowVectors
 
         row =
             Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)

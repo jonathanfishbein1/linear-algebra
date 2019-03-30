@@ -1029,34 +1029,25 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix nextrows has zero under pivot entry" <|
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix gaussianReduce put matrix into Row Echelon Form" <|
             \one two ->
                 let
-                    currentRow =
-                        Matrix.RowVector <| Vector.Vector [ one, two ]
-
-                    nextRow =
-                        Matrix.RowVector <| Vector.Vector [ two, two ]
-
                     matrix =
                         Matrix.Matrix
-                            [ currentRow
-                            , nextRow
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1, -4 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
+                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
                             ]
 
-                    (Matrix.Matrix listOfRowVectors) =
-                        Matrix.nextrows 0 (Matrix.scale currentRow) matrix
+                    rowEchelonFormMatrix =
+                        Matrix.gaussianReduce matrix
 
-                    (Matrix.RowVector (Vector.Vector secondRow)) =
-                        Maybe.withDefault (Matrix.RowVector <| Vector.Vector []) (List.Extra.getAt 0 listOfRowVectors)
-
-                    firstElementSecondRow =
-                        List.Extra.getAt 0 secondRow
+                    expected =
+                        Matrix.Matrix <|
+                            [ Matrix.RowVector <| Vector.Vector [ 1.0, 2.0, -1.0, -4.0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, -1.0, 3.0 ]
+                            , Matrix.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
+                            ]
                 in
-                case firstElementSecondRow of
-                    Just element ->
-                        Expect.within (Expect.Absolute 0.000000001) element 0
-
-                    Nothing ->
-                        Expect.fail "error"
+                Expect.equal rowEchelonFormMatrix expected
         ]

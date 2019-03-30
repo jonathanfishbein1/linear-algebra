@@ -285,7 +285,7 @@ reduceRow : Int -> Matrix Float -> Matrix Float
 reduceRow rowIndex matrix =
     let
         firstPivot =
-            Maybe.withDefault 0 (findPivot matrix rowIndex)
+            Maybe.withDefault rowIndex (findPivot matrix rowIndex)
 
         (Matrix swappedListOfRowVectors) =
             swap matrix rowIndex firstPivot
@@ -301,7 +301,7 @@ reduceRow rowIndex matrix =
 
         nextRows =
             List.drop (rowIndex + 1) listOfRowVectors
-                |> List.map (subrow rowIndex row)
+                |> List.map (subrow rowIndex scaledRow)
     in
     List.take rowIndex swappedListOfRowVectors
         ++ [ scaledRow ]

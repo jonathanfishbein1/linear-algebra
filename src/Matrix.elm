@@ -266,12 +266,12 @@ scale rowIndex (RowVector (Vector.Vector rowVector)) =
         [] ->
             RowVector <| Vector.Vector []
 
-        x :: xs ->
+        xs ->
             let
                 elementAtRowIndex =
-                    Maybe.withDefault 1 (List.Extra.getAt rowIndex (x :: xs))
+                    Maybe.withDefault 1 (List.Extra.getAt rowIndex xs)
             in
-            RowVector <| Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector <| x :: xs)
+            RowVector <| Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)
 
 
 subrow : Int -> RowVector Float -> RowVector Float -> RowVector Float

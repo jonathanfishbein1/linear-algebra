@@ -1029,8 +1029,8 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix gaussianReduce put matrix into Row Echelon Form" <|
-            \one two ->
+        , Test.test "tests matrix gaussianReduce put matrix into Row Echelon Form" <|
+            \_ ->
                 let
                     matrix =
                         Matrix.Matrix

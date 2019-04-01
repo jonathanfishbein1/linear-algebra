@@ -339,4 +339,4 @@ jordan rowIndex matrix =
 
 jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
-    List.foldr jordan (Matrix matrix) (List.range 0 (List.length matrix - 1))
+    List.foldr jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))

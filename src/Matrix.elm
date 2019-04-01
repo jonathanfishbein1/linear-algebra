@@ -316,3 +316,27 @@ reduceRow rowIndex matrix =
 gaussianReduce : Matrix Float -> Matrix Float
 gaussianReduce (Matrix matrix) =
     List.foldl reduceRow (Matrix matrix) (List.range 0 (List.length matrix - 1))
+
+
+jordan : Int -> Matrix Float -> Matrix Float
+jordan rowIndex matrix =
+    let
+        (Matrix listOfRowVectors) =
+            matrix
+
+        row =
+            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
+
+        nextRows =
+            List.drop (rowIndex + 1) listOfRowVectors
+                |> List.map (subrow rowIndex row)
+    in
+    List.take rowIndex listOfRowVectors
+        ++ [ row ]
+        ++ nextRows
+        |> Matrix
+
+
+jordanReduce : Matrix Float -> Matrix Float
+jordanReduce (Matrix matrix) =
+    List.foldr jordan (Matrix matrix) (List.range 0 (List.length matrix - 1))

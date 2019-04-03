@@ -55,6 +55,12 @@ type RowVector a
     = RowVector (Vector.Vector a)
 
 
+{-| Column Vector
+-}
+type ColumnVector a
+    = ColumnVector (Vector.Vector a)
+
+
 {-| Matrix type
 -}
 type Matrix a

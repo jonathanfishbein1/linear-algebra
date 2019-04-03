@@ -1034,13 +1034,16 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1, -4 ]
-                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
-                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3 ]
                             ]
 
+                    b =
+                        Matrix.ColumnVector <| Vector.Vector [ -4, -11, 22 ]
+
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce matrix
+                        Matrix.gaussianReduce matrix b
 
                     expected =
                         Matrix.Matrix <|
@@ -1055,13 +1058,16 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1, -4 ]
-                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
-                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3 ]
                             ]
 
+                    b =
+                        Matrix.ColumnVector <| Vector.Vector [ -4, -11, 22 ]
+
                     reducedRowEchelonFormMatrix =
-                        Matrix.gaussJordan matrix
+                        Matrix.gaussJordan matrix b
 
                     expected =
                         Matrix.Matrix <|
@@ -1076,13 +1082,16 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1, -4 ]
-                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
-                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3 ]
                             ]
 
+                    b =
+                        Matrix.ColumnVector <| Vector.Vector [ -4, -11, 22 ]
+
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve matrix
+                        Matrix.solve matrix b
 
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]

@@ -319,9 +319,13 @@ reduceRow rowIndex matrix =
         |> Matrix
 
 
-gaussianReduce : Matrix Float -> Matrix Float
-gaussianReduce (Matrix matrix) =
-    List.foldl reduceRow (Matrix matrix) (List.range 0 (List.length matrix - 1))
+gaussianReduce : Matrix Float -> ColumnVector Float -> Matrix Float
+gaussianReduce matrix b =
+    let
+        (Matrix augmentedMatrix) =
+            combineMatrixVector matrix b
+    in
+    List.foldl reduceRow (Matrix augmentedMatrix) (List.range 0 (List.length augmentedMatrix - 1))
 
 
 jordan : Int -> Matrix Float -> Matrix Float
@@ -357,16 +361,21 @@ jordanReduce (Matrix matrix) =
         |> Matrix
 
 
-gaussJordan : Matrix Float -> Matrix Float
-gaussJordan =
-    gaussianReduce >> jordanReduce
+gaussJordan : Matrix Float -> ColumnVector Float -> Matrix Float
+gaussJordan matrix b =
+    let
+        (Matrix augmentedMatrix) =
+            combineMatrixVector matrix b
+    in
+    gaussianReduce matrix b
+        |> jordanReduce
 
 
-solve : Matrix Float -> ColumnVector Float
-solve matrix =
+solve : Matrix Float -> ColumnVector Float -> ColumnVector Float
+solve matrix b =
     let
         (Matrix listOfRowVectors) =
-            gaussJordan matrix
+            gaussJordan matrix b
     in
     List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
         |> Vector.Vector
@@ -381,5 +390,5 @@ mapRowVector f (RowVector rowVector) =
 
 combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
 combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)) =
-    List.Extra.lift2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
+    List.map2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
         |> Matrix

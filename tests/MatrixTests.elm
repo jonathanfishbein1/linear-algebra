@@ -1082,12 +1082,10 @@ suite =
                             ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.gaussJordan matrix
+                        Matrix.solve matrix
 
                     expected =
-                        Matrix.Matrix <|
-                            [ Matrix.RowVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
-                            ]
+                        Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
         ]

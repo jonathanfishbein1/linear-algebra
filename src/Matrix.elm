@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, scale, subrow, swap
+    , findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -360,6 +360,16 @@ jordanReduce (Matrix matrix) =
 gaussJordan : Matrix Float -> Matrix Float
 gaussJordan =
     gaussianReduce >> jordanReduce
+
+
+solve : Matrix Float -> Vector.Vector Float
+solve matrix =
+    let
+        (Matrix listOfRowVectors) =
+            gaussJordan matrix
+    in
+    List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
+        |> Vector.Vector
 
 
 mapRowVector : (a -> b) -> RowVector a -> RowVector b

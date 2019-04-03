@@ -341,12 +341,10 @@ jordan rowIndex matrix =
                             |> mapRowVector negate
                     )
     in
-    Debug.log "here"
-        (prevRows
-            ++ [ row ]
-            ++ List.drop (rowIndex + 1) listOfRowVectors
-            |> Matrix
-        )
+    prevRows
+        ++ [ row ]
+        ++ List.drop (rowIndex + 1) listOfRowVectors
+        |> Matrix
 
 
 jordanReduce : Matrix Float -> Matrix Float

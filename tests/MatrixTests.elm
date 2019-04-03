@@ -4,6 +4,7 @@ import ComplexNumbers
 import Expect
 import Float.Extra
 import Fuzz
+import List.Extra
 import Matrix
 import Monoid
 import Test
@@ -889,4 +890,211 @@ suite =
         --                 Matrix.equal ComplexNumbers.equal aTimebThenAdjoint bAdjointTimesAAdjoint
         --         in
         --         Expect.true "AB adjoint equals A conjugate time B adjoint" result
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix swap applied twice is the same matrix" <|
+            \one two ->
+                let
+                    m1 =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ one, two ]
+                            , Matrix.RowVector <| Vector.Vector [ two, one ]
+                            , Matrix.RowVector <| Vector.Vector [ two, one ]
+                            ]
+
+                    swapOneTwo =
+                        Matrix.swap m1 1 2
+
+                    swapAgain =
+                        Matrix.swap swapOneTwo 1 2
+                in
+                Expect.equal m1 swapAgain
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix swap does not change matrix length" <|
+            \one two ->
+                let
+                    m1 =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ one, two ]
+                            , Matrix.RowVector <| Vector.Vector [ two, one ]
+                            , Matrix.RowVector <| Vector.Vector [ two, one ]
+                            ]
+
+                    (Matrix.Matrix m1List) =
+                        m1
+
+                    m1Length =
+                        List.length m1List
+
+                    swapOneTwo =
+                        Matrix.swap m1 1 2
+
+                    (Matrix.Matrix swapOneTwoList) =
+                        swapOneTwo
+
+                    swapOneLength =
+                        List.length swapOneTwoList
+                in
+                Expect.equal m1Length swapOneLength
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivot find row with pivot entry" <|
+            \one two ->
+                let
+                    m1 =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ one, two ]
+                            , Matrix.RowVector <| Vector.Vector [ two, two ]
+                            ]
+
+                    pivotLocation =
+                        Matrix.findPivot m1 0
+                in
+                case pivotLocation of
+                    Just location ->
+                        Expect.equal location 1
+
+                    Nothing ->
+                        Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivot find row with pivot entry two" <|
+            \one two ->
+                let
+                    m1 =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ one, two ]
+                            , Matrix.RowVector <| Vector.Vector [ two, one ]
+                            ]
+
+                    pivotLocation =
+                        Matrix.findPivot m1 0
+                in
+                case pivotLocation of
+                    Just location ->
+                        Expect.equal location 2
+
+                    Nothing ->
+                        Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales first element to one" <|
+            \one two ->
+                let
+                    row =
+                        Matrix.RowVector <| Vector.Vector [ one, two ]
+
+                    (Matrix.RowVector (Vector.Vector scaledRow)) =
+                        Matrix.scale 0 row
+
+                    firstElement =
+                        List.Extra.getAt 0 scaledRow
+                in
+                case firstElement of
+                    Just element ->
+                        Expect.equal element 1
+
+                    Nothing ->
+                        Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales second element by first" <|
+            \one two ->
+                let
+                    row =
+                        Matrix.RowVector <| Vector.Vector [ one, two ]
+
+                    (Matrix.RowVector (Vector.Vector scaledRow)) =
+                        Matrix.scale 0 row
+
+                    secondElement =
+                        List.Extra.getAt 1 scaledRow
+                in
+                case secondElement of
+                    Just element ->
+                        Expect.within (Expect.Absolute 0.000000001) element (two / one)
+
+                    Nothing ->
+                        Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix subrow has zero under pivot entry" <|
+            \one two ->
+                let
+                    currentRow =
+                        Matrix.RowVector <| Vector.Vector [ one, two ]
+
+                    nextRow =
+                        Matrix.RowVector <| Vector.Vector [ two, two ]
+
+                    (Matrix.RowVector (Vector.Vector subRow)) =
+                        Matrix.subrow 0 (Matrix.scale 0 currentRow) nextRow
+
+                    firstElementSecondRow =
+                        List.Extra.getAt 0 subRow
+                in
+                case firstElementSecondRow of
+                    Just element ->
+                        Expect.within (Expect.Absolute 0.000000001) element 0
+
+                    Nothing ->
+                        Expect.fail "error"
+        , Test.test "tests matrix gaussianReduce put matrix into Row Echelon Form" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3 ]
+                            ]
+
+                    b =
+                        Matrix.ColumnVector <| Vector.Vector [ -4, -11, 22 ]
+
+                    rowEchelonFormMatrix =
+                        Matrix.gaussianReduce matrix b
+
+                    expected =
+                        Matrix.Matrix <|
+                            [ Matrix.RowVector <| Vector.Vector [ 1.0, 2.0, -1.0, -4.0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, -1.0, 3.0 ]
+                            , Matrix.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
+                            ]
+                in
+                Expect.equal rowEchelonFormMatrix expected
+        , Test.test "tests matrix jordanReduce put matrix into Reduced Row Echelon Form" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3 ]
+                            ]
+
+                    b =
+                        Matrix.ColumnVector <| Vector.Vector [ -4, -11, 22 ]
+
+                    reducedRowEchelonFormMatrix =
+                        Matrix.gaussJordan matrix b
+
+                    expected =
+                        Matrix.Matrix <|
+                            [ Matrix.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -2.0 ]
+                            ]
+                in
+                Expect.equal reducedRowEchelonFormMatrix expected
+        , Test.test "tests matrix gaussJordan produces correct answers" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3 ]
+                            ]
+
+                    b =
+                        Matrix.ColumnVector <| Vector.Vector [ -4, -11, 22 ]
+
+                    reducedRowEchelonFormMatrix =
+                        Matrix.solve matrix b
+
+                    expected =
+                        Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
+                in
+                Expect.equal reducedRowEchelonFormMatrix expected
         ]

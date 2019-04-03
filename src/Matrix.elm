@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , isHermitian, isSymmetric
+    , ColumnVector(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -53,6 +53,12 @@ import Vector
 -}
 type RowVector a
     = RowVector (Vector.Vector a)
+
+
+{-| Column Vector
+-}
+type ColumnVector a
+    = ColumnVector (Vector.Vector a)
 
 
 {-| Matrix type
@@ -213,3 +219,176 @@ isSymmetric matrix =
 isHermitian : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Bool
 isHermitian matrix =
     adjoint matrix == matrix
+
+
+{-| Swap two rows of a matrix
+-}
+swap : Matrix a -> Int -> Int -> Matrix a
+swap (Matrix matrix) rowIndexOne rowIndexTwo =
+    case ( matrix, rowIndexOne, rowIndexTwo ) of
+        ( xs, 0, 0 ) ->
+            Matrix xs
+
+        ( x :: xs, 0, j ) ->
+            let
+                listValue =
+                    Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt j (x :: xs))
+            in
+            Matrix <| listValue :: List.take (j - 1) xs ++ x :: List.drop j xs
+
+        ( xs, i, 0 ) ->
+            swap (Matrix xs) 0 i
+
+        ( x :: xs, i, j ) ->
+            let
+                (Matrix intermediateList) =
+                    swap (Matrix xs) (i - 1) (j - 1)
+            in
+            Matrix <| x :: intermediateList
+
+        ( [], _, _ ) ->
+            Matrix matrix
+
+
+findPivot : Matrix number -> Int -> Maybe Int
+findPivot (Matrix matrix) initialRowIndex =
+    let
+        findRow x =
+            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt x matrix)
+
+        findPivotValue nextDiagonalIndex currentRowIndexIteration =
+            let
+                (RowVector (Vector.Vector currentRowIteration)) =
+                    findRow currentRowIndexIteration
+            in
+            Maybe.withDefault 0 (List.Extra.getAt nextDiagonalIndex currentRowIteration)
+    in
+    List.head <| List.filter (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))
+
+
+scale : Int -> RowVector Float -> RowVector Float
+scale rowIndex (RowVector (Vector.Vector rowVector)) =
+    case rowVector of
+        [] ->
+            RowVector <| Vector.Vector []
+
+        xs ->
+            let
+                elementAtRowIndex =
+                    Maybe.withDefault 1 (List.Extra.getAt rowIndex xs)
+            in
+            RowVector <| Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)
+
+
+subrow : Int -> RowVector Float -> RowVector Float -> RowVector Float
+subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRow)) =
+    let
+        k =
+            Maybe.withDefault 1 (List.Extra.getAt r nextRow)
+    in
+    List.map2 (\a b -> k * a - b) currentRow nextRow
+        |> Vector.Vector
+        |> RowVector
+
+
+reduceRow : Int -> Matrix Float -> Matrix Float
+reduceRow rowIndex matrix =
+    let
+        firstPivot =
+            Maybe.withDefault rowIndex (findPivot matrix rowIndex)
+
+        (Matrix swappedListOfRowVectors) =
+            swap matrix rowIndex firstPivot
+
+        (Matrix listOfRowVectors) =
+            Matrix swappedListOfRowVectors
+
+        row =
+            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
+
+        scaledRow =
+            scale rowIndex row
+
+        nextRows =
+            List.drop (rowIndex + 1) listOfRowVectors
+                |> List.map (subrow rowIndex scaledRow)
+    in
+    List.take rowIndex swappedListOfRowVectors
+        ++ [ scaledRow ]
+        ++ nextRows
+        |> Matrix
+
+
+gaussianReduce : Matrix Float -> ColumnVector Float -> Matrix Float
+gaussianReduce matrix b =
+    let
+        (Matrix augmentedMatrix) =
+            combineMatrixVector matrix b
+    in
+    List.foldl reduceRow (Matrix augmentedMatrix) (List.range 0 (List.length augmentedMatrix - 1))
+
+
+jordan : Int -> Matrix Float -> Matrix Float
+jordan rowIndex matrix =
+    let
+        (Matrix listOfRowVectors) =
+            matrix
+
+        row =
+            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
+
+        prevRows =
+            List.take rowIndex listOfRowVectors
+                |> List.map
+                    (\rowVector ->
+                        subrow rowIndex row rowVector
+                            |> mapRowVector negate
+                    )
+    in
+    prevRows
+        ++ [ row ]
+        ++ List.drop (rowIndex + 1) listOfRowVectors
+        |> Matrix
+
+
+jordanReduce : Matrix Float -> Matrix Float
+jordanReduce (Matrix matrix) =
+    let
+        (Matrix thing) =
+            List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
+    in
+    thing
+        |> Matrix
+
+
+gaussJordan : Matrix Float -> ColumnVector Float -> Matrix Float
+gaussJordan matrix b =
+    let
+        (Matrix augmentedMatrix) =
+            combineMatrixVector matrix b
+    in
+    gaussianReduce matrix b
+        |> jordanReduce
+
+
+solve : Matrix Float -> ColumnVector Float -> ColumnVector Float
+solve matrix b =
+    let
+        (Matrix listOfRowVectors) =
+            gaussJordan matrix b
+    in
+    List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
+        |> Vector.Vector
+        |> ColumnVector
+
+
+mapRowVector : (a -> b) -> RowVector a -> RowVector b
+mapRowVector f (RowVector rowVector) =
+    Vector.map f rowVector
+        |> RowVector
+
+
+combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
+combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)) =
+    List.map2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
+        |> Matrix

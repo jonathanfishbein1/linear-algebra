@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, scale, solve, subrow, swap
+    , ColumnVector(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -362,7 +362,7 @@ gaussJordan =
     gaussianReduce >> jordanReduce
 
 
-solve : Matrix Float -> Vector.Vector Float
+solve : Matrix Float -> ColumnVector Float
 solve matrix =
     let
         (Matrix listOfRowVectors) =
@@ -370,6 +370,7 @@ solve matrix =
     in
     List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
         |> Vector.Vector
+        |> ColumnVector
 
 
 mapRowVector : (a -> b) -> RowVector a -> RowVector b

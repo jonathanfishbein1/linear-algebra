@@ -1085,7 +1085,7 @@ suite =
                         Matrix.solve matrix
 
                     expected =
-                        Vector.Vector [ -8.0, 1.0, -2.0 ]
+                        Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
         ]

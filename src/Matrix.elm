@@ -372,5 +372,5 @@ mapRowVector f (RowVector rowVector) =
 
 combineMatrixVector : Matrix a -> Vector.Vector a -> Matrix a
 combineMatrixVector (Matrix listOfRowVectors) (Vector.Vector list) =
-    List.Extra.lift2 (\matrixRow vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
+    List.Extra.lift2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
         |> Matrix

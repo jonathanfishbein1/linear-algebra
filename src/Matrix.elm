@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot, gaussianReduce, isHermitian, isSymmetric, jordanReduce, scale, subrow, swap
+    , findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, scale, subrow, swap
     )
 
 {-| A module for Matrix
@@ -327,16 +327,38 @@ jordan rowIndex matrix =
         row =
             Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
 
-        nextRows =
-            List.drop (rowIndex + 1) listOfRowVectors
-                |> List.map (subrow rowIndex row)
+        prevRows =
+            List.take rowIndex listOfRowVectors
+                |> List.map
+                    (\rowVector ->
+                        subrow rowIndex row rowVector
+                            |> mapRowVector negate
+                    )
     in
-    List.take rowIndex listOfRowVectors
-        ++ [ row ]
-        ++ nextRows
-        |> Matrix
+    Debug.log "here"
+        (prevRows
+            ++ [ row ]
+            ++ List.drop (rowIndex + 1) listOfRowVectors
+            |> Matrix
+        )
 
 
 jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
-    List.foldr jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
+    let
+        (Matrix thing) =
+            List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
+    in
+    thing
+        |> Matrix
+
+
+gaussJordan : Matrix Float -> Matrix Float
+gaussJordan =
+    gaussianReduce >> jordanReduce
+
+
+mapRowVector : (a -> b) -> RowVector a -> RowVector b
+mapRowVector f (RowVector rowVector) =
+    Vector.map f rowVector
+        |> RowVector

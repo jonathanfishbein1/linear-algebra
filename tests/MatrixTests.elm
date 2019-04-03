@@ -1061,7 +1061,7 @@ suite =
                             ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.jordanReduce matrix
+                        Matrix.gaussJordan matrix
 
                     expected =
                         Matrix.Matrix <|

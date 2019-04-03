@@ -379,7 +379,7 @@ mapRowVector f (RowVector rowVector) =
         |> RowVector
 
 
-combineMatrixVector : Matrix a -> Vector.Vector a -> Matrix a
-combineMatrixVector (Matrix listOfRowVectors) (Vector.Vector list) =
+combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
+combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)) =
     List.Extra.lift2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
         |> Matrix

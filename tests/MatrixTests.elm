@@ -1050,7 +1050,7 @@ suite =
                             ]
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests matrix jordanReduce put matrix into Row Echelon Form" <|
+        , Test.test "tests matrix jordanReduce put matrix into Reduced Row Echelon Form" <|
             \_ ->
                 let
                     matrix =
@@ -1068,6 +1068,25 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
                             , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
                             , Matrix.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -2.0 ]
+                            ]
+                in
+                Expect.equal reducedRowEchelonFormMatrix expected
+        , Test.test "tests matrix gaussJordan produces correct answers" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1, -4 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
+                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
+                            ]
+
+                    reducedRowEchelonFormMatrix =
+                        Matrix.gaussJordan matrix
+
+                    expected =
+                        Matrix.Matrix <|
+                            [ Matrix.RowVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                             ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected

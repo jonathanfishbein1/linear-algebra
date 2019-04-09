@@ -1097,4 +1097,44 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
+        , Test.test "tests matrix gaussJordan with no solutions" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, 1, 1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1, 2, 2, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 4, 0, 6 ]
+                            ]
+
+                    b =
+                        Matrix.ColumnVector <| Vector.Vector [ 8, 12, 4 ]
+
+                    reducedRowEchelonFormMatrix =
+                        Matrix.solve matrix b
+
+                    expected =
+                        Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
+                in
+                Expect.equal reducedRowEchelonFormMatrix expected
+        , Test.test "tests matrix gaussJordan with infinite solutions" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, 1, 1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1, 2, 2, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 4, 0, 6 ]
+                            ]
+
+                    b =
+                        Matrix.ColumnVector <| Vector.Vector [ 7, 12, 4 ]
+
+                    reducedRowEchelonFormMatrix =
+                        Matrix.solve matrix b
+
+                    expected =
+                        Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
+                in
+                Expect.equal reducedRowEchelonFormMatrix expected
         ]

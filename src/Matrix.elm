@@ -369,8 +369,11 @@ jordanReduce (Matrix matrix) =
 
 gaussJordan : Matrix Float -> ColumnVector Float -> Matrix Float
 gaussJordan matrix b =
-    gaussianReduce matrix b
-        |> jordanReduce
+    let
+        firstReduce =
+            Debug.log "firstReduce " (gaussianReduce matrix b)
+    in
+    firstReduce |> jordanReduce
 
 
 solve : Matrix Float -> ColumnVector Float -> ColumnVector Float

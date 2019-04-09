@@ -369,10 +369,6 @@ jordanReduce (Matrix matrix) =
 
 gaussJordan : Matrix Float -> ColumnVector Float -> Matrix Float
 gaussJordan matrix b =
-    let
-        (Matrix augmentedMatrix) =
-            combineMatrixVector matrix b
-    in
     gaussianReduce matrix b
         |> jordanReduce
 

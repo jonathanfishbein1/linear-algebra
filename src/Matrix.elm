@@ -67,6 +67,12 @@ type Matrix a
     = Matrix (List (RowVector a))
 
 
+type Solution
+    = Unique (ColumnVector Float)
+    | NoSolution String
+    | InfiniteSolutions String
+
+
 {-| Add two Real Matrices together
 -}
 addRealMatrices : Matrix number -> Matrix number -> Matrix number

@@ -1069,7 +1069,7 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
-                Expect.equal reducedRowEchelonFormMatrix expected
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.UniqueSolution expected)
         , Test.test "tests matrix gaussJordan produces correct answers second example" <|
             \_ ->
                 let
@@ -1089,7 +1089,7 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ 5, -1.0, -1.0 ]
                 in
-                Expect.equal reducedRowEchelonFormMatrix expected
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.UniqueSolution expected)
         , Test.test "tests matrix gaussJordan with no solutions" <|
             \_ ->
                 let
@@ -1109,7 +1109,7 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
-                Expect.equal reducedRowEchelonFormMatrix expected
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.NoUniqueSolution "No Unique Solution")
         , Test.test "tests matrix gaussJordan with infinite solutions" <|
             \_ ->
                 let
@@ -1129,5 +1129,5 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
-                Expect.equal reducedRowEchelonFormMatrix expected
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.NoUniqueSolution "No Unique Solution")
         ]

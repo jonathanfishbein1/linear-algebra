@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , ColumnVector(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, scale, solve, subrow, swap
+    , ColumnVector(..), Solution(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -68,9 +68,8 @@ type Matrix a
 
 
 type Solution
-    = Unique (ColumnVector Float)
-    | NoSolution String
-    | InfiniteSolutions String
+    = UniqueSolution (ColumnVector Float)
+    | NoUniqueSolution String
 
 
 {-| Add two Real Matrices together
@@ -369,22 +368,28 @@ jordanReduce (Matrix matrix) =
 
 gaussJordan : Matrix Float -> ColumnVector Float -> Matrix Float
 gaussJordan matrix b =
-    let
-        firstReduce =
-            Debug.log "firstReduce " (gaussianReduce matrix b)
-    in
-    firstReduce |> jordanReduce
+    gaussianReduce matrix b
+        |> jordanReduce
 
 
-solve : Matrix Float -> ColumnVector Float -> ColumnVector Float
+solve : Matrix Float -> ColumnVector Float -> Solution
 solve matrix b =
     let
         (Matrix listOfRowVectors) =
             gaussJordan matrix b
+
+        solution =
+            List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
     in
-    List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
-        |> Vector.Vector
-        |> ColumnVector
+    if List.all isNaN solution then
+        NoUniqueSolution "No Unique Solution"
+
+    else
+        UniqueSolution
+            (solution
+                |> Vector.Vector
+                |> ColumnVector
+            )
 
 
 mapRowVector : (a -> b) -> RowVector a -> RowVector b

@@ -894,21 +894,23 @@ suite =
         --                 Matrix.equal ComplexNumbers.equal aTimebThenAdjoint bAdjointTimesAAdjoint
         --         in
         --         Expect.true "AB adjoint equals A conjugate time B adjoint" result
-        -- , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix swap applied twice is the same matrix" <|
-        --     \one two ->
-        --         let
-        --             m1 =
-        --                 Matrix.Matrix
-        --                     [ Matrix.RowVector <| Vector.Vector [ one, two ]
-        --                     , Matrix.RowVector <| Vector.Vector [ two, one ]
-        --                     , Matrix.RowVector <| Vector.Vector [ two, one ]
-        --                     ]
-        --             swapOneTwo =
-        --                 Matrix.swap m1 1 2
-        --             swapAgain =
-        --                 Matrix.swap swapOneTwo 1 2
-        --         in
-        --         Expect.equal m1 swapAgain
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix swap applied twice is the same matrix" <|
+            \one two ->
+                let
+                    m1 =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ one, two ]
+                            , Matrix.RowVector <| Vector.Vector [ two, one ]
+                            , Matrix.RowVector <| Vector.Vector [ two, one ]
+                            ]
+
+                    swapOneTwo =
+                        Matrix.swap m1 1 2
+
+                    swapAgain =
+                        Matrix.swap swapOneTwo 1 2
+                in
+                Expect.equal m1 swapAgain
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix swap does not change matrix length" <|
             \one two ->
                 let

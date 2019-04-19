@@ -614,35 +614,39 @@ suite =
         --                 Matrix.multiplyRealMatrices m1 (Matrix.multiplyRealMatrices m2 m3)
         --         in
         --         Expect.equal m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
-        -- , Test.test "tests identityMatrix is an identity matrix" <|
-        --     \_ ->
-        --         let
-        --             v1 =
-        --                 Matrix.RowVector <|
-        --                     Vector.Vector
-        --                         [ 1
-        --                         , 0
-        --                         , 0
-        --                         ]
-        --             v2 =
-        --                 Matrix.RowVector <|
-        --                     Vector.Vector
-        --                         [ 0
-        --                         , 1
-        --                         , 0
-        --                         ]
-        --             v3 =
-        --                 Matrix.RowVector <|
-        --                     Vector.Vector
-        --                         [ 0
-        --                         , 0
-        --                         , 1
-        --                         ]
-        --             m1 =
-        --                 Matrix.Matrix
-        --                     [ v1, v2, v3 ]
-        --         in
-        --         Expect.equal (Matrix.identityMatrix 3) m1
+        , Test.test "tests identityMatrix is an identity matrix" <|
+            \_ ->
+                let
+                    v1 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ 1
+                                , 0
+                                , 0
+                                ]
+
+                    v2 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ 0
+                                , 1
+                                , 0
+                                ]
+
+                    v3 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ 0
+                                , 0
+                                , 1
+                                ]
+
+                    m1 =
+                        Matrix.Matrix
+                            [ v1, v2, v3 ]
+                in
+                Expect.equal (Matrix.identityMatrix 3) m1
+
         -- , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests In*A = A" <|
         --     \one two three ->
         --         let

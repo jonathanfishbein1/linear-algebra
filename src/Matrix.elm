@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , ColumnVector(..), Solution(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, scale, solve, subrow, swap
+    , ColumnVector(..), Solution(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -402,3 +402,17 @@ combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
 combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)) =
     List.map2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
         |> Matrix
+
+
+nullSpace : Matrix Float -> Solution
+nullSpace (Matrix listOfRowVectors) =
+    let
+        numberOfRows =
+            List.length listOfRowVectors
+
+        b =
+            List.Extra.initialize numberOfRows (\_ -> 0)
+                |> Vector.Vector
+                |> ColumnVector
+    in
+    solve (Matrix listOfRowVectors) b

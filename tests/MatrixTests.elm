@@ -1177,4 +1177,13 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ 0, 0 ]
                 in
                 Expect.equal nullSpace (Matrix.UniqueSolution expected)
+        , Test.test "tests matrix linearlyIndependent" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 2 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, -3 ]
+                        ]
+                in
+                Expect.true "Two vectors are linearly independent" (Matrix.linearlyIndependent listOfRowVectors)
         ]

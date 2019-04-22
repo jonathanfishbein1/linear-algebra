@@ -1161,4 +1161,20 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix (Matrix.NoUniqueSolution "No Unique Solution")
+        , Test.test "tests matrix null space calculation" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, -3 ]
+                            ]
+
+                    nullSpace =
+                        Matrix.nullSpace matrix
+
+                    expected =
+                        Matrix.ColumnVector <| Vector.Vector [ 0, 0 ]
+                in
+                Expect.equal nullSpace (Matrix.UniqueSolution expected)
         ]

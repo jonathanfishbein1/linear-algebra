@@ -15,7 +15,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , ColumnVector(..), Solution(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, nullSpace, scale, solve, subrow, swap
+    , ColumnVector(..), Solution(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -416,3 +416,32 @@ nullSpace (Matrix listOfRowVectors) =
                 |> ColumnVector
     in
     solve (Matrix listOfRowVectors) b
+
+
+linearlyIndependent : List (RowVector Float) -> Bool
+linearlyIndependent listOfRowVectors =
+    let
+        matrix =
+            Matrix listOfRowVectors
+
+        matrixNullSpace =
+            nullSpace matrix
+
+        numberOfRows =
+            List.length listOfRowVectors
+
+        zeroVector =
+            List.Extra.initialize numberOfRows (\_ -> 0)
+                |> Vector.Vector
+                |> ColumnVector
+    in
+    case matrixNullSpace of
+        UniqueSolution resultVector ->
+            if resultVector == zeroVector then
+                True
+
+            else
+                False
+
+        _ ->
+            False

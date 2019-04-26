@@ -23,6 +23,7 @@ module Matrix exposing
       , isSymmetric
       , jordanReduce
       , linearlyIndependent
+      , multiplyRealVectorRealMatrix
       , nullSpace
       , scale
       , solve
@@ -214,12 +215,11 @@ map2VectorCartesian (Matrix right) (RowVector (Vector.Vector intermediateList)) 
             Matrix acc
 
 
-
--- {-| Multiply a Vector by a Matrix
--- -}
--- multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Matrix number
--- multiplyRealVectorRealMatrix matrix vector =
---     smartMapMatrix2Generic (Matrix <| [ RowVector vector ]) (RowVector <| Vector.Vector []) (Matrix []) (map diagonal matrix) (Matrix <| [ RowVector vector ])
+{-| Multiply a Vector by a Matrix
+-}
+multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Matrix number
+multiplyRealVectorRealMatrix matrix vector =
+    map2VectorCartesian (Matrix <| [ RowVector vector ]) (RowVector <| Vector.Vector []) (Matrix []) matrix (Matrix <| [ RowVector vector ])
 
 
 isSymmetric : Matrix a -> Bool

@@ -878,6 +878,31 @@ suite =
                         Matrix.multiplyRealMatrices (Matrix.transpose b) (Matrix.transpose a)
                 in
                 Expect.equal aTimebThenTranspose cTimesm1ThenTimesm2
+        , Test.test "tests matrix vector multiplication" <|
+            \_ ->
+                let
+                    v =
+                        Vector.Vector
+                            [ 1, 2, 3 ]
+
+                    m =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, 3 ]
+                            , Matrix.RowVector <| Vector.Vector [ 4, 5, 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 7, 8, 9 ]
+                            ]
+
+                    mTimesV =
+                        Matrix.multiplyRealVectorRealMatrix m v
+
+                    expected =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 14 ]
+                            , Matrix.RowVector <| Vector.Vector [ 32 ]
+                            , Matrix.RowVector <| Vector.Vector [ 50 ]
+                            ]
+                in
+                Expect.equal mTimesV expected
 
         -- , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication respects the conjugate" <|
         --     \one two three ->

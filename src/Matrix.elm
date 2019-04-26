@@ -12,25 +12,10 @@ module Matrix exposing
     , adjoint
     , apply
     , liftA2
+    , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    ,  ColumnVector(..)
-      , Solution(..)
-      , findPivot
-      , gaussJordan
-      , gaussianReduce
-      , isHermitian
-      , isSymmetric
-      , jordanReduce
-      , linearlyIndependent
-      , multiplyRealVectorRealMatrix
-      , nullSpace
-      , scale
-      , solve
-      , subrow
-      , swap
-        -- , multiplyComplexMatrices
-
+    , ColumnVector(..), Solution(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -171,12 +156,11 @@ liftA2 f a b =
     apply (map f a) b
 
 
-
--- {-| Matrix Matrix multiplication for a Complex Numbered Matrix
--- -}
--- multiplyComplexMatrices : Matrix (a -> b) -> Matrix a -> Matrix b
--- multiplyComplexMatrices matrixOne matrixTwo =
---     smartMapMatrix2Generic (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
+{-| Matrix Matrix multiplication for a Complex Numbered Matrix
+-}
+multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+multiplyComplexMatrices matrixOne matrixTwo =
+    map2VectorCartesianComplex (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
 
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
@@ -210,6 +194,19 @@ map2VectorCartesian (Matrix right) (RowVector (Vector.Vector intermediateList)) 
 
         ( _ :: ls, [] ) ->
             map2VectorCartesian (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector <| Vector.Vector <| intermediateList ])) (Matrix ls) (Matrix right)
+
+        ( [], _ ) ->
+            Matrix acc
+
+
+map2VectorCartesianComplex : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> RowVector (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+map2VectorCartesianComplex (Matrix right) (RowVector (Vector.Vector intermediateList)) (Matrix acc) (Matrix left) (Matrix currentRight) =
+    case ( left, currentRight ) of
+        ( (RowVector l) :: _, (RowVector r) :: rs ) ->
+            map2VectorCartesianComplex (Matrix right) (RowVector <| Vector.Vector (intermediateList ++ [ Vector.complexVectorDotProduct l r ])) (Matrix acc) (Matrix left) (Matrix rs)
+
+        ( _ :: ls, [] ) ->
+            map2VectorCartesianComplex (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector <| Vector.Vector <| intermediateList ])) (Matrix ls) (Matrix right)
 
         ( [], _ ) ->
             Matrix acc

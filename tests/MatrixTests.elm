@@ -903,59 +903,81 @@ suite =
                             ]
                 in
                 Expect.equal mTimesV expected
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication respects the conjugate" <|
+            \one two three ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two)
 
-        -- , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication respects the conjugate" <|
-        --     \one two three ->
-        --         let
-        --             v1 =
-        --                 Matrix.RowVector <|
-        --                     Vector.Vector
-        --                         [ three, one ]
-        --             v2 =
-        --                 Matrix.RowVector <|
-        --                     Vector.Vector
-        --                         [ one, two ]
-        --             a =
-        --                 Matrix.Matrix [ v1 ]
-        --             b =
-        --                 Matrix.Matrix [ v2 ]
-        --             aTimebThenConjugate : Matrix.Matrix (ComplexNumbers.ComplexNumberCartesian number)
-        --             aTimebThenConjugate =
-        --                 Matrix.multiplyComplexMatrices a b
-        --                     |> Matrix.conjugate
-        --             cTimesm1ThenTimesm2 : Matrix.Matrix (ComplexNumbers.ComplexNumberCartesian number)
-        --             cTimesm1ThenTimesm2 =
-        --                 Matrix.multiplyComplexMatrices (Matrix.conjugate a) (Matrix.conjugate b)
-        --             result =
-        --                 Matrix.equal ComplexNumbers.equal aTimebThenConjugate cTimesm1ThenTimesm2
-        --         in
-        --         Expect.true "AB conjugate equals A conjugate time B conjugate" result
-        -- , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication relates to the adjoin" <|
-        --     \one two three ->
-        --         let
-        --             v1 =
-        --                 Matrix.RowVector <|
-        --                     Vector.Vector
-        --                         [ three, one ]
-        --             v2 =
-        --                 Matrix.RowVector <|
-        --                     Vector.Vector
-        --                         [ one, two ]
-        --             a =
-        --                 Matrix.Matrix [ v1 ]
-        --             b =
-        --                 Matrix.Matrix [ v2 ]
-        --             aTimebThenAdjoint : Matrix.Matrix (ComplexNumbers.ComplexNumberCartesian number)
-        --             aTimebThenAdjoint =
-        --                 Matrix.multiplyComplexMatrices a b
-        --                     |> Matrix.adjoint
-        --             bAdjointTimesAAdjoint : Matrix.Matrix (ComplexNumbers.ComplexNumberCartesian number)
-        --             bAdjointTimesAAdjoint =
-        --                 Matrix.multiplyComplexMatrices (Matrix.adjoint a) (Matrix.adjoint b)
-        --             result =
-        --                 Matrix.equal ComplexNumbers.equal aTimebThenAdjoint bAdjointTimesAAdjoint
-        --         in
-        --         Expect.true "AB adjoint equals A conjugate time B adjoint" result
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real three) (ComplexNumbers.Imaginary two)
+
+                    complexNumberThree =
+                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three)
+
+                    v1 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ complexNumberThree, complexNumberOne ]
+
+                    v2 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ complexNumberOne, complexNumberTwo ]
+
+                    a =
+                        Matrix.Matrix [ v1 ]
+
+                    b =
+                        Matrix.Matrix [ v2 ]
+
+                    aTimebThenConjugate =
+                        Matrix.multiplyComplexMatrices a b
+                            |> Matrix.conjugate
+
+                    cTimesm1ThenTimesm2 =
+                        Matrix.multiplyComplexMatrices (Matrix.conjugate a) (Matrix.conjugate b)
+
+                    result =
+                        Matrix.equal ComplexNumbers.equal aTimebThenConjugate cTimesm1ThenTimesm2
+                in
+                Expect.true "AB conjugate equals A conjugate time B conjugate" result
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication relates to the adjoin" <|
+            \one two three ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two)
+
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real three) (ComplexNumbers.Imaginary two)
+
+                    v1 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ complexNumberOne ]
+
+                    v2 =
+                        Matrix.RowVector <|
+                            Vector.Vector
+                                [ complexNumberTwo ]
+
+                    a =
+                        Matrix.Matrix [ v1 ]
+
+                    b =
+                        Matrix.Matrix [ v2 ]
+
+                    aTimebThenAdjoint =
+                        Matrix.multiplyComplexMatrices a b
+                            |> Matrix.adjoint
+
+                    bAdjointTimesAAdjoint =
+                        Matrix.multiplyComplexMatrices (Matrix.adjoint a) (Matrix.adjoint b)
+
+                    result =
+                        Matrix.equal ComplexNumbers.equal aTimebThenAdjoint bAdjointTimesAAdjoint
+                in
+                Expect.true "AB adjoint equals A conjugate time B adjoint" result
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix swap applied twice is the same matrix" <|
             \one two ->
                 let

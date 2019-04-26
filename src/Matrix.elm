@@ -12,10 +12,24 @@ module Matrix exposing
     , adjoint
     , apply
     , liftA2
-    , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , ColumnVector(..), Solution(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, nullSpace, scale, solve, subrow, swap
+    ,  ColumnVector(..)
+      , Solution(..)
+      , findPivot
+      , gaussJordan
+      , gaussianReduce
+      , isHermitian
+      , isSymmetric
+      , jordanReduce
+      , linearlyIndependent
+      , nullSpace
+      , scale
+      , solve
+      , subrow
+      , swap
+        -- , multiplyComplexMatrices
+
     )
 
 {-| A module for Matrix
@@ -156,18 +170,19 @@ liftA2 f a b =
     apply (map f a) b
 
 
-{-| Matrix Matrix multiplication for a Complex Numbered Matrix
--}
-multiplyComplexMatrices : Matrix (a -> b) -> Matrix a -> Matrix b
-multiplyComplexMatrices matrixOne matrixTwo =
-    smartMapMatrix2Generic (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
+
+-- {-| Matrix Matrix multiplication for a Complex Numbered Matrix
+-- -}
+-- multiplyComplexMatrices : Matrix (a -> b) -> Matrix a -> Matrix b
+-- multiplyComplexMatrices matrixOne matrixTwo =
+--     smartMapMatrix2Generic (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
 
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
 -}
-multiplyRealMatrices : Matrix (Vector.Vector number) -> Matrix (Vector.Vector number) -> Matrix number
-multiplyRealMatrices =
-    liftA2Two Vector.realVectorDotProduct
+multiplyRealMatrices : Matrix number -> Matrix number -> Matrix number
+multiplyRealMatrices matrixOne matrixTwo =
+    map2VectorCartesian (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
 
 
 diagonal : Int -> Int -> number
@@ -186,34 +201,25 @@ identityMatrix dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (diagonal columnIndex)))
 
 
-applyTwo : Matrix (a -> b) -> Matrix a -> Matrix b
-applyTwo matrixOne matrixTwo =
-    smartMapMatrix2Generic (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
-
-
-liftA2Two : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
-liftA2Two f a b =
-    applyTwo (map f a) b
-
-
-smartMapMatrix2Generic : Matrix a -> RowVector b -> Matrix b -> Matrix (a -> b) -> Matrix a -> Matrix b
-smartMapMatrix2Generic (Matrix right) (RowVector intermediateList) (Matrix acc) (Matrix left) (Matrix currentRight) =
+map2VectorCartesian : Matrix number -> RowVector number -> Matrix number -> Matrix number -> Matrix number -> Matrix number
+map2VectorCartesian (Matrix right) (RowVector (Vector.Vector intermediateList)) (Matrix acc) (Matrix left) (Matrix currentRight) =
     case ( left, currentRight ) of
         ( (RowVector l) :: _, (RowVector r) :: rs ) ->
-            smartMapMatrix2Generic (Matrix right) (RowVector <| Vector.concat (Vector.apply l r) intermediateList) (Matrix acc) (Matrix left) (Matrix rs)
+            map2VectorCartesian (Matrix right) (RowVector <| Vector.Vector (intermediateList ++ [ Vector.realVectorDotProduct l r ])) (Matrix acc) (Matrix left) (Matrix rs)
 
         ( _ :: ls, [] ) ->
-            smartMapMatrix2Generic (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector intermediateList ])) (Matrix ls) (Matrix right)
+            map2VectorCartesian (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector <| Vector.Vector <| intermediateList ])) (Matrix ls) (Matrix right)
 
         ( [], _ ) ->
             Matrix acc
 
 
-{-| Multiply a Vector by a Matrix
--}
-multiplyRealVectorRealMatrix : Matrix Int -> Vector.Vector Int -> Matrix number
-multiplyRealVectorRealMatrix matrix vector =
-    smartMapMatrix2Generic (Matrix <| [ RowVector vector ]) (RowVector <| Vector.Vector []) (Matrix []) (map diagonal matrix) (Matrix <| [ RowVector vector ])
+
+-- {-| Multiply a Vector by a Matrix
+-- -}
+-- multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Matrix number
+-- multiplyRealVectorRealMatrix matrix vector =
+--     smartMapMatrix2Generic (Matrix <| [ RowVector vector ]) (RowVector <| Vector.Vector []) (Matrix []) (map diagonal matrix) (Matrix <| [ RowVector vector ])
 
 
 isSymmetric : Matrix a -> Bool

@@ -160,7 +160,7 @@ liftA2 f a b =
 -}
 multiplyComplexMatrices : Matrix (a -> b) -> Matrix a -> Matrix b
 multiplyComplexMatrices matrixOne matrixTwo =
-    smartMapMatrix2Generic (transpose matrixTwo) (Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
+    smartMapMatrix2Generic (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
 
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
@@ -188,7 +188,7 @@ identityMatrix dimension =
 
 applyTwo : Matrix (a -> b) -> Matrix a -> Matrix b
 applyTwo matrixOne matrixTwo =
-    smartMapMatrix2Generic (transpose matrixTwo) (Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
+    smartMapMatrix2Generic (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
 
 
 liftA2Two : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
@@ -196,14 +196,14 @@ liftA2Two f a b =
     applyTwo (map f a) b
 
 
-smartMapMatrix2Generic : Matrix a -> Vector.Vector b -> Matrix b -> Matrix (a -> b) -> Matrix a -> Matrix b
-smartMapMatrix2Generic (Matrix right) intermediateList (Matrix acc) (Matrix left) (Matrix currentRight) =
+smartMapMatrix2Generic : Matrix a -> RowVector b -> Matrix b -> Matrix (a -> b) -> Matrix a -> Matrix b
+smartMapMatrix2Generic (Matrix right) (RowVector intermediateList) (Matrix acc) (Matrix left) (Matrix currentRight) =
     case ( left, currentRight ) of
         ( (RowVector l) :: _, (RowVector r) :: rs ) ->
-            smartMapMatrix2Generic (Matrix right) (Vector.concat (Vector.apply l r) intermediateList) (Matrix acc) (Matrix left) (Matrix rs)
+            smartMapMatrix2Generic (Matrix right) (RowVector <| Vector.concat (Vector.apply l r) intermediateList) (Matrix acc) (Matrix left) (Matrix rs)
 
         ( _ :: ls, [] ) ->
-            smartMapMatrix2Generic (Matrix right) (Vector.Vector []) (Matrix (acc ++ [ RowVector intermediateList ])) (Matrix ls) (Matrix right)
+            smartMapMatrix2Generic (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector intermediateList ])) (Matrix ls) (Matrix right)
 
         ( [], _ ) ->
             Matrix acc
@@ -213,7 +213,7 @@ smartMapMatrix2Generic (Matrix right) intermediateList (Matrix acc) (Matrix left
 -}
 multiplyRealVectorRealMatrix : Matrix Int -> Vector.Vector Int -> Matrix number
 multiplyRealVectorRealMatrix matrix vector =
-    smartMapMatrix2Generic (Matrix <| [ RowVector vector ]) (Vector.Vector []) (Matrix []) (map diagonal matrix) (Matrix <| [ RowVector vector ])
+    smartMapMatrix2Generic (Matrix <| [ RowVector vector ]) (RowVector <| Vector.Vector []) (Matrix []) (map diagonal matrix) (Matrix <| [ RowVector vector ])
 
 
 isSymmetric : Matrix a -> Bool

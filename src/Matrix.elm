@@ -23,7 +23,8 @@ module Matrix exposing
     , isHermitian
     , isSymmetric
     , jordanReduce
-    , linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
+    , areLinearlyIndependent
+    , multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -56,6 +57,7 @@ module Matrix exposing
 @docs isHermitian
 @docs isSymmetric
 @docs jordanReduce
+@docs areLinearlyIndependent
 
 -}
 
@@ -451,8 +453,10 @@ nullSpace (Matrix listOfRowVectors) =
     solve (Matrix listOfRowVectors) b
 
 
-linearlyIndependent : List (RowVector Float) -> Bool
-linearlyIndependent listOfRowVectors =
+{-| Predicate to determine if a list of Vectors are linearly independent
+-}
+areLinearlyIndependent : List (RowVector Float) -> Bool
+areLinearlyIndependent listOfRowVectors =
     let
         matrix =
             Matrix listOfRowVectors

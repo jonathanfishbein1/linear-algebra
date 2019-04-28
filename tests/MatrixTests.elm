@@ -1269,7 +1269,7 @@ suite =
                         , Matrix.RowVector <| Vector.Vector [ 0, -3 ]
                         ]
                 in
-                Expect.true "Two vectors are linearly independent" (Matrix.linearlyIndependent listOfRowVectors)
+                Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent listOfRowVectors)
         , Test.test "tests matrix linearlyIndependent with two colinear vectors" <|
             \_ ->
                 let
@@ -1278,5 +1278,5 @@ suite =
                         , Matrix.RowVector <| Vector.Vector [ 2, 4 ]
                         ]
                 in
-                Expect.false "Two vectors are linearly dependent" (Matrix.linearlyIndependent listOfRowVectors)
+                Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent listOfRowVectors)
         ]

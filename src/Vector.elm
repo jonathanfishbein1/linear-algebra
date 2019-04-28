@@ -54,6 +54,7 @@ module Vector exposing
 @docs normalise
 @docs realVectorLength
 @docs subtractRealVectors
+@docs vector3ToVector
 
 -}
 
@@ -229,6 +230,8 @@ cross (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
         (x1 * y2 - x2 * y1)
 
 
+{-| Convert a Vector3 type to a Vector typeZ
+-}
 vector3ToVector : Vector3 number -> Vector number
 vector3ToVector (Vector3 x y z) =
     Vector [ x, y, z ]

@@ -17,7 +17,7 @@ module Vector exposing
     , complexVectorDotProduct
     , concat
     , complexVectorLength
-    , cross, distance, normalise, realLength, subtractRealVectors, vector3ToVector
+    , cross, distance, normalise, realVectorLength, subtractRealVectors, vector3ToVector
     )
 
 {-| A module for Vectors
@@ -175,8 +175,10 @@ concat (Vector listOne) (Vector listTwo) =
     Vector <| listOne ++ listTwo
 
 
-realLength : Vector Float -> Float
-realLength =
+{-| Calculate length of a real vector
+-}
+realVectorLength : Vector Float -> Float
+realVectorLength =
     foldl (\x acc -> x ^ 2 + acc) 0
         >> Basics.sqrt
 
@@ -202,7 +204,7 @@ subtractRealVectors =
 distance : Vector Float -> Vector Float -> Float
 distance vectorOne vectorTwo =
     subtractRealVectors vectorOne vectorTwo
-        |> realLength
+        |> realVectorLength
 
 
 {-| Take the cross product of two 3D vectors
@@ -224,8 +226,8 @@ vector3ToVector (Vector3 x y z) =
 -}
 normalise : Vector Float -> Vector Float
 normalise v =
-    if Float.Extra.equalWithin 0.000000001 (realLength v) 0.0 then
+    if Float.Extra.equalWithin 0.000000001 (realVectorLength v) 0.0 then
         v
 
     else
-        map ((/) (realLength v)) v
+        map ((/) (realVectorLength v)) v

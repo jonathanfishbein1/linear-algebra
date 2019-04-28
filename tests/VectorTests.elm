@@ -441,7 +441,7 @@ suite =
                         Basics.sqrt (Vector.realVectorDotProduct a a)
 
                     aLength =
-                        Vector.realLength a
+                        Vector.realVectorLength a
                 in
                 squareRootADotA
                     |> Expect.equal aLength
@@ -452,7 +452,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.realLength a
+                        Vector.realVectorLength a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -466,10 +466,10 @@ suite =
                         Vector.Vector [ two ]
 
                     aPlusBLength =
-                        Vector.realLength <| Vector.addRealVectors a b
+                        Vector.realVectorLength <| Vector.addRealVectors a b
 
                     lengthAPlusLengthB =
-                        Vector.realLength a + Vector.realLength b
+                        Vector.realVectorLength a + Vector.realVectorLength b
                 in
                 aPlusBLength
                     |> Expect.atMost lengthAPlusLengthB
@@ -480,10 +480,10 @@ suite =
                         Vector.Vector [ one ]
 
                     legnthOfTwoTimesA =
-                        Vector.realLength (Vector.map ((*) two) a)
+                        Vector.realVectorLength (Vector.map ((*) two) a)
 
                     lengthOfATimesTwo =
-                        Basics.abs two * Vector.realLength a
+                        Basics.abs two * Vector.realVectorLength a
                 in
                 legnthOfTwoTimesA
                     |> Expect.within (Expect.Absolute 0.1) lengthOfATimesTwo
@@ -564,7 +564,7 @@ suite =
 
                     normalisedALength =
                         Vector.normalise a
-                            |> Vector.realLength
+                            |> Vector.realVectorLength
                 in
                 normalisedALength
                     |> Expect.equal 1

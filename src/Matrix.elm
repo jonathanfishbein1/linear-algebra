@@ -25,7 +25,8 @@ module Matrix exposing
     , jordanReduce
     , areLinearlyIndependent
     , multiplyRealVectorRealMatrix
-    , nullSpace, scale, solve, subrow, swap
+    , nullSpace
+    , scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -60,6 +61,7 @@ module Matrix exposing
 @docs jordanReduce
 @docs areLinearlyIndependent
 @docs multiplyRealVectorRealMatrix
+@docs nullSpace
 
 -}
 
@@ -441,6 +443,8 @@ combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)
         |> Matrix
 
 
+{-| Calculate the null space of a matrix
+-}
 nullSpace : Matrix Float -> Solution
 nullSpace (Matrix listOfRowVectors) =
     let

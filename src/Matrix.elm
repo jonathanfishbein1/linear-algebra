@@ -27,7 +27,8 @@ module Matrix exposing
     , multiplyRealVectorRealMatrix
     , nullSpace
     , scale
-    , solve, subrow, swap
+    , solve
+    , subrow, swap
     )
 
 {-| A module for Matrix
@@ -64,6 +65,7 @@ module Matrix exposing
 @docs multiplyRealVectorRealMatrix
 @docs nullSpace
 @docs scale
+@docs solve
 
 -}
 
@@ -415,6 +417,8 @@ gaussJordan matrix b =
         |> jordanReduce
 
 
+{-| Solve a system of linear equations using Gauss-Jordan elimination
+-}
 solve : Matrix Float -> ColumnVector Float -> Solution
 solve matrix b =
     let

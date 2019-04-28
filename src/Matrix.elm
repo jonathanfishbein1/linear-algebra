@@ -1,6 +1,7 @@
 module Matrix exposing
     ( Matrix(..)
     , RowVector(..)
+    , ColumnVector(..)
     , addRealMatrices
     , addComplexMatrices
     , sumRealMatrices
@@ -15,7 +16,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , ColumnVector(..), Solution(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
+    , Solution(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -25,6 +26,7 @@ module Matrix exposing
 
 @docs Matrix
 @docs RowVector
+@docs ColumnVector
 
 @docs addRealMatrices
 @docs addComplexMatrices

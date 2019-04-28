@@ -28,7 +28,8 @@ module Matrix exposing
     , nullSpace
     , scale
     , solve
-    , subrow, swap
+    , subrow
+    , swap
     )
 
 {-| A module for Matrix
@@ -66,6 +67,7 @@ module Matrix exposing
 @docs nullSpace
 @docs scale
 @docs solve
+@docs subrow
 
 -}
 
@@ -324,6 +326,8 @@ scale rowIndex (RowVector (Vector.Vector rowVector)) =
             RowVector <| Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)
 
 
+{-| Internal function for subtracting rows from each other
+-}
 subrow : Int -> RowVector Float -> RowVector Float -> RowVector Float
 subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRow)) =
     let

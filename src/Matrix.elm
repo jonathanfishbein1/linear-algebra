@@ -2,6 +2,7 @@ module Matrix exposing
     ( Matrix(..)
     , RowVector(..)
     , ColumnVector(..)
+    , Solution(..)
     , addRealMatrices
     , addComplexMatrices
     , sumRealMatrices
@@ -16,7 +17,7 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , Solution(..), findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
+    , findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -27,6 +28,7 @@ module Matrix exposing
 @docs Matrix
 @docs RowVector
 @docs ColumnVector
+@docs Solution
 
 @docs addRealMatrices
 @docs addComplexMatrices
@@ -69,6 +71,8 @@ type Matrix a
     = Matrix (List (RowVector a))
 
 
+{-| Type to represent result of Gauss-Jordan reduction
+-}
 type Solution
     = UniqueSolution (ColumnVector Float)
     | NoUniqueSolution String

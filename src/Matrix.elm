@@ -19,7 +19,8 @@ module Matrix exposing
     , identityMatrix
     , findPivot
     , gaussJordan
-    , gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
+    , gaussianReduce
+    , isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -48,6 +49,7 @@ module Matrix exposing
 @docs identityMatrix
 @docs findPivot
 @docs gaussJordan
+@docs gaussianReduce
 
 -}
 
@@ -339,6 +341,8 @@ reduceRow rowIndex matrix =
         |> Matrix
 
 
+{-| Internal function Gaussian Elimination
+-}
 gaussianReduce : Matrix Float -> ColumnVector Float -> Matrix Float
 gaussianReduce matrix b =
     let

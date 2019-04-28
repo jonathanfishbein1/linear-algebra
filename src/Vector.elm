@@ -17,7 +17,8 @@ module Vector exposing
     , complexVectorDotProduct
     , concat
     , complexVectorLength
-    , cross, distance, normalise, realVectorLength, subtractRealVectors, vector3ToVector
+    , cross
+    , distance, normalise, realVectorLength, subtractRealVectors, vector3ToVector
     )
 
 {-| A module for Vectors
@@ -44,6 +45,7 @@ module Vector exposing
 @docs complexVectorDotProduct
 @docs concat
 @docs complexVectorLength
+@docs cross
 
 -}
 

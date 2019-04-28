@@ -16,7 +16,8 @@ module Vector exposing
     , realVectorDotProduct
     , complexVectorDotProduct
     , concat
-    , complexVectorLength, cross, distance, normalise, realLength, subtractRealVectors, vector3ToVector
+    , complexVectorLength
+    , cross, distance, normalise, realLength, subtractRealVectors, vector3ToVector
     )
 
 {-| A module for Vectors
@@ -42,6 +43,7 @@ module Vector exposing
 @docs realVectorDotProduct
 @docs complexVectorDotProduct
 @docs concat
+@docs complexVectorLength
 
 -}
 
@@ -179,6 +181,8 @@ realLength =
         >> Basics.sqrt
 
 
+{-| Calculate length of a complex vector
+-}
 complexVectorLength : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
 complexVectorLength complexNumbers =
     let

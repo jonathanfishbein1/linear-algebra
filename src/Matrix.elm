@@ -21,7 +21,8 @@ module Matrix exposing
     , gaussJordan
     , gaussianReduce
     , isHermitian
-    , isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
+    , isSymmetric
+    , jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -52,6 +53,7 @@ module Matrix exposing
 @docs gaussJordan
 @docs gaussianReduce
 @docs isHermitian
+@docs isSymmetric
 
 -}
 
@@ -233,6 +235,8 @@ multiplyRealVectorRealMatrix matrix vector =
     map2VectorCartesian (Matrix <| [ RowVector vector ]) (RowVector <| Vector.Vector []) (Matrix []) matrix (Matrix <| [ RowVector vector ])
 
 
+{-| Predicate to determine if Matrix is symmetric
+-}
 isSymmetric : Matrix a -> Bool
 isSymmetric matrix =
     transpose matrix == matrix

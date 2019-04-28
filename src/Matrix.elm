@@ -22,7 +22,8 @@ module Matrix exposing
     , gaussianReduce
     , isHermitian
     , isSymmetric
-    , jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
+    , jordanReduce
+    , linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -54,6 +55,7 @@ module Matrix exposing
 @docs gaussianReduce
 @docs isHermitian
 @docs isSymmetric
+@docs jordanReduce
 
 -}
 
@@ -383,6 +385,8 @@ jordan rowIndex matrix =
         |> Matrix
 
 
+{-| Internal function for Jordan Elimination
+-}
 jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
     let

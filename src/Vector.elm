@@ -1,5 +1,6 @@
 module Vector exposing
     ( Vector(..)
+    , Vector3(..)
     , addComplexVectors
     , addRealVectors
     , map
@@ -15,7 +16,7 @@ module Vector exposing
     , realVectorDotProduct
     , complexVectorDotProduct
     , concat
-    , Vector3(..), complexVectorLength, cross, distance, normalise, realLength, subtractRealVectors, vector3ToVector
+    , complexVectorLength, cross, distance, normalise, realLength, subtractRealVectors, vector3ToVector
     )
 
 {-| A module for Vectors
@@ -24,6 +25,7 @@ module Vector exposing
 # Types
 
 @docs Vector
+@docs Vector3
 
 @docs addComplexVectors
 @docs addRealVectors
@@ -54,6 +56,8 @@ type Vector a
     = Vector (List a)
 
 
+{-| 3 Dimensional Vector type
+-}
 type Vector3 a
     = Vector3 a a a
 

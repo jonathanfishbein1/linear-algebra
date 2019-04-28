@@ -18,7 +18,8 @@ module Vector exposing
     , concat
     , complexVectorLength
     , cross
-    , distance, normalise, realVectorLength, subtractRealVectors, vector3ToVector
+    , distance
+    , normalise, realVectorLength, subtractRealVectors, vector3ToVector
     )
 
 {-| A module for Vectors
@@ -46,6 +47,7 @@ module Vector exposing
 @docs concat
 @docs complexVectorLength
 @docs cross
+@docs distance
 
 -}
 
@@ -203,6 +205,8 @@ subtractRealVectors =
     liftA2 (-)
 
 
+{-| Calculate distance between two vectors
+-}
 distance : Vector Float -> Vector Float -> Float
 distance vectorOne vectorTwo =
     subtractRealVectors vectorOne vectorTwo

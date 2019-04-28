@@ -26,7 +26,8 @@ module Matrix exposing
     , areLinearlyIndependent
     , multiplyRealVectorRealMatrix
     , nullSpace
-    , scale, solve, subrow, swap
+    , scale
+    , solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -62,6 +63,7 @@ module Matrix exposing
 @docs areLinearlyIndependent
 @docs multiplyRealVectorRealMatrix
 @docs nullSpace
+@docs scale
 
 -}
 
@@ -304,6 +306,8 @@ findPivot (Matrix matrix) initialRowIndex =
     List.head <| List.filter (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))
 
 
+{-| Internal function for scalling rows by pivot entry
+-}
 scale : Int -> RowVector Float -> RowVector Float
 scale rowIndex (RowVector (Vector.Vector rowVector)) =
     case rowVector of

@@ -18,7 +18,8 @@ module Matrix exposing
     , multiplyRealMatrices
     , identityMatrix
     , findPivot
-    , gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
+    , gaussJordan
+    , gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -46,6 +47,7 @@ module Matrix exposing
 @docs multiplyRealMatrices
 @docs identityMatrix
 @docs findPivot
+@docs gaussJordan
 
 -}
 
@@ -379,6 +381,8 @@ jordanReduce (Matrix matrix) =
         |> Matrix
 
 
+{-| Internal function composition of Gaussian Elimination and Jordan Elimination
+-}
 gaussJordan : Matrix Float -> ColumnVector Float -> Matrix Float
 gaussJordan matrix b =
     gaussianReduce matrix b

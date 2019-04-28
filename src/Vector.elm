@@ -19,7 +19,8 @@ module Vector exposing
     , complexVectorLength
     , cross
     , distance
-    , normalise, realVectorLength, subtractRealVectors, vector3ToVector
+    , normalise
+    , realVectorLength, subtractRealVectors, vector3ToVector
     )
 
 {-| A module for Vectors
@@ -48,6 +49,7 @@ module Vector exposing
 @docs complexVectorLength
 @docs cross
 @docs distance
+@docs normalise
 
 -}
 

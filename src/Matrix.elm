@@ -20,7 +20,8 @@ module Matrix exposing
     , findPivot
     , gaussJordan
     , gaussianReduce
-    , isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
+    , isHermitian
+    , isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -50,6 +51,7 @@ module Matrix exposing
 @docs findPivot
 @docs gaussJordan
 @docs gaussianReduce
+@docs isHermitian
 
 -}
 
@@ -236,6 +238,8 @@ isSymmetric matrix =
     transpose matrix == matrix
 
 
+{-| Predicate to determine if Matrix is Hermitian
+-}
 isHermitian : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Bool
 isHermitian matrix =
     adjoint matrix == matrix

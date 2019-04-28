@@ -17,7 +17,8 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot, gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
+    , findPivot
+    , gaussJordan, gaussianReduce, isHermitian, isSymmetric, jordanReduce, linearlyIndependent, multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -44,6 +45,7 @@ module Matrix exposing
 @docs multiplyComplexMatrices
 @docs multiplyRealMatrices
 @docs identityMatrix
+@docs findPivot
 
 -}
 
@@ -264,6 +266,8 @@ swap (Matrix matrix) rowIndexOne rowIndexTwo =
             Matrix matrix
 
 
+{-| Internal function for finding pivot entry in Gaussian elimination
+-}
 findPivot : Matrix number -> Int -> Maybe Int
 findPivot (Matrix matrix) initialRowIndex =
     let

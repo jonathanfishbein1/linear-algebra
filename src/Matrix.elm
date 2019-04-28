@@ -24,7 +24,8 @@ module Matrix exposing
     , isSymmetric
     , jordanReduce
     , areLinearlyIndependent
-    , multiplyRealVectorRealMatrix, nullSpace, scale, solve, subrow, swap
+    , multiplyRealVectorRealMatrix
+    , nullSpace, scale, solve, subrow, swap
     )
 
 {-| A module for Matrix
@@ -58,6 +59,7 @@ module Matrix exposing
 @docs isSymmetric
 @docs jordanReduce
 @docs areLinearlyIndependent
+@docs multiplyRealVectorRealMatrix
 
 -}
 
@@ -232,7 +234,7 @@ map2VectorCartesianComplex (Matrix right) (RowVector (Vector.Vector intermediate
             Matrix acc
 
 
-{-| Multiply a Vector by a Matrix
+{-| Multiply a real Vector by a real Matrix
 -}
 multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Matrix number
 multiplyRealVectorRealMatrix matrix vector =

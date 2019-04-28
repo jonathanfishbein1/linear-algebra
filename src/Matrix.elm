@@ -68,6 +68,7 @@ module Matrix exposing
 @docs scale
 @docs solve
 @docs subrow
+@docs swap
 
 -}
 

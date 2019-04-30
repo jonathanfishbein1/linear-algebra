@@ -1,5 +1,6 @@
 module Vector exposing
     ( Vector(..)
+    , Vector3(..)
     , addComplexVectors
     , addRealVectors
     , map
@@ -15,6 +16,13 @@ module Vector exposing
     , realVectorDotProduct
     , complexVectorDotProduct
     , concat
+    , complexVectorLength
+    , cross
+    , distance
+    , normalise
+    , realVectorLength
+    , subtractRealVectors
+    , vector3ToVector
     )
 
 {-| A module for Vectors
@@ -23,6 +31,7 @@ module Vector exposing
 # Types
 
 @docs Vector
+@docs Vector3
 
 @docs addComplexVectors
 @docs addRealVectors
@@ -39,10 +48,18 @@ module Vector exposing
 @docs realVectorDotProduct
 @docs complexVectorDotProduct
 @docs concat
+@docs complexVectorLength
+@docs cross
+@docs distance
+@docs normalise
+@docs realVectorLength
+@docs subtractRealVectors
+@docs vector3ToVector
 
 -}
 
 import ComplexNumbers
+import Float.Extra
 import Monoid
 
 
@@ -50,6 +67,12 @@ import Monoid
 -}
 type Vector a
     = Vector (List a)
+
+
+{-| 3 Dimensional Vector type
+-}
+type Vector3 a
+    = Vector3 a a a
 
 
 {-| Add Complex Vectors together
@@ -161,3 +184,65 @@ realVectorDotProduct vectorOne vectorTwo =
 concat : Vector a -> Vector a -> Vector a
 concat (Vector listOne) (Vector listTwo) =
     Vector <| listOne ++ listTwo
+
+
+{-| Calculate length of a real vector
+-}
+realVectorLength : Vector Float -> Float
+realVectorLength =
+    foldl (\x acc -> x ^ 2 + acc) 0
+        >> Basics.sqrt
+
+
+{-| Calculate length of a complex vector
+-}
+complexVectorLength : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
+complexVectorLength complexNumbers =
+    let
+        complexNumbersPolar =
+            map ComplexNumbers.convertFromCartesianToPolar complexNumbers
+    in
+    foldl (\x acc -> ComplexNumbers.add (ComplexNumbers.power 2 x |> ComplexNumbers.convertFromPolarToCartesian) acc) ComplexNumbers.zero complexNumbersPolar
+
+
+{-| Subtract Real Vectors together
+-}
+subtractRealVectors : Vector number -> Vector number -> Vector number
+subtractRealVectors =
+    liftA2 (-)
+
+
+{-| Calculate distance between two vectors
+-}
+distance : Vector Float -> Vector Float -> Float
+distance vectorOne vectorTwo =
+    subtractRealVectors vectorOne vectorTwo
+        |> realVectorLength
+
+
+{-| Take the cross product of two 3D vectors
+-}
+cross : Vector3 number -> Vector3 number -> Vector3 number
+cross (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
+    Vector3
+        (y1 * z2 - y2 * z1)
+        (z1 * x2 - z2 * x1)
+        (x1 * y2 - x2 * y1)
+
+
+{-| Convert a Vector3 type to a Vector typeZ
+-}
+vector3ToVector : Vector3 number -> Vector number
+vector3ToVector (Vector3 x y z) =
+    Vector [ x, y, z ]
+
+
+{-| Adjust a vector so that its length is exactly one
+-}
+normalise : Vector Float -> Vector Float
+normalise v =
+    if Float.Extra.equalWithin 0.000000001 (realVectorLength v) 0.0 then
+        v
+
+    else
+        map ((/) (realVectorLength v)) v

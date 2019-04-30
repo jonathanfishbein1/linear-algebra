@@ -360,4 +360,212 @@ suite =
                 in
                 Monoid.concat (Vector.sumComplex [ ComplexNumbers.zero ]) listOfMonoids
                     |> Expect.equal expected
+        , Test.fuzz Fuzz.int "tests dot product is nondegenerative" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    expected =
+                        Vector.realVectorDotProduct a a
+                in
+                expected
+                    |> Expect.atLeast 0
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests dot product respects addition" <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    c =
+                        Vector.Vector [ three ]
+
+                    aPlusBDotc =
+                        Vector.realVectorDotProduct (Vector.addRealVectors a b) c
+
+                    aDotB =
+                        Vector.realVectorDotProduct a c
+
+                    bDotC =
+                        Vector.realVectorDotProduct b c
+
+                    aDotBPlusbDotC =
+                        aDotB + bDotC
+                in
+                aPlusBDotc
+                    |> Expect.equal aDotBPlusbDotC
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests dot product respects scalar multiplication" <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    threeTimesADotB =
+                        Vector.realVectorDotProduct (Vector.map ((*) three) a) b
+
+                    aDotBTimesThree =
+                        Vector.realVectorDotProduct a b * three
+                in
+                threeTimesADotB
+                    |> Expect.equal aDotBTimesThree
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests dot product is symetric" <|
+            \one two ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    aDotB =
+                        Vector.realVectorDotProduct a b
+
+                    bDotA =
+                        Vector.realVectorDotProduct b a
+                in
+                aDotB
+                    |> Expect.equal bDotA
+        , Test.fuzz (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector length equals square of dot product" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    squareRootADotA =
+                        Basics.sqrt (Vector.realVectorDotProduct a a)
+
+                    aLength =
+                        Vector.realVectorLength a
+                in
+                squareRootADotA
+                    |> Expect.equal aLength
+        , Test.fuzz Fuzz.float "tests vector length is nondegenerative" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    expected =
+                        Vector.realVectorLength a
+                in
+                expected
+                    |> Expect.atLeast 0
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector length satisfies triangle inequality" <|
+            \one two ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    aPlusBLength =
+                        Vector.realVectorLength <| Vector.addRealVectors a b
+
+                    lengthAPlusLengthB =
+                        Vector.realVectorLength a + Vector.realVectorLength b
+                in
+                aPlusBLength
+                    |> Expect.atMost lengthAPlusLengthB
+        , Test.fuzz2 (Fuzz.floatRange -10 10) (Fuzz.floatRange -10 10) "tests vector length respects scalar multiplication" <|
+            \one two ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    legnthOfTwoTimesA =
+                        Vector.realVectorLength (Vector.map ((*) two) a)
+
+                    lengthOfATimesTwo =
+                        Basics.abs two * Vector.realVectorLength a
+                in
+                legnthOfTwoTimesA
+                    |> Expect.within (Expect.Absolute 0.1) lengthOfATimesTwo
+        , Test.fuzz Fuzz.float "tests distance is nondegenerative" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    expected =
+                        Vector.distance a a
+                in
+                expected
+                    |> Expect.atLeast 0
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector distance satisfies triangle inequality" <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    c =
+                        Vector.Vector [ three ]
+
+                    distanceAB =
+                        Vector.distance a b
+
+                    distanceAC =
+                        Vector.distance a c
+
+                    distanceCB =
+                        Vector.distance c b
+                in
+                distanceAB
+                    |> Expect.atMost (distanceAC + distanceCB)
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests distance is symetric" <|
+            \one two ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    distanceAB =
+                        Vector.realVectorDotProduct a b
+
+                    distanceBA =
+                        Vector.realVectorDotProduct b a
+                in
+                distanceAB
+                    |> Expect.equal distanceBA
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests cross product is orthagonal to both vectors" <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector3 one two three
+
+                    b =
+                        Vector.Vector3 two three one
+
+                    aCrossB =
+                        Vector.cross a b
+                            |> Vector.vector3ToVector
+
+                    aDotACrossB =
+                        Vector.realVectorDotProduct (Vector.vector3ToVector a) aCrossB
+                in
+                aDotACrossB
+                    |> Expect.equal 0
+        , Test.fuzz (Fuzz.map toFloat (Fuzz.intRange 1 10)) "tests unit vector length is 1" <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    normalisedALength =
+                        Vector.normalise a
+                            |> Vector.realVectorLength
+                in
+                normalisedALength
+                    |> Expect.equal 1
         ]

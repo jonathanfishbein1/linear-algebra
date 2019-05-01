@@ -30,6 +30,7 @@ module Matrix exposing
     , solve
     , subrow
     , swap
+    , VectorSpace(..), doesSetSpanSpace
     )
 
 {-| A module for Matrix
@@ -437,7 +438,7 @@ solve matrix b =
             gaussJordan matrix b
 
         solution =
-            List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
+            Debug.log "solution " <| List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
     in
     if List.all isNaN solution then
         NoUniqueSolution "No Unique Solution"
@@ -458,6 +459,13 @@ mapRowVector f (RowVector rowVector) =
 
 combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
 combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)) =
+    let
+        listOfRowVectorsPrint =
+            Debug.log "listOfRowVectors " listOfRowVectors
+
+        listPrint =
+            Debug.log "list " list
+    in
     List.map2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
         |> Matrix
 
@@ -527,10 +535,10 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
                 |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
 
         matrix =
-            List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix rowVectors) identityColumnVectors
+            Debug.log "matrix " <| List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix rowVectors) identityColumnVectors
 
         result =
-            solve matrix (ColumnVector <| Vector.Vector [])
+            Debug.log "result " <| solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize vectorSpace (\_ -> 0))
     in
     case result of
         UniqueSolution _ ->

@@ -524,7 +524,7 @@ rowVectorTranspose (RowVector vector) =
     ColumnVector vector
 
 
-doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Maybe Bool
+doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Result String Bool
 doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
     if vectorSpace == List.length rowVectors then
         let
@@ -546,13 +546,13 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
         in
         case result of
             UniqueSolution _ ->
-                Just True
+                Ok True
 
             _ ->
-                Just False
+                Ok False
 
     else
-        Nothing
+        Err "Please pass in same number of Vectors as the Vector space"
 
 
 nDimension : Matrix a -> Int

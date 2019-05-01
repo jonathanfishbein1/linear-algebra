@@ -570,6 +570,8 @@ mDimension (Matrix listOfRowVectors) =
     List.length listOfRowVectors
 
 
+{-| Determine whether list of vectors are a basis for a space
+-}
 areBasis : VectorSpace -> List (RowVector Float) -> Bool
 areBasis vectorSpace rowVectors =
     if doesSetSpanSpace vectorSpace rowVectors && areLinearlyIndependent rowVectors then

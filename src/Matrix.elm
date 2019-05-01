@@ -30,7 +30,7 @@ module Matrix exposing
     , solve
     , subrow
     , swap
-    , VectorSpace(..), doesSetSpanSpace
+    , VectorSpace(..), areBasis, doesSetSpanSpace
     )
 
 {-| A module for Matrix
@@ -568,3 +568,14 @@ nDimension (Matrix listOfRowVectors) =
 mDimension : Matrix a -> Int
 mDimension (Matrix listOfRowVectors) =
     List.length listOfRowVectors
+
+
+{-| Determine whether list of vectors are a basis for a space
+-}
+areBasis : VectorSpace -> List (RowVector Float) -> Bool
+areBasis vectorSpace rowVectors =
+    if doesSetSpanSpace vectorSpace rowVectors && areLinearlyIndependent rowVectors then
+        True
+
+    else
+        False

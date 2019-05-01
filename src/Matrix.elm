@@ -517,6 +517,8 @@ rowVectorTranspose (RowVector vector) =
     ColumnVector vector
 
 
+{-| Determine whether list of vectors spans a space
+-}
 doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Bool
 doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
     let
@@ -549,6 +551,8 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
             False
 
 
+{-| Number of columns in Matrix
+-}
 nDimension : Matrix a -> Int
 nDimension (Matrix listOfRowVectors) =
     case listOfRowVectors of
@@ -559,6 +563,8 @@ nDimension (Matrix listOfRowVectors) =
             Vector.dimension x
 
 
+{-| Number of rows in Matrix
+-}
 mDimension : Matrix a -> Int
 mDimension (Matrix listOfRowVectors) =
     List.length listOfRowVectors

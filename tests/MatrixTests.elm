@@ -1388,4 +1388,113 @@ suite =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
                 Expect.false "Vector does not spans R2" result
+        , Test.test "tests matrix areBasis with standard basis vectors" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    result =
+                        Matrix.areBasis r2 listOfRowVectors
+                in
+                Expect.true "Vectors are basis for R2" result
+        , Test.test "tests matrix areBasis with zero vectors" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    result =
+                        Matrix.areBasis r2 listOfRowVectors
+                in
+                Expect.false "Vectors are not basis for R2" result
+        , Test.test "tests matrix areBasis with standard basis vectors 3 dimensions" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorSpace 3
+
+                    result =
+                        Matrix.areBasis r3 listOfRowVectors
+                in
+                Expect.false "Vectors are not basis for R3" result
+        , Test.test "tests matrix areBasis with zero vectors 3 dimensions" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 0, 1 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorSpace 3
+
+                    result =
+                        Matrix.areBasis r3 listOfRowVectors
+                in
+                Expect.true "Vectors are basis fro R3" result
+        , Test.test "tests matrix areBasis with three vectors" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorSpace 3
+
+                    result =
+                        Matrix.areBasis r3 listOfRowVectors
+                in
+                Expect.false "Vectors are not basis R3" result
+        , Test.test "tests matrix areBasis with three vectors testing r2" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    result =
+                        Matrix.areBasis r2 listOfRowVectors
+                in
+                Expect.false "Vectors are not basis for R2" result
+        , Test.test "tests matrix areBasis with three dimensional vector against R2" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 2, 0, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    result =
+                        Matrix.areBasis r2 listOfRowVectors
+                in
+                Expect.false "Vectos are not basis for R2" result
         ]

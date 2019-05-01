@@ -30,7 +30,7 @@ module Matrix exposing
     , solve
     , subrow
     , swap
-    , VectorSpace(..), doesSetSpanSpace
+    , VectorSpace(..), areBasis, doesSetSpanSpace
     )
 
 {-| A module for Matrix

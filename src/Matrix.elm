@@ -524,31 +524,35 @@ rowVectorTranspose (RowVector vector) =
     ColumnVector vector
 
 
-doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Bool
+doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Maybe Bool
 doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
-    let
-        (Matrix identityRowVectors) =
-            identityMatrix vectorSpace
+    if vectorSpace == List.length rowVectors then
+        let
+            (Matrix identityRowVectors) =
+                identityMatrix vectorSpace
 
-        identityColumnVectors =
-            List.map rowVectorTranspose identityRowVectors
-                |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
+            identityColumnVectors =
+                List.map rowVectorTranspose identityRowVectors
+                    |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
 
-        matrix =
-            Debug.log "matrix " <| List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix rowVectors) identityColumnVectors
+            matrix =
+                Debug.log "matrix " <| List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix rowVectors) identityColumnVectors
 
-        mD =
-            mDimension matrix
+            mD =
+                mDimension matrix
 
-        result =
-            Debug.log "result " <| solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0))
-    in
-    case result of
-        UniqueSolution _ ->
-            True
+            result =
+                Debug.log "result " <| solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0))
+        in
+        case result of
+            UniqueSolution _ ->
+                Just True
 
-        _ ->
-            False
+            _ ->
+                Just False
+
+    else
+        Nothing
 
 
 nDimension : Matrix a -> Int

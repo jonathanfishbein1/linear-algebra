@@ -1377,4 +1377,40 @@ suite =
 
                     Err _ ->
                         Expect.fail "fail"
+        , Test.test "tests matrix doesSetSpanSpace with three vectors testing r2" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    result =
+                        Matrix.doesSetSpanSpace r2 listOfRowVectors
+                in
+                Expect.err result
+        , Test.test "tests matrix doesSetSpanSpace with three dimensional vector against R2" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 2, 0, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    result =
+                        Matrix.doesSetSpanSpace r2 listOfRowVectors
+                in
+                case result of
+                    Ok x ->
+                        Expect.false "Vector does not spans R2" x
+
+                    Err _ ->
+                        Expect.fail "fail"
         ]

@@ -537,8 +537,11 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
         matrix =
             Debug.log "matrix " <| List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix rowVectors) identityColumnVectors
 
+        mD =
+            mDimension matrix
+
         result =
-            Debug.log "result " <| solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize vectorSpace (\_ -> 0))
+            Debug.log "result " <| solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0))
     in
     case result of
         UniqueSolution _ ->
@@ -546,3 +549,18 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
 
         _ ->
             False
+
+
+nDimension : Matrix a -> Int
+nDimension (Matrix listOfRowVectors) =
+    case listOfRowVectors of
+        [] ->
+            0
+
+        (RowVector x) :: xs ->
+            Vector.dimension x
+
+
+mDimension : Matrix a -> Int
+mDimension (Matrix listOfRowVectors) =
+    List.length listOfRowVectors

@@ -438,7 +438,7 @@ solve matrix b =
             gaussJordan matrix b
 
         solution =
-            Debug.log "solution " <| List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
+            List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
     in
     if List.all isNaN solution then
         NoUniqueSolution "No Unique Solution"
@@ -459,13 +459,6 @@ mapRowVector f (RowVector rowVector) =
 
 combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
 combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)) =
-    let
-        listOfRowVectorsPrint =
-            Debug.log "listOfRowVectors " listOfRowVectors
-
-        listPrint =
-            Debug.log "list " list
-    in
     List.map2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
         |> Matrix
 
@@ -540,13 +533,13 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
                 |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
 
         matrix =
-            Debug.log "matrix " <| List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix transposedListOfRowVectors) identityColumnVectors
+            List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix transposedListOfRowVectors) identityColumnVectors
 
         mD =
             mDimension matrix
 
         result =
-            Debug.log "result " <| solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0))
+            solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0))
     in
     case result of
         UniqueSolution _ ->

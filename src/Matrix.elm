@@ -103,6 +103,8 @@ type Solution
     | NoUniqueSolution String
 
 
+{-| Type to represent vector space such as R, R2, R3
+-}
 type VectorSpace
     = VectorSpace Int
 
@@ -507,6 +509,8 @@ areLinearlyIndependent listOfRowVectors =
             False
 
 
+{-| Convert a RowVector into a ColumnVector
+-}
 rowVectorTranspose : RowVector a -> ColumnVector a
 rowVectorTranspose (RowVector vector) =
     ColumnVector vector

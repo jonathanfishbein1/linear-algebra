@@ -103,6 +103,10 @@ type Solution
     | NoUniqueSolution String
 
 
+type VectorSpace
+    = VectorSpace Int
+
+
 {-| Add two Real Matrices together
 -}
 addRealMatrices : Matrix number -> Matrix number -> Matrix number

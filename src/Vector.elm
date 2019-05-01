@@ -23,6 +23,7 @@ module Vector exposing
     , realVectorLength
     , subtractRealVectors
     , vector3ToVector
+    , dimension
     )
 
 {-| A module for Vectors
@@ -246,3 +247,8 @@ normalise v =
 
     else
         map ((/) (realVectorLength v)) v
+
+
+dimension : Vector a -> Int
+dimension (Vector list) =
+    List.length list

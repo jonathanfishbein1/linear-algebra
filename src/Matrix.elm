@@ -568,3 +568,12 @@ nDimension (Matrix listOfRowVectors) =
 mDimension : Matrix a -> Int
 mDimension (Matrix listOfRowVectors) =
     List.length listOfRowVectors
+
+
+areBasis : VectorSpace -> List (RowVector Float) -> Bool
+areBasis vectorSpace rowVectors =
+    if doesSetSpanSpace vectorSpace rowVectors && areLinearlyIndependent rowVectors then
+        True
+
+    else
+        False

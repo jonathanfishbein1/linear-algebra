@@ -1279,4 +1279,138 @@ suite =
                         ]
                 in
                 Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent listOfRowVectors)
+        , Test.test "tests matrix doesSetSpanSpace with standard basis vectors" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    result =
+                        Matrix.doesSetSpanSpace r2 listOfRowVectors
+                in
+                Expect.ok result
+        , Test.test "tests matrix doesSetSpanSpace with zero vectors" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    result =
+                        Matrix.doesSetSpanSpace r2 listOfRowVectors
+                in
+                case result of
+                    Ok x ->
+                        Expect.false "Vector does not span R2" x
+
+                    Err _ ->
+                        Expect.fail "fail"
+        , Test.test "tests matrix doesSetSpanSpace with standard basis vectors 3 dimensions" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorSpace 3
+
+                    result =
+                        Matrix.doesSetSpanSpace r3 listOfRowVectors
+                in
+                case result of
+                    Ok x ->
+                        Expect.false "Vector does not spans R3" x
+
+                    Err _ ->
+                        Expect.fail "fail"
+        , Test.test "tests matrix doesSetSpanSpace with zero vectors 3 dimensions" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 0, 1 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorSpace 3
+
+                    result =
+                        Matrix.doesSetSpanSpace r3 listOfRowVectors
+                in
+                case result of
+                    Ok x ->
+                        Expect.true "Vector spans R3" x
+
+                    Err _ ->
+                        Expect.fail "fail"
+        , Test.test "tests matrix doesSetSpanSpace with three vectors" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorSpace 3
+
+                    result =
+                        Matrix.doesSetSpanSpace r3 listOfRowVectors
+                in
+                case result of
+                    Ok x ->
+                        Expect.false "Vector does not spans R3" x
+
+                    Err _ ->
+                        Expect.fail "fail"
+        , Test.test "tests matrix doesSetSpanSpace with three vectors testing r2" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    result =
+                        Matrix.doesSetSpanSpace r2 listOfRowVectors
+                in
+                Expect.err result
+        , Test.test "tests matrix doesSetSpanSpace with three dimensional vector against R2" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 2, 0, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    result =
+                        Matrix.doesSetSpanSpace r2 listOfRowVectors
+                in
+                case result of
+                    Ok x ->
+                        Expect.false "Vector does not spans R2" x
+
+                    Err _ ->
+                        Expect.fail "fail"
         ]

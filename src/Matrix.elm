@@ -30,6 +30,7 @@ module Matrix exposing
     , solve
     , subrow
     , swap
+    , VectorSpace(..), doesSetSpanSpace
     )
 
 {-| A module for Matrix
@@ -101,6 +102,12 @@ type Matrix a
 type Solution
     = UniqueSolution (ColumnVector Float)
     | NoUniqueSolution String
+
+
+{-| Type to represent vector space such as R, R2, R3
+-}
+type VectorSpace
+    = VectorSpace Int
 
 
 {-| Add two Real Matrices together
@@ -431,7 +438,7 @@ solve matrix b =
             gaussJordan matrix b
 
         solution =
-            List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
+            Debug.log "solution " <| List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
     in
     if List.all isNaN solution then
         NoUniqueSolution "No Unique Solution"
@@ -452,6 +459,13 @@ mapRowVector f (RowVector rowVector) =
 
 combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
 combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)) =
+    let
+        listOfRowVectorsPrint =
+            Debug.log "listOfRowVectors " listOfRowVectors
+
+        listPrint =
+            Debug.log "list " list
+    in
     List.map2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
         |> Matrix
 
@@ -501,3 +515,56 @@ areLinearlyIndependent listOfRowVectors =
 
         _ ->
             False
+
+
+{-| Convert a RowVector into a ColumnVector
+-}
+rowVectorTranspose : RowVector a -> ColumnVector a
+rowVectorTranspose (RowVector vector) =
+    ColumnVector vector
+
+
+doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Result String Bool
+doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
+    if vectorSpace == List.length rowVectors then
+        let
+            (Matrix identityRowVectors) =
+                identityMatrix vectorSpace
+
+            identityColumnVectors =
+                List.map rowVectorTranspose identityRowVectors
+                    |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
+
+            matrix =
+                Debug.log "matrix " <| List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix rowVectors) identityColumnVectors
+
+            mD =
+                mDimension matrix
+
+            result =
+                Debug.log "result " <| solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0))
+        in
+        case result of
+            UniqueSolution _ ->
+                Ok True
+
+            _ ->
+                Ok False
+
+    else
+        Err "Please pass in same number of Vectors as the Vector space"
+
+
+nDimension : Matrix a -> Int
+nDimension (Matrix listOfRowVectors) =
+    case listOfRowVectors of
+        [] ->
+            0
+
+        (RowVector x) :: xs ->
+            Vector.dimension x
+
+
+mDimension : Matrix a -> Int
+mDimension (Matrix listOfRowVectors) =
+    List.length listOfRowVectors

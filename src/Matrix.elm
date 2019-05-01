@@ -501,3 +501,8 @@ areLinearlyIndependent listOfRowVectors =
 
         _ ->
             False
+
+
+rowVectorTranspose : RowVector a -> ColumnVector a
+rowVectorTranspose (RowVector vector) =
+    ColumnVector vector

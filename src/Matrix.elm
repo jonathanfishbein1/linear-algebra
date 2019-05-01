@@ -514,3 +514,27 @@ areLinearlyIndependent listOfRowVectors =
 rowVectorTranspose : RowVector a -> ColumnVector a
 rowVectorTranspose (RowVector vector) =
     ColumnVector vector
+
+
+doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Bool
+doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
+    let
+        (Matrix identityRowVectors) =
+            identityMatrix vectorSpace
+
+        identityColumnVectors =
+            List.map rowVectorTranspose identityRowVectors
+                |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
+
+        matrix =
+            List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix rowVectors) identityColumnVectors
+
+        result =
+            solve matrix (ColumnVector <| Vector.Vector [])
+    in
+    case result of
+        UniqueSolution _ ->
+            True
+
+        _ ->
+            False

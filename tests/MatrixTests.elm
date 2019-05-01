@@ -1279,7 +1279,7 @@ suite =
                         ]
                 in
                 Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent listOfRowVectors)
-        , Test.test "tests matrix doesSetSpanSpace with one vector" <|
+        , Test.test "tests matrix doesSetSpanSpace with standard basis vectors" <|
             \_ ->
                 let
                     listOfRowVectors =
@@ -1291,4 +1291,16 @@ suite =
                         Matrix.VectorSpace 2
                 in
                 Expect.true "Vector spans R2" (Matrix.doesSetSpanSpace r2 listOfRowVectors)
+        , Test.test "tests matrix doesSetSpanSpace with zero vectors" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+                in
+                Expect.false "Vector not span R2" (Matrix.doesSetSpanSpace r2 listOfRowVectors)
         ]

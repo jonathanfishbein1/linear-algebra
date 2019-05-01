@@ -1302,5 +1302,30 @@ suite =
                     r2 =
                         Matrix.VectorSpace 2
                 in
-                Expect.false "Vector not span R2" (Matrix.doesSetSpanSpace r2 listOfRowVectors)
+                Expect.false "Vector does not span R2" (Matrix.doesSetSpanSpace r2 listOfRowVectors)
+        , Test.test "tests matrix doesSetSpanSpace with standard basis vectors 3 dimensions" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorSpace 3
+                in
+                Expect.false "Vector does not spans R3" (Matrix.doesSetSpanSpace r3 listOfRowVectors)
+        , Test.test "tests matrix doesSetSpanSpace with zero vectors 3 dimensions" <|
+            \_ ->
+                let
+                    listOfRowVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 0, 1 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorSpace 3
+                in
+                Expect.true "Vector spans R3" (Matrix.doesSetSpanSpace r3 listOfRowVectors)
         ]

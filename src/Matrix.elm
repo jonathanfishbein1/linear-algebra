@@ -524,40 +524,36 @@ rowVectorTranspose (RowVector vector) =
     ColumnVector vector
 
 
-doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Result String Bool
+doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Bool
 doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
-    if vectorSpace == List.length rowVectors then
-        let
-            (Matrix transposedListOfRowVectors) =
-                rowVectors
-                    |> Matrix
-                    |> transpose
+    let
+        (Matrix transposedListOfRowVectors) =
+            rowVectors
+                |> Matrix
+                |> transpose
 
-            (Matrix identityRowVectors) =
-                identityMatrix vectorSpace
+        (Matrix identityRowVectors) =
+            identityMatrix vectorSpace
 
-            identityColumnVectors =
-                List.map rowVectorTranspose identityRowVectors
-                    |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
+        identityColumnVectors =
+            List.map rowVectorTranspose identityRowVectors
+                |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
 
-            matrix =
-                Debug.log "matrix " <| List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix transposedListOfRowVectors) identityColumnVectors
+        matrix =
+            Debug.log "matrix " <| List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix transposedListOfRowVectors) identityColumnVectors
 
-            mD =
-                mDimension matrix
+        mD =
+            mDimension matrix
 
-            result =
-                Debug.log "result " <| solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0))
-        in
-        case result of
-            UniqueSolution _ ->
-                Ok True
+        result =
+            Debug.log "result " <| solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0))
+    in
+    case result of
+        UniqueSolution _ ->
+            True
 
-            _ ->
-                Ok False
-
-    else
-        Err "Please pass in same number of Vectors as the Vector space"
+        _ ->
+            False
 
 
 nDimension : Matrix a -> Int

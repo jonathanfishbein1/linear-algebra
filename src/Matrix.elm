@@ -528,6 +528,11 @@ doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Result String Bool
 doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
     if vectorSpace == List.length rowVectors then
         let
+            (Matrix transposedListOfRowVectors) =
+                rowVectors
+                    |> Matrix
+                    |> transpose
+
             (Matrix identityRowVectors) =
                 identityMatrix vectorSpace
 
@@ -536,7 +541,7 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
                     |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
 
             matrix =
-                Debug.log "matrix " <| List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix rowVectors) identityColumnVectors
+                Debug.log "matrix " <| List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix transposedListOfRowVectors) identityColumnVectors
 
             mD =
                 mDimension matrix

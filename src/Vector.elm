@@ -23,7 +23,7 @@ module Vector exposing
     , realVectorLength
     , subtractRealVectors
     , vector3ToVector
-    , dimension
+    , Scalar(..), complexVectorSubspace, dimension, realVectorSubspace
     )
 
 {-| A module for Vectors
@@ -61,6 +61,7 @@ module Vector exposing
 
 import ComplexNumbers
 import Float.Extra
+import List.Extra
 import Monoid
 
 
@@ -74,6 +75,10 @@ type Vector a
 -}
 type Vector3 a
     = Vector3 a a a
+
+
+type Scalar a
+    = Scalar a
 
 
 {-| Add Complex Vectors together
@@ -252,3 +257,49 @@ normalise v =
 dimension : Vector a -> Int
 dimension (Vector list) =
     List.length list
+
+
+realVectorSubspace : Scalar number -> List (Vector number) -> List (number -> Bool) -> Bool
+realVectorSubspace scalar vectorList predicates =
+    vectorSubspace 0 (*) addRealVectors scalar vectorList predicates
+
+
+complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian number) -> List (Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (ComplexNumbers.ComplexNumberCartesian number -> Bool) -> Bool
+complexVectorSubspace scalar vectorList predicates =
+    vectorSubspace ComplexNumbers.zero ComplexNumbers.multiply addComplexVectors scalar vectorList predicates
+
+
+vectorSubspace : b -> (a -> b -> b) -> (Vector b -> Vector b -> Vector b) -> Scalar a -> List (Vector b) -> List (b -> Bool) -> Bool
+vectorSubspace zero multiply add (Scalar scalar) vectorList predicates =
+    let
+        size =
+            Maybe.withDefault (Vector []) (List.head vectorList)
+                |> dimension
+
+        zeroVector =
+            List.Extra.initialize size (\_ -> zero)
+                |> Vector
+
+        containsZeroVector =
+            List.member zeroVector vectorList
+
+        scaledVectors =
+            List.map (map (multiply scalar)) vectorList
+
+        closurePassCriteria =
+            List.map (\(Vector vector) -> Vector <| List.map2 (\predicate x -> predicate x) predicates vector)
+                >> List.all (\(Vector vector) -> List.all ((==) True) vector)
+
+        closureUnderScalarMultiplication =
+            closurePassCriteria scaledVectors
+
+        cartesianAddVectors =
+            List.Extra.lift2 add
+
+        additionOfVectors =
+            cartesianAddVectors vectorList vectorList
+
+        closureUnderAddition =
+            closurePassCriteria additionOfVectors
+    in
+    containsZeroVector && closureUnderScalarMultiplication && closureUnderAddition

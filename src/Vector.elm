@@ -23,7 +23,7 @@ module Vector exposing
     , realVectorLength
     , subtractRealVectors
     , vector3ToVector
-    , dimension
+    , Scalar(..), dimension, realVectorSubspace
     )
 
 {-| A module for Vectors
@@ -286,11 +286,11 @@ realVectorSubspace (Scalar scalar) vectorList predicates =
             List.map (map ((*) scalar)) vectorList
 
         listOfVectorsPassPredicates =
-            List.map2 (\f x -> map f x) predicates scaledVectors
+            List.map (\(Vector vector) -> Vector <| List.map2 (\predicate x -> predicate x) predicates vector) scaledVectors
                 |> List.filter (\(Vector vector) -> List.all ((==) True) vector)
 
         closureUnderScalarMultiplication =
-            List.length vectorList == List.length listOfVectorsPassPredicates
+            Debug.log " closureUnderScalarMultiplication " <| List.length vectorList == List.length listOfVectorsPassPredicates
 
         cartesianAddVectors =
             List.Extra.lift2 addRealVectors
@@ -301,7 +301,8 @@ realVectorSubspace (Scalar scalar) vectorList predicates =
         listOfVectorsPassPredicatesAddition =
             List.map2 (\f x -> map f x) predicates additionOfVectors
                 |> List.filter (\(Vector vector) -> List.all ((==) True) vector)
-        closureUnderAddition = 
+
+        closureUnderAddition =
             List.length vectorList == List.length listOfVectorsPassPredicatesAddition
     in
     containsZeroVector && closureUnderScalarMultiplication && closureUnderAddition

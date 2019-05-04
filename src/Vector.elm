@@ -259,14 +259,6 @@ dimension (Vector list) =
     List.length list
 
 
-
--- [ 1, 2 ]
---     |> List.Extra.andThen
---         (\x ->
---         [    3, 4 ]
---             |> List.Extra.andThen (\y -> [ ( x, y ) ])
-
-
 realVectorSubspace : Scalar number -> List (Vector number) -> List (number -> Bool) -> Bool
 realVectorSubspace scalar vectorList predicates =
     vectorSubspace 0 (*) addRealVectors scalar vectorList predicates

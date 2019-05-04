@@ -78,8 +78,8 @@ type Vector3 a
     = Vector3 a a a
 
 
-type Msg
-    = NewNumber Int
+type Scalar number
+    = Scalar number
 
 
 {-| Add Complex Vectors together
@@ -265,26 +265,27 @@ oneToTen =
     Random.int 1 10
 
 
-realVectorSubspace : Vector (number -> number) -> List (number -> Bool) -> Bool
-realVectorSubspace vector predicates =
+realVectorSubspace : Scalar number -> List (Vector number) -> List (number -> Bool) -> Bool
+realVectorSubspace (Scalar scalar) vectorList predicates =
     let
         size =
-            dimension vector
-
-        zeroVectorTest =
-            map (\f -> f 0) vector
+            Maybe.withDefault (Vector []) (List.head vectorList)
+                |> dimension
 
         zeroVector =
             List.Extra.initialize size (\_ -> 0)
                 |> Vector
 
         containsZeroVector =
-            equal (==) zeroVectorTest zeroVector
+            List.member zeroVector vectorList
 
-        newNumber =
-            Random.generate NewNumber oneToTen
+        scaledVectors =
+            List.map (map ((*) scalar)) vectorList
 
-        vectorWithNumbers =
-            map (\f -> f newNumber) vector
+        listOfVectorsPassPredicates =
+            List.map2 (\f x -> map f x) predicates scaledVectors
+                |> List.filter (\(Vector vector) -> List.all ((==) True) vector)
+                
+        closureUnderScalarMultiplication = List.length vectorList == List.length listOfVectorsPassPredicates
     in
-    True
+    containsZeroVector

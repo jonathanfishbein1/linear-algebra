@@ -23,7 +23,7 @@ module Vector exposing
     , realVectorLength
     , subtractRealVectors
     , vector3ToVector
-    , Scalar(..), dimension, realVectorSubspace
+    , Scalar(..), complexVectorSubspace, dimension, realVectorSubspace
     )
 
 {-| A module for Vectors
@@ -270,6 +270,11 @@ dimension (Vector list) =
 realVectorSubspace : Scalar number -> List (Vector number) -> List (number -> Bool) -> Bool
 realVectorSubspace scalar vectorList predicates =
     vectorSubspace 0 (*) addRealVectors scalar vectorList predicates
+
+
+complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian number) -> List (Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (ComplexNumbers.ComplexNumberCartesian number -> Bool) -> Bool
+complexVectorSubspace scalar vectorList predicates =
+    vectorSubspace ComplexNumbers.zero ComplexNumbers.multiply addComplexVectors scalar vectorList predicates
 
 
 vectorSubspace : b -> (a -> b -> b) -> (Vector b -> Vector b -> Vector b) -> Scalar a -> List (Vector b) -> List (b -> Bool) -> Bool

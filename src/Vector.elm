@@ -285,12 +285,12 @@ realVectorSubspace (Scalar scalar) vectorList predicates =
         scaledVectors =
             List.map (map ((*) scalar)) vectorList
 
-        listOfVectorsPassPredicates =
-            List.map (\(Vector vector) -> Vector <| List.map2 (\predicate x -> predicate x) predicates vector) scaledVectors
-                |> List.filter (\(Vector vector) -> List.all ((==) True) vector)
+        closurePassCriteria =
+            List.map (\(Vector vector) -> Vector <| List.map2 (\predicate x -> predicate x) predicates vector)
+                >> List.all (\(Vector vector) -> List.all ((==) True) vector)
 
         closureUnderScalarMultiplication =
-            Debug.log " closureUnderScalarMultiplication " <| List.length vectorList == List.length listOfVectorsPassPredicates
+            closurePassCriteria scaledVectors
 
         cartesianAddVectors =
             List.Extra.lift2 addRealVectors
@@ -298,11 +298,7 @@ realVectorSubspace (Scalar scalar) vectorList predicates =
         additionOfVectors =
             cartesianAddVectors vectorList vectorList
 
-        listOfVectorsPassPredicatesAddition =
-            List.map2 (\f x -> map f x) predicates additionOfVectors
-                |> List.filter (\(Vector vector) -> List.all ((==) True) vector)
-
         closureUnderAddition =
-            List.length vectorList == List.length listOfVectorsPassPredicatesAddition
+            closurePassCriteria additionOfVectors
     in
     containsZeroVector && closureUnderScalarMultiplication && closureUnderAddition

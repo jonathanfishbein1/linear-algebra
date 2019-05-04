@@ -269,19 +269,14 @@ complexVectorSubspace scalar vectorList predicates =
     vectorSubspace ComplexNumbers.zero ComplexNumbers.multiply addComplexVectors scalar vectorList predicates
 
 
-vectorSubspace : b -> (a -> b -> b) -> (Vector b -> Vector b -> Vector b) -> Scalar a -> List (Vector b) -> List (b -> Bool) -> Bool
+vectorSubspace : b -> (b -> b -> b) -> (Vector b -> Vector b -> Vector b) -> Scalar b -> List (Vector b) -> List (b -> Bool) -> Bool
 vectorSubspace zero multiply add (Scalar scalar) vectorList predicates =
     let
-        size =
-            Maybe.withDefault (Vector []) (List.head vectorList)
-                |> dimension
-
-        zeroVector =
-            List.Extra.initialize size (\_ -> zero)
-                |> Vector
+        testZeroVector =
+            List.map (map (multiply zero)) vectorList
 
         containsZeroVector =
-            List.member zeroVector vectorList
+            closurePassCriteria testZeroVector
 
         scaledVectors =
             List.map (map (multiply scalar)) vectorList

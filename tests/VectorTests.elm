@@ -578,9 +578,6 @@ suite =
                         , Vector.Vector
                             [ two
                             ]
-                        , Vector.Vector
-                            [ 0
-                            ]
                         ]
 
                     predicates =
@@ -604,9 +601,6 @@ suite =
                         , Vector.Vector
                             [ two
                             ]
-                        , Vector.Vector
-                            [ 0
-                            ]
                         ]
 
                     predicates =
@@ -620,8 +614,8 @@ suite =
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests complexVectorSubspace" <|
-            \one two three ->
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests complexVectorSubspace" <|
+            \one two ->
                 let
                     complexNumber =
                         ComplexNumbers.ComplexNumberCartesian
@@ -635,9 +629,6 @@ suite =
                     vectors =
                         [ Vector.Vector
                             [ complexNumber
-                            ]
-                        , Vector.Vector
-                            [ ComplexNumbers.zero
                             ]
                         ]
 
@@ -652,8 +643,8 @@ suite =
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
-        , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests complexVectorSubspace x > 10 not a subspace" <|
-            \one two three ->
+        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests complexVectorSubspace x > zero not a subspace" <|
+            \one two ->
                 let
                     complexNumber =
                         ComplexNumbers.ComplexNumberCartesian
@@ -668,13 +659,10 @@ suite =
                         [ Vector.Vector
                             [ complexNumber
                             ]
-                        , Vector.Vector
-                            [ ComplexNumbers.zero
-                            ]
                         ]
 
                     predicates =
-                        [ ComplexNumbers.equal ComplexNumbers.zero ]
+                        [ ComplexNumbers.equal ComplexNumbers.one ]
 
                     scalar =
                         Vector.Scalar complexNumber

@@ -61,6 +61,7 @@ module Vector exposing
 
 import ComplexNumbers
 import Float.Extra
+import List.Extra
 import Monoid
 
 
@@ -252,3 +253,22 @@ normalise v =
 dimension : Vector a -> Int
 dimension (Vector list) =
     List.length list
+
+
+realVectorSubspace : Vector (number -> number) -> Bool
+realVectorSubspace vector =
+    let
+        size =
+            dimension vector
+
+        zeroVectorTest =
+            map (\f -> f 0) vector
+
+        zeroVector =
+            List.Extra.initialize size (\_ -> 0)
+                |> Vector
+
+        containsZeroVector =
+            equal (==) zeroVectorTest zeroVector
+    in
+    True

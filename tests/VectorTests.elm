@@ -572,9 +572,15 @@ suite =
             \one two three ->
                 let
                     vectors =
-                        [ Vector.Vector [ one ]
-                        , Vector.Vector [ two ]
-                        , Vector.Vector [ 0 ]
+                        [ Vector.Vector
+                            [ one
+                            ]
+                        , Vector.Vector
+                            [ two
+                            ]
+                        , Vector.Vector
+                            [ 0
+                            ]
                         ]
 
                     predicates =
@@ -592,9 +598,15 @@ suite =
             \one two three ->
                 let
                     vectors =
-                        [ Vector.Vector [ one ]
-                        , Vector.Vector [ two ]
-                        , Vector.Vector [ 0 ]
+                        [ Vector.Vector
+                            [ one
+                            ]
+                        , Vector.Vector
+                            [ two
+                            ]
+                        , Vector.Vector
+                            [ 0
+                            ]
                         ]
 
                     predicates =

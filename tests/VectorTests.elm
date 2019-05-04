@@ -588,4 +588,24 @@ suite =
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests realVectorSubspace x > 10 not a subspace" <|
+            \one two three ->
+                let
+                    vectors =
+                        [ Vector.Vector [ one ]
+                        , Vector.Vector [ two ]
+                        , Vector.Vector [ 0 ]
+                        ]
+
+                    predicates =
+                        [ (>) 0 ]
+
+                    scalar =
+                        Vector.Scalar one
+
+                    isSubspace =
+                        Vector.realVectorSubspace scalar vectors predicates
+                in
+                isSubspace
+                    |> Expect.false "is not a subspace"
         ]

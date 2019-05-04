@@ -63,7 +63,6 @@ import ComplexNumbers
 import Float.Extra
 import List.Extra
 import Monoid
-import Random
 
 
 {-| Vector type
@@ -78,8 +77,8 @@ type Vector3 a
     = Vector3 a a a
 
 
-type Scalar number
-    = Scalar number
+type Scalar a
+    = Scalar a
 
 
 {-| Add Complex Vectors together
@@ -269,21 +268,26 @@ dimension (Vector list) =
 
 
 realVectorSubspace : Scalar number -> List (Vector number) -> List (number -> Bool) -> Bool
-realVectorSubspace (Scalar scalar) vectorList predicates =
+realVectorSubspace scalar vectorList predicates =
+    vectorSubspace 0 (*) addRealVectors scalar vectorList predicates
+
+
+vectorSubspace : b -> (a -> b -> b) -> (Vector b -> Vector b -> Vector b) -> Scalar a -> List (Vector b) -> List (b -> Bool) -> Bool
+vectorSubspace zero multiply add (Scalar scalar) vectorList predicates =
     let
         size =
             Maybe.withDefault (Vector []) (List.head vectorList)
                 |> dimension
 
         zeroVector =
-            List.Extra.initialize size (\_ -> 0)
+            List.Extra.initialize size (\_ -> zero)
                 |> Vector
 
         containsZeroVector =
             List.member zeroVector vectorList
 
         scaledVectors =
-            List.map (map ((*) scalar)) vectorList
+            List.map (map (multiply scalar)) vectorList
 
         closurePassCriteria =
             List.map (\(Vector vector) -> Vector <| List.map2 (\predicate x -> predicate x) predicates vector)
@@ -293,7 +297,7 @@ realVectorSubspace (Scalar scalar) vectorList predicates =
             closurePassCriteria scaledVectors
 
         cartesianAddVectors =
-            List.Extra.lift2 addRealVectors
+            List.Extra.lift2 add
 
         additionOfVectors =
             cartesianAddVectors vectorList vectorList

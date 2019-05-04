@@ -260,11 +260,6 @@ dimension (Vector list) =
     List.length list
 
 
-oneToTen : Random.Generator Int
-oneToTen =
-    Random.int 1 10
-
-
 realVectorSubspace : Scalar number -> List (Vector number) -> List (number -> Bool) -> Bool
 realVectorSubspace (Scalar scalar) vectorList predicates =
     let
@@ -285,7 +280,8 @@ realVectorSubspace (Scalar scalar) vectorList predicates =
         listOfVectorsPassPredicates =
             List.map2 (\f x -> map f x) predicates scaledVectors
                 |> List.filter (\(Vector vector) -> List.all ((==) True) vector)
-                
-        closureUnderScalarMultiplication = List.length vectorList == List.length listOfVectorsPassPredicates
+
+        closureUnderScalarMultiplication =
+            List.length vectorList == List.length listOfVectorsPassPredicates
     in
     containsZeroVector

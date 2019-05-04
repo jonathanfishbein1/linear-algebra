@@ -63,6 +63,7 @@ import ComplexNumbers
 import Float.Extra
 import List.Extra
 import Monoid
+import Random
 
 
 {-| Vector type
@@ -75,6 +76,10 @@ type Vector a
 -}
 type Vector3 a
     = Vector3 a a a
+
+
+type Msg
+    = NewNumber Int
 
 
 {-| Add Complex Vectors together
@@ -255,8 +260,13 @@ dimension (Vector list) =
     List.length list
 
 
-realVectorSubspace : Vector (number -> number) -> Bool
-realVectorSubspace vector =
+oneToTen : Random.Generator Int
+oneToTen =
+    Random.int 1 10
+
+
+realVectorSubspace : Vector (number -> number) -> List (number -> Bool) -> Bool
+realVectorSubspace vector predicates =
     let
         size =
             dimension vector
@@ -270,5 +280,11 @@ realVectorSubspace vector =
 
         containsZeroVector =
             equal (==) zeroVectorTest zeroVector
+
+        newNumber =
+            Random.generate NewNumber oneToTen
+
+        vectorWithNumbers =
+            map (\f -> f newNumber) vector
     in
     True

@@ -260,6 +260,14 @@ dimension (Vector list) =
     List.length list
 
 
+
+-- [ 1, 2 ]
+--     |> List.Extra.andThen
+--         (\x ->
+--         [    3, 4 ]
+--             |> List.Extra.andThen (\y -> [ ( x, y ) ])
+
+
 realVectorSubspace : Scalar number -> List (Vector number) -> List (number -> Bool) -> Bool
 realVectorSubspace (Scalar scalar) vectorList predicates =
     let
@@ -283,5 +291,17 @@ realVectorSubspace (Scalar scalar) vectorList predicates =
 
         closureUnderScalarMultiplication =
             List.length vectorList == List.length listOfVectorsPassPredicates
+
+        cartesianAddVectors =
+            List.Extra.lift2 addRealVectors
+
+        additionOfVectors =
+            cartesianAddVectors vectorList vectorList
+
+        listOfVectorsPassPredicatesAddition =
+            List.map2 (\f x -> map f x) predicates additionOfVectors
+                |> List.filter (\(Vector vector) -> List.all ((==) True) vector)
+        closureUnderAddition = 
+            List.length vectorList == List.length listOfVectorsPassPredicatesAddition
     in
-    containsZeroVector
+    containsZeroVector && closureUnderScalarMultiplication && closureUnderAddition

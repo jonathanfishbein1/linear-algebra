@@ -274,30 +274,9 @@ isHermitian matrix =
 {-| Swap two rows of a matrix
 -}
 swap : Matrix a -> Int -> Int -> Matrix a
-swap (Matrix matrix) rowIndexOne rowIndexTwo =
-    case ( matrix, rowIndexOne, rowIndexTwo ) of
-        ( xs, 0, 0 ) ->
-            Matrix xs
-
-        ( x :: xs, 0, j ) ->
-            let
-                listValue =
-                    Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt j (x :: xs))
-            in
-            Matrix <| listValue :: List.take (j - 1) xs ++ x :: List.drop j xs
-
-        ( xs, i, 0 ) ->
-            swap (Matrix xs) 0 i
-
-        ( x :: xs, i, j ) ->
-            let
-                (Matrix intermediateList) =
-                    swap (Matrix xs) (i - 1) (j - 1)
-            in
-            Matrix <| x :: intermediateList
-
-        ( [], _, _ ) ->
-            Matrix matrix
+swap (Matrix listOfRowVectors) rowIndexOne rowIndexTwo =
+    List.Extra.swapAt rowIndexOne rowIndexTwo listOfRowVectors
+        |> Matrix
 
 
 {-| Internal function for finding pivot entry in Gaussian elimination

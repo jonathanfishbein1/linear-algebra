@@ -315,7 +315,7 @@ findPivot (Matrix matrix) initialRowIndex =
             in
             Maybe.withDefault 0 (List.Extra.getAt nextDiagonalIndex currentRowIteration)
     in
-    List.head <| List.filter (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))
+    List.Extra.find (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))
 
 
 {-| Internal function for scalling rows by pivot entry

@@ -29,7 +29,6 @@ module Matrix exposing
     , scale
     , solve
     , subrow
-    , swap
     , VectorSpace(..), areBasis, doesSetSpanSpace
     )
 
@@ -69,7 +68,6 @@ module Matrix exposing
 @docs scale
 @docs solve
 @docs subrow
-@docs swap
 
 -}
 
@@ -271,14 +269,6 @@ isHermitian matrix =
     adjoint matrix == matrix
 
 
-{-| Swap two rows of a matrix
--}
-swap : Int -> Int -> Matrix a -> Matrix a
-swap rowIndexOne rowIndexTwo (Matrix listOfRowVectors) =
-    List.Extra.swapAt rowIndexOne rowIndexTwo listOfRowVectors
-        |> Matrix
-
-
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
 findPivot : Matrix number -> Int -> Maybe Int
@@ -327,19 +317,16 @@ subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRo
 
 
 reduceRow : Int -> Matrix Float -> Matrix Float
-reduceRow rowIndex matrix =
+reduceRow rowIndex (Matrix listOfRowVectors) =
     let
         firstPivot =
-            Maybe.withDefault rowIndex (findPivot matrix rowIndex)
+            Maybe.withDefault rowIndex (findPivot (Matrix listOfRowVectors) rowIndex)
 
-        (Matrix swappedListOfRowVectors) =
-            swap rowIndex firstPivot matrix
-
-        (Matrix listOfRowVectors) =
-            Matrix swappedListOfRowVectors
+        swappedListOfRowVectors =
+            List.Extra.swapAt rowIndex firstPivot listOfRowVectors
 
         row =
-            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
+            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex swappedListOfRowVectors)
 
         scaledRow =
             scale rowIndex row

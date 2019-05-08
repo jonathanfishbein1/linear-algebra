@@ -989,10 +989,10 @@ suite =
                             ]
 
                     swapOneTwo =
-                        Matrix.swap m1 1 2
+                        Matrix.swap 1 2 m1
 
                     swapAgain =
-                        Matrix.swap swapOneTwo 1 2
+                        Matrix.swap 1 2 swapOneTwo
                 in
                 Expect.equal m1 swapAgain
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix swap does not change matrix length" <|
@@ -1012,7 +1012,7 @@ suite =
                         List.length m1List
 
                     swapOneTwo =
-                        Matrix.swap m1 1 2
+                        Matrix.swap 1 2 m1
 
                     (Matrix.Matrix swapOneTwoList) =
                         swapOneTwo

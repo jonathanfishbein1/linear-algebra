@@ -273,8 +273,8 @@ isHermitian matrix =
 
 {-| Swap two rows of a matrix
 -}
-swap : Matrix a -> Int -> Int -> Matrix a
-swap (Matrix listOfRowVectors) rowIndexOne rowIndexTwo =
+swap : Int -> Int -> Matrix a -> Matrix a
+swap rowIndexOne rowIndexTwo (Matrix listOfRowVectors) =
     List.Extra.swapAt rowIndexOne rowIndexTwo listOfRowVectors
         |> Matrix
 
@@ -333,7 +333,7 @@ reduceRow rowIndex matrix =
             Maybe.withDefault rowIndex (findPivot matrix rowIndex)
 
         (Matrix swappedListOfRowVectors) =
-            swap matrix rowIndex firstPivot
+            swap rowIndex firstPivot matrix
 
         (Matrix listOfRowVectors) =
             Matrix swappedListOfRowVectors

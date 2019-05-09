@@ -978,49 +978,6 @@ suite =
                         Matrix.equal ComplexNumbers.equal aTimebThenAdjoint bAdjointTimesAAdjoint
                 in
                 Expect.true "AB adjoint equals A conjugate time B adjoint" result
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix swap applied twice is the same matrix" <|
-            \one two ->
-                let
-                    m1 =
-                        Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ one, two ]
-                            , Matrix.RowVector <| Vector.Vector [ two, one ]
-                            , Matrix.RowVector <| Vector.Vector [ two, one ]
-                            ]
-
-                    swapOneTwo =
-                        Matrix.swap m1 1 2
-
-                    swapAgain =
-                        Matrix.swap swapOneTwo 1 2
-                in
-                Expect.equal m1 swapAgain
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix swap does not change matrix length" <|
-            \one two ->
-                let
-                    m1 =
-                        Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ one, two ]
-                            , Matrix.RowVector <| Vector.Vector [ two, one ]
-                            , Matrix.RowVector <| Vector.Vector [ two, one ]
-                            ]
-
-                    (Matrix.Matrix m1List) =
-                        m1
-
-                    m1Length =
-                        List.length m1List
-
-                    swapOneTwo =
-                        Matrix.swap m1 1 2
-
-                    (Matrix.Matrix swapOneTwoList) =
-                        swapOneTwo
-
-                    swapOneLength =
-                        List.length swapOneTwoList
-                in
-                Expect.equal m1Length swapOneLength
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivot find row with pivot entry" <|
             \one two ->
                 let

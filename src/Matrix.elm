@@ -29,7 +29,6 @@ module Matrix exposing
     , scale
     , solve
     , subrow
-    , swap
     , VectorSpace(..), areBasis, doesSetSpanSpace
     )
 
@@ -69,7 +68,6 @@ module Matrix exposing
 @docs scale
 @docs solve
 @docs subrow
-@docs swap
 
 -}
 
@@ -271,51 +269,18 @@ isHermitian matrix =
     adjoint matrix == matrix
 
 
-{-| Swap two rows of a matrix
--}
-swap : Matrix a -> Int -> Int -> Matrix a
-swap (Matrix matrix) rowIndexOne rowIndexTwo =
-    case ( matrix, rowIndexOne, rowIndexTwo ) of
-        ( xs, 0, 0 ) ->
-            Matrix xs
-
-        ( x :: xs, 0, j ) ->
-            let
-                listValue =
-                    Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt j (x :: xs))
-            in
-            Matrix <| listValue :: List.take (j - 1) xs ++ x :: List.drop j xs
-
-        ( xs, i, 0 ) ->
-            swap (Matrix xs) 0 i
-
-        ( x :: xs, i, j ) ->
-            let
-                (Matrix intermediateList) =
-                    swap (Matrix xs) (i - 1) (j - 1)
-            in
-            Matrix <| x :: intermediateList
-
-        ( [], _, _ ) ->
-            Matrix matrix
-
-
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
 findPivot : Matrix number -> Int -> Maybe Int
-findPivot (Matrix matrix) initialRowIndex =
-    let
-        findRow x =
-            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt x matrix)
-
-        findPivotValue nextDiagonalIndex currentRowIndexIteration =
-            let
-                (RowVector (Vector.Vector currentRowIteration)) =
-                    findRow currentRowIndexIteration
-            in
-            Maybe.withDefault 0 (List.Extra.getAt nextDiagonalIndex currentRowIteration)
-    in
-    List.head <| List.filter (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))
+findPivot (Matrix listOfRowVectors) initialRowIndex =
+    List.Extra.find
+        (\currentRowIndexIteration ->
+            List.Extra.getAt currentRowIndexIteration listOfRowVectors
+                |> Maybe.andThen (\(RowVector (Vector.Vector currentRowIteration)) -> List.Extra.getAt initialRowIndex currentRowIteration)
+                |> Maybe.withDefault 0
+                |> (/=) 0
+        )
+        (List.range initialRowIndex (List.length listOfRowVectors - 1))
 
 
 {-| Internal function for scalling rows by pivot entry
@@ -348,19 +313,16 @@ subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRo
 
 
 reduceRow : Int -> Matrix Float -> Matrix Float
-reduceRow rowIndex matrix =
+reduceRow rowIndex (Matrix listOfRowVectors) =
     let
         firstPivot =
-            Maybe.withDefault rowIndex (findPivot matrix rowIndex)
+            Maybe.withDefault rowIndex (findPivot (Matrix listOfRowVectors) rowIndex)
 
-        (Matrix swappedListOfRowVectors) =
-            swap matrix rowIndex firstPivot
-
-        (Matrix listOfRowVectors) =
-            Matrix swappedListOfRowVectors
+        swappedListOfRowVectors =
+            List.Extra.swapAt rowIndex firstPivot listOfRowVectors
 
         row =
-            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
+            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex swappedListOfRowVectors)
 
         scaledRow =
             scale rowIndex row

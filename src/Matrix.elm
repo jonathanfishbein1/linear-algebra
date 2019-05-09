@@ -272,15 +272,15 @@ isHermitian matrix =
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
 findPivot : Matrix number -> Int -> Maybe Int
-findPivot (Matrix matrix) initialRowIndex =
+findPivot (Matrix listOfRowVectors) initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
-            List.Extra.getAt currentRowIndexIteration matrix
+            List.Extra.getAt currentRowIndexIteration listOfRowVectors
                 |> Maybe.andThen (\(RowVector (Vector.Vector currentRowIteration)) -> List.Extra.getAt initialRowIndex currentRowIteration)
                 |> Maybe.withDefault 0
                 |> (/=) 0
         )
-        (List.range initialRowIndex (List.length matrix - 1))
+        (List.range initialRowIndex (List.length listOfRowVectors - 1))
 
 
 {-| Internal function for scalling rows by pivot entry

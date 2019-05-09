@@ -273,13 +273,14 @@ isHermitian matrix =
 -}
 findPivot : Matrix number -> Int -> Maybe Int
 findPivot (Matrix matrix) initialRowIndex =
-    let
-        findPivotValue nextDiagonalIndex currentRowIndexIteration =
+    List.Extra.find
+        (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration matrix
-                |> Maybe.andThen (\(RowVector (Vector.Vector currentRowIteration)) -> List.Extra.getAt nextDiagonalIndex currentRowIteration)
+                |> Maybe.andThen (\(RowVector (Vector.Vector currentRowIteration)) -> List.Extra.getAt initialRowIndex currentRowIteration)
                 |> Maybe.withDefault 0
-    in
-    List.Extra.find (\x -> findPivotValue initialRowIndex x /= 0) (List.range initialRowIndex (List.length matrix - 1))
+                |> (/=) 0
+        )
+        (List.range initialRowIndex (List.length matrix - 1))
 
 
 {-| Internal function for scalling rows by pivot entry

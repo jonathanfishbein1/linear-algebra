@@ -527,17 +527,27 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
             List.map rowVectorTranspose identityRowVectors
                 |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
 
+        initialIdentityColumnVectors =
+            Maybe.withDefault [ ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0) ] (List.Extra.init identityColumnVectors)
+
+        lastIdentityColumnVectors =
+            Maybe.withDefault (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0)) (List.Extra.last identityColumnVectors)
+
         matrix =
-            List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix transposedListOfRowVectors) identityColumnVectors
+            List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix transposedListOfRowVectors) initialIdentityColumnVectors
 
         mD =
-            mDimension matrix
+            mDimension (Matrix transposedListOfRowVectors)
 
         result =
-            solve matrix (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0))
+            solve matrix lastIdentityColumnVectors
     in
     case result of
-        UniqueSolution _ ->
+        UniqueSolution solution ->
+            let
+                something =
+                    Debug.log "solution " solution
+            in
             True
 
         _ ->

@@ -1201,7 +1201,7 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.NoUniqueSolution "No Unique Solution")
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions "No Unique Solution")
         , Test.test "tests matrix null space calculation" <|
             \_ ->
                 let
@@ -1266,22 +1266,6 @@ suite =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
                 Expect.false "Vector does not span R2" result
-        , Test.test "tests matrix doesSetSpanSpace with standard basis vectors 3 dimensions" <|
-            \_ ->
-                let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        ]
-
-                    r3 =
-                        Matrix.VectorSpace 3
-
-                    result =
-                        Matrix.doesSetSpanSpace r3 listOfRowVectors
-                in
-                Expect.false "Vector does not spans R3" result
         , Test.test "tests matrix doesSetSpanSpace with zero vectors 3 dimensions" <|
             \_ ->
                 let

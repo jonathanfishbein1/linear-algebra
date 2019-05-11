@@ -99,6 +99,7 @@ type Matrix a
 -}
 type Solution
     = UniqueSolution (ColumnVector Float)
+    | InfiniteSolutions String
     | NoUniqueSolution String
 
 
@@ -316,25 +317,41 @@ reduceRow : Int -> Matrix Float -> Matrix Float
 reduceRow rowIndex (Matrix listOfRowVectors) =
     let
         firstPivot =
-            Maybe.withDefault rowIndex (findPivot (Matrix listOfRowVectors) rowIndex)
-
-        swappedListOfRowVectors =
-            List.Extra.swapAt rowIndex firstPivot listOfRowVectors
-
-        row =
-            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex swappedListOfRowVectors)
-
-        scaledRow =
-            scale rowIndex row
-
-        nextRows =
-            List.drop (rowIndex + 1) listOfRowVectors
-                |> List.map (subrow rowIndex scaledRow)
+            findPivot (Matrix listOfRowVectors) rowIndex
     in
-    List.take rowIndex swappedListOfRowVectors
-        ++ [ scaledRow ]
-        ++ nextRows
-        |> Matrix
+    case firstPivot of
+        Just fPivot ->
+            let
+                swappedListOfRowVectors =
+                    List.Extra.swapAt rowIndex fPivot listOfRowVectors
+
+                row =
+                    Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex swappedListOfRowVectors)
+
+                scaledRow =
+                    scale rowIndex row
+
+                nextRows =
+                    List.drop (rowIndex + 1) listOfRowVectors
+                        |> List.map (subrow rowIndex scaledRow)
+
+                newMatrixReduceRow =
+                    Debug.log "new Matrix Reduce Row "
+                        (List.take rowIndex swappedListOfRowVectors
+                            ++ [ scaledRow ]
+                            ++ nextRows
+                            |> Matrix
+                        )
+            in
+            newMatrixReduceRow
+
+        Nothing ->
+            let
+                newMatrixReduceRow =
+                    Debug.log "new Matrix Reduce Row Two "
+                        (Matrix listOfRowVectors)
+            in
+            newMatrixReduceRow
 
 
 {-| Internal function Gaussian Elimination
@@ -344,8 +361,11 @@ gaussianReduce matrix b =
     let
         (Matrix augmentedMatrix) =
             combineMatrixVector matrix b
+
+        newMatrix =
+            Debug.log "newMatrix " <| List.foldl reduceRow (Matrix augmentedMatrix) (List.range 0 (List.length augmentedMatrix - 1))
     in
-    List.foldl reduceRow (Matrix augmentedMatrix) (List.range 0 (List.length augmentedMatrix - 1))
+    newMatrix
 
 
 jordan : Int -> Matrix Float -> Matrix Float
@@ -377,7 +397,7 @@ jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
     let
         (Matrix thing) =
-            List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
+            Debug.log "thing " <| List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
     in
     thing
         |> Matrix
@@ -399,11 +419,22 @@ solve matrix b =
         (Matrix listOfRowVectors) =
             gaussJordan matrix b
 
+        anyAllZeroRows =
+            listOfRowVectors
+                |> List.any (\(RowVector row) -> Vector.realVectorLength row == 0)
+
+        anyAllZeroExceptAugmentedSide =
+            listOfRowVectors
+                |> List.any (\(RowVector (Vector.Vector row)) -> List.all ((==) 0) (List.take (List.length row - 1) row) && Vector.realVectorLength (Vector.Vector row) /= 0)
+
         solution =
             List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
     in
-    if List.all isNaN solution then
+    if anyAllZeroExceptAugmentedSide then
         NoUniqueSolution "No Unique Solution"
+
+    else if anyAllZeroRows then
+        InfiniteSolutions "No Unique Solution"
 
     else
         UniqueSolution

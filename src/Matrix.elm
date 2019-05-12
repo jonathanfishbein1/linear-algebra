@@ -415,20 +415,26 @@ solve matrix b =
     let
         (Matrix augmentedMatrix) =
             combineMatrixVector matrix b
+    in
+    solveMatrix (Matrix augmentedMatrix)
 
-        (Matrix listOfRowVectors) =
-            Debug.log "final Matrix " <| gaussJordan (Matrix augmentedMatrix)
+
+solveMatrix : Matrix Float -> Solution
+solveMatrix (Matrix listOfRowVectors) =
+    let
+        (Matrix listOfRowVectorsRREF) =
+            Debug.log "final Matrix " <| gaussJordan (Matrix listOfRowVectors)
 
         anyAllZeroRows =
-            listOfRowVectors
+            listOfRowVectorsRREF
                 |> List.any (\(RowVector row) -> Vector.realVectorLength row == 0)
 
         anyAllZeroExceptAugmentedSide =
-            listOfRowVectors
+            listOfRowVectorsRREF
                 |> List.any (\(RowVector (Vector.Vector row)) -> List.all ((==) 0) (List.take (List.length row - 1) row) && Vector.realVectorLength (Vector.Vector row) /= 0)
 
         solution =
-            List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
+            List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectorsRREF
     in
     if anyAllZeroExceptAugmentedSide then
         NoUniqueSolution "No Unique Solution"
@@ -442,22 +448,6 @@ solve matrix b =
                 |> Vector.Vector
                 |> ColumnVector
             )
-
-
-solveMatrix : Matrix Float -> Solution
-solveMatrix (Matrix listOfRowVectors) =
-    let
-        b =
-            Debug.log "b sent to solve "
-                (List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
-                    |> Vector.Vector
-                    |> ColumnVector
-                )
-
-        matrix =
-            Debug.log "matrix sent to solve " <| List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ [ RowVector <| Vector.Vector <| List.take (List.length row - 1) row ]) [] listOfRowVectors
-    in
-    solve (Matrix matrix) b
 
 
 mapRowVector : (a -> b) -> RowVector a -> RowVector b

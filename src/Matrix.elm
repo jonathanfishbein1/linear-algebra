@@ -29,7 +29,7 @@ module Matrix exposing
     , scale
     , solve
     , subrow
-    , VectorSpace(..), areBasis, doesSetSpanSpace, mDimension, nDimension
+    , VectorSpace(..), areBasis, doesSetSpanSpace, mDimension, nDimension, solveMatrix
     )
 
 {-| A module for Matrix
@@ -99,7 +99,7 @@ type Matrix a
 -}
 type Solution
     = UniqueSolution (ColumnVector Float)
-    | InfiniteSolutions String
+    | InfiniteSolutions { nullity : Int, rank : Int }
     | NoUniqueSolution String
 
 
@@ -336,10 +336,12 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                         |> List.map (subrow rowIndex scaledRow)
 
                 newMatrixReduceRow =
-                    List.take rowIndex swappedListOfRowVectors
-                        ++ [ scaledRow ]
-                        ++ nextRows
-                        |> Matrix
+                    Debug.log "newMatrixReduceRow"
+                        (List.take rowIndex swappedListOfRowVectors
+                            ++ [ scaledRow ]
+                            ++ nextRows
+                            |> Matrix
+                        )
             in
             newMatrixReduceRow
 
@@ -358,7 +360,7 @@ jordan : Int -> Matrix Float -> Matrix Float
 jordan rowIndex matrix =
     let
         (Matrix listOfRowVectors) =
-            matrix
+            Debug.log "in jordan " <| matrix
 
         row =
             Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
@@ -381,7 +383,7 @@ jordan rowIndex matrix =
 -}
 jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
-    List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
+    List.foldl jordan (Matrix matrix) (List.range 0 (List.length matrix - 1))
 
 
 {-| Internal function composition of Gaussian Elimination and Jordan Elimination
@@ -403,15 +405,28 @@ solve matrix b =
     solveMatrix (Matrix augmentedMatrix)
 
 
+variablePortion : Matrix Float -> Matrix Float
+variablePortion (Matrix listOfRowVectors) =
+    List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ [ RowVector <| Vector.Vector <| List.take (List.length row - 1) row ]) [] listOfRowVectors
+        |> Matrix
+
+
 solveMatrix : Matrix Float -> Solution
 solveMatrix (Matrix listOfRowVectors) =
     let
         (Matrix listOfRowVectorsRREF) =
-            gaussJordan (Matrix listOfRowVectors)
+            Debug.log "listOfRowVectorsRREF " <| gaussJordan (Matrix listOfRowVectors)
 
-        anyAllZeroRows =
-            listOfRowVectorsRREF
-                |> List.any (\(RowVector row) -> Vector.realVectorLength row == 0)
+        (Matrix variableSide) =
+            Debug.log "Variable Side " <| variablePortion (Matrix listOfRowVectorsRREF)
+
+        notConstrainedEnough =
+            variableSide
+                |> List.any
+                    (\(RowVector (Vector.Vector row)) ->
+                        List.Extra.count (\x -> x /= 0) row
+                            |> (>) 1
+                    )
 
         anyAllZeroExceptAugmentedSide =
             listOfRowVectorsRREF
@@ -423,8 +438,17 @@ solveMatrix (Matrix listOfRowVectors) =
     if anyAllZeroExceptAugmentedSide then
         NoUniqueSolution "No Unique Solution"
 
-    else if anyAllZeroRows then
-        InfiniteSolutions "No Unique Solution"
+    else if notConstrainedEnough then
+        let
+            nullity =
+                nDimension (Matrix listOfRowVectorsRREF) - rank
+
+            rank =
+                listOfRowVectorsRREF
+                    |> List.filter (\(RowVector vector) -> Vector.realVectorLength vector /= 0)
+                    |> List.length
+        in
+        InfiniteSolutions { nullity = 0, rank = rank }
 
     else
         UniqueSolution
@@ -449,17 +473,17 @@ combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)
 {-| Calculate the null space of a matrix
 -}
 nullSpace : Matrix Float -> Solution
-nullSpace (Matrix listOfRowVectors) =
+nullSpace matrix =
     let
         numberOfRows =
-            List.length listOfRowVectors
+            mDimension matrix
 
         b =
             List.Extra.initialize numberOfRows (\_ -> 0)
                 |> Vector.Vector
                 |> ColumnVector
     in
-    solve (Matrix listOfRowVectors) b
+    solve matrix b
 
 
 {-| Predicate to determine if a list of Vectors are linearly independent

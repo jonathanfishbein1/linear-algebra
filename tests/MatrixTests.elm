@@ -1189,7 +1189,7 @@ suite =
                     reducedRowEchelonFormMatrix =
                         Matrix.solve matrix b
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions "No Unique Solution")
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions { nullity = 0, rank = 0 })
         , Test.test "tests matrix null space calculation" <|
             \_ ->
                 let
@@ -1426,4 +1426,17 @@ suite =
                         Matrix.areBasis r2 listOfRowVectors
                 in
                 Expect.false "Vectos are not basis for R2" result
+        , Test.test "tests matrix nullity with infinite solutions" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 1, 2, 3, 2 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
+                            ]
+
+                    reducedRowEchelonFormMatrix =
+                        Matrix.solveMatrix matrix
+                in
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
         ]

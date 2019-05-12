@@ -493,13 +493,6 @@ areLinearlyIndependent listOfRowVectors =
             False
 
 
-{-| Convert a RowVector into a ColumnVector
--}
-rowVectorTranspose : RowVector a -> ColumnVector a
-rowVectorTranspose (RowVector vector) =
-    ColumnVector vector
-
-
 {-| Determine whether list of vectors spans a space
 -}
 doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Bool

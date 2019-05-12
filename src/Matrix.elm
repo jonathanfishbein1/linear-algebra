@@ -539,7 +539,7 @@ nDimension (Matrix listOfRowVectors) =
         [] ->
             0
 
-        (RowVector x) :: xs ->
+        (RowVector x) :: _ ->
             Vector.dimension x
 
 

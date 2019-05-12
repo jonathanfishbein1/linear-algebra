@@ -336,33 +336,22 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                         |> List.map (subrow rowIndex scaledRow)
 
                 newMatrixReduceRow =
-                    Debug.log "new Matrix Reduce Row "
-                        (List.take rowIndex swappedListOfRowVectors
-                            ++ [ scaledRow ]
-                            ++ nextRows
-                            |> Matrix
-                        )
+                    List.take rowIndex swappedListOfRowVectors
+                        ++ [ scaledRow ]
+                        ++ nextRows
+                        |> Matrix
             in
             newMatrixReduceRow
 
         Nothing ->
-            let
-                newMatrixReduceRow =
-                    Debug.log "new Matrix Reduce Row Two "
-                        (Matrix listOfRowVectors)
-            in
-            newMatrixReduceRow
+            Matrix listOfRowVectors
 
 
 {-| Internal function Gaussian Elimination
 -}
 gaussianReduce : Matrix Float -> Matrix Float
 gaussianReduce (Matrix matrix) =
-    let
-        newMatrix =
-            Debug.log "newMatrix " <| List.foldl reduceRow (Matrix matrix) (List.range 0 (List.length matrix - 1))
-    in
-    newMatrix
+    List.foldl reduceRow (Matrix matrix) (List.range 0 (List.length matrix - 1))
 
 
 jordan : Int -> Matrix Float -> Matrix Float
@@ -392,12 +381,7 @@ jordan rowIndex matrix =
 -}
 jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
-    let
-        (Matrix thing) =
-            Debug.log "thing " <| List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
-    in
-    thing
-        |> Matrix
+    List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
 
 
 {-| Internal function composition of Gaussian Elimination and Jordan Elimination
@@ -423,7 +407,7 @@ solveMatrix : Matrix Float -> Solution
 solveMatrix (Matrix listOfRowVectors) =
     let
         (Matrix listOfRowVectorsRREF) =
-            Debug.log "final Matrix " <| gaussJordan (Matrix listOfRowVectors)
+            gaussJordan (Matrix listOfRowVectors)
 
         anyAllZeroRows =
             listOfRowVectorsRREF
@@ -533,18 +517,14 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
             identityRowVectors
                 |> List.map (\(RowVector vector) -> RowVector <| Vector.map toFloat vector)
 
-        (Matrix concatedMatrix) =
-            Debug.log "Concated matrix " <| matrixConcat (Matrix transposedListOfRowVectors) (Matrix floatMatrix)
+        concatedMatrix =
+            matrixConcat (Matrix transposedListOfRowVectors) (Matrix floatMatrix)
 
         result =
-            solveMatrix (Matrix concatedMatrix)
+            solveMatrix concatedMatrix
     in
     case result of
-        UniqueSolution solution ->
-            let
-                something =
-                    Debug.log "solution " solution
-            in
+        UniqueSolution _ ->
             True
 
         _ ->

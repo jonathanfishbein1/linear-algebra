@@ -1280,9 +1280,9 @@ suite =
             \_ ->
                 let
                     listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
                         ]
 
                     r3 =

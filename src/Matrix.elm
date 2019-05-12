@@ -29,7 +29,7 @@ module Matrix exposing
     , scale
     , solve
     , subrow
-    , VectorSpace(..), areBasis, doesSetSpanSpace
+    , VectorSpace(..), areBasis, doesSetSpanSpace, mDimension, nDimension
     )
 
 {-| A module for Matrix

@@ -1171,9 +1171,6 @@ suite =
 
                     reducedRowEchelonFormMatrix =
                         Matrix.solve matrix b
-
-                    expected =
-                        Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix (Matrix.NoUniqueSolution "No Unique Solution")
         , Test.test "tests matrix gaussJordan with infinite solutions" <|
@@ -1191,9 +1188,6 @@ suite =
 
                     reducedRowEchelonFormMatrix =
                         Matrix.solve matrix b
-
-                    expected =
-                        Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions "No Unique Solution")
         , Test.test "tests matrix null space calculation" <|

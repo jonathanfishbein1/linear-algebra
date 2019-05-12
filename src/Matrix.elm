@@ -356,14 +356,11 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
 
 {-| Internal function Gaussian Elimination
 -}
-gaussianReduce : Matrix Float -> ColumnVector Float -> Matrix Float
-gaussianReduce matrix b =
+gaussianReduce : Matrix Float -> Matrix Float
+gaussianReduce (Matrix matrix) =
     let
-        (Matrix augmentedMatrix) =
-            combineMatrixVector matrix b
-
         newMatrix =
-            Debug.log "newMatrix " <| List.foldl reduceRow (Matrix augmentedMatrix) (List.range 0 (List.length augmentedMatrix - 1))
+            Debug.log "newMatrix " <| List.foldl reduceRow (Matrix matrix) (List.range 0 (List.length matrix - 1))
     in
     newMatrix
 
@@ -405,9 +402,9 @@ jordanReduce (Matrix matrix) =
 
 {-| Internal function composition of Gaussian Elimination and Jordan Elimination
 -}
-gaussJordan : Matrix Float -> ColumnVector Float -> Matrix Float
-gaussJordan matrix b =
-    gaussianReduce matrix b
+gaussJordan : Matrix Float -> Matrix Float
+gaussJordan matrix =
+    gaussianReduce matrix
         |> jordanReduce
 
 
@@ -416,19 +413,28 @@ gaussJordan matrix b =
 solve : Matrix Float -> ColumnVector Float -> Solution
 solve matrix b =
     let
-        (Matrix listOfRowVectors) =
-            Debug.log "final Matrix " <| gaussJordan matrix b
+        (Matrix augmentedMatrix) =
+            combineMatrixVector matrix b
+    in
+    solveMatrix (Matrix augmentedMatrix)
+
+
+solveMatrix : Matrix Float -> Solution
+solveMatrix (Matrix listOfRowVectors) =
+    let
+        (Matrix listOfRowVectorsRREF) =
+            Debug.log "final Matrix " <| gaussJordan (Matrix listOfRowVectors)
 
         anyAllZeroRows =
-            listOfRowVectors
+            listOfRowVectorsRREF
                 |> List.any (\(RowVector row) -> Vector.realVectorLength row == 0)
 
         anyAllZeroExceptAugmentedSide =
-            listOfRowVectors
+            listOfRowVectorsRREF
                 |> List.any (\(RowVector (Vector.Vector row)) -> List.all ((==) 0) (List.take (List.length row - 1) row) && Vector.realVectorLength (Vector.Vector row) /= 0)
 
         solution =
-            List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
+            List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectorsRREF
     in
     if anyAllZeroExceptAugmentedSide then
         NoUniqueSolution "No Unique Solution"
@@ -442,22 +448,6 @@ solve matrix b =
                 |> Vector.Vector
                 |> ColumnVector
             )
-
-
-solveMatrix : Matrix Float -> Solution
-solveMatrix (Matrix listOfRowVectors) =
-    let
-        b =
-            Debug.log "b sent to solve "
-                (List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
-                    |> Vector.Vector
-                    |> ColumnVector
-                )
-
-        matrix =
-            Debug.log "matrix sent to solve " <| List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ [ RowVector <| Vector.Vector <| List.take (List.length row - 1) row ]) [ ] listOfRowVectors
-    in
-    solve (Matrix matrix) b
 
 
 mapRowVector : (a -> b) -> RowVector a -> RowVector b

@@ -417,7 +417,7 @@ solve : Matrix Float -> ColumnVector Float -> Solution
 solve matrix b =
     let
         (Matrix listOfRowVectors) =
-            gaussJordan matrix b
+            Debug.log "final Matrix " <| gaussJordan matrix b
 
         anyAllZeroRows =
             listOfRowVectors
@@ -442,6 +442,22 @@ solve matrix b =
                 |> Vector.Vector
                 |> ColumnVector
             )
+
+
+solveMatrix : Matrix Float -> Solution
+solveMatrix (Matrix listOfRowVectors) =
+    let
+        b =
+            Debug.log "b sent to solve "
+                (List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectors
+                    |> Vector.Vector
+                    |> ColumnVector
+                )
+
+        matrix =
+            Debug.log "matrix sent to solve " <| List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ [ RowVector <| Vector.Vector <| List.take (List.length row - 1) row ]) [ ] listOfRowVectors
+    in
+    solve (Matrix matrix) b
 
 
 mapRowVector : (a -> b) -> RowVector a -> RowVector b
@@ -523,24 +539,15 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
         (Matrix identityRowVectors) =
             identityMatrix vectorSpace
 
-        identityColumnVectors =
-            List.map rowVectorTranspose identityRowVectors
-                |> List.map (\(ColumnVector vector) -> ColumnVector <| Vector.map toFloat vector)
+        floatMatrix =
+            identityRowVectors
+                |> List.map (\(RowVector vector) -> RowVector <| Vector.map toFloat vector)
 
-        initialIdentityColumnVectors =
-            Maybe.withDefault [ ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0) ] (List.Extra.init identityColumnVectors)
-
-        lastIdentityColumnVectors =
-            Maybe.withDefault (ColumnVector <| Vector.Vector <| List.Extra.initialize mD (\_ -> 0)) (List.Extra.last identityColumnVectors)
-
-        matrix =
-            List.foldl (\elem acc -> combineMatrixVector acc elem) (Matrix transposedListOfRowVectors) initialIdentityColumnVectors
-
-        mD =
-            mDimension (Matrix transposedListOfRowVectors)
+        (Matrix concatedMatrix) =
+            Debug.log "Concated matrix " <| matrixConcat (Matrix transposedListOfRowVectors) (Matrix floatMatrix)
 
         result =
-            solve matrix lastIdentityColumnVectors
+            solveMatrix (Matrix concatedMatrix)
     in
     case result of
         UniqueSolution solution ->
@@ -582,3 +589,9 @@ areBasis vectorSpace rowVectors =
 
     else
         False
+
+
+matrixConcat : Matrix a -> Matrix a -> Matrix a
+matrixConcat (Matrix matrixOne) (Matrix matrixTwo) =
+    List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.concat rowOne rowTwo) matrixOne matrixTwo
+        |> Matrix

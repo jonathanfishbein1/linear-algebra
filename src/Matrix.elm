@@ -356,14 +356,11 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
 
 {-| Internal function Gaussian Elimination
 -}
-gaussianReduce : Matrix Float -> ColumnVector Float -> Matrix Float
-gaussianReduce matrix b =
+gaussianReduce : Matrix Float -> Matrix Float
+gaussianReduce (Matrix matrix) =
     let
-        (Matrix augmentedMatrix) =
-            combineMatrixVector matrix b
-
         newMatrix =
-            Debug.log "newMatrix " <| List.foldl reduceRow (Matrix augmentedMatrix) (List.range 0 (List.length augmentedMatrix - 1))
+            Debug.log "newMatrix " <| List.foldl reduceRow (Matrix matrix) (List.range 0 (List.length matrix - 1))
     in
     newMatrix
 
@@ -407,7 +404,11 @@ jordanReduce (Matrix matrix) =
 -}
 gaussJordan : Matrix Float -> ColumnVector Float -> Matrix Float
 gaussJordan matrix b =
-    gaussianReduce matrix b
+    let
+        (Matrix augmentedMatrix) =
+            combineMatrixVector matrix b
+    in
+    gaussianReduce (Matrix augmentedMatrix)
         |> jordanReduce
 
 
@@ -455,7 +456,7 @@ solveMatrix (Matrix listOfRowVectors) =
                 )
 
         matrix =
-            Debug.log "matrix sent to solve " <| List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ [ RowVector <| Vector.Vector <| List.take (List.length row - 1) row ]) [ ] listOfRowVectors
+            Debug.log "matrix sent to solve " <| List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ [ RowVector <| Vector.Vector <| List.take (List.length row - 1) row ]) [] listOfRowVectors
     in
     solve (Matrix matrix) b
 

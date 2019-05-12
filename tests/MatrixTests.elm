@@ -1079,16 +1079,13 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1 ]
-                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1 ]
-                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3 ]
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1, -4 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
+                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
                             ]
 
-                    b =
-                        Matrix.ColumnVector <| Vector.Vector [ -4, -11, 22 ]
-
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce matrix b
+                        Matrix.gaussianReduce matrix
 
                     expected =
                         Matrix.Matrix <|

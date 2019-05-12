@@ -402,13 +402,9 @@ jordanReduce (Matrix matrix) =
 
 {-| Internal function composition of Gaussian Elimination and Jordan Elimination
 -}
-gaussJordan : Matrix Float -> ColumnVector Float -> Matrix Float
-gaussJordan matrix b =
-    let
-        (Matrix augmentedMatrix) =
-            combineMatrixVector matrix b
-    in
-    gaussianReduce (Matrix augmentedMatrix)
+gaussJordan : Matrix Float -> Matrix Float
+gaussJordan matrix =
+    gaussianReduce matrix
         |> jordanReduce
 
 
@@ -417,8 +413,11 @@ gaussJordan matrix b =
 solve : Matrix Float -> ColumnVector Float -> Solution
 solve matrix b =
     let
+        (Matrix augmentedMatrix) =
+            combineMatrixVector matrix b
+
         (Matrix listOfRowVectors) =
-            Debug.log "final Matrix " <| gaussJordan matrix b
+            Debug.log "final Matrix " <| gaussJordan (Matrix augmentedMatrix)
 
         anyAllZeroRows =
             listOfRowVectors

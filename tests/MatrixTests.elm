@@ -1189,7 +1189,7 @@ suite =
                     reducedRowEchelonFormMatrix =
                         Matrix.solve matrix b
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions { nullity = 0, rank = 0 })
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
         , Test.test "tests matrix null space calculation" <|
             \_ ->
                 let
@@ -1434,9 +1434,6 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ 1, 1, 2, 3, 2 ]
                             , Matrix.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
                             ]
-
-                    reducedRowEchelonFormMatrix =
-                        Matrix.solveMatrix matrix
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
+                Expect.equal (Matrix.solveMatrix matrix) (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
         ]

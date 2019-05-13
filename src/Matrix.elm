@@ -382,7 +382,7 @@ jordan rowIndex matrix =
 -}
 jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
-    List.foldl jordan (Matrix matrix) (List.range 0 (List.length matrix - 1))
+    List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
 
 
 {-| Internal function composition of Gaussian Elimination and Jordan Elimination
@@ -420,12 +420,17 @@ solveMatrix (Matrix listOfRowVectors) =
             Debug.log "Variable Side " <| variablePortion (Matrix listOfRowVectorsRREF)
 
         notConstrainedEnough =
-            variableSide
-                |> List.any
-                    (\(RowVector (Vector.Vector row)) ->
-                        List.Extra.count (\x -> x /= 0) row
-                            |> (>) 1
-                    )
+            Debug.log "notConstrainedEnough "
+                (variableSide
+                    |> List.any
+                        (\(RowVector (Vector.Vector row)) ->
+                            let
+                                countOfOnes =
+                                    List.Extra.count (\x -> Debug.log "x " x /= 0) row
+                            in
+                            countOfOnes > 1
+                        )
+                )
 
         anyAllZeroExceptAugmentedSide =
             listOfRowVectorsRREF
@@ -439,15 +444,14 @@ solveMatrix (Matrix listOfRowVectors) =
 
     else if notConstrainedEnough then
         let
-            nullity =
-                nDimension (Matrix listOfRowVectorsRREF) - rank
-
             rank =
                 listOfRowVectorsRREF
-                    |> List.filter (\(RowVector vector) -> Vector.realVectorLength vector /= 0)
-                    |> List.length
+                    |> List.Extra.count (\(RowVector vector) -> Vector.realVectorLength vector /= 0)
+
+            nullity =
+                nDimension (Matrix listOfRowVectorsRREF) - rank
         in
-        InfiniteSolutions { nullity = 0, rank = rank }
+        InfiniteSolutions { nullity = nullity, rank = rank }
 
     else
         UniqueSolution

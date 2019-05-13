@@ -325,11 +325,10 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                 swappedListOfRowVectors =
                     List.Extra.swapAt rowIndex fPivot listOfRowVectors
 
-                row =
-                    Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex swappedListOfRowVectors)
-
                 scaledRow =
-                    scale rowIndex row
+                    List.Extra.getAt rowIndex swappedListOfRowVectors
+                        |> Maybe.map (scale rowIndex)
+                        |> Maybe.withDefault (RowVector <| Vector.Vector [])
 
                 nextRows =
                     List.drop (rowIndex + 1) listOfRowVectors

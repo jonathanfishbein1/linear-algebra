@@ -537,18 +537,10 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
             identityRowVectors
                 |> List.map (\(RowVector vector) -> RowVector <| Vector.map toFloat vector)
 
-        concatedMatrix =
-            matrixConcat (Matrix transposedListOfRowVectors) (Matrix floatMatrix)
-
-        result =
-            solveMatrix concatedMatrix
+        (Matrix listOfRowVectorsRREF) =
+           gaussJordan (Matrix transposedListOfRowVectors)
     in
-    case result of
-        UniqueSolution _ ->
-            True
-
-        _ ->
-            False
+    floatMatrix == listOfRowVectorsRREF
 
 
 {-| Number of columns in Matrix

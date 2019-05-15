@@ -408,7 +408,6 @@ jordan rowIndex matrix =
                 |> List.map
                     (\rowVector ->
                         subrow rowIndex row rowVector
-                            |> mapRowVector negate
                     )
     in
     prevRows

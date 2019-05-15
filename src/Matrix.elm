@@ -307,8 +307,20 @@ subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRo
     let
         k =
             Maybe.withDefault 1 (List.Extra.getAt r nextRow)
+
+        subtractedRow =
+            List.map2 (\a b -> k * a - b) currentRow nextRow
+
+        firstElement =
+            subtractedRow
+                |> List.Extra.find
+                    ((/=) 0)
+                |> Maybe.withDefault 1
+
+        scaledRow =
+            List.map (\x -> x / firstElement) subtractedRow
     in
-    List.map2 (\a b -> k * a - b) currentRow nextRow
+    scaledRow
         |> Vector.Vector
         |> RowVector
 
@@ -345,7 +357,34 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
             newMatrixReduceRow
 
         Nothing ->
-            Matrix listOfRowVectors
+            if rowIndex == (List.length listOfRowVectors - 1) then
+                Matrix listOfRowVectors
+
+            else
+                let
+                    nextNonZero =
+                        List.Extra.getAt rowIndex listOfRowVectors
+                            |> Maybe.andThen (\(RowVector (Vector.Vector list)) -> List.Extra.findIndex (\x -> x /= 0) list)
+                            |> Maybe.withDefault rowIndex
+
+                    scaledRow =
+                        List.Extra.getAt rowIndex listOfRowVectors
+                            |> Maybe.map (scale nextNonZero)
+                            |> Maybe.withDefault (RowVector <| Vector.Vector [])
+
+                    nextRows =
+                        List.drop nextNonZero listOfRowVectors
+                            |> List.map (subrow nextNonZero scaledRow)
+
+                    newMatrixReduceRow =
+                        Debug.log "newMatrixReduceRow"
+                            (List.take rowIndex listOfRowVectors
+                                ++ [ scaledRow ]
+                                ++ nextRows
+                                |> Matrix
+                            )
+                in
+                newMatrixReduceRow
 
 
 {-| Internal function Gaussian Elimination
@@ -538,7 +577,7 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
                 |> List.map (\(RowVector vector) -> RowVector <| Vector.map toFloat vector)
 
         (Matrix listOfRowVectorsRREF) =
-           gaussJordan (Matrix transposedListOfRowVectors)
+            gaussJordan (Matrix transposedListOfRowVectors)
     in
     floatMatrix == listOfRowVectorsRREF
 

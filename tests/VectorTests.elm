@@ -568,4 +568,108 @@ suite =
                 in
                 normalisedALength
                     |> Expect.equal 1
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests realVectorSubspace" <|
+            \one two ->
+                let
+                    vectors =
+                        [ Vector.Vector
+                            [ one
+                            ]
+                        , Vector.Vector
+                            [ two
+                            ]
+                        ]
+
+                    predicates =
+                        [ \_ -> True ]
+
+                    scalar =
+                        Vector.Scalar one
+
+                    isSubspace =
+                        Vector.realVectorSubspace scalar vectors predicates
+                in
+                isSubspace
+                    |> Expect.true "is a subspace"
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests realVectorSubspace x > 10 not a subspace" <|
+            \one two ->
+                let
+                    vectors =
+                        [ Vector.Vector
+                            [ one
+                            ]
+                        , Vector.Vector
+                            [ two
+                            ]
+                        ]
+
+                    predicates =
+                        [ (>) 0 ]
+
+                    scalar =
+                        Vector.Scalar one
+
+                    isSubspace =
+                        Vector.realVectorSubspace scalar vectors predicates
+                in
+                isSubspace
+                    |> Expect.false "is not a subspace"
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests complexVectorSubspace" <|
+            \one two ->
+                let
+                    complexNumber =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    vectors =
+                        [ Vector.Vector
+                            [ complexNumber
+                            ]
+                        ]
+
+                    predicates =
+                        [ \_ -> True ]
+
+                    scalar =
+                        Vector.Scalar complexNumber
+
+                    isSubspace =
+                        Vector.complexVectorSubspace scalar vectors predicates
+                in
+                isSubspace
+                    |> Expect.true "is a subspace"
+        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests complexVectorSubspace x > zero not a subspace" <|
+            \one two ->
+                let
+                    complexNumber =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    vectors =
+                        [ Vector.Vector
+                            [ complexNumber
+                            ]
+                        ]
+
+                    predicates =
+                        [ ComplexNumbers.equal ComplexNumbers.one ]
+
+                    scalar =
+                        Vector.Scalar complexNumber
+
+                    isSubspace =
+                        Vector.complexVectorSubspace scalar vectors predicates
+                in
+                isSubspace
+                    |> Expect.false "is not a subspace"
         ]

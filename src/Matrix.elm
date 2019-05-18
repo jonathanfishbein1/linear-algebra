@@ -3,6 +3,7 @@ module Matrix exposing
     , RowVector(..)
     , ColumnVector(..)
     , Solution(..)
+    , VectorSpace(..)
     , addRealMatrices
     , addComplexMatrices
     , sumRealMatrices
@@ -29,7 +30,12 @@ module Matrix exposing
     , scale
     , solve
     , subrow
-    , VectorSpace(..), areBasis, basisOfVectorSpace, doesSetSpanSpace, mDimension, nDimension, solveMatrix
+    , areBasis
+    , basisOfVectorSpace
+    , doesSetSpanSpace
+    , mDimension
+    , nDimension
+    , solveMatrix
     )
 
 {-| A module for Matrix
@@ -41,6 +47,7 @@ module Matrix exposing
 @docs RowVector
 @docs ColumnVector
 @docs Solution
+@docs VectorSpace
 
 @docs addRealMatrices
 @docs addComplexMatrices
@@ -68,6 +75,12 @@ module Matrix exposing
 @docs scale
 @docs solve
 @docs subrow
+@docs areBasis
+@docs basisOfVectorSpace
+@docs doesSetSpanSpace
+@docs mDimension
+@docs nDimension
+@docs solveMatrix
 
 -}
 
@@ -427,7 +440,7 @@ gaussJordan matrix =
         |> jordanReduce
 
 
-{-| Solve a system of linear equations using Gauss-Jordan elimination
+{-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
 -}
 solve : Matrix Float -> ColumnVector Float -> Solution
 solve matrix b =
@@ -444,6 +457,8 @@ variablePortion (Matrix listOfRowVectors) =
         |> Matrix
 
 
+{-| Solve a system of linear equations using Gauss-Jordan elimination
+-}
 solveMatrix : Matrix Float -> Solution
 solveMatrix (Matrix listOfRowVectors) =
     let
@@ -611,6 +626,8 @@ matrixConcat (Matrix matrixOne) (Matrix matrixTwo) =
         |> Matrix
 
 
+{-| Determine the basis vectors of a vector space
+-}
 basisOfVectorSpace : VectorSpace -> List (RowVector Float) -> List (RowVector Float)
 basisOfVectorSpace vectorSpace rowVectors =
     if areBasis vectorSpace rowVectors then

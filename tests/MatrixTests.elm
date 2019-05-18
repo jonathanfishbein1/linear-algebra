@@ -1436,4 +1436,39 @@ suite =
                             ]
                 in
                 Expect.equal (Matrix.solveMatrix matrix) (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
+        , Test.test "tests basisOfVectorSpace returns R2 basis vectors" <|
+            \_ ->
+                let
+                    r2BasisVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    testbasisVectors =
+                        Matrix.basisOfVectorSpace r2 r2BasisVectors
+                in
+                Expect.equal r2BasisVectors testbasisVectors
+        , Test.test "tests basisOfVectorSpace returns R2 basis vectors for non basis vectors" <|
+            \_ ->
+                let
+                    r2BasisVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                        ]
+
+                    testVectors =
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorSpace 2
+
+                    testbasisVectors =
+                        Matrix.basisOfVectorSpace r2 testVectors
+                in
+                Expect.equal r2BasisVectors testbasisVectors
         ]

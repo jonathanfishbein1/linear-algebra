@@ -1,6 +1,7 @@
 module Vector exposing
     ( Vector(..)
     , Vector3(..)
+    , Scalar(..)
     , addComplexVectors
     , addRealVectors
     , map
@@ -23,7 +24,9 @@ module Vector exposing
     , realVectorLength
     , subtractRealVectors
     , vector3ToVector
-    , Scalar(..), complexVectorSubspace, dimension, realVectorSubspace
+    , dimension
+    , realVectorSubspace
+    , complexVectorSubspace
     )
 
 {-| A module for Vectors
@@ -33,6 +36,7 @@ module Vector exposing
 
 @docs Vector
 @docs Vector3
+@docs Scalar
 
 @docs addComplexVectors
 @docs addRealVectors
@@ -56,6 +60,9 @@ module Vector exposing
 @docs realVectorLength
 @docs subtractRealVectors
 @docs vector3ToVector
+@docs dimension
+@docs realVectorSubspace
+@docs complexVectorSubspace
 
 -}
 

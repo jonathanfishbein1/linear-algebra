@@ -29,7 +29,7 @@ module Matrix exposing
     , scale
     , solve
     , subrow
-    , VectorSpace(..), areBasis, doesSetSpanSpace, mDimension, nDimension, solveMatrix
+    , VectorSpace(..), areBasis, basisOfVectorSpace, doesSetSpanSpace, mDimension, nDimension, solveMatrix
     )
 
 {-| A module for Matrix
@@ -609,3 +609,16 @@ matrixConcat : Matrix a -> Matrix a -> Matrix a
 matrixConcat (Matrix matrixOne) (Matrix matrixTwo) =
     List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.concat rowOne rowTwo) matrixOne matrixTwo
         |> Matrix
+
+
+basisOfVectorSpace : VectorSpace -> List (RowVector Float) -> List (RowVector Float)
+basisOfVectorSpace vectorSpace rowVectors =
+    if areBasis vectorSpace rowVectors then
+        rowVectors
+
+    else
+        let
+            (Matrix reducedRowEchelonFormListOfRowVectors) =
+                jordanReduce (Matrix rowVectors)
+        in
+        reducedRowEchelonFormListOfRowVectors

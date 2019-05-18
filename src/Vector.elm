@@ -77,6 +77,8 @@ type Vector3 a
     = Vector3 a a a
 
 
+{-| Type to represent a scalar value
+-}
 type Scalar a
     = Scalar a
 
@@ -254,16 +256,22 @@ normalise v =
         map ((/) (realVectorLength v)) v
 
 
+{-| Count of number of elements in a vector
+-}
 dimension : Vector a -> Int
 dimension (Vector list) =
     List.length list
 
 
+{-| Function to determine if a set of real valued vectors is a valid subspace
+-}
 realVectorSubspace : Scalar number -> List (Vector number) -> List (number -> Bool) -> Bool
 realVectorSubspace scalar vectorList predicates =
     vectorSubspace 0 (*) addRealVectors scalar vectorList predicates
 
 
+{-| Function to determine if a set of complex valued vectors is a valid subspace
+-}
 complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian number) -> List (Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (ComplexNumbers.ComplexNumberCartesian number -> Bool) -> Bool
 complexVectorSubspace scalar vectorList predicates =
     vectorSubspace ComplexNumbers.zero ComplexNumbers.multiply addComplexVectors scalar vectorList predicates

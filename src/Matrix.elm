@@ -307,8 +307,20 @@ subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRo
     let
         k =
             Maybe.withDefault 1 (List.Extra.getAt r nextRow)
+
+        subtractedRow =
+            List.map2 (\a b -> k * a - b) currentRow nextRow
+
+        firstElement =
+            subtractedRow
+                |> List.Extra.find
+                    ((/=) 0)
+                |> Maybe.withDefault 1
+
+        scaledRow =
+            List.map (\x -> x / firstElement) subtractedRow
     in
-    List.map2 (\a b -> k * a - b) currentRow nextRow
+    scaledRow
         |> Vector.Vector
         |> RowVector
 
@@ -335,17 +347,40 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                         |> List.map (subrow rowIndex scaledRow)
 
                 newMatrixReduceRow =
-                    Debug.log "newMatrixReduceRow"
-                        (List.take rowIndex swappedListOfRowVectors
-                            ++ [ scaledRow ]
-                            ++ nextRows
-                            |> Matrix
-                        )
+                    List.take rowIndex swappedListOfRowVectors
+                        ++ [ scaledRow ]
+                        ++ nextRows
+                        |> Matrix
             in
             newMatrixReduceRow
 
         Nothing ->
-            Matrix listOfRowVectors
+            if rowIndex == (List.length listOfRowVectors - 1) then
+                Matrix listOfRowVectors
+
+            else
+                let
+                    nextNonZero =
+                        List.Extra.getAt rowIndex listOfRowVectors
+                            |> Maybe.andThen (\(RowVector (Vector.Vector list)) -> List.Extra.findIndex (\x -> x /= 0) list)
+                            |> Maybe.withDefault rowIndex
+
+                    scaledRow =
+                        List.Extra.getAt rowIndex listOfRowVectors
+                            |> Maybe.map (scale nextNonZero)
+                            |> Maybe.withDefault (RowVector <| Vector.Vector [])
+
+                    nextRows =
+                        List.drop nextNonZero listOfRowVectors
+                            |> List.map (subrow nextNonZero scaledRow)
+
+                    newMatrixReduceRow =
+                        List.take rowIndex listOfRowVectors
+                            ++ [ scaledRow ]
+                            ++ nextRows
+                            |> Matrix
+                in
+                newMatrixReduceRow
 
 
 {-| Internal function Gaussian Elimination
@@ -359,7 +394,7 @@ jordan : Int -> Matrix Float -> Matrix Float
 jordan rowIndex matrix =
     let
         (Matrix listOfRowVectors) =
-            Debug.log "in jordan " <| matrix
+            matrix
 
         row =
             Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
@@ -369,7 +404,6 @@ jordan rowIndex matrix =
                 |> List.map
                     (\rowVector ->
                         subrow rowIndex row rowVector
-                            |> mapRowVector negate
                     )
     in
     prevRows
@@ -414,23 +448,21 @@ solveMatrix : Matrix Float -> Solution
 solveMatrix (Matrix listOfRowVectors) =
     let
         (Matrix listOfRowVectorsRREF) =
-            Debug.log "listOfRowVectorsRREF " <| gaussJordan (Matrix listOfRowVectors)
+            gaussJordan (Matrix listOfRowVectors)
 
         (Matrix variableSide) =
-            Debug.log "Variable Side " <| variablePortion (Matrix listOfRowVectorsRREF)
+            variablePortion (Matrix listOfRowVectorsRREF)
 
         notConstrainedEnough =
-            Debug.log "notConstrainedEnough "
-                (variableSide
-                    |> List.any
-                        (\(RowVector (Vector.Vector row)) ->
-                            let
-                                countOfOnes =
-                                    List.Extra.count (\x -> Debug.log "x " x /= 0) row
-                            in
-                            countOfOnes > 1
-                        )
-                )
+            variableSide
+                |> List.any
+                    (\(RowVector (Vector.Vector row)) ->
+                        let
+                            countOfOnes =
+                                List.Extra.count (\x -> x /= 0) row
+                        in
+                        countOfOnes > 1
+                    )
 
         anyAllZeroExceptAugmentedSide =
             listOfRowVectorsRREF
@@ -538,7 +570,7 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
                 |> List.map (\(RowVector vector) -> RowVector <| Vector.map toFloat vector)
 
         (Matrix listOfRowVectorsRREF) =
-           gaussJordan (Matrix transposedListOfRowVectors)
+            gaussJordan (Matrix transposedListOfRowVectors)
     in
     floatMatrix == listOfRowVectorsRREF
 

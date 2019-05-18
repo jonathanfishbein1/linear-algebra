@@ -347,12 +347,10 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                         |> List.map (subrow rowIndex scaledRow)
 
                 newMatrixReduceRow =
-                    Debug.log "newMatrixReduceRow"
-                        (List.take rowIndex swappedListOfRowVectors
-                            ++ [ scaledRow ]
-                            ++ nextRows
-                            |> Matrix
-                        )
+                    List.take rowIndex swappedListOfRowVectors
+                        ++ [ scaledRow ]
+                        ++ nextRows
+                        |> Matrix
             in
             newMatrixReduceRow
 
@@ -377,12 +375,10 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                             |> List.map (subrow nextNonZero scaledRow)
 
                     newMatrixReduceRow =
-                        Debug.log "newMatrixReduceRow"
-                            (List.take rowIndex listOfRowVectors
-                                ++ [ scaledRow ]
-                                ++ nextRows
-                                |> Matrix
-                            )
+                        List.take rowIndex listOfRowVectors
+                            ++ [ scaledRow ]
+                            ++ nextRows
+                            |> Matrix
                 in
                 newMatrixReduceRow
 
@@ -398,7 +394,7 @@ jordan : Int -> Matrix Float -> Matrix Float
 jordan rowIndex matrix =
     let
         (Matrix listOfRowVectors) =
-            Debug.log "in jordan " <| matrix
+            matrix
 
         row =
             Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
@@ -452,23 +448,21 @@ solveMatrix : Matrix Float -> Solution
 solveMatrix (Matrix listOfRowVectors) =
     let
         (Matrix listOfRowVectorsRREF) =
-            Debug.log "listOfRowVectorsRREF " <| gaussJordan (Matrix listOfRowVectors)
+            gaussJordan (Matrix listOfRowVectors)
 
         (Matrix variableSide) =
-            Debug.log "Variable Side " <| variablePortion (Matrix listOfRowVectorsRREF)
+            variablePortion (Matrix listOfRowVectorsRREF)
 
         notConstrainedEnough =
-            Debug.log "notConstrainedEnough "
-                (variableSide
-                    |> List.any
-                        (\(RowVector (Vector.Vector row)) ->
-                            let
-                                countOfOnes =
-                                    List.Extra.count (\x -> Debug.log "x " x /= 0) row
-                            in
-                            countOfOnes > 1
-                        )
-                )
+            variableSide
+                |> List.any
+                    (\(RowVector (Vector.Vector row)) ->
+                        let
+                            countOfOnes =
+                                List.Extra.count (\x -> x /= 0) row
+                        in
+                        countOfOnes > 1
+                    )
 
         anyAllZeroExceptAugmentedSide =
             listOfRowVectorsRREF

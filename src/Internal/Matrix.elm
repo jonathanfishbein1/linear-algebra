@@ -24,13 +24,14 @@ findPivot listOfRowVectors initialRowIndex =
 {-| Internal function for subtracting rows from each other
 -}
 subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
-subtractRow r (Vector.Vector currentRow) (Vector.Vector nextRow) =
+subtractRow r currentRow (Vector.Vector nextRow) =
     let
         k =
             Maybe.withDefault 1 (List.Extra.getAt r nextRow)
 
-        subtractedRow =
-            List.map2 (\a b -> k * a - b) currentRow nextRow
+        (Vector.Vector subtractedRow) =
+            Vector.map ((*) k) currentRow
+                |> Vector.subtractRealVectors (Vector.Vector nextRow)
 
         firstElement =
             subtractedRow

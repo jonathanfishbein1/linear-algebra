@@ -28,7 +28,7 @@ module Matrix exposing
     , nullSpace
     , scale
     , solve
-    , subrow
+    , subtractRow
     , areBasis
     , basisOfVectorSpace
     , doesSetSpanSpace
@@ -72,7 +72,7 @@ module Matrix exposing
 @docs nullSpace
 @docs scale
 @docs solve
-@docs subrow
+@docs subtractRow
 @docs areBasis
 @docs basisOfVectorSpace
 @docs doesSetSpanSpace
@@ -300,8 +300,8 @@ scale rowIndex (RowVector (Vector.Vector rowVector)) =
 
 {-| Internal function for subtracting rows from each other
 -}
-subrow : Int -> RowVector Float -> RowVector Float -> RowVector Float
-subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRow)) =
+subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
+subtractRow r (Vector.Vector currentRow) (Vector.Vector nextRow) =
     let
         k =
             Maybe.withDefault 1 (List.Extra.getAt r nextRow)
@@ -320,7 +320,6 @@ subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRo
     in
     scaledRow
         |> Vector.Vector
-        |> RowVector
 
 
 reduceRow : Int -> Matrix Float -> Matrix Float
@@ -339,18 +338,22 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                 swappedListOfRowVectors =
                     List.Extra.swapAt rowIndex fPivot listOfRowVectors
 
-                scaledRow =
+                (RowVector scaledRow) =
                     List.Extra.getAt rowIndex swappedListOfRowVectors
                         |> Maybe.map (scale rowIndex)
                         |> Maybe.withDefault (RowVector <| Vector.Vector [])
 
                 nextRows =
                     List.drop (rowIndex + 1) listOfRowVectors
-                        |> List.map (subrow rowIndex scaledRow)
+                        |> List.map
+                            (\(RowVector vector) ->
+                                subtractRow rowIndex scaledRow vector
+                                    |> RowVector
+                            )
 
                 newMatrixReduceRow =
                     List.take rowIndex swappedListOfRowVectors
-                        ++ [ scaledRow ]
+                        ++ [ RowVector scaledRow ]
                         ++ nextRows
                         |> Matrix
             in
@@ -367,18 +370,22 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                             |> Maybe.andThen (\(RowVector (Vector.Vector list)) -> List.Extra.findIndex (\x -> x /= 0) list)
                             |> Maybe.withDefault rowIndex
 
-                    scaledRow =
+                    (RowVector scaledRow) =
                         List.Extra.getAt rowIndex listOfRowVectors
                             |> Maybe.map (scale nextNonZero)
                             |> Maybe.withDefault (RowVector <| Vector.Vector [])
 
                     nextRows =
                         List.drop nextNonZero listOfRowVectors
-                            |> List.map (subrow nextNonZero scaledRow)
+                            |> List.map
+                                (\(RowVector vector) ->
+                                    subtractRow nextNonZero scaledRow vector
+                                        |> RowVector
+                                )
 
                     newMatrixReduceRow =
                         List.take rowIndex listOfRowVectors
-                            ++ [ scaledRow ]
+                            ++ [ RowVector scaledRow ]
                             ++ nextRows
                             |> Matrix
                 in
@@ -398,18 +405,19 @@ jordan rowIndex matrix =
         (Matrix listOfRowVectors) =
             matrix
 
-        row =
+        (RowVector row) =
             Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
 
         prevRows =
             List.take rowIndex listOfRowVectors
                 |> List.map
-                    (\rowVector ->
-                        subrow rowIndex row rowVector
+                    (\(RowVector vector) ->
+                        subtractRow rowIndex row vector
+                            |> RowVector
                     )
     in
     prevRows
-        ++ [ row ]
+        ++ [ RowVector row ]
         ++ List.drop (rowIndex + 1) listOfRowVectors
         |> Matrix
 

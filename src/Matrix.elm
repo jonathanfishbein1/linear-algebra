@@ -28,7 +28,6 @@ module Matrix exposing
     , nullSpace
     , scale
     , solve
-    , subtractRow
     , areBasis
     , basisOfVectorSpace
     , doesSetSpanSpace
@@ -72,7 +71,6 @@ module Matrix exposing
 @docs nullSpace
 @docs scale
 @docs solve
-@docs subtractRow
 @docs areBasis
 @docs basisOfVectorSpace
 @docs doesSetSpanSpace
@@ -298,30 +296,6 @@ scale rowIndex (RowVector (Vector.Vector rowVector)) =
             RowVector <| Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)
 
 
-{-| Internal function for subtracting rows from each other
--}
-subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
-subtractRow r (Vector.Vector currentRow) (Vector.Vector nextRow) =
-    let
-        k =
-            Maybe.withDefault 1 (List.Extra.getAt r nextRow)
-
-        subtractedRow =
-            List.map2 (\a b -> k * a - b) currentRow nextRow
-
-        firstElement =
-            subtractedRow
-                |> List.Extra.find
-                    ((/=) 0)
-                |> Maybe.withDefault 1
-
-        scaledRow =
-            List.map (\x -> x / firstElement) subtractedRow
-    in
-    scaledRow
-        |> Vector.Vector
-
-
 reduceRow : Int -> Matrix Float -> Matrix Float
 reduceRow rowIndex (Matrix listOfRowVectors) =
     let
@@ -347,7 +321,7 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                     List.drop (rowIndex + 1) listOfRowVectors
                         |> List.map
                             (\(RowVector vector) ->
-                                subtractRow rowIndex scaledRow vector
+                                Internal.Matrix.subtractRow rowIndex scaledRow vector
                                     |> RowVector
                             )
 
@@ -379,7 +353,7 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                         List.drop nextNonZero listOfRowVectors
                             |> List.map
                                 (\(RowVector vector) ->
-                                    subtractRow nextNonZero scaledRow vector
+                                    Internal.Matrix.subtractRow nextNonZero scaledRow vector
                                         |> RowVector
                                 )
 
@@ -412,7 +386,7 @@ jordan rowIndex matrix =
             List.take rowIndex listOfRowVectors
                 |> List.map
                     (\(RowVector vector) ->
-                        subtractRow rowIndex row vector
+                        Internal.Matrix.subtractRow rowIndex row vector
                             |> RowVector
                     )
     in

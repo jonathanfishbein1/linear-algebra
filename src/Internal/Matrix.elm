@@ -1,4 +1,7 @@
-module Internal.Matrix exposing (findPivot)
+module Internal.Matrix exposing
+    ( findPivot
+    , subtractRow
+    )
 
 import List.Extra
 import Vector
@@ -16,3 +19,27 @@ findPivot listOfRowVectors initialRowIndex =
                 |> (/=) 0
         )
         (List.range initialRowIndex (List.length listOfRowVectors - 1))
+
+
+{-| Internal function for subtracting rows from each other
+-}
+subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
+subtractRow r (Vector.Vector currentRow) (Vector.Vector nextRow) =
+    let
+        k =
+            Maybe.withDefault 1 (List.Extra.getAt r nextRow)
+
+        subtractedRow =
+            List.map2 (\a b -> k * a - b) currentRow nextRow
+
+        firstElement =
+            subtractedRow
+                |> List.Extra.find
+                    ((/=) 0)
+                |> Maybe.withDefault 1
+
+        scaledRow =
+            List.map (\x -> x / firstElement) subtractedRow
+    in
+    scaledRow
+        |> Vector.Vector

@@ -279,81 +279,17 @@ isHermitian matrix =
     adjoint matrix == matrix
 
 
-reduceRow : Int -> Matrix Float -> Matrix Float
-reduceRow rowIndex (Matrix listOfRowVectors) =
-    let
-        listOfVectors =
-            listOfRowVectors
-                |> List.map (\(RowVector vector) -> vector)
-
-        firstPivot =
-            Internal.Matrix.findPivot listOfVectors rowIndex
-    in
-    case firstPivot of
-        Just fPivot ->
-            let
-                swappedListOfRowVectors =
-                    List.Extra.swapAt rowIndex fPivot listOfRowVectors
-
-                scaledRow =
-                    List.Extra.getAt rowIndex swappedListOfRowVectors
-                        |> Maybe.map (\(RowVector vector) -> Internal.Matrix.scale rowIndex vector)
-                        |> Maybe.withDefault (Vector.Vector [])
-
-                nextRows =
-                    List.drop (rowIndex + 1) listOfRowVectors
-                        |> List.map
-                            (\(RowVector vector) ->
-                                Internal.Matrix.subtractRow rowIndex scaledRow vector
-                                    |> RowVector
-                            )
-
-                newMatrixReduceRow =
-                    List.take rowIndex swappedListOfRowVectors
-                        ++ [ RowVector scaledRow ]
-                        ++ nextRows
-                        |> Matrix
-            in
-            newMatrixReduceRow
-
-        Nothing ->
-            if rowIndex == (List.length listOfRowVectors - 1) then
-                Matrix listOfRowVectors
-
-            else
-                let
-                    nextNonZero =
-                        List.Extra.getAt rowIndex listOfRowVectors
-                            |> Maybe.andThen (\(RowVector (Vector.Vector list)) -> List.Extra.findIndex (\x -> x /= 0) list)
-                            |> Maybe.withDefault rowIndex
-
-                    scaledRow =
-                        List.Extra.getAt rowIndex listOfRowVectors
-                            |> Maybe.map (\(RowVector vector) -> Internal.Matrix.scale nextNonZero vector)
-                            |> Maybe.withDefault (Vector.Vector [])
-
-                    nextRows =
-                        List.drop nextNonZero listOfRowVectors
-                            |> List.map
-                                (\(RowVector vector) ->
-                                    Internal.Matrix.subtractRow nextNonZero scaledRow vector
-                                        |> RowVector
-                                )
-
-                    newMatrixReduceRow =
-                        List.take rowIndex listOfRowVectors
-                            ++ [ RowVector scaledRow ]
-                            ++ nextRows
-                            |> Matrix
-                in
-                newMatrixReduceRow
-
-
 {-| Internal function Gaussian Elimination
 -}
 gaussianReduce : Matrix Float -> Matrix Float
 gaussianReduce (Matrix matrix) =
-    List.foldl reduceRow (Matrix matrix) (List.range 0 (List.length matrix - 1))
+    let
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
+    in
+    List.foldl Internal.Matrix.reduceRow listOfVectors (List.range 0 (List.length matrix - 1))
+        |> List.map (\row -> RowVector row)
+        |> Matrix
 
 
 jordan : Int -> Matrix Float -> Matrix Float

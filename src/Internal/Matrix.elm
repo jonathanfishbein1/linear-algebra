@@ -1,5 +1,6 @@
 module Internal.Matrix exposing
     ( findPivot
+    , reduceRow
     , scale
     , subtractRow
     )
@@ -61,3 +62,65 @@ scale rowIndex (Vector.Vector rowVector) =
                     Maybe.withDefault 1 (List.Extra.getAt rowIndex xs)
             in
             Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)
+
+
+reduceRow : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
+reduceRow rowIndex listOfVectors =
+    let
+        firstPivot =
+            findPivot listOfVectors rowIndex
+    in
+    case firstPivot of
+        Just fPivot ->
+            let
+                swappedListOfVectors =
+                    List.Extra.swapAt rowIndex fPivot listOfVectors
+
+                scaledRow =
+                    List.Extra.getAt rowIndex swappedListOfVectors
+                        |> Maybe.map (\vector -> scale rowIndex vector)
+                        |> Maybe.withDefault (Vector.Vector [])
+
+                nextRows =
+                    List.drop (rowIndex + 1) listOfVectors
+                        |> List.map
+                            (\vector ->
+                                subtractRow rowIndex scaledRow vector
+                            )
+
+                newMatrixReduceRow =
+                    List.take rowIndex swappedListOfVectors
+                        ++ [ scaledRow ]
+                        ++ nextRows
+            in
+            newMatrixReduceRow
+
+        Nothing ->
+            if rowIndex == (List.length listOfVectors - 1) then
+                listOfVectors
+
+            else
+                let
+                    nextNonZero =
+                        List.Extra.getAt rowIndex listOfVectors
+                            |> Maybe.andThen (\(Vector.Vector list) -> List.Extra.findIndex (\x -> x /= 0) list)
+                            |> Maybe.withDefault rowIndex
+
+                    scaledRow =
+                        List.Extra.getAt rowIndex listOfVectors
+                            |> Maybe.map (\vector -> scale nextNonZero vector)
+                            |> Maybe.withDefault (Vector.Vector [])
+
+                    nextRows =
+                        List.drop nextNonZero listOfVectors
+                            |> List.map
+                                (\vector ->
+                                    subtractRow nextNonZero scaledRow vector
+                                )
+
+                    newMatrixReduceRow =
+                        List.take rowIndex listOfVectors
+                            ++ [ scaledRow ]
+                            ++ nextRows
+                in
+                newMatrixReduceRow

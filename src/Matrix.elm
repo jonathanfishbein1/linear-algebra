@@ -216,20 +216,11 @@ multiplyRealMatrices matrixOne matrixTwo =
     map2VectorCartesian (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
 
 
-diagonal : Int -> Int -> number
-diagonal columnIndex rowIndex =
-    if columnIndex == rowIndex then
-        1
-
-    else
-        0
-
-
 {-| Create Identity Matrix with n dimension
 -}
 identityMatrix : Int -> Matrix Int
 identityMatrix dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (diagonal columnIndex)))
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal columnIndex)))
 
 
 map2VectorCartesian : Matrix number -> RowVector number -> Matrix number -> Matrix number -> Matrix number -> Matrix number

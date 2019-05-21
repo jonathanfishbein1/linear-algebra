@@ -1,5 +1,6 @@
 module Internal.Matrix exposing
-    ( findPivot
+    ( diagonal
+    , findPivot
     , reduceRow
     , reduceRowBackwards
     , scale
@@ -143,3 +144,12 @@ reduceRowBackwards rowIndex listOfVectors =
     prevRows
         ++ [ row ]
         ++ List.drop (rowIndex + 1) listOfVectors
+
+
+diagonal : Int -> Int -> number
+diagonal columnIndex rowIndex =
+    if columnIndex == rowIndex then
+        1
+
+    else
+        0

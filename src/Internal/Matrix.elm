@@ -1,6 +1,7 @@
 module Internal.Matrix exposing
     ( findPivot
     , reduceRow
+    , reduceRowBackwards
     , scale
     , subtractRow
     )
@@ -124,3 +125,21 @@ reduceRow rowIndex listOfVectors =
                             ++ nextRows
                 in
                 newMatrixReduceRow
+
+
+reduceRowBackwards : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
+reduceRowBackwards rowIndex listOfVectors =
+    let
+        row =
+            Maybe.withDefault (Vector.Vector []) (List.Extra.getAt rowIndex listOfVectors)
+
+        prevRows =
+            List.take rowIndex listOfVectors
+                |> List.map
+                    (\vector ->
+                        subtractRow rowIndex row vector
+                    )
+    in
+    prevRows
+        ++ [ row ]
+        ++ List.drop (rowIndex + 1) listOfVectors

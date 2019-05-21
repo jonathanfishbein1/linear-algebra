@@ -292,34 +292,17 @@ gaussianReduce (Matrix matrix) =
         |> Matrix
 
 
-reduceRowBackwards : Int -> Matrix Float -> Matrix Float
-reduceRowBackwards rowIndex matrix =
-    let
-        (Matrix listOfRowVectors) =
-            matrix
-
-        (RowVector row) =
-            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
-
-        prevRows =
-            List.take rowIndex listOfRowVectors
-                |> List.map
-                    (\(RowVector vector) ->
-                        Internal.Matrix.subtractRow rowIndex row vector
-                            |> RowVector
-                    )
-    in
-    prevRows
-        ++ [ RowVector row ]
-        ++ List.drop (rowIndex + 1) listOfRowVectors
-        |> Matrix
-
-
 {-| Internal function for Jordan Elimination
 -}
 jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
-    List.foldl reduceRowBackwards (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
+    let
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
+    in
+    List.foldl Internal.Matrix.reduceRowBackwards listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
+        |> List.map (\row -> RowVector row)
+        |> Matrix
 
 
 {-| Internal function composition of Gaussian Elimination and Jordan Elimination

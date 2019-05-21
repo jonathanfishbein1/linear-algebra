@@ -18,7 +18,6 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot
     , gaussJordan
     , gaussianReduce
     , isHermitian
@@ -63,7 +62,6 @@ module Matrix exposing
 @docs multiplyComplexMatrices
 @docs multiplyRealMatrices
 @docs identityMatrix
-@docs findPivot
 @docs gaussJordan
 @docs gaussianReduce
 @docs isHermitian
@@ -85,6 +83,7 @@ module Matrix exposing
 -}
 
 import ComplexNumbers
+import Internal.Matrix
 import List.Extra
 import Monoid
 import Vector
@@ -283,20 +282,6 @@ isHermitian matrix =
     adjoint matrix == matrix
 
 
-{-| Internal function for finding pivot entry in Gaussian elimination
--}
-findPivot : Matrix number -> Int -> Maybe Int
-findPivot (Matrix listOfRowVectors) initialRowIndex =
-    List.Extra.find
-        (\currentRowIndexIteration ->
-            List.Extra.getAt currentRowIndexIteration listOfRowVectors
-                |> Maybe.andThen (\(RowVector (Vector.Vector currentRowIteration)) -> List.Extra.getAt initialRowIndex currentRowIteration)
-                |> Maybe.withDefault 0
-                |> (/=) 0
-        )
-        (List.range initialRowIndex (List.length listOfRowVectors - 1))
-
-
 {-| Internal function for scalling rows by pivot entry
 -}
 scale : Int -> RowVector Float -> RowVector Float
@@ -341,8 +326,12 @@ subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRo
 reduceRow : Int -> Matrix Float -> Matrix Float
 reduceRow rowIndex (Matrix listOfRowVectors) =
     let
+        listOfVectors =
+            listOfRowVectors
+                |> List.map (\(RowVector vector) -> vector)
+
         firstPivot =
-            findPivot (Matrix listOfRowVectors) rowIndex
+            Internal.Matrix.findPivot listOfVectors rowIndex
     in
     case firstPivot of
         Just fPivot ->

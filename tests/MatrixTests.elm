@@ -978,45 +978,6 @@ suite =
                         Matrix.equal ComplexNumbers.equal aTimebThenAdjoint bAdjointTimesAAdjoint
                 in
                 Expect.true "AB adjoint equals A conjugate time B adjoint" result
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivot find row with pivot entry" <|
-            \one two ->
-                let
-                    m1 =
-                        Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
-                            , Matrix.RowVector <| Vector.Vector [ one, two ]
-                            , Matrix.RowVector <| Vector.Vector [ two, two ]
-                            ]
-
-                    pivotLocation =
-                        Matrix.findPivot m1 0
-                in
-                case pivotLocation of
-                    Just location ->
-                        Expect.equal location 1
-
-                    Nothing ->
-                        Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivot find row with pivot entry two" <|
-            \one two ->
-                let
-                    m1 =
-                        Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0, 0 ]
-                            , Matrix.RowVector <| Vector.Vector [ one, two ]
-                            , Matrix.RowVector <| Vector.Vector [ two, one ]
-                            ]
-
-                    pivotLocation =
-                        Matrix.findPivot m1 0
-                in
-                case pivotLocation of
-                    Just location ->
-                        Expect.equal location 2
-
-                    Nothing ->
-                        Expect.fail "error"
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales first element to one" <|
             \one two ->
                 let

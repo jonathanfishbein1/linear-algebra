@@ -205,8 +205,22 @@ liftA2 f a b =
 {-| Matrix Matrix multiplication for a Complex Numbered Matrix
 -}
 multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-multiplyComplexMatrices matrixOne matrixTwo =
-    map2VectorCartesianComplex (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
+multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
+    let
+        (Matrix matrixTranspose) =
+            transpose matrixTwo
+
+        listOfVectors =
+            matrixTranspose
+                |> List.map (\(RowVector vector) -> vector)
+
+        listOfVectorsOne =
+            matrixOne
+                |> List.map (\(RowVector vector) -> vector)
+    in
+    Internal.Matrix.map2VectorCartesianComplex listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
+        |> List.map RowVector
+        |> Matrix
 
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
@@ -235,19 +249,6 @@ multiplyRealMatrices (Matrix matrixOne) matrixTwo =
 identityMatrix : Int -> Matrix Int
 identityMatrix dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal columnIndex)))
-
-
-map2VectorCartesianComplex : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> RowVector (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-map2VectorCartesianComplex (Matrix right) (RowVector (Vector.Vector intermediateList)) (Matrix acc) (Matrix left) (Matrix currentRight) =
-    case ( left, currentRight ) of
-        ( (RowVector l) :: _, (RowVector r) :: rs ) ->
-            map2VectorCartesianComplex (Matrix right) (RowVector <| Vector.Vector (intermediateList ++ [ Vector.complexVectorDotProduct l r ])) (Matrix acc) (Matrix left) (Matrix rs)
-
-        ( _ :: ls, [] ) ->
-            map2VectorCartesianComplex (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector <| Vector.Vector <| intermediateList ])) (Matrix ls) (Matrix right)
-
-        ( [], _ ) ->
-            Matrix acc
 
 
 {-| Multiply a real Vector by a real Matrix

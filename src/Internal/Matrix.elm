@@ -2,12 +2,14 @@ module Internal.Matrix exposing
     ( diagonal
     , findPivot
     , map2VectorCartesian
+    , map2VectorCartesianComplex
     , reduceRow
     , reduceRowBackwards
     , scale
     , subtractRow
     )
 
+import ComplexNumbers
 import List.Extra
 import Vector
 
@@ -164,6 +166,19 @@ map2VectorCartesian right (Vector.Vector intermediateList) acc left currentRight
 
         ( _ :: ls, [] ) ->
             map2VectorCartesian right (Vector.Vector []) (acc ++ [ Vector.Vector <| intermediateList ]) ls right
+
+        ( [], _ ) ->
+            acc
+
+
+map2VectorCartesianComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian number) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))
+map2VectorCartesianComplex right (Vector.Vector intermediateList) acc left currentRight =
+    case ( left, currentRight ) of
+        ( l :: _, r :: rs ) ->
+            map2VectorCartesianComplex right (Vector.Vector (intermediateList ++ [ Vector.complexVectorDotProduct l r ])) acc left rs
+
+        ( _ :: ls, [] ) ->
+            map2VectorCartesianComplex right (Vector.Vector []) (acc ++ [ Vector.Vector <| intermediateList ]) ls right
 
         ( [], _ ) ->
             acc

@@ -1,5 +1,6 @@
 module Internal.Matrix exposing
     ( findPivot
+    , scale
     , subtractRow
     )
 
@@ -44,3 +45,19 @@ subtractRow r currentRow (Vector.Vector nextRow) =
     in
     scaledRow
         |> Vector.Vector
+
+
+{-| Internal function for scalling rows by pivot entry
+-}
+scale : Int -> Vector.Vector Float -> Vector.Vector Float
+scale rowIndex (Vector.Vector rowVector) =
+    case rowVector of
+        [] ->
+            Vector.Vector []
+
+        xs ->
+            let
+                elementAtRowIndex =
+                    Maybe.withDefault 1 (List.Extra.getAt rowIndex xs)
+            in
+            Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)

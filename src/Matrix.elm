@@ -26,7 +26,6 @@ module Matrix exposing
     , areLinearlyIndependent
     , multiplyRealVectorRealMatrix
     , nullSpace
-    , scale
     , solve
     , areBasis
     , basisOfVectorSpace
@@ -280,22 +279,6 @@ isHermitian matrix =
     adjoint matrix == matrix
 
 
-{-| Internal function for scalling rows by pivot entry
--}
-scale : Int -> RowVector Float -> RowVector Float
-scale rowIndex (RowVector (Vector.Vector rowVector)) =
-    case rowVector of
-        [] ->
-            RowVector <| Vector.Vector []
-
-        xs ->
-            let
-                elementAtRowIndex =
-                    Maybe.withDefault 1 (List.Extra.getAt rowIndex xs)
-            in
-            RowVector <| Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)
-
-
 reduceRow : Int -> Matrix Float -> Matrix Float
 reduceRow rowIndex (Matrix listOfRowVectors) =
     let
@@ -312,10 +295,10 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                 swappedListOfRowVectors =
                     List.Extra.swapAt rowIndex fPivot listOfRowVectors
 
-                (RowVector scaledRow) =
+                scaledRow =
                     List.Extra.getAt rowIndex swappedListOfRowVectors
-                        |> Maybe.map (scale rowIndex)
-                        |> Maybe.withDefault (RowVector <| Vector.Vector [])
+                        |> Maybe.map (\(RowVector vector) -> Internal.Matrix.scale rowIndex vector)
+                        |> Maybe.withDefault (Vector.Vector [])
 
                 nextRows =
                     List.drop (rowIndex + 1) listOfRowVectors
@@ -344,10 +327,10 @@ reduceRow rowIndex (Matrix listOfRowVectors) =
                             |> Maybe.andThen (\(RowVector (Vector.Vector list)) -> List.Extra.findIndex (\x -> x /= 0) list)
                             |> Maybe.withDefault rowIndex
 
-                    (RowVector scaledRow) =
+                    scaledRow =
                         List.Extra.getAt rowIndex listOfRowVectors
-                            |> Maybe.map (scale nextNonZero)
-                            |> Maybe.withDefault (RowVector <| Vector.Vector [])
+                            |> Maybe.map (\(RowVector vector) -> Internal.Matrix.scale nextNonZero vector)
+                            |> Maybe.withDefault (Vector.Vector [])
 
                     nextRows =
                         List.drop nextNonZero listOfRowVectors

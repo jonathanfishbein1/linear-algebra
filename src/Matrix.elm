@@ -212,8 +212,22 @@ multiplyComplexMatrices matrixOne matrixTwo =
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
 -}
 multiplyRealMatrices : Matrix number -> Matrix number -> Matrix number
-multiplyRealMatrices matrixOne matrixTwo =
-    map2VectorCartesian (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
+multiplyRealMatrices (Matrix matrixOne) matrixTwo =
+    let
+        (Matrix matrixTranspose) =
+            transpose matrixTwo
+
+        listOfVectors =
+            matrixTranspose
+                |> List.map (\(RowVector vector) -> vector)
+
+        listOfVectorsOne =
+            matrixOne
+                |> List.map (\(RowVector vector) -> vector)
+    in
+    Internal.Matrix.map2VectorCartesian listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
+        |> List.map RowVector
+        |> Matrix
 
 
 {-| Create Identity Matrix with n dimension
@@ -221,19 +235,6 @@ multiplyRealMatrices matrixOne matrixTwo =
 identityMatrix : Int -> Matrix Int
 identityMatrix dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal columnIndex)))
-
-
-map2VectorCartesian : Matrix number -> RowVector number -> Matrix number -> Matrix number -> Matrix number -> Matrix number
-map2VectorCartesian (Matrix right) (RowVector (Vector.Vector intermediateList)) (Matrix acc) (Matrix left) (Matrix currentRight) =
-    case ( left, currentRight ) of
-        ( (RowVector l) :: _, (RowVector r) :: rs ) ->
-            map2VectorCartesian (Matrix right) (RowVector <| Vector.Vector (intermediateList ++ [ Vector.realVectorDotProduct l r ])) (Matrix acc) (Matrix left) (Matrix rs)
-
-        ( _ :: ls, [] ) ->
-            map2VectorCartesian (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector <| Vector.Vector <| intermediateList ])) (Matrix ls) (Matrix right)
-
-        ( [], _ ) ->
-            Matrix acc
 
 
 map2VectorCartesianComplex : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> RowVector (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
@@ -252,8 +253,15 @@ map2VectorCartesianComplex (Matrix right) (RowVector (Vector.Vector intermediate
 {-| Multiply a real Vector by a real Matrix
 -}
 multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Matrix number
-multiplyRealVectorRealMatrix matrix vector =
-    map2VectorCartesian (Matrix <| [ RowVector vector ]) (RowVector <| Vector.Vector []) (Matrix []) matrix (Matrix <| [ RowVector vector ])
+multiplyRealVectorRealMatrix (Matrix matrix) vector =
+    let
+        listOfVectors =
+            matrix
+                |> List.map (\(RowVector vec) -> vec)
+    in
+    Internal.Matrix.map2VectorCartesian [ vector ] (Vector.Vector []) [] listOfVectors [ vector ]
+        |> List.map RowVector
+        |> Matrix
 
 
 {-| Predicate to determine if Matrix is symmetric

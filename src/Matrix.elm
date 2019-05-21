@@ -18,7 +18,6 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot
     , gaussJordan
     , gaussianReduce
     , isHermitian
@@ -27,9 +26,7 @@ module Matrix exposing
     , areLinearlyIndependent
     , multiplyRealVectorRealMatrix
     , nullSpace
-    , scale
     , solve
-    , subrow
     , areBasis
     , basisOfVectorSpace
     , doesSetSpanSpace
@@ -63,7 +60,6 @@ module Matrix exposing
 @docs multiplyComplexMatrices
 @docs multiplyRealMatrices
 @docs identityMatrix
-@docs findPivot
 @docs gaussJordan
 @docs gaussianReduce
 @docs isHermitian
@@ -74,7 +70,6 @@ module Matrix exposing
 @docs nullSpace
 @docs scale
 @docs solve
-@docs subrow
 @docs areBasis
 @docs basisOfVectorSpace
 @docs doesSetSpanSpace
@@ -85,6 +80,7 @@ module Matrix exposing
 -}
 
 import ComplexNumbers
+import Internal.Matrix
 import List.Extra
 import Monoid
 import Vector
@@ -209,64 +205,64 @@ liftA2 f a b =
 {-| Matrix Matrix multiplication for a Complex Numbered Matrix
 -}
 multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-multiplyComplexMatrices matrixOne matrixTwo =
-    map2VectorCartesianComplex (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
+multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
+    let
+        (Matrix matrixTranspose) =
+            transpose matrixTwo
+
+        listOfVectors =
+            matrixTranspose
+                |> List.map (\(RowVector vector) -> vector)
+
+        listOfVectorsOne =
+            matrixOne
+                |> List.map (\(RowVector vector) -> vector)
+    in
+    Internal.Matrix.map2VectorCartesianComplex listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
+        |> List.map RowVector
+        |> Matrix
 
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
 -}
 multiplyRealMatrices : Matrix number -> Matrix number -> Matrix number
-multiplyRealMatrices matrixOne matrixTwo =
-    map2VectorCartesian (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
+multiplyRealMatrices (Matrix matrixOne) matrixTwo =
+    let
+        (Matrix matrixTranspose) =
+            transpose matrixTwo
 
+        listOfVectors =
+            matrixTranspose
+                |> List.map (\(RowVector vector) -> vector)
 
-diagonal : Int -> Int -> number
-diagonal columnIndex rowIndex =
-    if columnIndex == rowIndex then
-        1
-
-    else
-        0
+        listOfVectorsOne =
+            matrixOne
+                |> List.map (\(RowVector vector) -> vector)
+    in
+    Internal.Matrix.map2VectorCartesian listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
+        |> List.map RowVector
+        |> Matrix
 
 
 {-| Create Identity Matrix with n dimension
 -}
 identityMatrix : Int -> Matrix Int
 identityMatrix dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (diagonal columnIndex)))
-
-
-map2VectorCartesian : Matrix number -> RowVector number -> Matrix number -> Matrix number -> Matrix number -> Matrix number
-map2VectorCartesian (Matrix right) (RowVector (Vector.Vector intermediateList)) (Matrix acc) (Matrix left) (Matrix currentRight) =
-    case ( left, currentRight ) of
-        ( (RowVector l) :: _, (RowVector r) :: rs ) ->
-            map2VectorCartesian (Matrix right) (RowVector <| Vector.Vector (intermediateList ++ [ Vector.realVectorDotProduct l r ])) (Matrix acc) (Matrix left) (Matrix rs)
-
-        ( _ :: ls, [] ) ->
-            map2VectorCartesian (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector <| Vector.Vector <| intermediateList ])) (Matrix ls) (Matrix right)
-
-        ( [], _ ) ->
-            Matrix acc
-
-
-map2VectorCartesianComplex : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> RowVector (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-map2VectorCartesianComplex (Matrix right) (RowVector (Vector.Vector intermediateList)) (Matrix acc) (Matrix left) (Matrix currentRight) =
-    case ( left, currentRight ) of
-        ( (RowVector l) :: _, (RowVector r) :: rs ) ->
-            map2VectorCartesianComplex (Matrix right) (RowVector <| Vector.Vector (intermediateList ++ [ Vector.complexVectorDotProduct l r ])) (Matrix acc) (Matrix left) (Matrix rs)
-
-        ( _ :: ls, [] ) ->
-            map2VectorCartesianComplex (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector <| Vector.Vector <| intermediateList ])) (Matrix ls) (Matrix right)
-
-        ( [], _ ) ->
-            Matrix acc
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal columnIndex)))
 
 
 {-| Multiply a real Vector by a real Matrix
 -}
 multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Matrix number
-multiplyRealVectorRealMatrix matrix vector =
-    map2VectorCartesian (Matrix <| [ RowVector vector ]) (RowVector <| Vector.Vector []) (Matrix []) matrix (Matrix <| [ RowVector vector ])
+multiplyRealVectorRealMatrix (Matrix matrix) vector =
+    let
+        listOfVectors =
+            matrix
+                |> List.map (\(RowVector vec) -> vec)
+    in
+    Internal.Matrix.map2VectorCartesian [ vector ] (Vector.Vector []) [] listOfVectors [ vector ]
+        |> List.map RowVector
+        |> Matrix
 
 
 {-| Predicate to determine if Matrix is symmetric
@@ -283,145 +279,16 @@ isHermitian matrix =
     adjoint matrix == matrix
 
 
-{-| Internal function for finding pivot entry in Gaussian elimination
--}
-findPivot : Matrix number -> Int -> Maybe Int
-findPivot (Matrix listOfRowVectors) initialRowIndex =
-    List.Extra.find
-        (\currentRowIndexIteration ->
-            List.Extra.getAt currentRowIndexIteration listOfRowVectors
-                |> Maybe.andThen (\(RowVector (Vector.Vector currentRowIteration)) -> List.Extra.getAt initialRowIndex currentRowIteration)
-                |> Maybe.withDefault 0
-                |> (/=) 0
-        )
-        (List.range initialRowIndex (List.length listOfRowVectors - 1))
-
-
-{-| Internal function for scalling rows by pivot entry
--}
-scale : Int -> RowVector Float -> RowVector Float
-scale rowIndex (RowVector (Vector.Vector rowVector)) =
-    case rowVector of
-        [] ->
-            RowVector <| Vector.Vector []
-
-        xs ->
-            let
-                elementAtRowIndex =
-                    Maybe.withDefault 1 (List.Extra.getAt rowIndex xs)
-            in
-            RowVector <| Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)
-
-
-{-| Internal function for subtracting rows from each other
--}
-subrow : Int -> RowVector Float -> RowVector Float -> RowVector Float
-subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRow)) =
-    let
-        k =
-            Maybe.withDefault 1 (List.Extra.getAt r nextRow)
-
-        subtractedRow =
-            List.map2 (\a b -> k * a - b) currentRow nextRow
-
-        firstElement =
-            subtractedRow
-                |> List.Extra.find
-                    ((/=) 0)
-                |> Maybe.withDefault 1
-
-        scaledRow =
-            List.map (\x -> x / firstElement) subtractedRow
-    in
-    scaledRow
-        |> Vector.Vector
-        |> RowVector
-
-
-reduceRow : Int -> Matrix Float -> Matrix Float
-reduceRow rowIndex (Matrix listOfRowVectors) =
-    let
-        firstPivot =
-            findPivot (Matrix listOfRowVectors) rowIndex
-    in
-    case firstPivot of
-        Just fPivot ->
-            let
-                swappedListOfRowVectors =
-                    List.Extra.swapAt rowIndex fPivot listOfRowVectors
-
-                scaledRow =
-                    List.Extra.getAt rowIndex swappedListOfRowVectors
-                        |> Maybe.map (scale rowIndex)
-                        |> Maybe.withDefault (RowVector <| Vector.Vector [])
-
-                nextRows =
-                    List.drop (rowIndex + 1) listOfRowVectors
-                        |> List.map (subrow rowIndex scaledRow)
-
-                newMatrixReduceRow =
-                    List.take rowIndex swappedListOfRowVectors
-                        ++ [ scaledRow ]
-                        ++ nextRows
-                        |> Matrix
-            in
-            newMatrixReduceRow
-
-        Nothing ->
-            if rowIndex == (List.length listOfRowVectors - 1) then
-                Matrix listOfRowVectors
-
-            else
-                let
-                    nextNonZero =
-                        List.Extra.getAt rowIndex listOfRowVectors
-                            |> Maybe.andThen (\(RowVector (Vector.Vector list)) -> List.Extra.findIndex (\x -> x /= 0) list)
-                            |> Maybe.withDefault rowIndex
-
-                    scaledRow =
-                        List.Extra.getAt rowIndex listOfRowVectors
-                            |> Maybe.map (scale nextNonZero)
-                            |> Maybe.withDefault (RowVector <| Vector.Vector [])
-
-                    nextRows =
-                        List.drop nextNonZero listOfRowVectors
-                            |> List.map (subrow nextNonZero scaledRow)
-
-                    newMatrixReduceRow =
-                        List.take rowIndex listOfRowVectors
-                            ++ [ scaledRow ]
-                            ++ nextRows
-                            |> Matrix
-                in
-                newMatrixReduceRow
-
-
 {-| Internal function Gaussian Elimination
 -}
 gaussianReduce : Matrix Float -> Matrix Float
 gaussianReduce (Matrix matrix) =
-    List.foldl reduceRow (Matrix matrix) (List.range 0 (List.length matrix - 1))
-
-
-jordan : Int -> Matrix Float -> Matrix Float
-jordan rowIndex matrix =
     let
-        (Matrix listOfRowVectors) =
-            matrix
-
-        row =
-            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
-
-        prevRows =
-            List.take rowIndex listOfRowVectors
-                |> List.map
-                    (\rowVector ->
-                        subrow rowIndex row rowVector
-                    )
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
     in
-    prevRows
-        ++ [ row ]
-        ++ List.drop (rowIndex + 1) listOfRowVectors
+    List.foldl Internal.Matrix.reduceRow listOfVectors (List.range 0 (List.length matrix - 1))
+        |> List.map (\row -> RowVector row)
         |> Matrix
 
 
@@ -429,7 +296,13 @@ jordan rowIndex matrix =
 -}
 jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
-    List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
+    let
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
+    in
+    List.foldl Internal.Matrix.reduceRowBackwards listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
+        |> List.map (\row -> RowVector row)
+        |> Matrix
 
 
 {-| Internal function composition of Gaussian Elimination and Jordan Elimination

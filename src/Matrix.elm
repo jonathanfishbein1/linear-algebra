@@ -347,7 +347,7 @@ solveMatrix (Matrix listOfRowVectors) =
                     (\(RowVector (Vector.Vector row)) ->
                         let
                             countOfOnes =
-                                List.Extra.count (\x -> x /= 0) row
+                                List.Extra.count ((/=) 0) row
                         in
                         countOfOnes > 1
                     )

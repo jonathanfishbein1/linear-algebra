@@ -292,8 +292,8 @@ gaussianReduce (Matrix matrix) =
         |> Matrix
 
 
-jordan : Int -> Matrix Float -> Matrix Float
-jordan rowIndex matrix =
+reduceRowBackwards : Int -> Matrix Float -> Matrix Float
+reduceRowBackwards rowIndex matrix =
     let
         (Matrix listOfRowVectors) =
             matrix
@@ -319,7 +319,7 @@ jordan rowIndex matrix =
 -}
 jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
-    List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
+    List.foldl reduceRowBackwards (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
 
 
 {-| Internal function composition of Gaussian Elimination and Jordan Elimination

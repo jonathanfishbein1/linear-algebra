@@ -150,7 +150,7 @@ sumComplexMatrices sumEmptyMatrix =
 -}
 map : (a -> b) -> Matrix a -> Matrix b
 map f (Matrix listOfRowVectors) =
-    Matrix <| List.map (\row -> rowVectorMap f row) listOfRowVectors
+    Matrix <| List.map (rowVectorMap f) listOfRowVectors
 
 
 {-| Compare two Matrices for equality

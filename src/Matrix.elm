@@ -318,10 +318,10 @@ gaussJordan matrix =
 solve : Matrix Float -> ColumnVector Float -> Solution
 solve matrix b =
     let
-        (Matrix augmentedMatrix) =
+        augmentedMatrix =
             combineMatrixVector matrix b
     in
-    solveMatrix (Matrix augmentedMatrix)
+    solveMatrix augmentedMatrix
 
 
 variablePortion : Matrix Float -> Matrix Float
@@ -379,12 +379,6 @@ solveMatrix (Matrix listOfRowVectors) =
                 |> Vector.Vector
                 |> ColumnVector
             )
-
-
-mapRowVector : (a -> b) -> RowVector a -> RowVector b
-mapRowVector f (RowVector rowVector) =
-    Vector.map f rowVector
-        |> RowVector
 
 
 combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
@@ -445,20 +439,20 @@ areLinearlyIndependent listOfRowVectors =
 doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Bool
 doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
     let
-        (Matrix transposedListOfRowVectors) =
+        transposedListOfRowVectors =
             rowVectors
                 |> Matrix
                 |> transpose
 
-        (Matrix identityRowVectors) =
+        identityRowVectors =
             identityMatrix vectorSpace
 
         floatMatrix =
             identityRowVectors
-                |> List.map (\(RowVector vector) -> RowVector <| Vector.map toFloat vector)
+                |> map toFloat
 
-        (Matrix listOfRowVectorsRREF) =
-            gaussJordan (Matrix transposedListOfRowVectors)
+        listOfRowVectorsRREF =
+            gaussJordan transposedListOfRowVectors
     in
     floatMatrix == listOfRowVectorsRREF
 

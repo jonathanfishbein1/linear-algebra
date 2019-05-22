@@ -150,7 +150,7 @@ sumComplexMatrices sumEmptyMatrix =
 -}
 map : (a -> b) -> Matrix a -> Matrix b
 map f (Matrix listOfRowVectors) =
-    Matrix <| List.map (\(RowVector vector) -> RowVector <| Vector.map f vector) listOfRowVectors
+    Matrix <| List.map (\row -> rowVectorMap f row) listOfRowVectors
 
 
 {-| Compare two Matrices for equality
@@ -512,3 +512,9 @@ basisOfVectorSpace vectorSpace rowVectors =
                 jordanReduce (Matrix rowVectors)
         in
         reducedRowEchelonFormListOfRowVectors
+
+
+rowVectorMap : (a -> b) -> RowVector a -> RowVector b
+rowVectorMap f (RowVector vector) =
+    Vector.map f vector
+        |> RowVector

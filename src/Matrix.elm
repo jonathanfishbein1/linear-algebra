@@ -150,7 +150,7 @@ sumComplexMatrices sumEmptyMatrix =
 -}
 map : (a -> b) -> Matrix a -> Matrix b
 map f (Matrix listOfRowVectors) =
-    Matrix <| List.map (\(RowVector vector) -> RowVector <| Vector.map f vector) listOfRowVectors
+    Matrix <| List.map (rowVectorMap f) listOfRowVectors
 
 
 {-| Compare two Matrices for equality
@@ -316,12 +316,17 @@ gaussJordan matrix =
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
 -}
 solve : Matrix Float -> ColumnVector Float -> Solution
-solve matrix b =
+solve matrix (ColumnVector (Vector.Vector b)) =
     let
-        (Matrix augmentedMatrix) =
-            combineMatrixVector matrix b
+        matrixB =
+            b
+                |> List.map (\x -> [ x ] |> Vector.Vector |> RowVector)
+                |> Matrix
+
+        augmentedMatrix =
+            matrixConcat matrix matrixB
     in
-    solveMatrix (Matrix augmentedMatrix)
+    solveMatrix augmentedMatrix
 
 
 variablePortion : Matrix Float -> Matrix Float
@@ -381,18 +386,6 @@ solveMatrix (Matrix listOfRowVectors) =
             )
 
 
-mapRowVector : (a -> b) -> RowVector a -> RowVector b
-mapRowVector f (RowVector rowVector) =
-    Vector.map f rowVector
-        |> RowVector
-
-
-combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
-combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)) =
-    List.map2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
-        |> Matrix
-
-
 {-| Calculate the null space of a matrix
 -}
 nullSpace : Matrix Float -> Solution
@@ -445,20 +438,20 @@ areLinearlyIndependent listOfRowVectors =
 doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Bool
 doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
     let
-        (Matrix transposedListOfRowVectors) =
+        transposedListOfRowVectors =
             rowVectors
                 |> Matrix
                 |> transpose
 
-        (Matrix identityRowVectors) =
+        identityRowVectors =
             identityMatrix vectorSpace
 
         floatMatrix =
             identityRowVectors
-                |> List.map (\(RowVector vector) -> RowVector <| Vector.map toFloat vector)
+                |> map toFloat
 
-        (Matrix listOfRowVectorsRREF) =
-            gaussJordan (Matrix transposedListOfRowVectors)
+        listOfRowVectorsRREF =
+            gaussJordan transposedListOfRowVectors
     in
     floatMatrix == listOfRowVectorsRREF
 
@@ -512,3 +505,9 @@ basisOfVectorSpace vectorSpace rowVectors =
                 jordanReduce (Matrix rowVectors)
         in
         reducedRowEchelonFormListOfRowVectors
+
+
+rowVectorMap : (a -> b) -> RowVector a -> RowVector b
+rowVectorMap f (RowVector vector) =
+    Vector.map f vector
+        |> RowVector

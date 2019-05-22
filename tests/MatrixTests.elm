@@ -1375,4 +1375,20 @@ suite =
                         Matrix.basisOfVectorSpace r2 testVectors
                 in
                 Expect.equal r2BasisVectors testbasisVectors
+        , Test.test "tests matrix fold" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                            ]
+
+                    result =
+                        Matrix.VectorSpace 2
+
+                    foldResult =
+                        Matrix.foldl (+) 0 matrix
+                in
+                Expect.equal foldResult 2
         ]

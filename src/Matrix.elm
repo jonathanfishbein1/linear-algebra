@@ -511,3 +511,10 @@ rowVectorMap : (a -> b) -> RowVector a -> RowVector b
 rowVectorMap f (RowVector vector) =
     Vector.map f vector
         |> RowVector
+
+
+{-| Left fold over a RowVector
+-}
+rowVectorFoldl : (a -> b -> b) -> b -> RowVector a -> b
+rowVectorFoldl foldFunction acc (RowVector vector) =
+    Vector.foldl foldFunction acc vector

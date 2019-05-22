@@ -316,10 +316,15 @@ gaussJordan matrix =
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
 -}
 solve : Matrix Float -> ColumnVector Float -> Solution
-solve matrix b =
+solve matrix (ColumnVector (Vector.Vector b)) =
     let
+        matrixB =
+            b
+                |> List.map (\x -> [ x ] |> Vector.Vector |> RowVector)
+                |> Matrix
+
         augmentedMatrix =
-            combineMatrixVector matrix b
+            matrixConcat matrix matrixB
     in
     solveMatrix augmentedMatrix
 
@@ -379,12 +384,6 @@ solveMatrix (Matrix listOfRowVectors) =
                 |> Vector.Vector
                 |> ColumnVector
             )
-
-
-combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
-combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)) =
-    List.map2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
-        |> Matrix
 
 
 {-| Calculate the null space of a matrix

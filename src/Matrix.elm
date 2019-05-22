@@ -331,7 +331,7 @@ solve matrix (ColumnVector (Vector.Vector b)) =
 
 variablePortion : Matrix Float -> Matrix Float
 variablePortion (Matrix listOfRowVectors) =
-    List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ [ RowVector <| Vector.Vector <| List.take (List.length row - 1) row ]) [] listOfRowVectors
+    List.map (\(RowVector (Vector.Vector row)) -> RowVector <| Vector.Vector <| List.take (List.length row - 1) row) listOfRowVectors
         |> Matrix
 
 
@@ -518,3 +518,10 @@ rowVectorMap f (RowVector vector) =
 rowVectorFoldl : (a -> b -> b) -> b -> RowVector a -> b
 rowVectorFoldl foldFunction acc (RowVector vector) =
     Vector.foldl foldFunction acc vector
+
+
+{-| Left fold over a Matrix
+-}
+foldl : (a -> b -> b) -> b -> Matrix a -> b
+foldl foldFunction acc (Matrix listOfRowVectors) =
+    List.foldl (\row accumlator -> rowVectorFoldl foldFunction accumlator row) acc listOfRowVectors

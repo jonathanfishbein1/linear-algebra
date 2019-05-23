@@ -613,11 +613,11 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m1Timesm2AndThenTimesm3 =
-                        Maybe.andThen (Matrix.multiplyRealMatrices m3)
+                        Result.andThen (Matrix.multiplyRealMatrices m3)
                             (Matrix.multiplyRealMatrices m1 m2)
 
                     m2Timesm3AndThenTimesm1 =
-                        Maybe.andThen (Matrix.multiplyRealMatrices m1)
+                        Result.andThen (Matrix.multiplyRealMatrices m1)
                             (Matrix.multiplyRealMatrices m2 m3)
                 in
                 Expect.equal m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
@@ -687,7 +687,7 @@ suite =
                     m1TimeI =
                         Matrix.multiplyRealMatrices m1 (Matrix.identityMatrix 3)
                 in
-                Expect.equal m1TimeI (Just m1)
+                Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests A*In = a" <|
             \one two three ->
                 let
@@ -722,7 +722,7 @@ suite =
                     m1TimeI =
                         Matrix.multiplyRealMatrices (Matrix.identityMatrix 3) m1
                 in
-                Expect.equal m1TimeI (Just m1)
+                Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition" <|
             \one two three ->
                 let
@@ -767,7 +767,7 @@ suite =
                         Matrix.multiplyRealMatrices m1 (Matrix.addRealMatrices m2 m3)
 
                     m1Timesm2Plusem1Timesm3 =
-                        Maybe.map2 Matrix.addRealMatrices (Matrix.multiplyRealMatrices m1 m2) (Matrix.multiplyRealMatrices m1 m3)
+                        Result.map2 Matrix.addRealMatrices (Matrix.multiplyRealMatrices m1 m2) (Matrix.multiplyRealMatrices m1 m3)
                 in
                 Expect.equal m1Timesm2Plus3 m1Timesm2Plusem1Timesm3
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition second test" <|
@@ -814,7 +814,7 @@ suite =
                         Matrix.multiplyRealMatrices (Matrix.addRealMatrices m2 m3) m1
 
                     m2Timesm1Plusm3Timesm1 =
-                        Maybe.map2 Matrix.addRealMatrices (Matrix.multiplyRealMatrices m2 m1) (Matrix.multiplyRealMatrices m3 m1)
+                        Result.map2 Matrix.addRealMatrices (Matrix.multiplyRealMatrices m2 m1) (Matrix.multiplyRealMatrices m3 m1)
                 in
                 Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication respects scalar multiplication" <|
@@ -847,7 +847,7 @@ suite =
 
                     cTimesm1Timem2 =
                         Matrix.multiplyRealMatrices m1 m2
-                            |> Maybe.map (Matrix.map ((*) one))
+                            |> Result.map (Matrix.map ((*) one))
 
                     cTimesm1ThenTimesm2 =
                         Matrix.multiplyRealMatrices (Matrix.map ((*) one) m1) m2
@@ -874,7 +874,7 @@ suite =
 
                     aTimebThenTranspose =
                         Matrix.multiplyRealMatrices a b
-                            |> Maybe.map Matrix.transpose
+                            |> Result.map Matrix.transpose
 
                     cTimesm1ThenTimesm2 =
                         Matrix.multiplyRealMatrices (Matrix.transpose b) (Matrix.transpose a)

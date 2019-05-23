@@ -226,7 +226,7 @@ multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
 -}
-multiplyRealMatrices : Matrix number -> Matrix number -> Maybe (Matrix number)
+multiplyRealMatrices : Matrix number -> Matrix number -> Result String (Matrix number)
 multiplyRealMatrices (Matrix matrixOne) matrixTwo =
     if nDimension (Matrix matrixOne) == mDimension matrixTwo then
         let
@@ -244,10 +244,10 @@ multiplyRealMatrices (Matrix matrixOne) matrixTwo =
         Internal.Matrix.map2VectorCartesian listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
             |> List.map RowVector
             |> Matrix
-            |> Just
+            |> Ok
 
     else
-        Nothing
+        Err "first matrix must have same number of columns as the second matrix has rows"
 
 
 {-| Create Identity Matrix with n dimension

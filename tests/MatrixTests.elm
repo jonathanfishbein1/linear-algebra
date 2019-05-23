@@ -1142,7 +1142,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.equal result (Just True)
+                Expect.equal result (Ok True)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors" <|
             \_ ->
                 let
@@ -1157,7 +1157,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.equal result (Just False)
+                Expect.equal result (Ok False)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors 3 dimensions" <|
             \_ ->
                 let
@@ -1173,7 +1173,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r3 listOfRowVectors
                 in
-                Expect.equal result (Just True)
+                Expect.equal result (Ok True)
         , Test.test "tests matrix doesSetSpanSpace with three vectors" <|
             \_ ->
                 let
@@ -1189,7 +1189,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r3 listOfRowVectors
                 in
-                Expect.equal result (Just False)
+                Expect.equal result (Ok False)
         , Test.test "tests matrix doesSetSpanSpace with three vectors testing r2" <|
             \_ ->
                 let
@@ -1205,7 +1205,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.equal result (Just False)
+                Expect.equal result (Err "Please input same number of vectors as vector space")
         , Test.test "tests matrix doesSetSpanSpace with three dimensional vector against R2" <|
             \_ ->
                 let
@@ -1220,7 +1220,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.equal result (Just False)
+                Expect.equal result (Err "Please input vectors of equal length as vector space")
         , Test.test "tests matrix areBasis with standard basis vectors" <|
             \_ ->
                 let
@@ -1319,8 +1319,8 @@ suite =
             \_ ->
                 let
                     listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 2, 0, 0 ]
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 2, 0 ]
                         ]
 
                     r2 =

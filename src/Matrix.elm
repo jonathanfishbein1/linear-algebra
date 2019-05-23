@@ -436,10 +436,13 @@ areLinearlyIndependent listOfRowVectors =
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Maybe Bool
+doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Result String Bool
 doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
-    if List.length rowVectors < vectorSpace then
-        Nothing
+    if List.length rowVectors /= vectorSpace then
+        Err "Please input same number of vectors as vector space"
+
+    else if not <| List.all (\(RowVector row) -> Vector.dimension row == vectorSpace) rowVectors then
+        Err "Please input vectors of equal length as vector space"
 
     else
         let
@@ -460,7 +463,7 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
         in
         floatMatrix
             == listOfRowVectorsRREF
-            |> Just
+            |> Ok
 
 
 {-| Number of columns in Matrix
@@ -486,7 +489,7 @@ mDimension (Matrix listOfRowVectors) =
 -}
 areBasis : VectorSpace -> List (RowVector Float) -> Bool
 areBasis vectorSpace rowVectors =
-    if doesSetSpanSpace vectorSpace rowVectors == Just True && areLinearlyIndependent rowVectors then
+    if doesSetSpanSpace vectorSpace rowVectors == Ok True && areLinearlyIndependent rowVectors then
         True
 
     else

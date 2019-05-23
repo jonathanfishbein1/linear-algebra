@@ -898,11 +898,7 @@ suite =
                         Matrix.multiplyRealVectorRealMatrix m v
 
                     expected =
-                        Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 14 ]
-                            , Matrix.RowVector <| Vector.Vector [ 32 ]
-                            , Matrix.RowVector <| Vector.Vector [ 50 ]
-                            ]
+                        Vector.Vector [ 14, 32, 50 ]
                 in
                 Expect.equal mTimesV expected
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication respects the conjugate" <|

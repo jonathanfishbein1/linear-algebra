@@ -264,7 +264,7 @@ identityMatrix dimension =
 
 {-| Multiply a real Vector by a real Matrix
 -}
-multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Matrix number
+multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Vector.Vector number
 multiplyRealVectorRealMatrix (Matrix matrix) vector =
     let
         listOfVectors =
@@ -272,8 +272,8 @@ multiplyRealVectorRealMatrix (Matrix matrix) vector =
                 |> List.map (\(RowVector vec) -> vec)
     in
     Internal.Matrix.map2VectorCartesian [ vector ] (Vector.Vector []) [] listOfVectors [ vector ]
-        |> List.map RowVector
-        |> Matrix
+        |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
+        |> Vector.Vector
 
 
 {-| Predicate to determine if Matrix is symmetric

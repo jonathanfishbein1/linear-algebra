@@ -8,9 +8,6 @@ module Vector exposing
     , multiplyRealVectors
     , multiplyComplexVectors
     , equal
-    , sumEmpty
-    , sumReal
-    , sumComplex
     , apply
     , liftA2
     , foldl
@@ -27,6 +24,7 @@ module Vector exposing
     , dimension
     , realVectorSubspace
     , complexVectorSubspace
+    , append, concatEmpty
     )
 
 {-| A module for Vectors
@@ -138,23 +136,25 @@ equal comparator vectorOne vectorTwo =
 
 {-| Monoid empty for Vector
 -}
-sumEmpty : List a -> Vector a
-sumEmpty =
-    Vector
+concatEmpty : Vector a
+concatEmpty =
+    Vector []
 
 
-{-| Monoidally add Real Vectors together
+{-| Monoidally append Vectors together
 -}
-sumReal : List number -> Monoid.Monoid (Vector number)
-sumReal a =
-    Monoid.monoid (sumEmpty a) addRealVectors
+concat : Monoid.Monoid (Vector a)
+concat =
+    Monoid.monoid concatEmpty append
 
 
-{-| Monoidally add Complex Vectors together
+{-| Append Vectors together
 -}
-sumComplex : List (ComplexNumbers.ComplexNumberCartesian number) -> Monoid.Monoid (Vector (ComplexNumbers.ComplexNumberCartesian number))
-sumComplex a =
-    Monoid.monoid (sumEmpty a) addComplexVectors
+append : Vector a -> Vector a -> Vector a
+append (Vector listOne) (Vector listTwo) =
+    listOne
+        ++ listTwo
+        |> Vector
 
 
 {-| Apply for Vector
@@ -192,13 +192,6 @@ realVectorDotProduct : Vector number -> Vector number -> number
 realVectorDotProduct vectorOne vectorTwo =
     liftA2 (*) vectorOne vectorTwo
         |> foldl (+) 0
-
-
-{-| Concat two Vectors together
--}
-concat : Vector a -> Vector a -> Vector a
-concat (Vector listOne) (Vector listTwo) =
-    Vector <| listOne ++ listTwo
 
 
 {-| Calculate length of a real vector

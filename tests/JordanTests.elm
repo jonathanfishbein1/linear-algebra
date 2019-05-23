@@ -39,11 +39,12 @@ suite =
             \_ ->
                 let
                     rowEchelonFormMatrix =
-                         Matrix.Matrix <|
-                             [ Matrix.RowVector <| Vector.Vector [ 1.0, 1.0, 1.0, 3.0 ]
-                             , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, 2.0, -3.0 ]
-                             , Matrix.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
-                             ]
+                        Matrix.Matrix <|
+                            [ Matrix.RowVector <| Vector.Vector [ 1.0, 1.0, 1.0, 3.0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, 2.0, -3.0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
+                            ]
+
                     reducedRowEchelonFormMatrix =
                         Matrix.jordanReduce rowEchelonFormMatrix
 

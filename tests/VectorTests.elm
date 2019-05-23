@@ -119,12 +119,9 @@ suite =
                 in
                 Vector.addComplexVectors v w
                     |> Expect.equal (Vector.addComplexVectors w v)
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests zero is additive identity" <|
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests empty vector is additive identity" <|
             \one two ->
                 let
-                    v =
-                        Vector.sumEmpty [ ComplexNumbers.zero ]
-
                     w =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumberCartesian
@@ -136,7 +133,7 @@ suite =
                                 )
                             ]
                 in
-                Vector.addComplexVectors v w
+                Vector.append Vector.concatEmpty w
                     |> Expect.equal w
         , Test.fuzz2 Fuzz.int Fuzz.int "tests vector inverse" <|
             \one two ->
@@ -338,27 +335,36 @@ suite =
                                 )
                             ]
                 in
-                Monoid.append (Vector.sumComplex [ ComplexNumbers.zero ]) v (Monoid.empty <| Vector.sumComplex [ ComplexNumbers.zero ])
+                Monoid.append Vector.concat v (Monoid.empty Vector.concat)
                     |> Expect.equal v
         , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add" <|
             \one two three ->
                 let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two)
+
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three)
+
+                    complexNumberThree =
+                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three)
+
                     a =
-                        Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two) ]
+                        Vector.Vector [ complexNumberOne ]
 
                     b =
-                        Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three) ]
+                        Vector.Vector [ complexNumberTwo ]
 
                     c =
-                        Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three) ]
+                        Vector.Vector [ complexNumberThree ]
 
                     expected =
-                        Vector.addComplexVectors (Vector.addComplexVectors a b) c
+                        Vector.Vector [ complexNumberOne, complexNumberTwo, complexNumberThree ]
 
                     listOfMonoids =
                         [ a, b, c ]
                 in
-                Monoid.concat (Vector.sumComplex [ ComplexNumbers.zero ]) listOfMonoids
+                Monoid.concat Vector.concat listOfMonoids
                     |> Expect.equal expected
         , Test.fuzz Fuzz.int "tests dot product is nondegenerative" <|
             \one ->

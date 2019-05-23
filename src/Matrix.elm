@@ -226,23 +226,28 @@ multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
 -}
-multiplyRealMatrices : Matrix number -> Matrix number -> Matrix number
+multiplyRealMatrices : Matrix number -> Matrix number -> Maybe (Matrix number)
 multiplyRealMatrices (Matrix matrixOne) matrixTwo =
-    let
-        (Matrix matrixTranspose) =
-            transpose matrixTwo
+    if nDimension (Matrix matrixOne) == mDimension matrixTwo then
+        let
+            (Matrix matrixTranspose) =
+                transpose matrixTwo
 
-        listOfVectors =
-            matrixTranspose
-                |> List.map (\(RowVector vector) -> vector)
+            listOfVectors =
+                matrixTranspose
+                    |> List.map (\(RowVector vector) -> vector)
 
-        listOfVectorsOne =
-            matrixOne
-                |> List.map (\(RowVector vector) -> vector)
-    in
-    Internal.Matrix.map2VectorCartesian listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
-        |> List.map RowVector
-        |> Matrix
+            listOfVectorsOne =
+                matrixOne
+                    |> List.map (\(RowVector vector) -> vector)
+        in
+        Internal.Matrix.map2VectorCartesian listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
+            |> List.map RowVector
+            |> Matrix
+            |> Just
+
+    else
+        Nothing
 
 
 {-| Create Identity Matrix with n dimension

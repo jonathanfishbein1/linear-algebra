@@ -436,25 +436,31 @@ areLinearlyIndependent listOfRowVectors =
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Bool
+doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Maybe Bool
 doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
-    let
-        transposedListOfRowVectors =
-            rowVectors
-                |> Matrix
-                |> transpose
+    if List.length rowVectors < vectorSpace then
+        Nothing
 
-        identityRowVectors =
-            identityMatrix vectorSpace
+    else
+        let
+            transposedListOfRowVectors =
+                rowVectors
+                    |> Matrix
+                    |> transpose
 
-        floatMatrix =
-            identityRowVectors
-                |> map toFloat
+            identityRowVectors =
+                identityMatrix vectorSpace
 
-        listOfRowVectorsRREF =
-            gaussJordan transposedListOfRowVectors
-    in
-    floatMatrix == listOfRowVectorsRREF
+            floatMatrix =
+                identityRowVectors
+                    |> map toFloat
+
+            listOfRowVectorsRREF =
+                gaussJordan transposedListOfRowVectors
+        in
+        floatMatrix
+            == listOfRowVectorsRREF
+            |> Just
 
 
 {-| Number of columns in Matrix
@@ -480,7 +486,7 @@ mDimension (Matrix listOfRowVectors) =
 -}
 areBasis : VectorSpace -> List (RowVector Float) -> Bool
 areBasis vectorSpace rowVectors =
-    if doesSetSpanSpace vectorSpace rowVectors && areLinearlyIndependent rowVectors then
+    if doesSetSpanSpace vectorSpace rowVectors == Just True && areLinearlyIndependent rowVectors then
         True
 
     else

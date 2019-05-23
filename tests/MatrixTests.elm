@@ -1142,7 +1142,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.true "Vector spans R2" result
+                Expect.equal result (Just True)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors" <|
             \_ ->
                 let
@@ -1157,7 +1157,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.false "Vector does not span R2" result
+                Expect.equal result (Just False)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors 3 dimensions" <|
             \_ ->
                 let
@@ -1173,7 +1173,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r3 listOfRowVectors
                 in
-                Expect.true "Vector spans R3" result
+                Expect.equal result (Just True)
         , Test.test "tests matrix doesSetSpanSpace with three vectors" <|
             \_ ->
                 let
@@ -1189,7 +1189,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r3 listOfRowVectors
                 in
-                Expect.false "Vector does not spans R3" result
+                Expect.equal result (Just False)
         , Test.test "tests matrix doesSetSpanSpace with three vectors testing r2" <|
             \_ ->
                 let
@@ -1205,7 +1205,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.false "Vector does not span R2" result
+                Expect.equal result (Just False)
         , Test.test "tests matrix doesSetSpanSpace with three dimensional vector against R2" <|
             \_ ->
                 let
@@ -1220,7 +1220,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.false "Vector does not spans R2" result
+                Expect.equal result (Just False)
         , Test.test "tests matrix areBasis with standard basis vectors" <|
             \_ ->
                 let

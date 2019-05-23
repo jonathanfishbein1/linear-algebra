@@ -205,23 +205,28 @@ liftA2 f a b =
 
 {-| Matrix Matrix multiplication for a Complex Numbered Matrix
 -}
-multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian number))
 multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
-    let
-        (Matrix matrixTranspose) =
-            transpose matrixTwo
+    if nDimension (Matrix matrixOne) == mDimension matrixTwo then
+        let
+            (Matrix matrixTranspose) =
+                transpose matrixTwo
 
-        listOfVectors =
-            matrixTranspose
-                |> List.map (\(RowVector vector) -> vector)
+            listOfVectors =
+                matrixTranspose
+                    |> List.map (\(RowVector vector) -> vector)
 
-        listOfVectorsOne =
-            matrixOne
-                |> List.map (\(RowVector vector) -> vector)
-    in
-    Internal.Matrix.map2VectorCartesianComplex listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
-        |> List.map RowVector
-        |> Matrix
+            listOfVectorsOne =
+                matrixOne
+                    |> List.map (\(RowVector vector) -> vector)
+        in
+        Internal.Matrix.map2VectorCartesianComplex listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
+            |> List.map RowVector
+            |> Matrix
+            |> Ok
+
+    else
+        Err "first matrix must have same number of columns as the second matrix has rows"
 
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix

@@ -928,22 +928,28 @@ suite =
                                 [ complexNumberOne, complexNumberTwo ]
 
                     a =
-                        Matrix.Matrix [ v1 ]
+                        Matrix.Matrix
+                            [ v1
+                            , v2
+                            ]
 
                     b =
-                        Matrix.Matrix [ v2 ]
+                        Matrix.Matrix
+                            [ v2
+                            , v1
+                            ]
 
                     aTimebThenConjugate =
                         Matrix.multiplyComplexMatrices a b
-                            |> Matrix.conjugate
+                            |> Result.map Matrix.conjugate
 
                     cTimesm1ThenTimesm2 =
                         Matrix.multiplyComplexMatrices (Matrix.conjugate a) (Matrix.conjugate b)
 
                     result =
-                        Matrix.equal ComplexNumbers.equal aTimebThenConjugate cTimesm1ThenTimesm2
+                        Result.map2 (Matrix.equal ComplexNumbers.equal) aTimebThenConjugate cTimesm1ThenTimesm2
                 in
-                Expect.true "AB conjugate equals A conjugate time B conjugate" result
+                Expect.equal result (Ok True)
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication relates to the adjoin" <|
             \one two three ->
                 let
@@ -971,15 +977,15 @@ suite =
 
                     aTimebThenAdjoint =
                         Matrix.multiplyComplexMatrices a b
-                            |> Matrix.adjoint
+                            |> Result.map Matrix.adjoint
 
                     bAdjointTimesAAdjoint =
                         Matrix.multiplyComplexMatrices (Matrix.adjoint a) (Matrix.adjoint b)
 
                     result =
-                        Matrix.equal ComplexNumbers.equal aTimebThenAdjoint bAdjointTimesAAdjoint
+                        Result.map2 (Matrix.equal ComplexNumbers.equal) aTimebThenAdjoint bAdjointTimesAAdjoint
                 in
-                Expect.true "AB adjoint equals A conjugate time B adjoint" result
+                Expect.equal result (Ok True)
         , Test.test "tests matrix gaussianReduce put matrix into Row Echelon Form" <|
             \_ ->
                 let

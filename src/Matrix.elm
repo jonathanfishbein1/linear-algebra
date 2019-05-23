@@ -451,11 +451,6 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
 
     else
         let
-            transposedListOfRowVectors =
-                rowVectors
-                    |> Matrix
-                    |> transpose
-
             identityRowVectors =
                 identityMatrix vectorSpace
 
@@ -464,7 +459,7 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
                     |> map toFloat
 
             listOfRowVectorsRREF =
-                gaussJordan transposedListOfRowVectors
+                gaussJordan (Matrix rowVectors)
         in
         floatMatrix
             == listOfRowVectorsRREF

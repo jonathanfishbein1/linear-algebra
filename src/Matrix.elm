@@ -503,7 +503,7 @@ areBasis vectorSpace rowVectors =
 
 matrixConcat : Matrix a -> Matrix a -> Matrix a
 matrixConcat (Matrix matrixOne) (Matrix matrixTwo) =
-    List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.concat rowOne rowTwo) matrixOne matrixTwo
+    List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) matrixOne matrixTwo
         |> Matrix
 
 

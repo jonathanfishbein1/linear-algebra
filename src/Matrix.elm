@@ -542,10 +542,10 @@ foldl foldFunction acc (Matrix listOfRowVectors) =
     List.foldl (\row accumlator -> rowVectorFoldl foldFunction accumlator row) acc listOfRowVectors
 
 
-{-| Append Matricies together
+{-| Append Matricies together vertically
 -}
-append : Matrix a -> Matrix a -> Matrix a
-append (Matrix listOne) (Matrix listTwo) =
+appendVertical : Matrix a -> Matrix a -> Matrix a
+appendVertical (Matrix listOne) (Matrix listTwo) =
     listOne
         ++ listTwo
         |> Matrix
@@ -553,6 +553,13 @@ append (Matrix listOne) (Matrix listTwo) =
 
 {-| Monoid empty for Vector
 -}
-concatEmpty : Matrix a
-concatEmpty =
+matrixConcatVerticalEmpty : Matrix a
+matrixConcatVerticalEmpty =
     Matrix []
+
+
+{-| Monoidally append Matricies together
+-}
+matrixConcatVertical : Monoid.Monoid (Matrix a)
+matrixConcatVertical =
+    Monoid.monoid matrixConcatVerticalEmpty appendVertical

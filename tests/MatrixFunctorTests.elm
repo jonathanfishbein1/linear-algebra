@@ -25,11 +25,11 @@ suite =
                         Matrix.map identity m
                 in
                 Expect.equal m mPrime
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests Matrix Functor composition" <|
-            \one two ->
+        , Test.fuzz Fuzz.int "tests Matrix Functor composition" <|
+            \one ->
                 let
                     m =
-                        Vector.Vector [ one, two ]
+                        Vector.Vector [ one ]
                             |> Matrix.RowVector
                             |> List.singleton
                             |> Matrix.Matrix

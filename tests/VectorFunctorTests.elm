@@ -10,7 +10,7 @@ import Vector
 
 suite : Test.Test
 suite =
-    Test.describe "The LinearAlgebra module"
+    Test.describe "Tests Functor abstraction for Vector"
         [ Test.fuzz Fuzz.int "tests Vector add is commutative" <|
             \one ->
                 let
@@ -21,11 +21,11 @@ suite =
                         Vector.map identity v
                 in
                 Expect.equal v vPrime
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests Vector Functor composition" <|
-            \one two ->
+        , Test.fuzz Fuzz.int "tests Vector Functor composition" <|
+            \one ->
                 let
                     v =
-                        Vector.Vector [ one, two ]
+                        Vector.Vector [ one ]
 
                     f =
                         (*) 2

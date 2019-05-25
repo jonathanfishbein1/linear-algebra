@@ -24,7 +24,7 @@ module Vector exposing
     , dimension
     , realVectorSubspace
     , complexVectorSubspace
-    , append, concatEmpty
+    , append, concatEmpty, pure
     )
 
 {-| A module for Vectors
@@ -155,6 +155,11 @@ append (Vector listOne) (Vector listTwo) =
     listOne
         ++ listTwo
         |> Vector
+
+
+pure : a -> Vector a
+pure a =
+    Vector [ a ]
 
 
 {-| Apply for Vector

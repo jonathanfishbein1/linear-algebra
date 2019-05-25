@@ -33,7 +33,7 @@ module Matrix exposing
     , mDimension
     , nDimension
     , solveMatrix
-    , foldl, matrixConcatHorizontal, matrixConcatVertical, matrixEmpty
+    , foldl, matrixConcatHorizontal, matrixConcatVertical, matrixEmpty, pure
     )
 
 {-| A module for Matrix
@@ -591,3 +591,8 @@ appendHorizontal (Matrix listOne) (Matrix listTwo) =
 matrixConcatHorizontal : Monoid.Monoid (Matrix a)
 matrixConcatHorizontal =
     Monoid.monoid matrixEmpty appendHorizontal
+
+
+pure : a -> Matrix a
+pure a =
+    Matrix [ RowVector <| Vector.Vector <| [ a ] ]

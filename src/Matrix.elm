@@ -549,3 +549,10 @@ append (Matrix listOne) (Matrix listTwo) =
     listOne
         ++ listTwo
         |> Matrix
+
+
+{-| Monoid empty for Vector
+-}
+concatEmpty : Matrix a
+concatEmpty =
+    Matrix []

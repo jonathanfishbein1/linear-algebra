@@ -24,4 +24,20 @@ suite =
                         Vector.apply vIdentity v
                 in
                 Expect.equal vApplied v
+        , Test.fuzz Fuzz.int "tests third applicative law for Vector" <|
+            \one ->
+                let
+                    f =
+                        (*) 2
+
+                    pureF =
+                        Vector.pure f
+
+                    pureOne =
+                        Vector.pure one
+
+                    vApplied =
+                        Vector.apply pureF pureOne
+                in
+                Expect.equal vApplied (Vector.pure <| f one)
         ]

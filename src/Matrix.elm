@@ -33,7 +33,7 @@ module Matrix exposing
     , mDimension
     , nDimension
     , solveMatrix
-    , foldl
+    , foldl, matrixConcatHorizontal, matrixConcatVertical, matrixEmpty
     )
 
 {-| A module for Matrix
@@ -540,3 +540,54 @@ rowVectorFoldl foldFunction acc (RowVector vector) =
 foldl : (a -> b -> b) -> b -> Matrix a -> b
 foldl foldFunction acc (Matrix listOfRowVectors) =
     List.foldl (\row accumlator -> rowVectorFoldl foldFunction accumlator row) acc listOfRowVectors
+
+
+{-| Append Matricies together vertically
+-}
+appendVertical : Matrix a -> Matrix a -> Matrix a
+appendVertical (Matrix listOne) (Matrix listTwo) =
+    listOne
+        ++ listTwo
+        |> Matrix
+
+
+{-| Monoid empty for Vector
+-}
+matrixEmpty : Matrix a
+matrixEmpty =
+    Matrix []
+
+
+{-| Monoidally append Matricies together vertically
+-}
+matrixConcatVertical : Monoid.Monoid (Matrix a)
+matrixConcatVertical =
+    Monoid.monoid matrixEmpty appendVertical
+
+
+{-| Append Matricies together horizontally
+-}
+appendHorizontal : Matrix a -> Matrix a -> Matrix a
+appendHorizontal (Matrix listOne) (Matrix listTwo) =
+    let
+        difference =
+            mDimension (Matrix listOne) - mDimension (Matrix listTwo)
+    in
+    if difference == 0 then
+        List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) listOne listTwo
+            |> Matrix
+
+    else if difference > 0 then
+        List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) listOne (listTwo ++ List.Extra.initialize difference (\_ -> RowVector <| Vector.Vector []))
+            |> Matrix
+
+    else
+        List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) (listOne ++ List.Extra.initialize (Basics.abs difference) (\_ -> RowVector <| Vector.Vector [])) listTwo
+            |> Matrix
+
+
+{-| Monoidally append Matricies together horizontally
+-}
+matrixConcatHorizontal : Monoid.Monoid (Matrix a)
+matrixConcatHorizontal =
+    Monoid.monoid matrixEmpty appendHorizontal

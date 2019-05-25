@@ -540,3 +540,12 @@ rowVectorFoldl foldFunction acc (RowVector vector) =
 foldl : (a -> b -> b) -> b -> Matrix a -> b
 foldl foldFunction acc (Matrix listOfRowVectors) =
     List.foldl (\row accumlator -> rowVectorFoldl foldFunction accumlator row) acc listOfRowVectors
+
+
+{-| Append Matricies together
+-}
+append : Matrix a -> Matrix a -> Matrix a
+append (Matrix listOne) (Matrix listTwo) =
+    listOne
+        ++ listTwo
+        |> Matrix

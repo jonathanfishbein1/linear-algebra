@@ -33,7 +33,7 @@ module Matrix exposing
     , mDimension
     , nDimension
     , solveMatrix
-    , foldl
+    , foldl, matrixConcatVertical, matrixConcatVerticalEmpty
     )
 
 {-| A module for Matrix

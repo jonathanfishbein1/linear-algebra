@@ -142,51 +142,6 @@ suite =
                 in
                 m1Plusm2AndThenPlusm3
                     |> Expect.equal m2Plusm3AndThenm1
-        , Test.fuzz2 Fuzz.float Fuzz.float "tests Matrix empty or identity value for sum" <|
-            \one two ->
-                let
-                    m =
-                        Matrix.Matrix <|
-                            [ Matrix.RowVector <|
-                                Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            one
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            one
-                                        )
-                                    ]
-                            ]
-
-                    sumEmptyComplexMatrix =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero ] ]
-                in
-                Monoid.append (Matrix.sumComplexMatrices sumEmptyComplexMatrix) m (Monoid.empty <| Matrix.sumComplexMatrices sumEmptyComplexMatrix)
-                    |> Expect.equal m
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add matricies" <|
-            \one two three ->
-                let
-                    a =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two) ] ]
-
-                    b =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three) ] ]
-
-                    c =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three) ] ]
-
-                    expected =
-                        Matrix.addComplexMatrices (Matrix.addComplexMatrices a b) c
-
-                    sumEmptyComplexMatrix =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero ] ]
-
-                    listOfMonoids =
-                        [ a, b, c ]
-                in
-                Monoid.concat (Matrix.sumComplexMatrices sumEmptyComplexMatrix) listOfMonoids
-                    |> Expect.equal expected
         , Test.fuzz2 Fuzz.int Fuzz.int "tests matrix inverse" <|
             \one two ->
                 let

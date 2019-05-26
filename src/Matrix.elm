@@ -331,7 +331,7 @@ solve matrix (ColumnVector (Vector.Vector b)) =
     let
         matrixB =
             b
-                |> List.map (\x -> [ x ] |> Vector.Vector |> RowVector)
+                |> List.map (List.singleton >> Vector.Vector >> RowVector)
                 |> Matrix
 
         augmentedMatrix =

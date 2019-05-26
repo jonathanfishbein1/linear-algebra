@@ -2,12 +2,10 @@ module InternalMatrixTests exposing (suite)
 
 import ComplexNumbers
 import Expect
-import Float.Extra
 import Fuzz
 import Internal.Matrix
 import List.Extra
 import Matrix
-import Monoid
 import Test
 import Vector
 

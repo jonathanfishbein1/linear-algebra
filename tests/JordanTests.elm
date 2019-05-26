@@ -1,11 +1,8 @@
 module JordanTests exposing (suite)
 
-import ComplexNumbers
 import Expect
-import Float.Extra
 import Fuzz
 import Matrix
-import Monoid
 import Test
 import Vector
 

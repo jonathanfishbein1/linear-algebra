@@ -3,7 +3,6 @@ module VectorFunctorTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
-import Monoid
 import Test
 import Vector
 

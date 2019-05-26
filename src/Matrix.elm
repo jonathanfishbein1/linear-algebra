@@ -312,7 +312,7 @@ jordanReduce (Matrix matrix) =
             List.map (\(RowVector vector) -> vector) matrix
     in
     List.foldl Internal.Matrix.reduceRowBackwards listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
-        |> List.map (\row -> RowVector row)
+        |> List.map RowVector
         |> Matrix
 
 

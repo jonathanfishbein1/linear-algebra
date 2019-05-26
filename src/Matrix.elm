@@ -406,7 +406,7 @@ nullSpace matrix =
             mDimension matrix
 
         b =
-            List.Extra.initialize numberOfRows (\_ -> 0)
+            List.repeat numberOfRows 0
                 |> Vector.Vector
                 |> ColumnVector
     in
@@ -428,7 +428,7 @@ areLinearlyIndependent listOfRowVectors =
             List.length listOfRowVectors
 
         zeroVector =
-            List.Extra.initialize numberOfRows (\_ -> 0)
+            List.repeat numberOfRows 0
                 |> Vector.Vector
                 |> ColumnVector
     in
@@ -578,11 +578,11 @@ appendHorizontal (Matrix listOne) (Matrix listTwo) =
             |> Matrix
 
     else if difference > 0 then
-        List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) listOne (listTwo ++ List.Extra.initialize difference (\_ -> RowVector <| Vector.Vector []))
+        List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) listOne (listTwo ++ List.repeat difference (RowVector <| Vector.Vector []))
             |> Matrix
 
     else
-        List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) (listOne ++ List.Extra.initialize (Basics.abs difference) (\_ -> RowVector <| Vector.Vector [])) listTwo
+        List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) (listOne ++ List.repeat (Basics.abs difference) (RowVector <| Vector.Vector [])) listTwo
             |> Matrix
 
 

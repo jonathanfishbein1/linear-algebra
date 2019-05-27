@@ -69,7 +69,6 @@ module Matrix exposing
 @docs areLinearlyIndependent
 @docs multiplyRealVectorRealMatrix
 @docs nullSpace
-@docs scale
 @docs solve
 @docs areBasis
 @docs basisOfVectorSpace
@@ -335,7 +334,7 @@ solve matrix (ColumnVector (Vector.Vector b)) =
                 |> Matrix
 
         augmentedMatrix =
-            matrixConcat matrix matrixB
+            Monoid.append matrixConcatHorizontal matrix matrixB
     in
     solveMatrix augmentedMatrix
 
@@ -501,12 +500,6 @@ areBasis vectorSpace rowVectors =
         False
 
 
-matrixConcat : Matrix a -> Matrix a -> Matrix a
-matrixConcat (Matrix matrixOne) (Matrix matrixTwo) =
-    List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) matrixOne matrixTwo
-        |> Matrix
-
-
 {-| Determine the basis vectors of a vector space
 -}
 basisOfVectorSpace : VectorSpace -> List (RowVector Float) -> List (RowVector Float)
@@ -593,6 +586,8 @@ matrixConcatHorizontal =
     Monoid.monoid matrixEmpty appendHorizontal
 
 
+{-| Applicative pure for Matrix
+-}
 pure : a -> Matrix a
 pure a =
     Matrix [ RowVector <| Vector.Vector <| [ a ] ]

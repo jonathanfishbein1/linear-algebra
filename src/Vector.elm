@@ -159,6 +159,8 @@ append (Vector listOne) (Vector listTwo) =
         |> Vector
 
 
+{-| Place a value in minimal Vector context
+-}
 pure : a -> Vector a
 pure a =
     Vector [ a ]

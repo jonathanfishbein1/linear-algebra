@@ -18,7 +18,7 @@ suite =
                         Vector.pure identity
 
                     v =
-                        Vector.Vector [ one ]
+                        Vector.pure one
 
                     vApplied =
                         Vector.apply vIdentity v
@@ -34,10 +34,10 @@ suite =
                         Vector.pure f
 
                     u =
-                        Vector.Vector [ identity ]
+                        Vector.pure identity
 
                     v =
-                        Vector.Vector [ identity ]
+                        Vector.pure identity
 
                     w =
                         Vector.Vector [ 0 ]

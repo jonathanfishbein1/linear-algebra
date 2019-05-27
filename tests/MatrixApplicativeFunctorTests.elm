@@ -19,7 +19,7 @@ suite =
                         Matrix.pure identity
 
                     m =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                        Matrix.pure one
 
                     mApplied =
                         Matrix.apply mIdentity m

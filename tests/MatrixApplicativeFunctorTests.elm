@@ -25,6 +25,31 @@ suite =
                         Matrix.apply mIdentity m
                 in
                 Expect.equal mApplied m
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests second applicative law for Matrix" <|
+            \one two three ->
+                let
+                    f =
+                        (<<)
+
+                    fPure =
+                        Matrix.pure f
+
+                    u =
+                        Matrix.pure identity
+
+                    v =
+                        Matrix.pure identity
+
+                    w =
+                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ 0 ] ]
+
+                    leftSide =
+                        Matrix.apply (Matrix.apply (Matrix.apply fPure u) v) w
+
+                    rightSide =
+                        Matrix.apply u (Matrix.apply v w)
+                in
+                Expect.equal leftSide rightSide
         , Test.fuzz Fuzz.int "tests third applicative law for Matrix" <|
             \one ->
                 let

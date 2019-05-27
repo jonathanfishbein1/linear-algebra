@@ -65,4 +65,20 @@ suite =
                         Vector.apply pureF pureOne
                 in
                 Expect.equal vApplied (Vector.pure <| f one)
+        , Test.fuzz Fuzz.int "tests fourth applicative law for Vector" <|
+            \one ->
+                let
+                    pureOne =
+                        Vector.pure identity
+
+                    pureTwo =
+                        Vector.pure one
+
+                    leftSide =
+                        Vector.apply pureOne pureTwo
+
+                    rightSide =
+                        Vector.apply (Vector.pure (\_ -> one)) pureOne
+                in
+                Expect.equal leftSide rightSide
         ]

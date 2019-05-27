@@ -24,8 +24,8 @@ suite =
                         Vector.apply vIdentity v
                 in
                 Expect.equal vApplied v
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests second applicative law for Vector" <|
-            \one two three ->
+        , Test.fuzz Fuzz.int "tests second applicative law for Vector" <|
+            \one ->
                 let
                     f =
                         (<<)
@@ -40,7 +40,7 @@ suite =
                         Vector.pure identity
 
                     w =
-                        Vector.Vector [ 0 ]
+                        Vector.Vector [ one ]
 
                     leftSide =
                         Vector.apply (Vector.apply (Vector.apply fPure u) v) w

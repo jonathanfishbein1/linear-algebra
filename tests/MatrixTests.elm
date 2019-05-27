@@ -2,11 +2,8 @@ module MatrixTests exposing (suite)
 
 import ComplexNumbers
 import Expect
-import Float.Extra
 import Fuzz
-import List.Extra
 import Matrix
-import Monoid
 import Test
 import Vector
 
@@ -142,51 +139,6 @@ suite =
                 in
                 m1Plusm2AndThenPlusm3
                     |> Expect.equal m2Plusm3AndThenm1
-        , Test.fuzz2 Fuzz.float Fuzz.float "tests Matrix empty or identity value for sum" <|
-            \one two ->
-                let
-                    m =
-                        Matrix.Matrix <|
-                            [ Matrix.RowVector <|
-                                Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            one
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            one
-                                        )
-                                    ]
-                            ]
-
-                    sumEmptyComplexMatrix =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero ] ]
-                in
-                Monoid.append (Matrix.sumComplexMatrices sumEmptyComplexMatrix) m (Monoid.empty <| Matrix.sumComplexMatrices sumEmptyComplexMatrix)
-                    |> Expect.equal m
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add matricies" <|
-            \one two three ->
-                let
-                    a =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two) ] ]
-
-                    b =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three) ] ]
-
-                    c =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three) ] ]
-
-                    expected =
-                        Matrix.addComplexMatrices (Matrix.addComplexMatrices a b) c
-
-                    sumEmptyComplexMatrix =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero ] ]
-
-                    listOfMonoids =
-                        [ a, b, c ]
-                in
-                Monoid.concat (Matrix.sumComplexMatrices sumEmptyComplexMatrix) listOfMonoids
-                    |> Expect.equal expected
         , Test.fuzz2 Fuzz.int Fuzz.int "tests matrix inverse" <|
             \one two ->
                 let
@@ -613,10 +565,12 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m1Timesm2AndThenTimesm3 =
-                        Matrix.multiplyRealMatrices (Matrix.multiplyRealMatrices m1 m2) m3
+                        Result.andThen (Matrix.multiplyRealMatrices m3)
+                            (Matrix.multiplyRealMatrices m1 m2)
 
                     m2Timesm3AndThenTimesm1 =
-                        Matrix.multiplyRealMatrices m1 (Matrix.multiplyRealMatrices m2 m3)
+                        Result.andThen (Matrix.multiplyRealMatrices m1)
+                            (Matrix.multiplyRealMatrices m2 m3)
                 in
                 Expect.equal m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
         , Test.test "tests identityMatrix is an identity matrix" <|
@@ -685,7 +639,7 @@ suite =
                     m1TimeI =
                         Matrix.multiplyRealMatrices m1 (Matrix.identityMatrix 3)
                 in
-                Expect.equal m1TimeI m1
+                Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests A*In = a" <|
             \one two three ->
                 let
@@ -720,7 +674,7 @@ suite =
                     m1TimeI =
                         Matrix.multiplyRealMatrices (Matrix.identityMatrix 3) m1
                 in
-                Expect.equal m1TimeI m1
+                Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition" <|
             \one two three ->
                 let
@@ -765,7 +719,7 @@ suite =
                         Matrix.multiplyRealMatrices m1 (Matrix.addRealMatrices m2 m3)
 
                     m1Timesm2Plusem1Timesm3 =
-                        Matrix.addRealMatrices (Matrix.multiplyRealMatrices m1 m2) (Matrix.multiplyRealMatrices m1 m3)
+                        Result.map2 Matrix.addRealMatrices (Matrix.multiplyRealMatrices m1 m2) (Matrix.multiplyRealMatrices m1 m3)
                 in
                 Expect.equal m1Timesm2Plus3 m1Timesm2Plusem1Timesm3
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition second test" <|
@@ -812,7 +766,7 @@ suite =
                         Matrix.multiplyRealMatrices (Matrix.addRealMatrices m2 m3) m1
 
                     m2Timesm1Plusm3Timesm1 =
-                        Matrix.addRealMatrices (Matrix.multiplyRealMatrices m2 m1) (Matrix.multiplyRealMatrices m3 m1)
+                        Result.map2 Matrix.addRealMatrices (Matrix.multiplyRealMatrices m2 m1) (Matrix.multiplyRealMatrices m3 m1)
                 in
                 Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication respects scalar multiplication" <|
@@ -845,7 +799,7 @@ suite =
 
                     cTimesm1Timem2 =
                         Matrix.multiplyRealMatrices m1 m2
-                            |> Matrix.map ((*) one)
+                            |> Result.map (Matrix.map ((*) one))
 
                     cTimesm1ThenTimesm2 =
                         Matrix.multiplyRealMatrices (Matrix.map ((*) one) m1) m2
@@ -872,7 +826,7 @@ suite =
 
                     aTimebThenTranspose =
                         Matrix.multiplyRealMatrices a b
-                            |> Matrix.transpose
+                            |> Result.map Matrix.transpose
 
                     cTimesm1ThenTimesm2 =
                         Matrix.multiplyRealMatrices (Matrix.transpose b) (Matrix.transpose a)
@@ -896,11 +850,7 @@ suite =
                         Matrix.multiplyRealVectorRealMatrix m v
 
                     expected =
-                        Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 14 ]
-                            , Matrix.RowVector <| Vector.Vector [ 32 ]
-                            , Matrix.RowVector <| Vector.Vector [ 50 ]
-                            ]
+                        Vector.Vector [ 14, 32, 50 ]
                 in
                 Expect.equal mTimesV expected
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication respects the conjugate" <|
@@ -926,22 +876,28 @@ suite =
                                 [ complexNumberOne, complexNumberTwo ]
 
                     a =
-                        Matrix.Matrix [ v1 ]
+                        Matrix.Matrix
+                            [ v1
+                            , v2
+                            ]
 
                     b =
-                        Matrix.Matrix [ v2 ]
+                        Matrix.Matrix
+                            [ v2
+                            , v1
+                            ]
 
                     aTimebThenConjugate =
                         Matrix.multiplyComplexMatrices a b
-                            |> Matrix.conjugate
+                            |> Result.map Matrix.conjugate
 
                     cTimesm1ThenTimesm2 =
                         Matrix.multiplyComplexMatrices (Matrix.conjugate a) (Matrix.conjugate b)
 
                     result =
-                        Matrix.equal ComplexNumbers.equal aTimebThenConjugate cTimesm1ThenTimesm2
+                        Result.map2 (Matrix.equal ComplexNumbers.equal) aTimebThenConjugate cTimesm1ThenTimesm2
                 in
-                Expect.true "AB conjugate equals A conjugate time B conjugate" result
+                Expect.equal result (Ok True)
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication relates to the adjoin" <|
             \one two three ->
                 let
@@ -969,111 +925,15 @@ suite =
 
                     aTimebThenAdjoint =
                         Matrix.multiplyComplexMatrices a b
-                            |> Matrix.adjoint
+                            |> Result.map Matrix.adjoint
 
                     bAdjointTimesAAdjoint =
                         Matrix.multiplyComplexMatrices (Matrix.adjoint a) (Matrix.adjoint b)
 
                     result =
-                        Matrix.equal ComplexNumbers.equal aTimebThenAdjoint bAdjointTimesAAdjoint
+                        Result.map2 (Matrix.equal ComplexNumbers.equal) aTimebThenAdjoint bAdjointTimesAAdjoint
                 in
-                Expect.true "AB adjoint equals A conjugate time B adjoint" result
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivot find row with pivot entry" <|
-            \one two ->
-                let
-                    m1 =
-                        Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
-                            , Matrix.RowVector <| Vector.Vector [ one, two ]
-                            , Matrix.RowVector <| Vector.Vector [ two, two ]
-                            ]
-
-                    pivotLocation =
-                        Matrix.findPivot m1 0
-                in
-                case pivotLocation of
-                    Just location ->
-                        Expect.equal location 1
-
-                    Nothing ->
-                        Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivot find row with pivot entry two" <|
-            \one two ->
-                let
-                    m1 =
-                        Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0, 0 ]
-                            , Matrix.RowVector <| Vector.Vector [ one, two ]
-                            , Matrix.RowVector <| Vector.Vector [ two, one ]
-                            ]
-
-                    pivotLocation =
-                        Matrix.findPivot m1 0
-                in
-                case pivotLocation of
-                    Just location ->
-                        Expect.equal location 2
-
-                    Nothing ->
-                        Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales first element to one" <|
-            \one two ->
-                let
-                    row =
-                        Matrix.RowVector <| Vector.Vector [ one, two ]
-
-                    (Matrix.RowVector (Vector.Vector scaledRow)) =
-                        Matrix.scale 0 row
-
-                    firstElement =
-                        List.Extra.getAt 0 scaledRow
-                in
-                case firstElement of
-                    Just element ->
-                        Expect.equal element 1
-
-                    Nothing ->
-                        Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales second element by first" <|
-            \one two ->
-                let
-                    row =
-                        Matrix.RowVector <| Vector.Vector [ one, two ]
-
-                    (Matrix.RowVector (Vector.Vector scaledRow)) =
-                        Matrix.scale 0 row
-
-                    secondElement =
-                        List.Extra.getAt 1 scaledRow
-                in
-                case secondElement of
-                    Just element ->
-                        Expect.within (Expect.Absolute 0.000000001) element (two / one)
-
-                    Nothing ->
-                        Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix subrow has zero under pivot entry" <|
-            \one two ->
-                let
-                    currentRow =
-                        Matrix.RowVector <| Vector.Vector [ one, two ]
-
-                    nextRow =
-                        Matrix.RowVector <| Vector.Vector [ two, two ]
-
-                    (Matrix.RowVector (Vector.Vector subRow)) =
-                        Matrix.subrow 0 (Matrix.scale 0 currentRow) nextRow
-
-                    firstElementSecondRow =
-                        List.Extra.getAt 0 subRow
-                in
-                case firstElementSecondRow of
-                    Just element ->
-                        Expect.within (Expect.Absolute 0.000000001) element 0
-
-                    Nothing ->
-                        Expect.fail "error"
+                Expect.equal result (Ok True)
         , Test.test "tests matrix gaussianReduce put matrix into Row Echelon Form" <|
             \_ ->
                 let
@@ -1238,7 +1098,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.true "Vector spans R2" result
+                Expect.equal result (Ok True)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors" <|
             \_ ->
                 let
@@ -1253,7 +1113,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.false "Vector does not span R2" result
+                Expect.equal result (Ok False)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors 3 dimensions" <|
             \_ ->
                 let
@@ -1269,7 +1129,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r3 listOfRowVectors
                 in
-                Expect.true "Vector spans R3" result
+                Expect.equal result (Ok True)
         , Test.test "tests matrix doesSetSpanSpace with three vectors" <|
             \_ ->
                 let
@@ -1285,7 +1145,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r3 listOfRowVectors
                 in
-                Expect.false "Vector does not spans R3" result
+                Expect.equal result (Ok False)
         , Test.test "tests matrix doesSetSpanSpace with three vectors testing r2" <|
             \_ ->
                 let
@@ -1301,7 +1161,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.false "Vector does not span R2" result
+                Expect.equal result (Err "Please input same number of vectors as vector space")
         , Test.test "tests matrix doesSetSpanSpace with three dimensional vector against R2" <|
             \_ ->
                 let
@@ -1316,7 +1176,7 @@ suite =
                     result =
                         Matrix.doesSetSpanSpace r2 listOfRowVectors
                 in
-                Expect.false "Vector does not spans R2" result
+                Expect.equal result (Err "Please input vectors of equal length as vector space")
         , Test.test "tests matrix areBasis with standard basis vectors" <|
             \_ ->
                 let
@@ -1415,8 +1275,8 @@ suite =
             \_ ->
                 let
                     listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 2, 0, 0 ]
+                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                        , Matrix.RowVector <| Vector.Vector [ 2, 0 ]
                         ]
 
                     r2 =
@@ -1471,4 +1331,20 @@ suite =
                         Matrix.basisOfVectorSpace r2 testVectors
                 in
                 Expect.equal r2BasisVectors testbasisVectors
+        , Test.test "tests matrix fold" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                            ]
+
+                    result =
+                        Matrix.VectorSpace 2
+
+                    foldResult =
+                        Matrix.foldl (+) 0 matrix
+                in
+                Expect.equal foldResult 2
         ]

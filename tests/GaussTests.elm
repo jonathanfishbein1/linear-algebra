@@ -1,12 +1,8 @@
 module GaussTests exposing (suite)
 
-import ComplexNumbers
 import Expect
-import Float.Extra
 import Fuzz
-import List.Extra
 import Matrix
-import Monoid
 import Test
 import Vector
 

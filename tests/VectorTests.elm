@@ -3,7 +3,6 @@ module VectorTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
-import Monoid
 import Test
 import Vector
 
@@ -119,12 +118,9 @@ suite =
                 in
                 Vector.addComplexVectors v w
                     |> Expect.equal (Vector.addComplexVectors w v)
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests zero is additive identity" <|
+        , Test.fuzz2 Fuzz.int Fuzz.int "tests empty vector is additive identity" <|
             \one two ->
                 let
-                    v =
-                        Vector.sumEmpty [ ComplexNumbers.zero ]
-
                     w =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumberCartesian
@@ -136,7 +132,7 @@ suite =
                                 )
                             ]
                 in
-                Vector.addComplexVectors v w
+                Vector.append Vector.concatEmpty w
                     |> Expect.equal w
         , Test.fuzz2 Fuzz.int Fuzz.int "tests vector inverse" <|
             \one two ->
@@ -324,42 +320,6 @@ suite =
                         Vector.equal ComplexNumbers.equal c1VPlusc2V c1Plusc2V
                 in
                 Expect.true "All elements equal" result
-        , Test.fuzz2 Fuzz.float Fuzz.float "tests Vector empty or identity value for sum" <|
-            \one two ->
-                let
-                    v =
-                        Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    one
-                                )
-                                (ComplexNumbers.Imaginary
-                                    one
-                                )
-                            ]
-                in
-                Monoid.append (Vector.sumComplex [ ComplexNumbers.zero ]) v (Monoid.empty <| Vector.sumComplex [ ComplexNumbers.zero ])
-                    |> Expect.equal v
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add" <|
-            \one two three ->
-                let
-                    a =
-                        Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two) ]
-
-                    b =
-                        Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three) ]
-
-                    c =
-                        Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three) ]
-
-                    expected =
-                        Vector.addComplexVectors (Vector.addComplexVectors a b) c
-
-                    listOfMonoids =
-                        [ a, b, c ]
-                in
-                Monoid.concat (Vector.sumComplex [ ComplexNumbers.zero ]) listOfMonoids
-                    |> Expect.equal expected
         , Test.fuzz Fuzz.int "tests dot product is nondegenerative" <|
             \one ->
                 let

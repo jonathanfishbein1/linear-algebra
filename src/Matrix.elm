@@ -18,7 +18,6 @@ module Matrix exposing
     , multiplyComplexMatrices
     , multiplyRealMatrices
     , identityMatrix
-    , findPivot
     , gaussJordan
     , gaussianReduce
     , isHermitian
@@ -27,15 +26,18 @@ module Matrix exposing
     , areLinearlyIndependent
     , multiplyRealVectorRealMatrix
     , nullSpace
-    , scale
     , solve
-    , subrow
     , areBasis
     , basisOfVectorSpace
     , doesSetSpanSpace
     , mDimension
     , nDimension
     , solveMatrix
+    , foldl
+    , matrixConcatHorizontal
+    , matrixConcatVertical
+    , matrixEmpty
+    , pure
     )
 
 {-| A module for Matrix
@@ -63,7 +65,6 @@ module Matrix exposing
 @docs multiplyComplexMatrices
 @docs multiplyRealMatrices
 @docs identityMatrix
-@docs findPivot
 @docs gaussJordan
 @docs gaussianReduce
 @docs isHermitian
@@ -72,19 +73,23 @@ module Matrix exposing
 @docs areLinearlyIndependent
 @docs multiplyRealVectorRealMatrix
 @docs nullSpace
-@docs scale
 @docs solve
-@docs subrow
 @docs areBasis
 @docs basisOfVectorSpace
 @docs doesSetSpanSpace
 @docs mDimension
 @docs nDimension
 @docs solveMatrix
+@docs foldl
+@docs matrixConcatHorizontal
+@docs matrixConcatVertical
+@docs matrixEmpty
+@docs pure
 
 -}
 
 import ComplexNumbers
+import Internal.Matrix
 import List.Extra
 import Monoid
 import Vector
@@ -154,7 +159,7 @@ sumComplexMatrices sumEmptyMatrix =
 -}
 map : (a -> b) -> Matrix a -> Matrix b
 map f (Matrix listOfRowVectors) =
-    Matrix <| List.map (\(RowVector vector) -> RowVector <| Vector.map f vector) listOfRowVectors
+    Matrix <| List.map (rowVectorMap f) listOfRowVectors
 
 
 {-| Compare two Matrices for equality
@@ -208,65 +213,75 @@ liftA2 f a b =
 
 {-| Matrix Matrix multiplication for a Complex Numbered Matrix
 -}
-multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-multiplyComplexMatrices matrixOne matrixTwo =
-    map2VectorCartesianComplex (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
+multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian number))
+multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
+    if nDimension (Matrix matrixOne) == mDimension matrixTwo then
+        let
+            (Matrix matrixTranspose) =
+                transpose matrixTwo
+
+            listOfVectors =
+                matrixTranspose
+                    |> List.map (\(RowVector vector) -> vector)
+
+            listOfVectorsOne =
+                matrixOne
+                    |> List.map (\(RowVector vector) -> vector)
+        in
+        Internal.Matrix.map2VectorCartesianComplex listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
+            |> List.map RowVector
+            |> Matrix
+            |> Ok
+
+    else
+        Err "first matrix must have same number of columns as the second matrix has rows"
 
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
 -}
-multiplyRealMatrices : Matrix number -> Matrix number -> Matrix number
-multiplyRealMatrices matrixOne matrixTwo =
-    map2VectorCartesian (transpose matrixTwo) (RowVector <| Vector.Vector []) (Matrix []) matrixOne (transpose matrixTwo)
+multiplyRealMatrices : Matrix number -> Matrix number -> Result String (Matrix number)
+multiplyRealMatrices (Matrix matrixOne) matrixTwo =
+    if nDimension (Matrix matrixOne) == mDimension matrixTwo then
+        let
+            (Matrix matrixTranspose) =
+                transpose matrixTwo
 
+            listOfVectors =
+                matrixTranspose
+                    |> List.map (\(RowVector vector) -> vector)
 
-diagonal : Int -> Int -> number
-diagonal columnIndex rowIndex =
-    if columnIndex == rowIndex then
-        1
+            listOfVectorsOne =
+                matrixOne
+                    |> List.map (\(RowVector vector) -> vector)
+        in
+        Internal.Matrix.map2VectorCartesian listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
+            |> List.map RowVector
+            |> Matrix
+            |> Ok
 
     else
-        0
+        Err "first matrix must have same number of columns as the second matrix has rows"
 
 
 {-| Create Identity Matrix with n dimension
 -}
 identityMatrix : Int -> Matrix Int
 identityMatrix dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (diagonal columnIndex)))
-
-
-map2VectorCartesian : Matrix number -> RowVector number -> Matrix number -> Matrix number -> Matrix number -> Matrix number
-map2VectorCartesian (Matrix right) (RowVector (Vector.Vector intermediateList)) (Matrix acc) (Matrix left) (Matrix currentRight) =
-    case ( left, currentRight ) of
-        ( (RowVector l) :: _, (RowVector r) :: rs ) ->
-            map2VectorCartesian (Matrix right) (RowVector <| Vector.Vector (intermediateList ++ [ Vector.realVectorDotProduct l r ])) (Matrix acc) (Matrix left) (Matrix rs)
-
-        ( _ :: ls, [] ) ->
-            map2VectorCartesian (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector <| Vector.Vector <| intermediateList ])) (Matrix ls) (Matrix right)
-
-        ( [], _ ) ->
-            Matrix acc
-
-
-map2VectorCartesianComplex : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> RowVector (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-map2VectorCartesianComplex (Matrix right) (RowVector (Vector.Vector intermediateList)) (Matrix acc) (Matrix left) (Matrix currentRight) =
-    case ( left, currentRight ) of
-        ( (RowVector l) :: _, (RowVector r) :: rs ) ->
-            map2VectorCartesianComplex (Matrix right) (RowVector <| Vector.Vector (intermediateList ++ [ Vector.complexVectorDotProduct l r ])) (Matrix acc) (Matrix left) (Matrix rs)
-
-        ( _ :: ls, [] ) ->
-            map2VectorCartesianComplex (Matrix right) (RowVector (Vector.Vector [])) (Matrix (acc ++ [ RowVector <| Vector.Vector <| intermediateList ])) (Matrix ls) (Matrix right)
-
-        ( [], _ ) ->
-            Matrix acc
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal columnIndex)))
 
 
 {-| Multiply a real Vector by a real Matrix
 -}
-multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Matrix number
-multiplyRealVectorRealMatrix matrix vector =
-    map2VectorCartesian (Matrix <| [ RowVector vector ]) (RowVector <| Vector.Vector []) (Matrix []) matrix (Matrix <| [ RowVector vector ])
+multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Vector.Vector number
+multiplyRealVectorRealMatrix (Matrix matrix) vector =
+    let
+        listOfVectors =
+            matrix
+                |> List.map (\(RowVector vec) -> vec)
+    in
+    Internal.Matrix.map2VectorCartesian [ vector ] (Vector.Vector []) [] listOfVectors [ vector ]
+        |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
+        |> Vector.Vector
 
 
 {-| Predicate to determine if Matrix is symmetric
@@ -283,145 +298,16 @@ isHermitian matrix =
     adjoint matrix == matrix
 
 
-{-| Internal function for finding pivot entry in Gaussian elimination
--}
-findPivot : Matrix number -> Int -> Maybe Int
-findPivot (Matrix listOfRowVectors) initialRowIndex =
-    List.Extra.find
-        (\currentRowIndexIteration ->
-            List.Extra.getAt currentRowIndexIteration listOfRowVectors
-                |> Maybe.andThen (\(RowVector (Vector.Vector currentRowIteration)) -> List.Extra.getAt initialRowIndex currentRowIteration)
-                |> Maybe.withDefault 0
-                |> (/=) 0
-        )
-        (List.range initialRowIndex (List.length listOfRowVectors - 1))
-
-
-{-| Internal function for scalling rows by pivot entry
--}
-scale : Int -> RowVector Float -> RowVector Float
-scale rowIndex (RowVector (Vector.Vector rowVector)) =
-    case rowVector of
-        [] ->
-            RowVector <| Vector.Vector []
-
-        xs ->
-            let
-                elementAtRowIndex =
-                    Maybe.withDefault 1 (List.Extra.getAt rowIndex xs)
-            in
-            RowVector <| Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)
-
-
-{-| Internal function for subtracting rows from each other
--}
-subrow : Int -> RowVector Float -> RowVector Float -> RowVector Float
-subrow r (RowVector (Vector.Vector currentRow)) (RowVector (Vector.Vector nextRow)) =
-    let
-        k =
-            Maybe.withDefault 1 (List.Extra.getAt r nextRow)
-
-        subtractedRow =
-            List.map2 (\a b -> k * a - b) currentRow nextRow
-
-        firstElement =
-            subtractedRow
-                |> List.Extra.find
-                    ((/=) 0)
-                |> Maybe.withDefault 1
-
-        scaledRow =
-            List.map (\x -> x / firstElement) subtractedRow
-    in
-    scaledRow
-        |> Vector.Vector
-        |> RowVector
-
-
-reduceRow : Int -> Matrix Float -> Matrix Float
-reduceRow rowIndex (Matrix listOfRowVectors) =
-    let
-        firstPivot =
-            findPivot (Matrix listOfRowVectors) rowIndex
-    in
-    case firstPivot of
-        Just fPivot ->
-            let
-                swappedListOfRowVectors =
-                    List.Extra.swapAt rowIndex fPivot listOfRowVectors
-
-                scaledRow =
-                    List.Extra.getAt rowIndex swappedListOfRowVectors
-                        |> Maybe.map (scale rowIndex)
-                        |> Maybe.withDefault (RowVector <| Vector.Vector [])
-
-                nextRows =
-                    List.drop (rowIndex + 1) listOfRowVectors
-                        |> List.map (subrow rowIndex scaledRow)
-
-                newMatrixReduceRow =
-                    List.take rowIndex swappedListOfRowVectors
-                        ++ [ scaledRow ]
-                        ++ nextRows
-                        |> Matrix
-            in
-            newMatrixReduceRow
-
-        Nothing ->
-            if rowIndex == (List.length listOfRowVectors - 1) then
-                Matrix listOfRowVectors
-
-            else
-                let
-                    nextNonZero =
-                        List.Extra.getAt rowIndex listOfRowVectors
-                            |> Maybe.andThen (\(RowVector (Vector.Vector list)) -> List.Extra.findIndex (\x -> x /= 0) list)
-                            |> Maybe.withDefault rowIndex
-
-                    scaledRow =
-                        List.Extra.getAt rowIndex listOfRowVectors
-                            |> Maybe.map (scale nextNonZero)
-                            |> Maybe.withDefault (RowVector <| Vector.Vector [])
-
-                    nextRows =
-                        List.drop nextNonZero listOfRowVectors
-                            |> List.map (subrow nextNonZero scaledRow)
-
-                    newMatrixReduceRow =
-                        List.take rowIndex listOfRowVectors
-                            ++ [ scaledRow ]
-                            ++ nextRows
-                            |> Matrix
-                in
-                newMatrixReduceRow
-
-
 {-| Internal function Gaussian Elimination
 -}
 gaussianReduce : Matrix Float -> Matrix Float
 gaussianReduce (Matrix matrix) =
-    List.foldl reduceRow (Matrix matrix) (List.range 0 (List.length matrix - 1))
-
-
-jordan : Int -> Matrix Float -> Matrix Float
-jordan rowIndex matrix =
     let
-        (Matrix listOfRowVectors) =
-            matrix
-
-        row =
-            Maybe.withDefault (RowVector <| Vector.Vector []) (List.Extra.getAt rowIndex listOfRowVectors)
-
-        prevRows =
-            List.take rowIndex listOfRowVectors
-                |> List.map
-                    (\rowVector ->
-                        subrow rowIndex row rowVector
-                    )
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
     in
-    prevRows
-        ++ [ row ]
-        ++ List.drop (rowIndex + 1) listOfRowVectors
+    List.foldl Internal.Matrix.reduceRow listOfVectors (List.range 0 (List.length matrix - 1))
+        |> List.map RowVector
         |> Matrix
 
 
@@ -429,7 +315,13 @@ jordan rowIndex matrix =
 -}
 jordanReduce : Matrix Float -> Matrix Float
 jordanReduce (Matrix matrix) =
-    List.foldl jordan (Matrix matrix) (List.reverse (List.range 0 (List.length matrix - 1)))
+    let
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
+    in
+    List.foldl Internal.Matrix.reduceRowBackwards listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
+        |> List.map RowVector
+        |> Matrix
 
 
 {-| Internal function composition of Gaussian Elimination and Jordan Elimination
@@ -443,17 +335,22 @@ gaussJordan matrix =
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
 -}
 solve : Matrix Float -> ColumnVector Float -> Solution
-solve matrix b =
+solve matrix (ColumnVector (Vector.Vector b)) =
     let
-        (Matrix augmentedMatrix) =
-            combineMatrixVector matrix b
+        matrixB =
+            b
+                |> List.map (List.singleton >> Vector.Vector >> RowVector)
+                |> Matrix
+
+        augmentedMatrix =
+            Monoid.append matrixConcatHorizontal matrix matrixB
     in
-    solveMatrix (Matrix augmentedMatrix)
+    solveMatrix augmentedMatrix
 
 
 variablePortion : Matrix Float -> Matrix Float
 variablePortion (Matrix listOfRowVectors) =
-    List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ [ RowVector <| Vector.Vector <| List.take (List.length row - 1) row ]) [] listOfRowVectors
+    List.map (\(RowVector (Vector.Vector row)) -> RowVector <| Vector.Vector <| List.take (List.length row - 1) row) listOfRowVectors
         |> Matrix
 
 
@@ -474,7 +371,7 @@ solveMatrix (Matrix listOfRowVectors) =
                     (\(RowVector (Vector.Vector row)) ->
                         let
                             countOfOnes =
-                                List.Extra.count (\x -> x /= 0) row
+                                List.Extra.count ((/=) 0) row
                         in
                         countOfOnes > 1
                     )
@@ -508,18 +405,6 @@ solveMatrix (Matrix listOfRowVectors) =
             )
 
 
-mapRowVector : (a -> b) -> RowVector a -> RowVector b
-mapRowVector f (RowVector rowVector) =
-    Vector.map f rowVector
-        |> RowVector
-
-
-combineMatrixVector : Matrix a -> ColumnVector a -> Matrix a
-combineMatrixVector (Matrix listOfRowVectors) (ColumnVector (Vector.Vector list)) =
-    List.map2 (\(RowVector (Vector.Vector matrixRow)) vectorElement -> RowVector <| Vector.Vector <| List.append matrixRow [ vectorElement ]) listOfRowVectors list
-        |> Matrix
-
-
 {-| Calculate the null space of a matrix
 -}
 nullSpace : Matrix Float -> Solution
@@ -529,7 +414,7 @@ nullSpace matrix =
             mDimension matrix
 
         b =
-            List.Extra.initialize numberOfRows (\_ -> 0)
+            List.repeat numberOfRows 0
                 |> Vector.Vector
                 |> ColumnVector
     in
@@ -551,7 +436,7 @@ areLinearlyIndependent listOfRowVectors =
             List.length listOfRowVectors
 
         zeroVector =
-            List.Extra.initialize numberOfRows (\_ -> 0)
+            List.repeat numberOfRows 0
                 |> Vector.Vector
                 |> ColumnVector
     in
@@ -569,25 +454,29 @@ areLinearlyIndependent listOfRowVectors =
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Bool
+doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Result String Bool
 doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
-    let
-        (Matrix transposedListOfRowVectors) =
-            rowVectors
-                |> Matrix
-                |> transpose
+    if List.length rowVectors /= vectorSpace then
+        Err "Please input same number of vectors as vector space"
 
-        (Matrix identityRowVectors) =
-            identityMatrix vectorSpace
+    else if not <| List.all (\(RowVector row) -> Vector.dimension row == vectorSpace) rowVectors then
+        Err "Please input vectors of equal length as vector space"
 
-        floatMatrix =
-            identityRowVectors
-                |> List.map (\(RowVector vector) -> RowVector <| Vector.map toFloat vector)
+    else
+        let
+            identityRowVectors =
+                identityMatrix vectorSpace
 
-        (Matrix listOfRowVectorsRREF) =
-            gaussJordan (Matrix transposedListOfRowVectors)
-    in
-    floatMatrix == listOfRowVectorsRREF
+            floatMatrix =
+                identityRowVectors
+                    |> map toFloat
+
+            listOfRowVectorsRREF =
+                gaussJordan (Matrix rowVectors)
+        in
+        floatMatrix
+            == listOfRowVectorsRREF
+            |> Ok
 
 
 {-| Number of columns in Matrix
@@ -613,17 +502,11 @@ mDimension (Matrix listOfRowVectors) =
 -}
 areBasis : VectorSpace -> List (RowVector Float) -> Bool
 areBasis vectorSpace rowVectors =
-    if doesSetSpanSpace vectorSpace rowVectors && areLinearlyIndependent rowVectors then
+    if doesSetSpanSpace vectorSpace rowVectors == Ok True && areLinearlyIndependent rowVectors then
         True
 
     else
         False
-
-
-matrixConcat : Matrix a -> Matrix a -> Matrix a
-matrixConcat (Matrix matrixOne) (Matrix matrixTwo) =
-    List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.concat rowOne rowTwo) matrixOne matrixTwo
-        |> Matrix
 
 
 {-| Determine the basis vectors of a vector space
@@ -639,3 +522,81 @@ basisOfVectorSpace vectorSpace rowVectors =
                 jordanReduce (Matrix rowVectors)
         in
         reducedRowEchelonFormListOfRowVectors
+
+
+rowVectorMap : (a -> b) -> RowVector a -> RowVector b
+rowVectorMap f (RowVector vector) =
+    Vector.map f vector
+        |> RowVector
+
+
+{-| Left fold over a RowVector
+-}
+rowVectorFoldl : (a -> b -> b) -> b -> RowVector a -> b
+rowVectorFoldl foldFunction acc (RowVector vector) =
+    Vector.foldl foldFunction acc vector
+
+
+{-| Left fold over a Matrix
+-}
+foldl : (a -> b -> b) -> b -> Matrix a -> b
+foldl foldFunction acc (Matrix listOfRowVectors) =
+    List.foldl (\row accumlator -> rowVectorFoldl foldFunction accumlator row) acc listOfRowVectors
+
+
+{-| Append Matricies together vertically
+-}
+appendVertical : Matrix a -> Matrix a -> Matrix a
+appendVertical (Matrix listOne) (Matrix listTwo) =
+    listOne
+        ++ listTwo
+        |> Matrix
+
+
+{-| Monoid empty for Vector
+-}
+matrixEmpty : Matrix a
+matrixEmpty =
+    Matrix []
+
+
+{-| Monoidally append Matricies together vertically
+-}
+matrixConcatVertical : Monoid.Monoid (Matrix a)
+matrixConcatVertical =
+    Monoid.monoid matrixEmpty appendVertical
+
+
+{-| Append Matricies together horizontally
+-}
+appendHorizontal : Matrix a -> Matrix a -> Matrix a
+appendHorizontal (Matrix listOne) (Matrix listTwo) =
+    let
+        difference =
+            mDimension (Matrix listOne) - mDimension (Matrix listTwo)
+    in
+    if difference == 0 then
+        List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) listOne listTwo
+            |> Matrix
+
+    else if difference > 0 then
+        List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) listOne (listTwo ++ List.repeat difference (RowVector <| Vector.Vector []))
+            |> Matrix
+
+    else
+        List.map2 (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo) (listOne ++ List.repeat (Basics.abs difference) (RowVector <| Vector.Vector [])) listTwo
+            |> Matrix
+
+
+{-| Monoidally append Matricies together horizontally
+-}
+matrixConcatHorizontal : Monoid.Monoid (Matrix a)
+matrixConcatHorizontal =
+    Monoid.monoid matrixEmpty appendHorizontal
+
+
+{-| Applicative pure for Matrix
+-}
+pure : a -> Matrix a
+pure a =
+    Matrix [ RowVector <| Vector.Vector <| [ a ] ]

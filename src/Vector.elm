@@ -24,7 +24,9 @@ module Vector exposing
     , dimension
     , realVectorSubspace
     , complexVectorSubspace
-    , append, concatEmpty, pure
+    , append
+    , pure
+    , concatEmpty
     )
 
 {-| A module for Vectors
@@ -58,6 +60,9 @@ module Vector exposing
 @docs dimension
 @docs realVectorSubspace
 @docs complexVectorSubspace
+@docs append
+@docs @concatEmpty
+@docs pure
 
 -}
 

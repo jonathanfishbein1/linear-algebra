@@ -42,9 +42,6 @@ module Vector exposing
 @docs multiplyRealVectors
 @docs multiplyComplexVectors
 @docs equal
-@docs sumEmpty
-@docs sumReal
-@docs sumComplex
 @docs apply
 @docs liftA2
 @docs foldl

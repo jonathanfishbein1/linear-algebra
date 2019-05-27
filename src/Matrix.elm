@@ -33,7 +33,11 @@ module Matrix exposing
     , mDimension
     , nDimension
     , solveMatrix
-    , foldl, matrixConcatHorizontal, matrixConcatVertical, matrixEmpty, pure
+    , foldl
+    , matrixConcatHorizontal
+    , matrixConcatVertical
+    , matrixEmpty
+    , pure
     )
 
 {-| A module for Matrix
@@ -76,6 +80,11 @@ module Matrix exposing
 @docs mDimension
 @docs nDimension
 @docs solveMatrix
+@docs foldl
+@docs matrixConcatHorizontal
+@docs matrixConcatVertical
+@docs matrixEmpty
+@docs pure
 
 -}
 

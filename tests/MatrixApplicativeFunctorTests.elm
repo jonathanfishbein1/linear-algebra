@@ -66,4 +66,20 @@ suite =
                         Matrix.apply pureF pureOne
                 in
                 Expect.equal mApplied (Matrix.pure <| f one)
+        , Test.fuzz Fuzz.int "tests fourth applicative law for Matrix" <|
+            \one ->
+                let
+                    pureOne =
+                        Matrix.pure identity
+
+                    pureTwo =
+                        Matrix.pure one
+
+                    leftSide =
+                        Matrix.apply pureOne pureTwo
+
+                    rightSide =
+                        Matrix.apply (Matrix.pure (\_ -> one)) pureOne
+                in
+                Expect.equal leftSide rightSide
         ]

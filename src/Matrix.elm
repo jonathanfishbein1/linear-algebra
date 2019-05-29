@@ -600,3 +600,17 @@ matrixConcatHorizontal =
 pure : a -> Matrix a
 pure a =
     Matrix [ RowVector <| Vector.Vector <| [ a ] ]
+
+
+bind : Matrix a -> (Vector.Vector a -> Matrix b) -> Matrix b
+bind (Matrix listOfRowVectors) fMatrix =
+    List.concatMap
+        (\(RowVector row) ->
+            let
+                (Matrix result) =
+                    fMatrix row
+            in
+            result
+        )
+        listOfRowVectors
+        |> Matrix

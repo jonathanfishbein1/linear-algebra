@@ -602,13 +602,22 @@ pure a =
     Matrix [ RowVector <| Vector.Vector <| [ a ] ]
 
 
-bind : Matrix a -> (Vector.Vector a -> Matrix b) -> Matrix b
+bind : Matrix a -> (a -> Matrix b) -> Matrix b
 bind (Matrix listOfRowVectors) fMatrix =
     List.concatMap
-        (\(RowVector row) ->
+        (\(RowVector (Vector.Vector listOfElements)) ->
             let
                 (Matrix result) =
-                    fMatrix row
+                    List.concatMap
+                        (\element ->
+                            let
+                                (Matrix resultInner) =
+                                    fMatrix element
+                            in
+                            resultInner
+                        )
+                        listOfElements
+                        |> Matrix
             in
             result
         )

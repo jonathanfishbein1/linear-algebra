@@ -38,6 +38,7 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
+    , bind
     )
 
 {-| A module for Matrix

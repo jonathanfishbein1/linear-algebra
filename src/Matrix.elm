@@ -38,6 +38,7 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
+    , bind
     )
 
 {-| A module for Matrix
@@ -600,3 +601,26 @@ matrixConcatHorizontal =
 pure : a -> Matrix a
 pure a =
     Matrix [ RowVector <| Vector.Vector <| [ a ] ]
+
+
+bind : Matrix a -> (a -> Matrix b) -> Matrix b
+bind (Matrix listOfRowVectors) fMatrix =
+    List.concatMap
+        (\(RowVector (Vector.Vector listOfElements)) ->
+            let
+                (Matrix result) =
+                    List.concatMap
+                        (\element ->
+                            let
+                                (Matrix resultInner) =
+                                    fMatrix element
+                            in
+                            resultInner
+                        )
+                        listOfElements
+                        |> Matrix
+            in
+            result
+        )
+        listOfRowVectors
+        |> Matrix

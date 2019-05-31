@@ -27,6 +27,7 @@ module Vector exposing
     , append
     , concatEmpty
     , pure
+    , bind
     )
 
 {-| A module for Vectors
@@ -315,3 +316,17 @@ vectorSubspace zero multiply add (Scalar scalar) vectorList predicates =
             closurePassCriteria additionOfVectors
     in
     containsZeroVector && closureUnderScalarMultiplication && closureUnderAddition
+
+
+bind : Vector a -> (a -> Vector b) -> Vector b
+bind (Vector list) fVector =
+    List.concatMap
+        (\x ->
+            let
+                (Vector result) =
+                    fVector x
+            in
+            result
+        )
+        list
+        |> Vector

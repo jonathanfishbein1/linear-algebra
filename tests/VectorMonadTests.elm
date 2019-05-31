@@ -34,4 +34,25 @@ suite =
                         Vector.bind m Vector.pure
                 in
                 Expect.equal leftSide m
+        , Test.fuzz Fuzz.int "tests Vector Monad associativity" <|
+            \one ->
+                let
+                    m =
+                        Vector.pure one
+
+                    f a =
+                        [ a * 2 ]
+                            |> Vector.Vector
+
+                    g a =
+                        [ a * 3 ]
+                            |> Vector.Vector
+
+                    leftSide =
+                        Vector.bind (Vector.bind m f) g
+
+                    rightSide =
+                        Vector.bind m (\x -> Vector.bind (f x) g)
+                in
+                Expect.equal leftSide rightSide
         ]

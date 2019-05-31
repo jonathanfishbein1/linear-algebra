@@ -38,4 +38,31 @@ suite =
                         Matrix.bind m Matrix.pure
                 in
                 Expect.equal leftSide m
+        , Test.fuzz Fuzz.int "tests Matrix Monad associativity" <|
+            \one ->
+                let
+                    m =
+                        Matrix.pure one
+
+                    f a =
+                        [ a * 2 ]
+                            |> Vector.Vector
+                            |> Matrix.RowVector
+                            |> List.singleton
+                            |> Matrix.Matrix
+
+                    g a =
+                        [ a * 3 ]
+                            |> Vector.Vector
+                            |> Matrix.RowVector
+                            |> List.singleton
+                            |> Matrix.Matrix
+
+                    leftSide =
+                        Matrix.bind (Matrix.bind m f) g
+
+                    rightSide =
+                        Matrix.bind m (\x -> Matrix.bind (f x) g)
+                in
+                Expect.equal leftSide rightSide
         ]

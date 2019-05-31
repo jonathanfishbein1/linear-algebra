@@ -28,4 +28,14 @@ suite =
                         f one
                 in
                 Expect.equal leftSide rightSide
+        , Test.fuzz Fuzz.int "tests Matrix Monad right identity" <|
+            \one ->
+                let
+                    m =
+                        Matrix.pure one
+
+                    leftSide =
+                        Matrix.bind m Matrix.pure
+                in
+                Expect.equal leftSide m
         ]

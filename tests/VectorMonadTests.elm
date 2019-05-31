@@ -24,4 +24,14 @@ suite =
                         f one
                 in
                 Expect.equal leftSide rightSide
+        , Test.fuzz Fuzz.int "tests Vector Monad right identity" <|
+            \one ->
+                let
+                    m =
+                        Vector.pure one
+
+                    leftSide =
+                        Vector.bind m Vector.pure
+                in
+                Expect.equal leftSide m
         ]

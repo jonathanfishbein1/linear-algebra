@@ -90,6 +90,7 @@ module Matrix exposing
 -}
 
 import ComplexNumbers
+import Equal
 import Internal.Matrix
 import List.Extra
 import Monoid
@@ -165,8 +166,8 @@ map f (Matrix listOfRowVectors) =
 
 {-| Compare two Matrices for equality
 -}
-equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
-equal comparator (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
+equalImplementation : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
+equalImplementation comparator (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
     List.all ((==) True) <| List.map2 (\(RowVector vectorOne) (RowVector vectorTwo) -> Vector.equal comparator vectorOne vectorTwo) listOfRowVectorsOne listOfRowVectorsTwo
 
 
@@ -624,3 +625,15 @@ bind (Matrix listOfRowVectors) fMatrix =
         )
         listOfRowVectors
         |> Matrix
+
+
+{-| `Equal` type for `Matrix`.
+-}
+matrixEqual : (a -> a -> Bool) -> Equal.Equal (Matrix a)
+matrixEqual comparator =
+    Equal.Equal (equalImplementation comparator)
+
+
+equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
+equal comparator =
+    Equal.equal <| matrixEqual comparator

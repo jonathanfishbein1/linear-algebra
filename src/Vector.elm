@@ -68,6 +68,7 @@ module Vector exposing
 -}
 
 import ComplexNumbers
+import Equal
 import Float.Extra
 import List.Extra
 import Monoid
@@ -128,8 +129,8 @@ multiplyComplexVectors vectorOne vectorTwo =
 
 {-| Compare two Vectors for equality
 -}
-equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
-equal comparator vectorOne vectorTwo =
+equalImplementation : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
+equalImplementation comparator vectorOne vectorTwo =
     let
         (Vector list) =
             liftA2 comparator vectorOne vectorTwo
@@ -330,3 +331,15 @@ bind (Vector list) fVector =
         )
         list
         |> Vector
+
+
+{-| `Equal` type for `Vector`.
+-}
+vectorEqual : (a -> a -> Bool) -> Equal.Equal (Vector a)
+vectorEqual comparator =
+    Equal.Equal (equalImplementation comparator)
+
+
+equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
+equal comparator =
+    Equal.equal <| vectorEqual comparator

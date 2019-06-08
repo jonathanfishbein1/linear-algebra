@@ -343,3 +343,8 @@ vectorEqual comparator =
 equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
 equal comparator =
     Equal.equal <| vectorEqual comparator
+
+
+getAt : Int -> Vector a -> Maybe a
+getAt index (Vector list) =
+    List.Extra.getAt index list

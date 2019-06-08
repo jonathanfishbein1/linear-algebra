@@ -33,12 +33,14 @@ findPivot listOfRowVectors initialRowIndex =
 subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
 subtractRow r currentRow nextRow =
     let
-        k =
-            Maybe.withDefault 1 (Vector.getAt r nextRow)
-
         (Vector.Vector subtractedRow) =
-            Vector.map ((*) k) currentRow
-                |> Vector.subtractRealVectors nextRow
+            Vector.getAt r nextRow
+                |> Maybe.map
+                    (\k ->
+                        Vector.map ((*) k) currentRow
+                            |> Vector.subtractRealVectors nextRow
+                    )
+                |> Maybe.withDefault nextRow
 
         firstElement =
             subtractedRow

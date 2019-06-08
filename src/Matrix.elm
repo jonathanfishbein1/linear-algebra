@@ -38,7 +38,7 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
-    , bind
+    , bind, getAt, setAt
     )
 
 {-| A module for Matrix
@@ -637,3 +637,24 @@ matrixEqual comparator =
 equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
 equal comparator =
     Equal.equal <| matrixEqual comparator
+
+
+getAt : ( Int, Int ) -> Matrix a -> Maybe a
+getAt ( rowIndex, columnIndex ) (Matrix listOfRowVectors) =
+    List.Extra.getAt rowIndex listOfRowVectors
+        |> Maybe.andThen (\(RowVector list) -> Vector.getAt columnIndex list)
+
+
+setAt : ( Int, Int ) -> a -> Matrix a -> Matrix a
+setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
+    let
+        newRow =
+            List.Extra.getAt rowIndex listOfRowVectors
+                |> Maybe.map (\(RowVector list) -> RowVector <| Vector.setAt columnIndex element list)
+                |> Maybe.withDefault (RowVector <| Vector.Vector [])
+
+        newMatrix =
+            List.Extra.setAt rowIndex newRow listOfRowVectors
+                |> Matrix
+    in
+    newMatrix

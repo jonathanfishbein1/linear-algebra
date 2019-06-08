@@ -632,4 +632,18 @@ suite =
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "getAt index" <|
+            \one two three ->
+                let
+                    vector =
+                        Vector.Vector [ one, two, three ]
+                in
+                Expect.equal (Vector.getAt 0 vector) (Just one)
+        , Test.fuzz Fuzz.int "setAt getAt index" <|
+            \one ->
+                let
+                    vector =
+                        Vector.setAt 0 one (Vector.Vector [ 0 ])
+                in
+                Expect.equal (Vector.getAt 0 vector) (Just one)
         ]

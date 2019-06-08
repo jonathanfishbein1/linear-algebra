@@ -27,7 +27,7 @@ module Vector exposing
     , append
     , concatEmpty
     , pure
-    , bind
+    , bind, getAt, setAt
     )
 
 {-| A module for Vectors
@@ -343,3 +343,14 @@ vectorEqual comparator =
 equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
 equal comparator =
     Equal.equal <| vectorEqual comparator
+
+
+getAt : Int -> Vector a -> Maybe a
+getAt index (Vector list) =
+    List.Extra.getAt index list
+
+
+setAt : Int -> a -> Vector a -> Vector a
+setAt index element (Vector list) =
+    List.Extra.setAt index element list
+        |> Vector

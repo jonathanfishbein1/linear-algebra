@@ -358,5 +358,9 @@ setAt index element (Vector list) =
 
 print : Vector Float -> String
 print (Vector list) =
-    List.map String.fromFloat list
-        |> String.join ","
+    let
+        values =
+            List.map String.fromFloat list
+                |> String.join ", "
+    in
+    "Vector [" ++ values ++ "]"

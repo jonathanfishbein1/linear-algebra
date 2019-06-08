@@ -57,16 +57,11 @@ subtractRow r currentRow nextRow =
 -}
 scale : Int -> Vector.Vector Float -> Vector.Vector Float
 scale rowIndex rowVector =
-    case rowVector of
-        Vector.Vector [] ->
-            Vector.Vector []
-
-        xs ->
-            let
-                elementAtRowIndex =
-                    Maybe.withDefault 1 (Vector.getAt rowIndex xs)
-            in
-            Vector.map (\rowElement -> rowElement / elementAtRowIndex) xs
+    let
+        elementAtRowIndex =
+            Maybe.withDefault 1 (Vector.getAt rowIndex rowVector)
+    in
+    Vector.map (\rowElement -> rowElement / elementAtRowIndex) rowVector
 
 
 reduceRow : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)

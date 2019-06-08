@@ -1347,4 +1347,11 @@ suite =
                         Matrix.foldl (+) 0 matrix
                 in
                 Expect.equal foldResult 2
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "getAt index" <|
+            \one two three ->
+                let
+                    matrix =
+                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ one, two, three ] ]
+                in
+                Expect.equal (Matrix.getAt ( 0, 0 ) matrix) (Just one)
         ]

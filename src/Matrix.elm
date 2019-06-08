@@ -647,14 +647,11 @@ getAt ( rowIndex, columnIndex ) (Matrix listOfRowVectors) =
 
 setAt : ( Int, Int ) -> a -> Matrix a -> Matrix a
 setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
-    let
-        newRow =
-            List.Extra.getAt rowIndex listOfRowVectors
-                |> Maybe.map (\(RowVector list) -> RowVector <| Vector.setAt columnIndex element list)
-                |> Maybe.withDefault (RowVector <| Vector.Vector [])
-
-        newMatrix =
-            List.Extra.setAt rowIndex newRow listOfRowVectors
-                |> Matrix
-    in
-    newMatrix
+    List.Extra.getAt rowIndex listOfRowVectors
+        |> Maybe.map (\(RowVector list) -> RowVector <| Vector.setAt columnIndex element list)
+        |> Maybe.map
+            (\newRow ->
+                List.Extra.setAt rowIndex newRow listOfRowVectors
+            )
+        |> Maybe.withDefault listOfRowVectors
+        |> Matrix

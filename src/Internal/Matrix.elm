@@ -21,7 +21,7 @@ findPivot listOfRowVectors initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration listOfRowVectors
-                |> Maybe.andThen (\currentRowIteration -> Vector.getAt initialRowIndex currentRowIteration)
+                |> Maybe.andThen (Vector.getAt initialRowIndex)
                 |> Maybe.withDefault 0
                 |> (/=) 0
         )
@@ -83,15 +83,13 @@ reduceRow rowIndex listOfVectors =
 
                 scaledRow =
                     List.Extra.getAt rowIndex swappedListOfVectors
-                        |> Maybe.map (\vector -> scale rowIndex vector)
+                        |> Maybe.map (scale rowIndex)
                         |> Maybe.withDefault (Vector.Vector [])
 
                 nextRows =
                     List.drop (rowIndex + 1) listOfVectors
                         |> List.map
-                            (\vector ->
-                                subtractRow rowIndex scaledRow vector
-                            )
+                            (subtractRow rowIndex scaledRow)
 
                 newMatrixReduceRow =
                     List.take rowIndex swappedListOfVectors
@@ -108,20 +106,18 @@ reduceRow rowIndex listOfVectors =
                 let
                     nextNonZero =
                         List.Extra.getAt rowIndex listOfVectors
-                            |> Maybe.andThen (\(Vector.Vector list) -> List.Extra.findIndex (\x -> x /= 0) list)
+                            |> Maybe.andThen (\(Vector.Vector list) -> List.Extra.findIndex ((/=) 0) list)
                             |> Maybe.withDefault rowIndex
 
                     scaledRow =
                         List.Extra.getAt rowIndex listOfVectors
-                            |> Maybe.map (\vector -> scale nextNonZero vector)
+                            |> Maybe.map (scale nextNonZero)
                             |> Maybe.withDefault (Vector.Vector [])
 
                     nextRows =
                         List.drop nextNonZero listOfVectors
                             |> List.map
-                                (\vector ->
-                                    subtractRow nextNonZero scaledRow vector
-                                )
+                                (subtractRow nextNonZero scaledRow)
 
                     newMatrixReduceRow =
                         List.take rowIndex listOfVectors
@@ -140,9 +136,7 @@ reduceRowBackwards rowIndex listOfVectors =
         prevRows =
             List.take rowIndex listOfVectors
                 |> List.map
-                    (\vector ->
-                        subtractRow rowIndex row vector
-                    )
+                    (subtractRow rowIndex row)
     in
     prevRows
         ++ [ row ]

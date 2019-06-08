@@ -656,4 +656,17 @@ suite =
                         Vector.print vector
                 in
                 Expect.equal printedVector "Vector [0, 1]"
+        , Test.test "read Vector" <|
+            \_ ->
+                let
+                    vector =
+                        Vector.Vector [ 0, 1 ]
+
+                    printedVector =
+                        Vector.print vector
+
+                    readVector =
+                        Vector.read printedVector
+                in
+                Expect.equal readVector (Ok vector)
         ]

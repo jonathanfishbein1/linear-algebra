@@ -27,7 +27,7 @@ module Vector exposing
     , append
     , concatEmpty
     , pure
-    , bind, getAt, print, setAt
+    , bind, getAt, print, read, setAt
     )
 
 {-| A module for Vectors
@@ -371,7 +371,7 @@ listParser : Parser.Parser (List Float)
 listParser =
     Parser.sequence
         { start = "["
-        , separator = ";"
+        , separator = ","
         , end = "]"
         , spaces = Parser.spaces
         , item = Parser.float

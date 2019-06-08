@@ -79,7 +79,7 @@ suite =
                         Matrix.apply pureOne pureTwo
 
                     rightSide =
-                        Matrix.apply (Matrix.pure (\_ -> one)) pureOne
+                        Matrix.apply (Matrix.pure <| Basics.always one) pureOne
                 in
                 Expect.equal leftSide rightSide
         ]

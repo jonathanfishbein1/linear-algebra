@@ -78,7 +78,7 @@ suite =
                         Vector.apply pureOne pureTwo
 
                     rightSide =
-                        Vector.apply (Vector.pure (\_ -> one)) pureOne
+                        Vector.apply (Vector.pure <| Basics.always one) pureOne
                 in
                 Expect.equal leftSide rightSide
         ]

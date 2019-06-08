@@ -72,6 +72,7 @@ import Equal
 import Float.Extra
 import List.Extra
 import Monoid
+import Parser exposing ((|.), (|=))
 
 
 {-| Vector type
@@ -364,3 +365,28 @@ print (Vector list) =
                 |> String.join ", "
     in
     "Vector [" ++ values ++ "]"
+
+
+listParser : Parser.Parser (List Float)
+listParser =
+    Parser.sequence
+        { start = "["
+        , separator = ";"
+        , end = "]"
+        , spaces = Parser.spaces
+        , item = Parser.float
+        , trailing = Parser.Forbidden
+        }
+
+
+parseVector : Parser.Parser (Vector Float)
+parseVector =
+    Parser.succeed Vector
+        |. Parser.keyword "Vector"
+        |. Parser.spaces
+        |= listParser
+
+
+read : String -> Result (List Parser.DeadEnd) (Vector Float)
+read vectorString =
+    Parser.run parseVector vectorString

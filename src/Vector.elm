@@ -27,7 +27,7 @@ module Vector exposing
     , append
     , concatEmpty
     , pure
-    , bind, getAt, setAt
+    , bind, getAt, print, setAt
     )
 
 {-| A module for Vectors
@@ -354,3 +354,9 @@ setAt : Int -> a -> Vector a -> Vector a
 setAt index element (Vector list) =
     List.Extra.setAt index element list
         |> Vector
+
+
+print : Vector Float -> String
+print (Vector list) =
+    List.map String.fromFloat list
+        |> String.join ","

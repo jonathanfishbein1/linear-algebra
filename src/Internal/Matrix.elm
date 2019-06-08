@@ -21,7 +21,7 @@ findPivot listOfRowVectors initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration listOfRowVectors
-                |> Maybe.andThen (\(Vector.Vector currentRowIteration) -> List.Extra.getAt initialRowIndex currentRowIteration)
+                |> Maybe.andThen (\currentRowIteration -> Vector.getAt initialRowIndex currentRowIteration)
                 |> Maybe.withDefault 0
                 |> (/=) 0
         )
@@ -31,14 +31,14 @@ findPivot listOfRowVectors initialRowIndex =
 {-| Internal function for subtracting rows from each other
 -}
 subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
-subtractRow r currentRow (Vector.Vector nextRow) =
+subtractRow r currentRow nextRow =
     let
         k =
-            Maybe.withDefault 1 (List.Extra.getAt r nextRow)
+            Maybe.withDefault 1 (Vector.getAt r nextRow)
 
         (Vector.Vector subtractedRow) =
             Vector.map ((*) k) currentRow
-                |> Vector.subtractRealVectors (Vector.Vector nextRow)
+                |> Vector.subtractRealVectors nextRow
 
         firstElement =
             subtractedRow
@@ -56,17 +56,17 @@ subtractRow r currentRow (Vector.Vector nextRow) =
 {-| Internal function for scalling rows by pivot entry
 -}
 scale : Int -> Vector.Vector Float -> Vector.Vector Float
-scale rowIndex (Vector.Vector rowVector) =
+scale rowIndex rowVector =
     case rowVector of
-        [] ->
+        Vector.Vector [] ->
             Vector.Vector []
 
         xs ->
             let
                 elementAtRowIndex =
-                    Maybe.withDefault 1 (List.Extra.getAt rowIndex xs)
+                    Maybe.withDefault 1 (Vector.getAt rowIndex xs)
             in
-            Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)
+            Vector.map (\rowElement -> rowElement / elementAtRowIndex) xs
 
 
 reduceRow : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)

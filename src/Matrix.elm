@@ -38,7 +38,7 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
-    , bind
+    , bind, getAt
     )
 
 {-| A module for Matrix
@@ -637,3 +637,9 @@ matrixEqual comparator =
 equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
 equal comparator =
     Equal.equal <| matrixEqual comparator
+
+
+getAt : ( Int, Int ) -> Matrix a -> Maybe a
+getAt ( rowIndex, columnIndex ) (Matrix listOfRowVectors) =
+    List.Extra.getAt rowIndex listOfRowVectors
+        |> Maybe.andThen (\(RowVector list) -> Vector.getAt columnIndex list)

@@ -27,7 +27,7 @@ module Vector exposing
     , append
     , concatEmpty
     , pure
-    , bind
+    , bind, getAt
     )
 
 {-| A module for Vectors

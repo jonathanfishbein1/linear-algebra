@@ -1354,4 +1354,11 @@ suite =
                         Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ one, two, three ] ]
                 in
                 Expect.equal (Matrix.getAt ( 0, 0 ) matrix) (Just one)
+        , Test.fuzz Fuzz.int "setAt getAt index" <|
+            \one ->
+                let
+                    matrix =
+                        Matrix.setAt ( 0, 0 ) one (Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ 0 ] ])
+                in
+                Expect.equal (Matrix.getAt ( 0, 0 ) matrix) (Just one)
         ]

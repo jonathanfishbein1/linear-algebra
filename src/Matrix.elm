@@ -38,7 +38,7 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
-    , bind, getAt, print, setAt
+    , bind, getAt, print, read, setAt
     )
 
 {-| A module for Matrix
@@ -94,6 +94,7 @@ import Equal
 import Internal.Matrix
 import List.Extra
 import Monoid
+import Parser exposing ((|.), (|=))
 import Vector
 
 
@@ -661,6 +662,39 @@ print : Matrix Float -> String
 print (Matrix listOfRowVectors) =
     let
         values =
-            List.foldl (\(RowVector row) acc -> "[ RowVector " ++ Vector.print row ++ " ] ]" ++ acc) "" listOfRowVectors
+            List.foldl (\(RowVector row) acc -> "RowVector " ++ Vector.print row ++ " ]" ++ acc) "" listOfRowVectors
     in
     "Matrix [ " ++ values ++ " ]"
+
+
+read : String -> Result (List Parser.DeadEnd) (Matrix Float)
+read matrixString =
+    Parser.run parseMatrix matrixString
+
+
+listOfRowVectorParser : Parser.Parser (List (RowVector Float))
+listOfRowVectorParser =
+    Parser.sequence
+        { start = "["
+        , separator = ","
+        , end = "]"
+        , spaces = Parser.spaces
+        , item = parseRowVector
+        , trailing = Parser.Forbidden
+        }
+
+
+parseMatrix : Parser.Parser (Matrix Float)
+parseMatrix =
+    Parser.succeed Matrix
+        |. Parser.keyword "Matrix"
+        |. Parser.spaces
+        |= listOfRowVectorParser
+
+
+parseRowVector : Parser.Parser (RowVector Float)
+parseRowVector =
+    Parser.succeed RowVector
+        |. Parser.keyword "RowVector"
+        |. Parser.spaces
+        |= Vector.parseVector

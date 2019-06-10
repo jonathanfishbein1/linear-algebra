@@ -38,7 +38,7 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
-    , bind, getAt, setAt
+    , bind, getAt, print, setAt
     )
 
 {-| A module for Matrix
@@ -655,3 +655,12 @@ setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
             )
         |> Maybe.withDefault listOfRowVectors
         |> Matrix
+
+
+print : Matrix Float -> String
+print (Matrix listOfRowVectors) =
+    let
+        values =
+            List.foldl (\(RowVector row) acc -> "[ RowVector " ++ Vector.print row ++ " ] ]" ++ acc) "" listOfRowVectors
+    in
+    "Matrix [ " ++ values ++ " ]"

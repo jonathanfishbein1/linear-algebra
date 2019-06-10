@@ -27,7 +27,7 @@ module Vector exposing
     , append
     , concatEmpty
     , pure
-    , bind, getAt, setAt
+    , bind, getAt, parseVector, print, read, setAt
     )
 
 {-| A module for Vectors
@@ -72,6 +72,7 @@ import Equal
 import Float.Extra
 import List.Extra
 import Monoid
+import Parser exposing ((|.), (|=))
 
 
 {-| Vector type
@@ -354,3 +355,59 @@ setAt : Int -> a -> Vector a -> Vector a
 setAt index element (Vector list) =
     List.Extra.setAt index element list
         |> Vector
+
+
+print : Vector Float -> String
+print (Vector list) =
+    let
+        values =
+            List.map String.fromFloat list
+                |> String.join ", "
+    in
+    "Vector [" ++ values ++ "]"
+
+
+listParser : Parser.Parser (List Float)
+listParser =
+    Parser.sequence
+        { start = "["
+        , separator = ","
+        , end = "]"
+        , spaces = Parser.spaces
+        , item = myNumber
+        , trailing = Parser.Forbidden
+        }
+
+
+parseVector : Parser.Parser (Vector Float)
+parseVector =
+    Parser.succeed Vector
+        |. Parser.keyword "Vector"
+        |. Parser.spaces
+        |= listParser
+
+
+read : String -> Result (List Parser.DeadEnd) (Vector Float)
+read vectorString =
+    Parser.run parseVector vectorString
+
+
+float : Parser.Parser Float
+float =
+    Parser.number
+        { int = Just toFloat
+        , hex = Nothing
+        , octal = Nothing
+        , binary = Nothing
+        , float = Just identity
+        }
+
+
+myNumber : Parser.Parser Float
+myNumber =
+    Parser.oneOf
+        [ Parser.succeed negate
+            |. Parser.symbol "-"
+            |= float
+        , float
+        ]

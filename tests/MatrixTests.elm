@@ -1361,4 +1361,27 @@ suite =
                         Matrix.setAt ( 0, 0 ) one (Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ 0 ] ])
                 in
                 Expect.equal (Matrix.getAt ( 0, 0 ) matrix) (Just one)
+        , Test.test "print Matrix" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ 0, 1 ] ]
+
+                    printedMatrix =
+                        Matrix.print matrix
+                in
+                Expect.equal printedMatrix "Matrix [ RowVector Vector [0, 1] ] ]"
+        , Test.fuzz2 (Fuzz.floatRange -10 0) (Fuzz.floatRange -10 0) "read Matrix" <|
+            \one two ->
+                let
+                    matrix =
+                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ 0, 1 ] ]
+
+                    printedMatrix =
+                        Matrix.print matrix
+
+                    readMatrix =
+                        Matrix.read printedMatrix
+                in
+                Expect.equal readMatrix (Ok matrix)
         ]

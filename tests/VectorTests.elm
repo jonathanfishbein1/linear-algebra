@@ -3,6 +3,7 @@ module VectorTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
+import Parser
 import Test
 import Vector
 
@@ -646,4 +647,27 @@ suite =
                         Vector.setAt 0 one (Vector.Vector [ 0 ])
                 in
                 Expect.equal (Vector.getAt 0 vector) (Just one)
+        , Test.test "print Vector" <|
+            \_ ->
+                let
+                    vector =
+                        Vector.Vector [ 0, 1 ]
+
+                    printedVector =
+                        Vector.print vector
+                in
+                Expect.equal printedVector "Vector [0, 1]"
+        , Test.fuzz2 (Fuzz.floatRange -10 0) (Fuzz.floatRange -10 0) "read Vector" <|
+            \one two ->
+                let
+                    vector =
+                        Vector.Vector [ one, two ]
+
+                    printedVector =
+                        Vector.print vector
+
+                    readVector =
+                        Vector.read printedVector
+                in
+                Expect.equal readVector (Ok vector)
         ]

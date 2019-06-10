@@ -374,7 +374,7 @@ listParser =
         , separator = ","
         , end = "]"
         , spaces = Parser.spaces
-        , item = Parser.float
+        , item = myNumber
         , trailing = Parser.Forbidden
         }
 
@@ -390,3 +390,24 @@ parseVector =
 read : String -> Result (List Parser.DeadEnd) (Vector Float)
 read vectorString =
     Parser.run parseVector vectorString
+
+
+float : Parser.Parser Float
+float =
+    Parser.number
+        { int = Just toFloat
+        , hex = Nothing
+        , octal = Nothing
+        , binary = Nothing
+        , float = Just identity
+        }
+
+
+myNumber : Parser.Parser Float
+myNumber =
+    Parser.oneOf
+        [ Parser.succeed negate
+            |. Parser.symbol "-"
+            |= float
+        , float
+        ]

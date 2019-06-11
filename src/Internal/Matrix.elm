@@ -42,17 +42,14 @@ subtractRow r currentRow nextRow =
                     )
                 |> Maybe.withDefault nextRow
 
-        firstElement =
-            subtractedRow
-                |> List.Extra.find
-                    ((/=) 0)
-                |> Maybe.withDefault 1
-
         scaledRow =
-            List.map (\x -> x / firstElement) subtractedRow
+            subtractedRow
+                |> List.Extra.findIndex
+                    ((/=) 0)
+                |> Maybe.map (\index -> scale index (Vector.Vector subtractedRow))
+                |> Maybe.withDefault (Vector.Vector subtractedRow)
     in
     scaledRow
-        |> Vector.Vector
 
 
 {-| Internal function for scalling rows by pivot entry

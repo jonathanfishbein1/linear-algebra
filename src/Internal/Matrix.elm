@@ -98,7 +98,7 @@ reduceRow rowIndex listOfVectors =
                 let
                     nextNonZero =
                         List.Extra.getAt rowIndex listOfVectors
-                            |> Maybe.andThen (\list -> Vector.findIndex ((/=) 0) list)
+                            |> Maybe.andThen (Vector.findIndex ((/=) 0))
                             |> Maybe.withDefault rowIndex
 
                     scaledRow =

@@ -179,7 +179,7 @@ transpose (Matrix listOfRowVectors) =
     listOfRowVectors
         |> List.map (\(RowVector (Vector.Vector x)) -> x)
         |> List.Extra.transpose
-        |> List.map (\x -> RowVector <| Vector.Vector x)
+        |> List.map (Vector.Vector >> RowVector)
         |> Matrix
 
 

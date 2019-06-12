@@ -33,7 +33,7 @@ findPivot listOfRowVectors initialRowIndex =
 subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
 subtractRow r currentRow nextRow =
     let
-        (Vector.Vector subtractedRow) =
+        subtractedRow =
             Vector.getAt r nextRow
                 |> Maybe.map
                     (\k ->
@@ -44,10 +44,10 @@ subtractRow r currentRow nextRow =
 
         scaledRow =
             subtractedRow
-                |> List.Extra.findIndex
+                |> Vector.findIndex
                     ((/=) 0)
-                |> Maybe.map (\index -> scale index (Vector.Vector subtractedRow))
-                |> Maybe.withDefault (Vector.Vector subtractedRow)
+                |> Maybe.map (\index -> scale index subtractedRow)
+                |> Maybe.withDefault subtractedRow
     in
     scaledRow
 
@@ -98,7 +98,7 @@ reduceRow rowIndex listOfVectors =
                 let
                     nextNonZero =
                         List.Extra.getAt rowIndex listOfVectors
-                            |> Maybe.andThen (\(Vector.Vector list) -> List.Extra.findIndex ((/=) 0) list)
+                            |> Maybe.andThen (\list -> Vector.findIndex ((/=) 0) list)
                             |> Maybe.withDefault rowIndex
 
                     scaledRow =

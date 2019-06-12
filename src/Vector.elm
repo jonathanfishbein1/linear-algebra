@@ -27,7 +27,7 @@ module Vector exposing
     , append
     , concatEmpty
     , pure
-    , bind, getAt, parseVector, print, read, setAt
+    , bind, findIndex, getAt, parseVector, print, read, setAt
     )
 
 {-| A module for Vectors
@@ -411,3 +411,8 @@ myNumber =
             |= float
         , float
         ]
+
+
+findIndex : (a -> Bool) -> Vector a -> Maybe Int
+findIndex predicate (Vector list) =
+    List.Extra.findIndex predicate list

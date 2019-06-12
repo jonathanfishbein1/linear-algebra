@@ -647,7 +647,7 @@ suite =
                         Vector.setAt 0 one (Vector.Vector [ 0 ])
                 in
                 Expect.equal (Vector.getAt 0 vector) (Just one)
-        , Test.fuzz2 (Fuzz.floatRange -10 0) (Fuzz.floatRange -10 0) "read Vector" <|
+        , Test.fuzz2 Fuzz.float Fuzz.float "read Vector" <|
             \one two ->
                 let
                     vector =

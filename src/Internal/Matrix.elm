@@ -35,21 +35,17 @@ subtractRow r currentRow nextRow =
     Vector.getAt r nextRow
         |> Maybe.andThen
             (\nElement ->
-                let
-                    sRow =
-                        Vector.getAt r currentRow
-                            |> Maybe.map
-                                (\currentElement ->
-                                    if currentElement == 0 then
-                                        Vector.map ((*) nElement) currentRow
-                                            |> Vector.subtractRealVectors nextRow
+                Vector.getAt r currentRow
+                    |> Maybe.map
+                        (\currentElement ->
+                            if currentElement == 0 then
+                                Vector.map ((*) nElement) currentRow
+                                    |> Vector.subtractRealVectors nextRow
 
-                                    else
-                                        Vector.map ((*) (nElement / currentElement)) currentRow
-                                            |> Vector.subtractRealVectors nextRow
-                                )
-                in
-                sRow
+                            else
+                                Vector.map ((*) (nElement / currentElement)) currentRow
+                                    |> Vector.subtractRealVectors nextRow
+                        )
             )
         |> Maybe.withDefault nextRow
 

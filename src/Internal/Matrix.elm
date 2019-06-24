@@ -32,30 +32,26 @@ findPivot listOfRowVectors initialRowIndex =
 -}
 subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
 subtractRow r currentRow nextRow =
-    let
-        subtractedRow =
-            Vector.getAt r nextRow
-                |> Maybe.andThen
-                    (\nElement ->
-                        let
-                            sRow =
-                                Vector.getAt r currentRow
-                                    |> Maybe.map
-                                        (\currentElement ->
-                                            if currentElement == 0 then
-                                                Vector.map ((*) nElement) currentRow
-                                                    |> Vector.subtractRealVectors nextRow
+    Vector.getAt r nextRow
+        |> Maybe.andThen
+            (\nElement ->
+                let
+                    sRow =
+                        Vector.getAt r currentRow
+                            |> Maybe.map
+                                (\currentElement ->
+                                    if currentElement == 0 then
+                                        Vector.map ((*) nElement) currentRow
+                                            |> Vector.subtractRealVectors nextRow
 
-                                            else
-                                                Vector.map ((*) (nElement / currentElement)) currentRow
-                                                    |> Vector.subtractRealVectors nextRow
-                                        )
-                        in
-                        sRow
-                    )
-                |> Maybe.withDefault nextRow
-    in
-    subtractedRow
+                                    else
+                                        Vector.map ((*) (nElement / currentElement)) currentRow
+                                            |> Vector.subtractRealVectors nextRow
+                                )
+                in
+                sRow
+            )
+        |> Maybe.withDefault nextRow
 
 
 {-| Internal function for scalling rows by pivot entry

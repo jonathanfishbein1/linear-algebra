@@ -392,7 +392,7 @@ solveMatrix (Matrix listOfRowVectors) =
     else if notConstrainedEnough then
         let
             rank =
-                listOfRowVectorsRREF
+                Debug.log "listOfRowVectorsRREF " listOfRowVectorsRREF
                     |> List.Extra.count (\(RowVector vector) -> Vector.realVectorLength vector /= 0)
 
             nullity =

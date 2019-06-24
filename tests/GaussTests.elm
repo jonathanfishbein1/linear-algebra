@@ -127,7 +127,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <| Vector.Vector [ 1, 2, 3, 9 ]
                             , Matrix.RowVector <| Vector.Vector [ 0, 1, 1, 2 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0, 0, 1, 2.9999999999999996 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 0, 1, 3 ]
                             ]
 
                     rowEchelonFormMatrix =

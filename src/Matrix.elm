@@ -308,8 +308,18 @@ gaussianReduce (Matrix matrix) =
     let
         listOfVectors =
             List.map (\(RowVector vector) -> vector) matrix
+
+        upperT =
+            List.foldl Internal.Matrix.reduceRow listOfVectors (List.range 0 (List.length matrix - 1))
+
+        rowEchelonForm =
+            List.indexedMap
+                (\rowIndex vector ->
+                    Internal.Matrix.scale rowIndex vector
+                )
+                upperT
     in
-    List.foldl Internal.Matrix.reduceRow listOfVectors (List.range 0 (List.length matrix - 1))
+    rowEchelonForm
         |> List.map RowVector
         |> Matrix
 

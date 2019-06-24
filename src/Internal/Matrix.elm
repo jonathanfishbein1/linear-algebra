@@ -38,13 +38,13 @@ subtractRow r currentRow nextRow =
                 Vector.getAt r currentRow
                     |> Maybe.map
                         (\currentElement ->
-                            if currentElement == 0 then
+                            (if currentElement == 0 then
                                 Vector.map ((*) nElement) currentRow
-                                    |> Vector.subtractRealVectors nextRow
 
-                            else
+                             else
                                 Vector.map ((*) (nElement / currentElement)) currentRow
-                                    |> Vector.subtractRealVectors nextRow
+                            )
+                                |> Vector.subtractRealVectors nextRow
                         )
             )
         |> Maybe.withDefault nextRow

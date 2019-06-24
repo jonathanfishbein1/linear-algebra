@@ -41,15 +41,8 @@ subtractRow r currentRow nextRow =
                             |> Vector.subtractRealVectors nextRow
                     )
                 |> Maybe.withDefault nextRow
-
-        scaledRow =
-            subtractedRow
-                |> Vector.findIndex
-                    ((/=) 0)
-                |> Maybe.map (\index -> scale index subtractedRow)
-                |> Maybe.withDefault subtractedRow
     in
-    scaledRow
+    subtractedRow
 
 
 {-| Internal function for scalling rows by pivot entry
@@ -81,7 +74,20 @@ reduceRow rowIndex listOfVectors =
                 nextRows =
                     List.drop (rowIndex + 1) listOfVectors
                         |> List.map
-                            (subtractRow rowIndex scaledRow)
+                            (\row ->
+                                let
+                                    subtractedRow =
+                                        subtractRow rowIndex scaledRow row
+
+                                    scaledRowInner =
+                                        Vector.findIndex
+                                            ((/=) 0)
+                                            subtractedRow
+                                            |> Maybe.map (\index -> scale index subtractedRow)
+                                            |> Maybe.withDefault subtractedRow
+                                in
+                                scaledRowInner
+                            )
 
                 newMatrixReduceRow =
                     List.take rowIndex swappedListOfVectors

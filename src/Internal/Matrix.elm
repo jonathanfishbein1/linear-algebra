@@ -7,6 +7,7 @@ module Internal.Matrix exposing
     , reduceRowBackwards
     , scale
     , subtractRow
+    , upperTriangle
     )
 
 import ComplexNumbers
@@ -179,3 +180,65 @@ map2VectorCartesianComplex right (Vector.Vector intermediateList) acc left curre
 
         ( [], _ ) ->
             acc
+
+
+upperTriangle : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
+upperTriangle rowIndex listOfVectors =
+    let
+        firstPivot =
+            findPivot listOfVectors rowIndex
+    in
+    case firstPivot of
+        Just fPivot ->
+            let
+                swappedListOfVectors =
+                    List.Extra.swapAt rowIndex fPivot listOfVectors
+
+                currentRow =
+                    List.Extra.getAt rowIndex swappedListOfVectors
+                        |> Maybe.withDefault (Vector.Vector [])
+
+                nextRows =
+                    List.drop (rowIndex + 1) listOfVectors
+                        |> List.map
+                            (\row ->
+                                let
+                                    subtractedRow =
+                                        subtractRow rowIndex currentRow row
+                                in
+                                subtractedRow
+                            )
+
+                newMatrixReduceRow =
+                    List.take rowIndex swappedListOfVectors
+                        ++ [ currentRow ]
+                        ++ nextRows
+            in
+            newMatrixReduceRow
+
+        Nothing ->
+            if rowIndex == (List.length listOfVectors - 1) then
+                listOfVectors
+
+            else
+                let
+                    nextNonZero =
+                        List.Extra.getAt rowIndex listOfVectors
+                            |> Maybe.andThen (Vector.findIndex ((/=) 0))
+                            |> Maybe.withDefault rowIndex
+
+                    currentRow =
+                        List.Extra.getAt rowIndex listOfVectors
+                            |> Maybe.withDefault (Vector.Vector [])
+
+                    nextRows =
+                        List.drop nextNonZero listOfVectors
+                            |> List.map
+                                (subtractRow nextNonZero currentRow)
+
+                    newMatrixReduceRow =
+                        List.take rowIndex listOfVectors
+                            ++ [ currentRow ]
+                            ++ nextRows
+                in
+                newMatrixReduceRow

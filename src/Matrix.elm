@@ -38,7 +38,7 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
-    , bind, getAt, print, read, setAt
+    , bind, getAt, print, read, setAt, upperTriangle
     )
 
 {-| A module for Matrix
@@ -310,6 +310,17 @@ gaussianReduce (Matrix matrix) =
             List.map (\(RowVector vector) -> vector) matrix
     in
     List.foldl Internal.Matrix.reduceRow listOfVectors (List.range 0 (List.length matrix - 1))
+        |> List.map RowVector
+        |> Matrix
+
+
+upperTriangle : Matrix Float -> Matrix Float
+upperTriangle (Matrix matrix) =
+    let
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
+    in
+    List.foldl Internal.Matrix.upperTriangle listOfVectors (List.range 0 (List.length matrix - 1))
         |> List.map RowVector
         |> Matrix
 

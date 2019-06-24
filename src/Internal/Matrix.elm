@@ -35,10 +35,18 @@ subtractRow r currentRow nextRow =
     let
         subtractedRow =
             Vector.getAt r nextRow
-                |> Maybe.map
-                    (\k ->
-                        Vector.map ((*) k) currentRow
-                            |> Vector.subtractRealVectors nextRow
+                |> Maybe.andThen
+                    (\nElement ->
+                        let
+                            sRow =
+                                Vector.getAt r currentRow
+                                    |> Maybe.map
+                                        (\currentElement ->
+                                            Vector.map ((*) (nElement / currentElement)) currentRow
+                                                |> Vector.subtractRealVectors nextRow
+                                        )
+                        in
+                        sRow
                     )
                 |> Maybe.withDefault nextRow
     in

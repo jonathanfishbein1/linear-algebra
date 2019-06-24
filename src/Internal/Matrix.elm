@@ -3,7 +3,6 @@ module Internal.Matrix exposing
     , findPivot
     , map2VectorCartesian
     , map2VectorCartesianComplex
-    , reduceRow
     , reduceRowBackwards
     , scale
     , subtractRow
@@ -69,15 +68,6 @@ scale rowIndex rowVector =
                     rowVector
             )
         |> Maybe.withDefault rowVector
-
-
-reduceRow : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
-reduceRow rowIndex listOfVectors =
-    let
-        upperT =
-            upperTriangle rowIndex listOfVectors
-    in
-    upperT
 
 
 reduceRowBackwards : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)

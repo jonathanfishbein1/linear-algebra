@@ -38,7 +38,7 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
-    , bind, getAt, print, read, setAt, upperTriangle
+    , bind, determinant, getAt, print, read, setAt, upperTriangle
     )
 
 {-| A module for Matrix
@@ -93,6 +93,7 @@ import ComplexNumbers
 import Equal
 import Internal.Matrix
 import List.Extra
+import Maybe.Extra
 import Monoid
 import Parser exposing ((|.), (|=))
 import Vector
@@ -717,3 +718,22 @@ parseRowVector =
         |. Parser.keyword "RowVector"
         |. Parser.spaces
         |= Vector.parseVector
+
+
+determinant : Matrix Float -> Maybe Float
+determinant matrix =
+    let
+        upperTriangularForm =
+            upperTriangle matrix
+
+        numberOfRows =
+            mDimension upperTriangularForm
+
+        indices =
+            List.Extra.initialize numberOfRows (\index -> ( index, index ))
+
+        diagonalMaybeEntries =
+            List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) upperTriangularForm :: acc) [] indices
+    in
+    Maybe.Extra.combine diagonalMaybeEntries
+        |> Maybe.map List.product

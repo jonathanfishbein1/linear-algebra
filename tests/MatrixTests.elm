@@ -467,4 +467,19 @@ suite =
                         Matrix.determinant matrix
                 in
                 Expect.equal determinant (Just 35)
+        , Test.test "tests matrix determinant 4 x 4" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, 3, 4 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1, 0, 2, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 1, 2, 3 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, 0, 0 ]
+                            ]
+
+                    determinant =
+                        Matrix.determinant matrix
+                in
+                Expect.equal determinant (Just 7)
         ]

@@ -38,7 +38,7 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
-    , bind, getAt, print, read, setAt
+    , bind, getAt, print, read, setAt, upperTriangle
     )
 
 {-| A module for Matrix
@@ -304,12 +304,31 @@ isHermitian matrix =
 {-| Internal function Gaussian Elimination
 -}
 gaussianReduce : Matrix Float -> Matrix Float
-gaussianReduce (Matrix matrix) =
+gaussianReduce matrix =
+    let
+        (Matrix upperTriangularForm) =
+            upperTriangle matrix
+
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) upperTriangularForm
+
+        rowEchelonForm =
+            List.indexedMap
+                Internal.Matrix.scale
+                listOfVectors
+    in
+    rowEchelonForm
+        |> List.map RowVector
+        |> Matrix
+
+
+upperTriangle : Matrix Float -> Matrix Float
+upperTriangle (Matrix matrix) =
     let
         listOfVectors =
             List.map (\(RowVector vector) -> vector) matrix
     in
-    List.foldl Internal.Matrix.reduceRow listOfVectors (List.range 0 (List.length matrix - 1))
+    List.foldl Internal.Matrix.upperTriangle listOfVectors (List.range 0 (List.length matrix - 1))
         |> List.map RowVector
         |> Matrix
 

@@ -440,4 +440,31 @@ suite =
                         Matrix.read printedMatrix
                 in
                 Expect.equal readMatrix (Ok matrix)
+        , Test.test "tests matrix determinant 2 x 2" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2 ]
+                            , Matrix.RowVector <| Vector.Vector [ 3, 4 ]
+                            ]
+
+                    determinant =
+                        Matrix.determinant matrix
+                in
+                Expect.equal determinant (Just -2)
+        , Test.test "tests matrix determinant 3 x 3" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, 4 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, -1, 3 ]
+                            , Matrix.RowVector <| Vector.Vector [ 4, 0, 1 ]
+                            ]
+
+                    determinant =
+                        Matrix.determinant matrix
+                in
+                Expect.equal determinant (Just 35)
         ]

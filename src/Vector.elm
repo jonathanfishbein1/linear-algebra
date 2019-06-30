@@ -27,7 +27,13 @@ module Vector exposing
     , append
     , concatEmpty
     , pure
-    , bind, findIndex, getAt, parseVector, print, read, setAt
+    , bind
+    , findIndex
+    , getAt
+    , parseVector
+    , print
+    , read
+    , setAt
     )
 
 {-| A module for Vectors
@@ -64,6 +70,13 @@ module Vector exposing
 @docs append
 @docs concatEmpty
 @docs pure
+@docs bind
+@docs findIndex
+@docs getAt
+@docs parseVector
+@docs print
+@docs read
+@docs setAt
 
 -}
 
@@ -320,6 +333,8 @@ vectorSubspace zero multiply add (Scalar scalar) vectorList predicates =
     containsZeroVector && closureUnderScalarMultiplication && closureUnderAddition
 
 
+{-| bind for Vector
+-}
 bind : Vector a -> (a -> Vector b) -> Vector b
 bind (Vector list) fVector =
     List.concatMap
@@ -346,17 +361,23 @@ equal comparator =
     Equal.equal <| vectorEqual comparator
 
 
+{-| Get the value in a Vector at the specified index
+-}
 getAt : Int -> Vector a -> Maybe a
 getAt index (Vector list) =
     List.Extra.getAt index list
 
 
+{-| Set the value in a Vector at the specified index
+-}
 setAt : Int -> a -> Vector a -> Vector a
 setAt index element (Vector list) =
     List.Extra.setAt index element list
         |> Vector
 
 
+{-| Print a Vector as a string
+-}
 print : Vector Float -> String
 print (Vector list) =
     let
@@ -379,6 +400,8 @@ listParser =
         }
 
 
+{-| Parse a Vector
+-}
 parseVector : Parser.Parser (Vector Float)
 parseVector =
     Parser.succeed Vector
@@ -387,6 +410,8 @@ parseVector =
         |= listParser
 
 
+{-| Try to read a string into a Vector
+-}
 read : String -> Result (List Parser.DeadEnd) (Vector Float)
 read vectorString =
     Parser.run parseVector vectorString
@@ -413,6 +438,8 @@ myNumber =
         ]
 
 
+{-| Find index of a value in a Vector
+-}
 findIndex : (a -> Bool) -> Vector a -> Maybe Int
 findIndex predicate (Vector list) =
     List.Extra.findIndex predicate list

@@ -356,6 +356,8 @@ vectorEqual comparator =
     Equal.Equal (equalImplementation comparator)
 
 
+{-| Compare two vectors for equality using a comparator
+-}
 equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
 equal comparator =
     Equal.equal <| vectorEqual comparator

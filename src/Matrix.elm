@@ -98,6 +98,7 @@ module Matrix exposing
 @docs print
 @docs read
 @docs setAt
+@docs upperTriangle
 
 -}
 
@@ -426,7 +427,7 @@ solveMatrix (Matrix listOfRowVectors) =
     else if notConstrainedEnough then
         let
             rank =
-                Debug.log "listOfRowVectorsRREF " listOfRowVectorsRREF
+                listOfRowVectorsRREF
                     |> List.Extra.count (\(RowVector vector) -> Vector.realVectorLength vector /= 0)
 
             nullity =
@@ -671,6 +672,8 @@ matrixEqual comparator =
     Equal.Equal (equalImplementation comparator)
 
 
+{-| Compare two matricies using comparator
+-}
 equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
 equal comparator =
     Equal.equal <| matrixEqual comparator

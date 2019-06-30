@@ -125,221 +125,221 @@ suite =
         , Test.test "tests matrix linearlyIndependent" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 2 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, -3 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 2 ]
+                        , Vector.Vector [ 0, -3 ]
                         ]
                 in
-                Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent listOfRowVectors)
+                Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent listOfVectors)
         , Test.test "tests matrix linearlyIndependent with two colinear vectors" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 2 ]
-                        , Matrix.RowVector <| Vector.Vector [ 2, 4 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 2 ]
+                        , Vector.Vector [ 2, 4 ]
                         ]
                 in
-                Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent listOfRowVectors)
+                Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent listOfVectors)
         , Test.test "tests matrix doesSetSpanSpace with standard basis vectors" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 0, 1 ]
                         ]
 
                     r2 =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfRowVectors
+                        Matrix.doesSetSpanSpace r2 listOfVectors
                 in
                 Expect.equal result (Ok True)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 0, 0 ]
+                        , Vector.Vector [ 0, 0 ]
                         ]
 
                     r2 =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfRowVectors
+                        Matrix.doesSetSpanSpace r2 listOfVectors
                 in
                 Expect.equal result (Ok False)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors 3 dimensions" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 0, 1 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0, 0 ]
+                        , Vector.Vector [ 0, 1, 0 ]
+                        , Vector.Vector [ 0, 0, 1 ]
                         ]
 
                     r3 =
                         Matrix.VectorSpace 3
 
                     result =
-                        Matrix.doesSetSpanSpace r3 listOfRowVectors
+                        Matrix.doesSetSpanSpace r3 listOfVectors
                 in
                 Expect.equal result (Ok True)
         , Test.test "tests matrix doesSetSpanSpace with three vectors" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0, 0 ]
+                        , Vector.Vector [ 1, 0, 0 ]
+                        , Vector.Vector [ 1, 0, 0 ]
                         ]
 
                     r3 =
                         Matrix.VectorSpace 3
 
                     result =
-                        Matrix.doesSetSpanSpace r3 listOfRowVectors
+                        Matrix.doesSetSpanSpace r3 listOfVectors
                 in
                 Expect.equal result (Ok False)
         , Test.test "tests matrix doesSetSpanSpace with three vectors testing r2" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
                         ]
 
                     r2 =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfRowVectors
+                        Matrix.doesSetSpanSpace r2 listOfVectors
                 in
                 Expect.equal result (Err "Please input same number of vectors as vector space")
         , Test.test "tests matrix doesSetSpanSpace with three dimensional vector against R2" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 2, 0, 0 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0, 0 ]
+                        , Vector.Vector [ 2, 0, 0 ]
                         ]
 
                     r2 =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfRowVectors
+                        Matrix.doesSetSpanSpace r2 listOfVectors
                 in
                 Expect.equal result (Err "Please input vectors of equal length as vector space")
         , Test.test "tests matrix areBasis with standard basis vectors" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 0, 1 ]
                         ]
 
                     r2 =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.areBasis r2 listOfRowVectors
+                        Matrix.areBasis r2 listOfVectors
                 in
                 Expect.true "Vectors are basis for R2" result
         , Test.test "tests matrix areBasis with zero vectors" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 0, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 0 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 0, 0 ]
+                        , Vector.Vector [ 0, 0 ]
                         ]
 
                     r2 =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.areBasis r2 listOfRowVectors
+                        Matrix.areBasis r2 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R2" result
         , Test.test "tests matrix areBasis with standard basis vectors 3 dimensions" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
                         ]
 
                     r3 =
                         Matrix.VectorSpace 3
 
                     result =
-                        Matrix.areBasis r3 listOfRowVectors
+                        Matrix.areBasis r3 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R3" result
         , Test.test "tests matrix areBasis with zero vectors 3 dimensions" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 0, 1 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0, 0 ]
+                        , Vector.Vector [ 0, 1, 0 ]
+                        , Vector.Vector [ 0, 0, 1 ]
                         ]
 
                     r3 =
                         Matrix.VectorSpace 3
 
                     result =
-                        Matrix.areBasis r3 listOfRowVectors
+                        Matrix.areBasis r3 listOfVectors
                 in
                 Expect.true "Vectors are basis fro R3" result
         , Test.test "tests matrix areBasis with three vectors" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
                         ]
 
                     r3 =
                         Matrix.VectorSpace 3
 
                     result =
-                        Matrix.areBasis r3 listOfRowVectors
+                        Matrix.areBasis r3 listOfVectors
                 in
                 Expect.false "Vectors are not basis R3" result
         , Test.test "tests matrix areBasis with three vectors testing r2" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
                         ]
 
                     r2 =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.areBasis r2 listOfRowVectors
+                        Matrix.areBasis r2 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R2" result
         , Test.test "tests matrix areBasis with three dimensional vector against R2" <|
             \_ ->
                 let
-                    listOfRowVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 2, 0 ]
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 2, 0 ]
                         ]
 
                     r2 =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.areBasis r2 listOfRowVectors
+                        Matrix.areBasis r2 listOfVectors
                 in
                 Expect.false "Vectos are not basis for R2" result
         , Test.test "tests matrix nullity with infinite solutions" <|
@@ -356,8 +356,8 @@ suite =
             \_ ->
                 let
                     r2BasisVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 0, 1 ]
                         ]
 
                     r2 =
@@ -371,13 +371,13 @@ suite =
             \_ ->
                 let
                     r2BasisVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 0, 1 ]
                         ]
 
                     testVectors =
-                        [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-                        , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 0, 1 ]
                         ]
 
                     r2 =

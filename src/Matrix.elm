@@ -461,9 +461,12 @@ nullSpace matrix =
 
 {-| Predicate to determine if a list of Vectors are linearly independent
 -}
-areLinearlyIndependent : List (RowVector Float) -> Bool
-areLinearlyIndependent listOfRowVectors =
+areLinearlyIndependent : List (Vector.Vector Float) -> Bool
+areLinearlyIndependent listOfVectors =
     let
+        listOfRowVectors =
+            List.map RowVector listOfVectors
+
         matrix =
             Matrix listOfRowVectors
 
@@ -492,12 +495,12 @@ areLinearlyIndependent listOfRowVectors =
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : VectorSpace -> List (RowVector Float) -> Result String Bool
-doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
-    if List.length rowVectors /= vectorSpace then
+doesSetSpanSpace : VectorSpace -> List (Vector.Vector Float) -> Result String Bool
+doesSetSpanSpace (VectorSpace vectorSpace) vectors =
+    if List.length vectors /= vectorSpace then
         Err "Please input same number of vectors as vector space"
 
-    else if not <| List.all (\(RowVector row) -> Vector.dimension row == vectorSpace) rowVectors then
+    else if not <| List.all (\vector -> Vector.dimension vector == vectorSpace) vectors then
         Err "Please input vectors of equal length as vector space"
 
     else
@@ -510,7 +513,7 @@ doesSetSpanSpace (VectorSpace vectorSpace) rowVectors =
                     |> map toFloat
 
             listOfRowVectorsRREF =
-                gaussJordan (Matrix rowVectors)
+                gaussJordan (Matrix (List.map RowVector vectors))
         in
         floatMatrix
             == listOfRowVectorsRREF
@@ -538,9 +541,9 @@ mDimension (Matrix listOfRowVectors) =
 
 {-| Determine whether list of vectors are a basis for a space
 -}
-areBasis : VectorSpace -> List (RowVector Float) -> Bool
-areBasis vectorSpace rowVectors =
-    if doesSetSpanSpace vectorSpace rowVectors == Ok True && areLinearlyIndependent rowVectors then
+areBasis : VectorSpace -> List (Vector.Vector Float) -> Bool
+areBasis vectorSpace vectors =
+    if doesSetSpanSpace vectorSpace vectors == Ok True && areLinearlyIndependent vectors then
         True
 
     else
@@ -549,17 +552,18 @@ areBasis vectorSpace rowVectors =
 
 {-| Determine the basis vectors of a vector space
 -}
-basisOfVectorSpace : VectorSpace -> List (RowVector Float) -> List (RowVector Float)
-basisOfVectorSpace vectorSpace rowVectors =
-    if areBasis vectorSpace rowVectors then
-        rowVectors
+basisOfVectorSpace : VectorSpace -> List (Vector.Vector Float) -> List (Vector.Vector Float)
+basisOfVectorSpace vectorSpace vectors =
+    if areBasis vectorSpace vectors then
+        vectors
 
     else
         let
             (Matrix reducedRowEchelonFormListOfRowVectors) =
-                jordanReduce (Matrix rowVectors)
+                jordanReduce (Matrix (List.map RowVector vectors))
         in
         reducedRowEchelonFormListOfRowVectors
+            |> List.map (\(RowVector vector) -> vector)
 
 
 rowVectorMap : (a -> b) -> RowVector a -> RowVector b

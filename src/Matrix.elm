@@ -245,7 +245,7 @@ multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
                 matrixOne
                     |> List.map (\(RowVector vector) -> vector)
         in
-        Internal.Matrix.map2VectorCartesianComplex listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
+        Internal.Matrix.map2VectorCartesianComplex listOfVectorsOne listOfVectors
             |> List.map RowVector
             |> Matrix
             |> Ok

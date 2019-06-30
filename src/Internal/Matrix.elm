@@ -108,17 +108,17 @@ map2VectorCartesian left right =
         left
 
 
-map2VectorCartesianComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian number) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))
-map2VectorCartesianComplex right (Vector.Vector intermediateList) acc left currentRight =
-    case ( left, currentRight ) of
-        ( l :: _, r :: rs ) ->
-            map2VectorCartesianComplex right (Vector.Vector (intermediateList ++ [ Vector.complexVectorDotProduct l r ])) acc left rs
-
-        ( _ :: ls, [] ) ->
-            map2VectorCartesianComplex right (Vector.Vector []) (acc ++ [ Vector.Vector <| intermediateList ]) ls right
-
-        ( [], _ ) ->
-            acc
+map2VectorCartesianComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))
+map2VectorCartesianComplex left right =
+    List.foldl
+        (\leftVector finalAcc ->
+            finalAcc
+                ++ [ List.foldl (\rightVector intermediateAcc -> intermediateAcc ++ [ Vector.complexVectorDotProduct leftVector rightVector ]) [] right
+                        |> Vector.Vector
+                   ]
+        )
+        []
+        left
 
 
 upperTriangle : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)

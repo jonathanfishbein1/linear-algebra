@@ -38,7 +38,13 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
-    , bind, determinant, getAt, print, read, setAt, upperTriangle
+    , bind
+    , determinant
+    , getAt
+    , print
+    , read
+    , setAt
+    , upperTriangle
     )
 
 {-| A module for Matrix
@@ -86,6 +92,12 @@ module Matrix exposing
 @docs matrixConcatVertical
 @docs matrixEmpty
 @docs pure
+@docs bind
+@docs determinant
+@docs getAt
+@docs print
+@docs read
+@docs setAt
 
 -}
 
@@ -302,7 +314,7 @@ isHermitian matrix =
     adjoint matrix == matrix
 
 
-{-| Internal function Gaussian Elimination
+{-| Gaussian Elimination
 -}
 gaussianReduce : Matrix Float -> Matrix Float
 gaussianReduce matrix =
@@ -323,6 +335,8 @@ gaussianReduce matrix =
         |> Matrix
 
 
+{-| Put a matrix into Upper Triangular Form
+-}
 upperTriangle : Matrix Float -> Matrix Float
 upperTriangle (Matrix matrix) =
     let
@@ -347,7 +361,7 @@ jordanReduce (Matrix matrix) =
         |> Matrix
 
 
-{-| Internal function composition of Gaussian Elimination and Jordan Elimination
+{-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
 gaussJordan : Matrix Float -> Matrix Float
 gaussJordan matrix =
@@ -625,6 +639,8 @@ pure a =
     Matrix [ RowVector <| Vector.Vector <| [ a ] ]
 
 
+{-| Monad bind for Matrix
+-}
 bind : Matrix a -> (a -> Matrix b) -> Matrix b
 bind (Matrix listOfRowVectors) fMatrix =
     List.concatMap
@@ -660,12 +676,16 @@ equal comparator =
     Equal.equal <| matrixEqual comparator
 
 
+{-| Get the value in a matrix at the specified row and column
+-}
 getAt : ( Int, Int ) -> Matrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (Matrix listOfRowVectors) =
     List.Extra.getAt rowIndex listOfRowVectors
         |> Maybe.andThen (\(RowVector list) -> Vector.getAt columnIndex list)
 
 
+{-| Set the value in a Matrix at the specified row and column
+-}
 setAt : ( Int, Int ) -> a -> Matrix a -> Matrix a
 setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
     List.Extra.getAt rowIndex listOfRowVectors
@@ -678,6 +698,8 @@ setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
         |> Matrix
 
 
+{-| Print a matrix to a string
+-}
 print : Matrix Float -> String
 print (Matrix listOfRowVectors) =
     let
@@ -687,6 +709,8 @@ print (Matrix listOfRowVectors) =
     "Matrix [ " ++ values ++ " ]"
 
 
+{-| Try to read a string into a Matrix
+-}
 read : String -> Result (List Parser.DeadEnd) (Matrix Float)
 read matrixString =
     Parser.run parseMatrix matrixString
@@ -720,6 +744,8 @@ parseRowVector =
         |= Vector.parseVector
 
 
+{-| Try to calculate the determinant
+-}
 determinant : Matrix Float -> Maybe Float
 determinant matrix =
     let

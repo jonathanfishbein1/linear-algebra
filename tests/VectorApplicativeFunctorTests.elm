@@ -18,12 +18,37 @@ suite =
                         Vector.pure identity
 
                     v =
-                        Vector.Vector [ one ]
+                        Vector.pure one
 
                     vApplied =
                         Vector.apply vIdentity v
                 in
                 Expect.equal vApplied v
+        , Test.fuzz Fuzz.int "tests second applicative law for Vector" <|
+            \one ->
+                let
+                    f =
+                        (<<)
+
+                    fPure =
+                        Vector.pure f
+
+                    u =
+                        Vector.pure identity
+
+                    v =
+                        Vector.pure identity
+
+                    w =
+                        Vector.Vector [ one ]
+
+                    leftSide =
+                        Vector.apply (Vector.apply (Vector.apply fPure u) v) w
+
+                    rightSide =
+                        Vector.apply u (Vector.apply v w)
+                in
+                Expect.equal leftSide rightSide
         , Test.fuzz Fuzz.int "tests third applicative law for Vector" <|
             \one ->
                 let
@@ -40,4 +65,20 @@ suite =
                         Vector.apply pureF pureOne
                 in
                 Expect.equal vApplied (Vector.pure <| f one)
+        , Test.fuzz Fuzz.int "tests fourth applicative law for Vector" <|
+            \one ->
+                let
+                    pureOne =
+                        Vector.pure identity
+
+                    pureTwo =
+                        Vector.pure one
+
+                    leftSide =
+                        Vector.apply pureOne pureTwo
+
+                    rightSide =
+                        Vector.apply (Vector.pure <| Basics.always one) pureOne
+                in
+                Expect.equal leftSide rightSide
         ]

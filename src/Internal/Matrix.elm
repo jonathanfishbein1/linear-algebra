@@ -3,10 +3,10 @@ module Internal.Matrix exposing
     , findPivot
     , map2VectorCartesian
     , map2VectorCartesianComplex
-    , reduceRow
     , reduceRowBackwards
     , scale
     , subtractRow
+    , upperTriangle
     )
 
 import ComplexNumbers
@@ -21,7 +21,7 @@ findPivot listOfRowVectors initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration listOfRowVectors
-                |> Maybe.andThen (\(Vector.Vector currentRowIteration) -> List.Extra.getAt initialRowIndex currentRowIteration)
+                |> Maybe.andThen (Vector.getAt initialRowIndex)
                 |> Maybe.withDefault 0
                 |> (/=) 0
         )
@@ -31,104 +31,43 @@ findPivot listOfRowVectors initialRowIndex =
 {-| Internal function for subtracting rows from each other
 -}
 subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
-subtractRow r currentRow (Vector.Vector nextRow) =
-    let
-        k =
-            Maybe.withDefault 1 (List.Extra.getAt r nextRow)
+subtractRow r currentRow nextRow =
+    Vector.getAt r nextRow
+        |> Maybe.andThen
+            (\nElement ->
+                Vector.getAt r currentRow
+                    |> Maybe.map
+                        (\currentElement ->
+                            (if currentElement == 0 then
+                                Vector.map ((*) nElement) currentRow
 
-        (Vector.Vector subtractedRow) =
-            Vector.map ((*) k) currentRow
-                |> Vector.subtractRealVectors (Vector.Vector nextRow)
-
-        firstElement =
-            subtractedRow
-                |> List.Extra.find
-                    ((/=) 0)
-                |> Maybe.withDefault 1
-
-        scaledRow =
-            List.map (\x -> x / firstElement) subtractedRow
-    in
-    scaledRow
-        |> Vector.Vector
+                             else
+                                Vector.map ((*) (nElement / currentElement)) currentRow
+                            )
+                                |> Vector.subtractRealVectors nextRow
+                        )
+            )
+        |> Maybe.withDefault nextRow
 
 
 {-| Internal function for scalling rows by pivot entry
 -}
 scale : Int -> Vector.Vector Float -> Vector.Vector Float
-scale rowIndex (Vector.Vector rowVector) =
-    case rowVector of
-        [] ->
-            Vector.Vector []
+scale rowIndex rowVector =
+    Vector.getAt rowIndex rowVector
+        |> Maybe.map
+            (\elementAtRowIndex ->
+                Vector.map
+                    (\rowElement ->
+                        if elementAtRowIndex == 0 then
+                            rowElement
 
-        xs ->
-            let
-                elementAtRowIndex =
-                    Maybe.withDefault 1 (List.Extra.getAt rowIndex xs)
-            in
-            Vector.map (\rowElement -> rowElement / elementAtRowIndex) (Vector.Vector xs)
-
-
-reduceRow : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
-reduceRow rowIndex listOfVectors =
-    let
-        firstPivot =
-            findPivot listOfVectors rowIndex
-    in
-    case firstPivot of
-        Just fPivot ->
-            let
-                swappedListOfVectors =
-                    List.Extra.swapAt rowIndex fPivot listOfVectors
-
-                scaledRow =
-                    List.Extra.getAt rowIndex swappedListOfVectors
-                        |> Maybe.map (\vector -> scale rowIndex vector)
-                        |> Maybe.withDefault (Vector.Vector [])
-
-                nextRows =
-                    List.drop (rowIndex + 1) listOfVectors
-                        |> List.map
-                            (\vector ->
-                                subtractRow rowIndex scaledRow vector
-                            )
-
-                newMatrixReduceRow =
-                    List.take rowIndex swappedListOfVectors
-                        ++ [ scaledRow ]
-                        ++ nextRows
-            in
-            newMatrixReduceRow
-
-        Nothing ->
-            if rowIndex == (List.length listOfVectors - 1) then
-                listOfVectors
-
-            else
-                let
-                    nextNonZero =
-                        List.Extra.getAt rowIndex listOfVectors
-                            |> Maybe.andThen (\(Vector.Vector list) -> List.Extra.findIndex (\x -> x /= 0) list)
-                            |> Maybe.withDefault rowIndex
-
-                    scaledRow =
-                        List.Extra.getAt rowIndex listOfVectors
-                            |> Maybe.map (\vector -> scale nextNonZero vector)
-                            |> Maybe.withDefault (Vector.Vector [])
-
-                    nextRows =
-                        List.drop nextNonZero listOfVectors
-                            |> List.map
-                                (\vector ->
-                                    subtractRow nextNonZero scaledRow vector
-                                )
-
-                    newMatrixReduceRow =
-                        List.take rowIndex listOfVectors
-                            ++ [ scaledRow ]
-                            ++ nextRows
-                in
-                newMatrixReduceRow
+                        else
+                            rowElement / elementAtRowIndex
+                    )
+                    rowVector
+            )
+        |> Maybe.withDefault rowVector
 
 
 reduceRowBackwards : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
@@ -140,9 +79,7 @@ reduceRowBackwards rowIndex listOfVectors =
         prevRows =
             List.take rowIndex listOfVectors
                 |> List.map
-                    (\vector ->
-                        subtractRow rowIndex row vector
-                    )
+                    (subtractRow rowIndex row)
     in
     prevRows
         ++ [ row ]
@@ -182,3 +119,65 @@ map2VectorCartesianComplex right (Vector.Vector intermediateList) acc left curre
 
         ( [], _ ) ->
             acc
+
+
+upperTriangle : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
+upperTriangle rowIndex listOfVectors =
+    let
+        firstPivot =
+            findPivot listOfVectors rowIndex
+    in
+    case firstPivot of
+        Just fPivot ->
+            let
+                swappedListOfVectors =
+                    List.Extra.swapAt rowIndex fPivot listOfVectors
+
+                currentRow =
+                    List.Extra.getAt rowIndex swappedListOfVectors
+                        |> Maybe.withDefault (Vector.Vector [])
+
+                nextRows =
+                    List.drop (rowIndex + 1) listOfVectors
+                        |> List.map
+                            (\row ->
+                                let
+                                    subtractedRow =
+                                        subtractRow rowIndex currentRow row
+                                in
+                                subtractedRow
+                            )
+
+                newMatrixReduceRow =
+                    List.take rowIndex swappedListOfVectors
+                        ++ [ currentRow ]
+                        ++ nextRows
+            in
+            newMatrixReduceRow
+
+        Nothing ->
+            if rowIndex == (List.length listOfVectors - 1) then
+                listOfVectors
+
+            else
+                let
+                    nextNonZero =
+                        List.Extra.getAt rowIndex listOfVectors
+                            |> Maybe.andThen (Vector.findIndex ((/=) 0))
+                            |> Maybe.withDefault rowIndex
+
+                    currentRow =
+                        List.Extra.getAt rowIndex listOfVectors
+                            |> Maybe.withDefault (Vector.Vector [])
+
+                    nextRows =
+                        List.drop nextNonZero listOfVectors
+                            |> List.map
+                                (subtractRow nextNonZero currentRow)
+
+                    newMatrixReduceRow =
+                        List.take rowIndex listOfVectors
+                            ++ [ currentRow ]
+                            ++ nextRows
+                in
+                newMatrixReduceRow

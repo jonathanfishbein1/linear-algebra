@@ -38,6 +38,13 @@ module Matrix exposing
     , matrixConcatVertical
     , matrixEmpty
     , pure
+    , bind
+    , determinant
+    , getAt
+    , print
+    , read
+    , setAt
+    , upperTriangle
     )
 
 {-| A module for Matrix
@@ -85,13 +92,23 @@ module Matrix exposing
 @docs matrixConcatVertical
 @docs matrixEmpty
 @docs pure
+@docs bind
+@docs determinant
+@docs getAt
+@docs print
+@docs read
+@docs setAt
+@docs upperTriangle
 
 -}
 
 import ComplexNumbers
+import Equal
 import Internal.Matrix
 import List.Extra
+import Maybe.Extra
 import Monoid
+import Parser exposing ((|.), (|=))
 import Vector
 
 
@@ -164,8 +181,8 @@ map f (Matrix listOfRowVectors) =
 
 {-| Compare two Matrices for equality
 -}
-equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
-equal comparator (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
+equalImplementation : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
+equalImplementation comparator (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
     List.all ((==) True) <| List.map2 (\(RowVector vectorOne) (RowVector vectorTwo) -> Vector.equal comparator vectorOne vectorTwo) listOfRowVectorsOne listOfRowVectorsTwo
 
 
@@ -176,7 +193,7 @@ transpose (Matrix listOfRowVectors) =
     listOfRowVectors
         |> List.map (\(RowVector (Vector.Vector x)) -> x)
         |> List.Extra.transpose
-        |> List.map (\x -> RowVector <| Vector.Vector x)
+        |> List.map (Vector.Vector >> RowVector)
         |> Matrix
 
 
@@ -298,15 +315,36 @@ isHermitian matrix =
     adjoint matrix == matrix
 
 
-{-| Internal function Gaussian Elimination
+{-| Gaussian Elimination
 -}
 gaussianReduce : Matrix Float -> Matrix Float
-gaussianReduce (Matrix matrix) =
+gaussianReduce matrix =
+    let
+        (Matrix upperTriangularForm) =
+            upperTriangle matrix
+
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) upperTriangularForm
+
+        rowEchelonForm =
+            List.indexedMap
+                Internal.Matrix.scale
+                listOfVectors
+    in
+    rowEchelonForm
+        |> List.map RowVector
+        |> Matrix
+
+
+{-| Put a matrix into Upper Triangular Form
+-}
+upperTriangle : Matrix Float -> Matrix Float
+upperTriangle (Matrix matrix) =
     let
         listOfVectors =
             List.map (\(RowVector vector) -> vector) matrix
     in
-    List.foldl Internal.Matrix.reduceRow listOfVectors (List.range 0 (List.length matrix - 1))
+    List.foldl Internal.Matrix.upperTriangle listOfVectors (List.range 0 (List.length matrix - 1))
         |> List.map RowVector
         |> Matrix
 
@@ -324,7 +362,7 @@ jordanReduce (Matrix matrix) =
         |> Matrix
 
 
-{-| Internal function composition of Gaussian Elimination and Jordan Elimination
+{-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
 gaussJordan : Matrix Float -> Matrix Float
 gaussJordan matrix =
@@ -600,3 +638,131 @@ matrixConcatHorizontal =
 pure : a -> Matrix a
 pure a =
     Matrix [ RowVector <| Vector.Vector <| [ a ] ]
+
+
+{-| Monad bind for Matrix
+-}
+bind : Matrix a -> (a -> Matrix b) -> Matrix b
+bind (Matrix listOfRowVectors) fMatrix =
+    List.concatMap
+        (\(RowVector (Vector.Vector listOfElements)) ->
+            let
+                (Matrix result) =
+                    List.concatMap
+                        (\element ->
+                            let
+                                (Matrix resultInner) =
+                                    fMatrix element
+                            in
+                            resultInner
+                        )
+                        listOfElements
+                        |> Matrix
+            in
+            result
+        )
+        listOfRowVectors
+        |> Matrix
+
+
+{-| `Equal` type for `Matrix`.
+-}
+matrixEqual : (a -> a -> Bool) -> Equal.Equal (Matrix a)
+matrixEqual comparator =
+    Equal.Equal (equalImplementation comparator)
+
+
+{-| Compare two matricies using comparator
+-}
+equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
+equal comparator =
+    Equal.equal <| matrixEqual comparator
+
+
+{-| Get the value in a matrix at the specified row and column
+-}
+getAt : ( Int, Int ) -> Matrix a -> Maybe a
+getAt ( rowIndex, columnIndex ) (Matrix listOfRowVectors) =
+    List.Extra.getAt rowIndex listOfRowVectors
+        |> Maybe.andThen (\(RowVector list) -> Vector.getAt columnIndex list)
+
+
+{-| Set the value in a Matrix at the specified row and column
+-}
+setAt : ( Int, Int ) -> a -> Matrix a -> Matrix a
+setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
+    List.Extra.getAt rowIndex listOfRowVectors
+        |> Maybe.map (\(RowVector list) -> RowVector <| Vector.setAt columnIndex element list)
+        |> Maybe.map
+            (\newRow ->
+                List.Extra.setAt rowIndex newRow listOfRowVectors
+            )
+        |> Maybe.withDefault listOfRowVectors
+        |> Matrix
+
+
+{-| Print a matrix to a string
+-}
+print : Matrix Float -> String
+print (Matrix listOfRowVectors) =
+    let
+        values =
+            List.foldl (\(RowVector row) acc -> "RowVector " ++ Vector.print row ++ " ]" ++ acc) "" listOfRowVectors
+    in
+    "Matrix [ " ++ values ++ " ]"
+
+
+{-| Try to read a string into a Matrix
+-}
+read : String -> Result (List Parser.DeadEnd) (Matrix Float)
+read matrixString =
+    Parser.run parseMatrix matrixString
+
+
+listOfRowVectorParser : Parser.Parser (List (RowVector Float))
+listOfRowVectorParser =
+    Parser.sequence
+        { start = "["
+        , separator = ","
+        , end = "]"
+        , spaces = Parser.spaces
+        , item = parseRowVector
+        , trailing = Parser.Forbidden
+        }
+
+
+parseMatrix : Parser.Parser (Matrix Float)
+parseMatrix =
+    Parser.succeed Matrix
+        |. Parser.keyword "Matrix"
+        |. Parser.spaces
+        |= listOfRowVectorParser
+
+
+parseRowVector : Parser.Parser (RowVector Float)
+parseRowVector =
+    Parser.succeed RowVector
+        |. Parser.keyword "RowVector"
+        |. Parser.spaces
+        |= Vector.parseVector
+
+
+{-| Try to calculate the determinant
+-}
+determinant : Matrix Float -> Maybe Float
+determinant matrix =
+    let
+        upperTriangularForm =
+            upperTriangle matrix
+
+        numberOfRows =
+            mDimension upperTriangularForm
+
+        indices =
+            List.Extra.initialize numberOfRows (\index -> ( index, index ))
+
+        diagonalMaybeEntries =
+            List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) upperTriangularForm :: acc) [] indices
+    in
+    Maybe.Extra.combine diagonalMaybeEntries
+        |> Maybe.map List.product

@@ -27,6 +27,13 @@ module Vector exposing
     , append
     , concatEmpty
     , pure
+    , bind
+    , findIndex
+    , getAt
+    , parseVector
+    , print
+    , read
+    , setAt
     )
 
 {-| A module for Vectors
@@ -63,13 +70,22 @@ module Vector exposing
 @docs append
 @docs concatEmpty
 @docs pure
+@docs bind
+@docs findIndex
+@docs getAt
+@docs parseVector
+@docs print
+@docs read
+@docs setAt
 
 -}
 
 import ComplexNumbers
+import Equal
 import Float.Extra
 import List.Extra
 import Monoid
+import Parser exposing ((|.), (|=))
 
 
 {-| Vector type
@@ -127,8 +143,8 @@ multiplyComplexVectors vectorOne vectorTwo =
 
 {-| Compare two Vectors for equality
 -}
-equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
-equal comparator vectorOne vectorTwo =
+equalImplementation : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
+equalImplementation comparator vectorOne vectorTwo =
     let
         (Vector list) =
             liftA2 comparator vectorOne vectorTwo
@@ -315,3 +331,117 @@ vectorSubspace zero multiply add (Scalar scalar) vectorList predicates =
             closurePassCriteria additionOfVectors
     in
     containsZeroVector && closureUnderScalarMultiplication && closureUnderAddition
+
+
+{-| bind for Vector
+-}
+bind : Vector a -> (a -> Vector b) -> Vector b
+bind (Vector list) fVector =
+    List.concatMap
+        (\x ->
+            let
+                (Vector result) =
+                    fVector x
+            in
+            result
+        )
+        list
+        |> Vector
+
+
+{-| `Equal` type for `Vector`.
+-}
+vectorEqual : (a -> a -> Bool) -> Equal.Equal (Vector a)
+vectorEqual comparator =
+    Equal.Equal (equalImplementation comparator)
+
+
+{-| Compare two vectors for equality using a comparator
+-}
+equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
+equal comparator =
+    Equal.equal <| vectorEqual comparator
+
+
+{-| Get the value in a Vector at the specified index
+-}
+getAt : Int -> Vector a -> Maybe a
+getAt index (Vector list) =
+    List.Extra.getAt index list
+
+
+{-| Set the value in a Vector at the specified index
+-}
+setAt : Int -> a -> Vector a -> Vector a
+setAt index element (Vector list) =
+    List.Extra.setAt index element list
+        |> Vector
+
+
+{-| Print a Vector as a string
+-}
+print : Vector Float -> String
+print (Vector list) =
+    let
+        values =
+            List.map String.fromFloat list
+                |> String.join ", "
+    in
+    "Vector [" ++ values ++ "]"
+
+
+listParser : Parser.Parser (List Float)
+listParser =
+    Parser.sequence
+        { start = "["
+        , separator = ","
+        , end = "]"
+        , spaces = Parser.spaces
+        , item = myNumber
+        , trailing = Parser.Forbidden
+        }
+
+
+{-| Parse a Vector
+-}
+parseVector : Parser.Parser (Vector Float)
+parseVector =
+    Parser.succeed Vector
+        |. Parser.keyword "Vector"
+        |. Parser.spaces
+        |= listParser
+
+
+{-| Try to read a string into a Vector
+-}
+read : String -> Result (List Parser.DeadEnd) (Vector Float)
+read vectorString =
+    Parser.run parseVector vectorString
+
+
+float : Parser.Parser Float
+float =
+    Parser.number
+        { int = Just toFloat
+        , hex = Nothing
+        , octal = Nothing
+        , binary = Nothing
+        , float = Just identity
+        }
+
+
+myNumber : Parser.Parser Float
+myNumber =
+    Parser.oneOf
+        [ Parser.succeed negate
+            |. Parser.symbol "-"
+            |= float
+        , float
+        ]
+
+
+{-| Find index of a value in a Vector
+-}
+findIndex : (a -> Bool) -> Vector a -> Maybe Int
+findIndex predicate (Vector list) =
+    List.Extra.findIndex predicate list

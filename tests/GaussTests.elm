@@ -127,11 +127,32 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <| Vector.Vector [ 1, 2, 3, 9 ]
                             , Matrix.RowVector <| Vector.Vector [ 0, 1, 1, 2 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0, 0, 1, 2.9999999999999996 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 0, 1, 3 ]
                             ]
 
                     rowEchelonFormMatrix =
                         Matrix.gaussianReduce matrix
+                in
+                Expect.equal rowEchelonFormMatrix expected
+        , Test.test "tests matrix gaussianReduce put matrix into Row Echelon Form" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1, -4 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
+                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
+                            ]
+
+                    rowEchelonFormMatrix =
+                        Matrix.gaussianReduce matrix
+
+                    expected =
+                        Matrix.Matrix <|
+                            [ Matrix.RowVector <| Vector.Vector [ 1.0, 2.0, -1.0, -4.0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, -1.0, 3.0 ]
+                            , Matrix.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
+                            ]
                 in
                 Expect.equal rowEchelonFormMatrix expected
         ]

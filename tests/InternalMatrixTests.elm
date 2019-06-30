@@ -68,6 +68,16 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
+        , Test.test "tests matrix scale scales empty Vector" <|
+            \_ ->
+                let
+                    row =
+                        Vector.Vector []
+
+                    (Vector.Vector scaledRow) =
+                        Internal.Matrix.scale 0 row
+                in
+                Expect.equal (Vector.Vector scaledRow) (Vector.Vector [])
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales second element by first" <|
             \one two ->
                 let

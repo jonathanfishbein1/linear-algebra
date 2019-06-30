@@ -271,7 +271,7 @@ multiplyRealMatrices (Matrix matrixOne) matrixTwo =
                 matrixOne
                     |> List.map (\(RowVector vector) -> vector)
         in
-        Internal.Matrix.map2VectorCartesian listOfVectors (Vector.Vector []) [] listOfVectorsOne listOfVectors
+        Internal.Matrix.map2VectorCartesian listOfVectorsOne listOfVectors
             |> List.map RowVector
             |> Matrix
             |> Ok
@@ -296,7 +296,7 @@ multiplyRealVectorRealMatrix (Matrix matrix) vector =
             matrix
                 |> List.map (\(RowVector vec) -> vec)
     in
-    Internal.Matrix.map2VectorCartesian [ vector ] (Vector.Vector []) [] listOfVectors [ vector ]
+    Internal.Matrix.map2VectorCartesian listOfVectors [ vector ]
         |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
         |> Vector.Vector
 

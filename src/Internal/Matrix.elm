@@ -95,17 +95,17 @@ diagonal columnIndex rowIndex =
         0
 
 
-map2VectorCartesian : List (Vector.Vector number) -> Vector.Vector number -> List (Vector.Vector number) -> List (Vector.Vector number) -> List (Vector.Vector number) -> List (Vector.Vector number)
-map2VectorCartesian right (Vector.Vector intermediateList) acc left currentRight =
-    case ( left, currentRight ) of
-        ( l :: _, r :: rs ) ->
-            map2VectorCartesian right (Vector.Vector (intermediateList ++ [ Vector.realVectorDotProduct l r ])) acc left rs
-
-        ( _ :: ls, [] ) ->
-            map2VectorCartesian right (Vector.Vector []) (acc ++ [ Vector.Vector <| intermediateList ]) ls right
-
-        ( [], _ ) ->
-            acc
+map2VectorCartesian : List (Vector.Vector number) -> List (Vector.Vector number) -> List (Vector.Vector number)
+map2VectorCartesian left right =
+    List.foldl
+        (\leftVector finalAcc ->
+            finalAcc
+                ++ [ List.foldl (\rightVector intermediateAcc -> intermediateAcc ++ [ Vector.realVectorDotProduct leftVector rightVector ]) [] right
+                        |> Vector.Vector
+                   ]
+        )
+        []
+        left
 
 
 map2VectorCartesianComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian number) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian number))

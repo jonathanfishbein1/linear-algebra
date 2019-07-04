@@ -81,11 +81,11 @@ module Vector exposing
 -}
 
 import ComplexNumbers
-import Equal
 import Float.Extra
 import List.Extra
 import Monoid
 import Parser exposing ((|.), (|=))
+import Typeclasses.Classes.Equality
 
 
 {-| Vector type
@@ -351,16 +351,16 @@ bind (Vector list) fVector =
 
 {-| `Equal` type for `Vector`.
 -}
-vectorEqual : (a -> a -> Bool) -> Equal.Equal (Vector a)
+vectorEqual : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Vector a)
 vectorEqual comparator =
-    Equal.Equal (equalImplementation comparator)
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
 
 
 {-| Compare two vectors for equality using a comparator
 -}
 equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
 equal comparator =
-    Equal.equal <| vectorEqual comparator
+    (vectorEqual comparator).eq
 
 
 {-| Get the value in a Vector at the specified index

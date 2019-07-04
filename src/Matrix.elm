@@ -103,12 +103,12 @@ module Matrix exposing
 -}
 
 import ComplexNumbers
-import Equal
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
 import Monoid
 import Parser exposing ((|.), (|=))
+import Typeclasses.Classes.Equality
 import Vector
 
 
@@ -671,16 +671,16 @@ bind (Matrix listOfRowVectors) fMatrix =
 
 {-| `Equal` type for `Matrix`.
 -}
-matrixEqual : (a -> a -> Bool) -> Equal.Equal (Matrix a)
+matrixEqual : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Matrix a)
 matrixEqual comparator =
-    Equal.Equal (equalImplementation comparator)
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
 
 
 {-| Compare two matricies using comparator
 -}
 equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
 equal comparator =
-    Equal.equal <| matrixEqual comparator
+    (matrixEqual comparator).eq
 
 
 {-| Get the value in a matrix at the specified row and column

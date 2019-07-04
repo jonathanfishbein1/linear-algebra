@@ -106,9 +106,10 @@ import ComplexNumbers
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
-import Monoid
 import Parser exposing ((|.), (|=))
 import Typeclasses.Classes.Equality
+import Typeclasses.Classes.Monoid
+import Typeclasses.Classes.Semigroup
 import Vector
 
 
@@ -160,16 +161,16 @@ addComplexMatrices =
 
 {-| Monoidally add two Real numbered Matrices together
 -}
-sumRealMatrices : Matrix number -> Monoid.Monoid (Matrix number)
+sumRealMatrices : Matrix number -> Typeclasses.Classes.Monoid.Monoid (Matrix number)
 sumRealMatrices sumEmptyMatrix =
-    Monoid.monoid sumEmptyMatrix addRealMatrices
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addRealMatrices) sumEmptyMatrix
 
 
 {-| Monoidally add two Complex numbered Matrices together
 -}
-sumComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumberCartesian number))
+sumComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Typeclasses.Classes.Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumberCartesian number))
 sumComplexMatrices sumEmptyMatrix =
-    Monoid.monoid sumEmptyMatrix addComplexMatrices
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addComplexMatrices) sumEmptyMatrix
 
 
 {-| Map over a Matrix
@@ -381,7 +382,7 @@ solve matrix (ColumnVector (Vector.Vector b)) =
                 |> Matrix
 
         augmentedMatrix =
-            Monoid.append matrixConcatHorizontal matrix matrixB
+            matrixConcatHorizontal.semigroup.prepend matrix matrixB
     in
     solveMatrix augmentedMatrix
 
@@ -604,9 +605,9 @@ matrixEmpty =
 
 {-| Monoidally append Matricies together vertically
 -}
-matrixConcatVertical : Monoid.Monoid (Matrix a)
+matrixConcatVertical : Typeclasses.Classes.Monoid.Monoid (Matrix a)
 matrixConcatVertical =
-    Monoid.monoid matrixEmpty appendVertical
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend appendVertical) matrixEmpty
 
 
 {-| Append Matricies together horizontally
@@ -632,9 +633,9 @@ appendHorizontal (Matrix listOne) (Matrix listTwo) =
 
 {-| Monoidally append Matricies together horizontally
 -}
-matrixConcatHorizontal : Monoid.Monoid (Matrix a)
+matrixConcatHorizontal : Typeclasses.Classes.Monoid.Monoid (Matrix a)
 matrixConcatHorizontal =
-    Monoid.monoid matrixEmpty appendHorizontal
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend appendHorizontal) matrixEmpty
 
 
 {-| Applicative pure for Matrix

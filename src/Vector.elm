@@ -83,9 +83,10 @@ module Vector exposing
 import ComplexNumbers
 import Float.Extra
 import List.Extra
-import Monoid
 import Parser exposing ((|.), (|=))
 import Typeclasses.Classes.Equality
+import Typeclasses.Classes.Monoid
+import Typeclasses.Classes.Semigroup
 
 
 {-| Vector type
@@ -161,9 +162,9 @@ concatEmpty =
 
 {-| Monoidally append Vectors together
 -}
-concat : Monoid.Monoid (Vector a)
+concat : Typeclasses.Classes.Monoid.Monoid (Vector a)
 concat =
-    Monoid.monoid concatEmpty append
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend append) concatEmpty
 
 
 {-| Append Vectors together

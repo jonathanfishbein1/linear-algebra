@@ -677,7 +677,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiplyRealMatrices m1 (Matrix.identityMatrix 3)
+                        Matrix.multiplyRealMatrices (Matrix.identityMatrix 3) m1
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests A*In = a" <|
@@ -712,7 +712,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiplyRealMatrices (Matrix.identityMatrix 3) m1
+                        Matrix.multiplyRealMatrices m1 (Matrix.identityMatrix 3)
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition" <|

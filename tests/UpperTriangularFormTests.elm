@@ -30,5 +30,5 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 0.0, 0.0, 4 ]
                             ]
                 in
-                Expect.equal upperTriangularFormMatrix expected
+                Expect.equal upperTriangularFormMatrix (Ok expected)
         ]

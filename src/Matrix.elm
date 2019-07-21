@@ -339,15 +339,20 @@ gaussianReduce (Matrix matrix) =
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Matrix Float -> Matrix Float
+upperTriangle : Matrix Float -> Result String (Matrix Float)
 upperTriangle (Matrix matrix) =
-    let
-        listOfVectors =
-            List.map (\(RowVector vector) -> vector) matrix
-    in
-    List.foldl Internal.Matrix.calculateUpperTriangularFormRectangle listOfVectors (List.range 0 (List.length matrix - 1))
-        |> List.map RowVector
-        |> Matrix
+    if mDimension (Matrix matrix) == nDimension (Matrix matrix) then
+        let
+            listOfVectors =
+                List.map (\(RowVector vector) -> vector) matrix
+        in
+        List.foldl Internal.Matrix.calculateUpperTriangularFormRectangle listOfVectors (List.range 0 (List.length matrix - 1))
+            |> List.map RowVector
+            |> Matrix
+            |> Ok
+
+    else
+        Err "Must be Square Matrix"
 
 
 {-| Internal function for Jordan Elimination
@@ -756,23 +761,24 @@ parseRowVector =
 -}
 determinant : Matrix Float -> Result String Float
 determinant matrix =
-    if mDimension matrix == nDimension matrix then
-        let
-            upperTriangularForm =
-                upperTriangle matrix
+    let
+        upperTriangularForm =
+            upperTriangle matrix
+    in
+    Result.andThen
+        (\squareMatrix ->
+            let
+                numberOfRows =
+                    mDimension squareMatrix
 
-            numberOfRows =
-                mDimension upperTriangularForm
+                indices =
+                    List.Extra.initialize numberOfRows (\index -> ( index, index ))
 
-            indices =
-                List.Extra.initialize numberOfRows (\index -> ( index, index ))
-
-            diagonalMaybeEntries =
-                List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) upperTriangularForm :: acc) [] indices
-        in
-        Maybe.Extra.combine diagonalMaybeEntries
-            |> Maybe.map List.product
-            |> Result.fromMaybe "Index out of range"
-
-    else
-        Err "Not a square matrix"
+                diagonalMaybeEntries =
+                    List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
+            in
+            Maybe.Extra.combine diagonalMaybeEntries
+                |> Maybe.map List.product
+                |> Result.fromMaybe "Index out of range"
+        )
+        upperTriangularForm

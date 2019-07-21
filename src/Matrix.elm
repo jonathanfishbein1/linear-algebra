@@ -319,18 +319,18 @@ isHermitian matrix =
 {-| Gaussian Elimination
 -}
 gaussianReduce : Matrix Float -> Matrix Float
-gaussianReduce matrix =
+gaussianReduce (Matrix matrix) =
     let
-        (Matrix upperTriangularForm) =
-            upperTriangle matrix
-
         listOfVectors =
-            List.map (\(RowVector vector) -> vector) upperTriangularForm
+            List.map (\(RowVector vector) -> vector) matrix
+
+        upperTriangularFormRectangle =
+            List.foldl Internal.Matrix.calculateUpperTriangularFormRectangle listOfVectors (List.range 0 (List.length matrix - 1))
 
         rowEchelonForm =
             List.indexedMap
                 Internal.Matrix.scale
-                listOfVectors
+                upperTriangularFormRectangle
     in
     rowEchelonForm
         |> List.map RowVector

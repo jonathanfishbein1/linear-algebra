@@ -754,20 +754,25 @@ parseRowVector =
 
 {-| Try to calculate the determinant
 -}
-determinant : Matrix Float -> Maybe Float
+determinant : Matrix Float -> Result String Float
 determinant matrix =
-    let
-        upperTriangularForm =
-            upperTriangle matrix
+    if mDimension matrix == nDimension matrix then
+        let
+            upperTriangularForm =
+                upperTriangle matrix
 
-        numberOfRows =
-            mDimension upperTriangularForm
+            numberOfRows =
+                mDimension upperTriangularForm
 
-        indices =
-            List.Extra.initialize numberOfRows (\index -> ( index, index ))
+            indices =
+                List.Extra.initialize numberOfRows (\index -> ( index, index ))
 
-        diagonalMaybeEntries =
-            List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) upperTriangularForm :: acc) [] indices
-    in
-    Maybe.Extra.combine diagonalMaybeEntries
-        |> Maybe.map List.product
+            diagonalMaybeEntries =
+                List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) upperTriangularForm :: acc) [] indices
+        in
+        Maybe.Extra.combine diagonalMaybeEntries
+            |> Maybe.map List.product
+            |> Result.fromMaybe "Index out of range"
+
+    else
+        Err "Not a square matrix"

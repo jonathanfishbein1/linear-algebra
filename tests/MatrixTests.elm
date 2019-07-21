@@ -452,7 +452,7 @@ suite =
                     determinant =
                         Matrix.determinant matrix
                 in
-                Expect.equal determinant (Just -2)
+                Expect.equal determinant (Ok -2)
         , Test.test "tests matrix determinant 3 x 3" <|
             \_ ->
                 let
@@ -466,7 +466,7 @@ suite =
                     determinant =
                         Matrix.determinant matrix
                 in
-                Expect.equal determinant (Just 35)
+                Expect.equal determinant (Ok 35)
         , Test.test "tests matrix determinant 4 x 4" <|
             \_ ->
                 let
@@ -481,5 +481,5 @@ suite =
                     determinant =
                         Matrix.determinant matrix
                 in
-                Expect.equal determinant (Just 7)
+                Expect.equal determinant (Ok 7)
         ]

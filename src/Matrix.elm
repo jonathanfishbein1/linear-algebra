@@ -103,6 +103,7 @@ module Matrix exposing
 -}
 
 import ComplexNumbers
+import Float.Extra
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
@@ -782,3 +783,31 @@ determinant matrix =
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularForm
+
+
+invert : Matrix Float -> Result String Float
+invert matrix =
+    let
+        theDeterminant =
+            determinant matrix
+    in
+    case theDeterminant of
+        Ok value ->
+            if Float.Extra.equalWithin 0.000000001 value 0.0 then
+                Err ""
+
+            else
+                let
+                    sizeOfMatrix =
+                        mDimension matrix
+
+                    augmentedMatrix =
+                        appendHorizontal matrix (identityMatrix sizeOfMatrix |> map toFloat)
+
+                    reducedRowEchelonForm =
+                        gaussJordan augmentedMatrix
+                in
+                Err ""
+
+        Err err ->
+            Err err

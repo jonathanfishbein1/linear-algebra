@@ -345,7 +345,7 @@ upperTriangle (Matrix matrix) =
         listOfVectors =
             List.map (\(RowVector vector) -> vector) matrix
     in
-    List.foldl Internal.Matrix.upperTriangle listOfVectors (List.range 0 (List.length matrix - 1))
+    List.foldl Internal.Matrix.calculateUpperTriangularFormRectangle listOfVectors (List.range 0 (List.length matrix - 1))
         |> List.map RowVector
         |> Matrix
 

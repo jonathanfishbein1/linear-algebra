@@ -1,12 +1,12 @@
 module Internal.Matrix exposing
-    ( diagonal
+    ( calculateUpperTriangularFormRectangle
+    , diagonal
     , findPivot
     , map2VectorCartesian
     , map2VectorCartesianComplex
     , reduceRowBackwards
     , scale
     , subtractRow
-    , upperTriangle
     )
 
 import ComplexNumbers
@@ -121,8 +121,8 @@ map2VectorCartesianComplex left right =
         left
 
 
-upperTriangle : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
-upperTriangle rowIndex listOfVectors =
+calculateUpperTriangularFormRectangle : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
+calculateUpperTriangularFormRectangle rowIndex listOfVectors =
     let
         firstPivot =
             findPivot listOfVectors rowIndex

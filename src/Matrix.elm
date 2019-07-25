@@ -394,9 +394,8 @@ solve matrix (ColumnVector (Vector.Vector b)) =
 
 
 variablePortion : Matrix Float -> Matrix Float
-variablePortion (Matrix listOfRowVectors) =
-    List.map (\(RowVector (Vector.Vector row)) -> RowVector <| Vector.Vector <| List.take (List.length row - 1) row) listOfRowVectors
-        |> Matrix
+variablePortion matrix =
+    subMatrix 0 (mDimension matrix) 0 (nDimension matrix - 1) matrix
 
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination
@@ -811,3 +810,17 @@ invert matrix =
 
         Err err ->
             Err err
+
+
+subMatrix : Int -> Int -> Int -> Int -> Matrix a -> Matrix a
+subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex (Matrix listOfRowVectors) =
+    List.take endingRowIndex listOfRowVectors
+        |> List.drop startingRowIndex
+        |> List.map
+            (\(RowVector (Vector.Vector row)) ->
+                List.take endingColumnIndex row
+                    |> List.drop startingColumnIndex
+                    |> Vector.Vector
+                    |> RowVector
+            )
+        |> Matrix

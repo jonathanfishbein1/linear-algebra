@@ -1,4 +1,4 @@
-module GaussTests exposing (suite)
+module MatrixTests.GaussTests exposing (suite)
 
 import Expect
 import Fuzz

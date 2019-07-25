@@ -1,4 +1,4 @@
-module MatrixFunctorTests exposing (suite)
+module MatrixTests.MatrixFunctorTests exposing (suite)
 
 import Expect
 import Fuzz

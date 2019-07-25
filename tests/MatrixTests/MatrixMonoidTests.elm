@@ -1,4 +1,4 @@
-module MatrixMonoidTests exposing (suite)
+module MatrixTests.MatrixMonoidTests exposing (suite)
 
 import Expect
 import Fuzz

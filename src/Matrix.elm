@@ -784,7 +784,7 @@ determinant matrix =
         upperTriangularForm
 
 
-invert : Matrix Float -> Result String Float
+invert : Matrix Float -> Result String (Matrix Float)
 invert matrix =
     let
         theDeterminant =
@@ -793,7 +793,7 @@ invert matrix =
     case theDeterminant of
         Ok value ->
             if Float.Extra.equalWithin 0.000000001 value 0.0 then
-                Err ""
+                Err "Determinant is zero matrix is not invertable"
 
             else
                 let
@@ -805,8 +805,11 @@ invert matrix =
 
                     reducedRowEchelonForm =
                         gaussJordan augmentedMatrix
+
+                    inverse =
+                        subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
                 in
-                Err ""
+                Ok inverse
 
         Err err ->
             Err err

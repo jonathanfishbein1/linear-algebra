@@ -1,4 +1,4 @@
-module VectorMonadTests exposing (suite)
+module VectorTests.VectorMonadTests exposing (suite)
 
 import ComplexNumbers
 import Expect

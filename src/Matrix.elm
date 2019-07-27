@@ -45,6 +45,7 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
+    , invert
     )
 
 {-| A module for Matrix

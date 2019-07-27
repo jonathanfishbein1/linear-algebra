@@ -1,4 +1,4 @@
-module ComplexInnerProductSpaceTests exposing (suite)
+module MatrixTests.ComplexInnerProductSpaceTests exposing (suite)
 
 import ComplexNumbers
 import Expect

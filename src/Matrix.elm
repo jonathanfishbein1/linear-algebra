@@ -45,6 +45,7 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
+    , invert
     )
 
 {-| A module for Matrix
@@ -103,6 +104,7 @@ module Matrix exposing
 -}
 
 import ComplexNumbers
+import Float.Extra
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
@@ -393,9 +395,8 @@ solve matrix (ColumnVector (Vector.Vector b)) =
 
 
 variablePortion : Matrix Float -> Matrix Float
-variablePortion (Matrix listOfRowVectors) =
-    List.map (\(RowVector (Vector.Vector row)) -> RowVector <| Vector.Vector <| List.take (List.length row - 1) row) listOfRowVectors
-        |> Matrix
+variablePortion matrix =
+    subMatrix 0 (mDimension matrix) 0 (nDimension matrix - 1) matrix
 
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination
@@ -782,3 +783,48 @@ determinant matrix =
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularForm
+
+
+invert : Matrix Float -> Result String (Matrix Float)
+invert matrix =
+    let
+        theDeterminant =
+            determinant matrix
+    in
+    case theDeterminant of
+        Ok value ->
+            if Float.Extra.equalWithin 0.000000001 value 0.0 then
+                Err "Determinant is zero matrix is not invertable"
+
+            else
+                let
+                    sizeOfMatrix =
+                        mDimension matrix
+
+                    augmentedMatrix =
+                        appendHorizontal matrix (identityMatrix sizeOfMatrix |> map toFloat)
+
+                    reducedRowEchelonForm =
+                        gaussJordan augmentedMatrix
+
+                    inverse =
+                        subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
+                in
+                Ok inverse
+
+        Err err ->
+            Err err
+
+
+subMatrix : Int -> Int -> Int -> Int -> Matrix a -> Matrix a
+subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex (Matrix listOfRowVectors) =
+    List.take endingRowIndex listOfRowVectors
+        |> List.drop startingRowIndex
+        |> List.map
+            (\(RowVector (Vector.Vector row)) ->
+                List.take endingColumnIndex row
+                    |> List.drop startingColumnIndex
+                    |> Vector.Vector
+                    |> RowVector
+            )
+        |> Matrix

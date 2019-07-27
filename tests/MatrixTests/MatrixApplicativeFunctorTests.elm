@@ -1,4 +1,4 @@
-module MatrixApplicativeFunctorTests exposing (suite)
+module MatrixTests.MatrixApplicativeFunctorTests exposing (suite)
 
 import ComplexNumbers
 import Expect

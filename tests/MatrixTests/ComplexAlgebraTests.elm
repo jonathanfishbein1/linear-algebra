@@ -1,4 +1,4 @@
-module ComplexAlgebraTests exposing (suite)
+module MatrixTests.ComplexAlgebraTests exposing (suite)
 
 import ComplexNumbers
 import Expect

@@ -1,4 +1,4 @@
-module VectorApplicativeFunctorTests exposing (suite)
+module VectorTests.VectorApplicativeFunctorTests exposing (suite)
 
 import ComplexNumbers
 import Expect

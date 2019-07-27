@@ -1,4 +1,4 @@
-module UpperTriangularFormTests exposing (suite)
+module MatrixTests.UpperTriangularFormTests exposing (suite)
 
 import Expect
 import Fuzz

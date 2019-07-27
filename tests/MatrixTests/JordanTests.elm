@@ -1,4 +1,4 @@
-module JordanTests exposing (suite)
+module MatrixTests.JordanTests exposing (suite)
 
 import Expect
 import Fuzz

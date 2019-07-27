@@ -503,4 +503,52 @@ suite =
                         Matrix.invert matrix
                 in
                 Expect.equal inverse (Ok expectedInverse)
+        , Test.test "tests matrix times inverse equals identity" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, -1, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ -1, 2, 3 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1, 1, 4 ]
+                            ]
+
+                    inverse =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 5, 3, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 7, 5, -2 ]
+                            , Matrix.RowVector <| Vector.Vector [ -3, -2, 1 ]
+                            ]
+
+                    identityMatrix =
+                        Matrix.identityMatrix (Matrix.mDimension matrix)
+
+                    matrixInverseProduct =
+                        Matrix.multiplyRealMatrices matrix inverse
+                in
+                Expect.equal matrixInverseProduct (Ok identityMatrix)
+        , Test.test "tests inverse times matrix equals identity" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, -1, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ -1, 2, 3 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1, 1, 4 ]
+                            ]
+
+                    inverse =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 5, 3, -1 ]
+                            , Matrix.RowVector <| Vector.Vector [ 7, 5, -2 ]
+                            , Matrix.RowVector <| Vector.Vector [ -3, -2, 1 ]
+                            ]
+
+                    identityMatrix =
+                        Matrix.identityMatrix (Matrix.mDimension matrix)
+
+                    inverseMatrixProduct =
+                        Matrix.multiplyRealMatrices inverse matrix
+                in
+                Expect.equal inverseMatrixProduct (Ok identityMatrix)
         ]

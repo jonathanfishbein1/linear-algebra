@@ -50,6 +50,33 @@ subtractRow r currentRow nextRow =
         |> Maybe.withDefault nextRow
 
 
+{-| Internal function for subtracting complex rows from each other
+-}
+subtractComplexRow : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
+subtractComplexRow r currentRow nextRow =
+    Vector.getAt r nextRow
+        |> Maybe.andThen
+            (\nElement ->
+                Vector.getAt r currentRow
+                    |> Maybe.map
+                        (\currentElement ->
+                            if currentElement == ComplexNumbers.zero then
+                                Vector.map (ComplexNumbers.multiply nElement) currentRow
+
+                            else
+                                ComplexNumbers.divide nElement currentElement
+                                    |> Result.toMaybe
+                                    |> Maybe.map
+                                        (\divideResult ->
+                                            Vector.map (ComplexNumbers.multiply divideResult) currentRow
+                                        )
+                                    |> Maybe.withDefault currentRow
+                                    |> Vector.subtractComplexVectors nextRow
+                        )
+            )
+        |> Maybe.withDefault nextRow
+
+
 {-| Internal function for scalling rows by pivot entry
 -}
 scale : Int -> Vector.Vector Float -> Vector.Vector Float

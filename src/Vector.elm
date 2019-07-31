@@ -34,6 +34,7 @@ module Vector exposing
     , print
     , read
     , setAt
+    , subtractComplexVectors
     )
 
 {-| A module for Vectors
@@ -244,6 +245,13 @@ complexVectorLength complexNumbers =
 subtractRealVectors : Vector number -> Vector number -> Vector number
 subtractRealVectors =
     liftA2 (-)
+
+
+{-| Subtract Complex Vectors together
+-}
+subtractComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
+subtractComplexVectors =
+    liftA2 ComplexNumbers.subtract
 
 
 {-| Calculate distance between two vectors

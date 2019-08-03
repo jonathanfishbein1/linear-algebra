@@ -68,6 +68,42 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix complex scale scales first element to one" <|
+            \one two ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    row =
+                        Vector.Vector [ complexNumberOne, complexNumberTwo ]
+
+                    (Vector.Vector scaledComplexRow) =
+                        Internal.Matrix.scaleComplex 0 row
+
+                    firstElement =
+                        List.Extra.getAt 0 scaledComplexRow
+                in
+                case firstElement of
+                    Just element ->
+                        Expect.equal element ComplexNumbers.one
+
+                    Nothing ->
+                        Expect.fail "error"
         , Test.test "tests matrix scale scales empty Vector" <|
             \_ ->
                 let
@@ -78,6 +114,16 @@ suite =
                         Internal.Matrix.scale 0 row
                 in
                 Expect.equal (Vector.Vector scaledRow) (Vector.Vector [])
+        , Test.test "tests matrix complex scale scales empty Vector" <|
+            \_ ->
+                let
+                    row =
+                        Vector.Vector []
+
+                    (Vector.Vector scaledComplexRow) =
+                        Internal.Matrix.scaleComplex 0 row
+                in
+                Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [])
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales second element by first" <|
             \one two ->
                 let
@@ -114,6 +160,45 @@ suite =
                 case firstElementSecondRow of
                     Just element ->
                         Expect.within (Expect.Absolute 0.000000001) element 0
+
+                    Nothing ->
+                        Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix subtractComplexRow has zero under pivot entry" <|
+            \one two ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    currentRow =
+                        Vector.Vector [ complexNumberOne, complexNumberTwo ]
+
+                    nextRow =
+                        Vector.Vector [ complexNumberTwo, complexNumberTwo ]
+
+                    (Vector.Vector subRow) =
+                        Internal.Matrix.subtractComplexRow 0 (Internal.Matrix.scaleComplex 0 currentRow) nextRow
+
+                    firstElementSecondRow =
+                        List.Extra.getAt 0 subRow
+                in
+                case firstElementSecondRow of
+                    Just element ->
+                        Expect.equal element ComplexNumbers.zero
 
                     Nothing ->
                         Expect.fail "error"

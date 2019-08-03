@@ -6,6 +6,8 @@ module Internal.Matrix exposing
     , map2VectorCartesianComplex
     , reduceRowBackwards
     , scale
+    , scaleComplex
+    , subtractComplexRow
     , subtractRow
     )
 
@@ -91,6 +93,28 @@ scale rowIndex rowVector =
 
                         else
                             rowElement / elementAtRowIndex
+                    )
+                    rowVector
+            )
+        |> Maybe.withDefault rowVector
+
+
+{-| Internal function for scalling rows by pivot entry
+-}
+scaleComplex : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
+scaleComplex rowIndex rowVector =
+    Vector.getAt rowIndex rowVector
+        |> Maybe.map
+            (\elementAtRowIndex ->
+                Vector.map
+                    (\rowElement ->
+                        if elementAtRowIndex == ComplexNumbers.zero then
+                            rowElement
+
+                        else
+                            ComplexNumbers.divide rowElement elementAtRowIndex
+                                |> Result.toMaybe
+                                |> Maybe.withDefault rowElement
                     )
                     rowVector
             )

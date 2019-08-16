@@ -50,6 +50,79 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivotComplex find row with pivot entry" <|
+            \one two ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    m1 =
+                        [ Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
+                        , Vector.Vector [ complexNumberOne, complexNumberTwo ]
+                        , Vector.Vector [ complexNumberTwo, complexNumberTwo ]
+                        ]
+
+                    pivotLocation =
+                        Internal.Matrix.findPivotComplex m1 0
+                in
+                case pivotLocation of
+                    Just location ->
+                        Expect.equal location 1
+
+                    Nothing ->
+                        Expect.fail "error"
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivotComplex find row with pivot entry two" <|
+            \one two ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    m1 =
+                        [ Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
+                        , Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
+                        , Vector.Vector [ complexNumberOne, complexNumberTwo ]
+                        , Vector.Vector [ complexNumberTwo, complexNumberTwo ]
+                        ]
+
+                    pivotLocation =
+                        Internal.Matrix.findPivotComplex m1 0
+                in
+                case pivotLocation of
+                    Just location ->
+                        Expect.equal location 2
+
+                    Nothing ->
+                        Expect.fail "error"
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales first element to one" <|
             \one two ->
                 let

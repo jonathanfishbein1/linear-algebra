@@ -1,6 +1,7 @@
 module Internal.Matrix exposing
     ( calculateUpperTriangularFormRectangle
     , diagonal
+    , findPivotComplex
     , findPivotReal
     , map2VectorCartesian
     , map2VectorCartesianComplex

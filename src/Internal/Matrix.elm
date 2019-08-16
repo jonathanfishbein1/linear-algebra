@@ -1,7 +1,7 @@
 module Internal.Matrix exposing
     ( calculateUpperTriangularFormRectangle
     , diagonal
-    , findPivot
+    , findPivotReal
     , map2VectorCartesian
     , map2VectorCartesianComplex
     , reduceRowBackwards
@@ -18,16 +18,26 @@ import Vector
 
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
-findPivot : List (Vector.Vector number) -> Int -> Maybe Int
-findPivot listOfRowVectors initialRowIndex =
+findPivotGeneric : a -> List (Vector.Vector a) -> Int -> Maybe Int
+findPivotGeneric zero listOfRowVectors initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration listOfRowVectors
                 |> Maybe.andThen (Vector.getAt initialRowIndex)
-                |> Maybe.withDefault 0
-                |> (/=) 0
+                |> Maybe.withDefault zero
+                |> (/=) zero
         )
         (List.range initialRowIndex (List.length listOfRowVectors - 1))
+
+
+findPivotReal : List (Vector.Vector number) -> Int -> Maybe Int
+findPivotReal =
+    findPivotGeneric 0
+
+
+findPivotComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> Int -> Maybe Int
+findPivotComplex =
+    findPivotGeneric ComplexNumbers.zero
 
 
 {-| Internal function for subtracting rows from each other
@@ -176,7 +186,7 @@ calculateUpperTriangularFormRectangle : Int -> List (Vector.Vector Float) -> Lis
 calculateUpperTriangularFormRectangle rowIndex listOfVectors =
     let
         firstPivot =
-            findPivot listOfVectors rowIndex
+            findPivotReal listOfVectors rowIndex
     in
     case firstPivot of
         Just fPivot ->

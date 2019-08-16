@@ -23,7 +23,7 @@ suite =
                         ]
 
                     pivotLocation =
-                        Internal.Matrix.findPivot m1 0
+                        Internal.Matrix.findPivotReal m1 0
                 in
                 case pivotLocation of
                     Just location ->
@@ -42,7 +42,7 @@ suite =
                         ]
 
                     pivotLocation =
-                        Internal.Matrix.findPivot m1 0
+                        Internal.Matrix.findPivotReal m1 0
                 in
                 case pivotLocation of
                     Just location ->

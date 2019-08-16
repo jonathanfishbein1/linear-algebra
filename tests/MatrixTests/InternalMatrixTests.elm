@@ -97,10 +97,19 @@ suite =
 
                     firstElement =
                         List.Extra.getAt 0 scaledComplexRow
+
+                    complexOne =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
                 in
                 case firstElement of
                     Just element ->
-                        Expect.equal element ComplexNumbers.one
+                        Expect.equal element complexOne
 
                     Nothing ->
                         Expect.fail "error"
@@ -198,7 +207,7 @@ suite =
                 in
                 case firstElementSecondRow of
                     Just element ->
-                        Expect.equal element ComplexNumbers.zero
+                        Expect.true "equal" (ComplexNumbers.equal element ComplexNumbers.zero)
 
                     Nothing ->
                         Expect.fail "error"

@@ -140,25 +140,40 @@ suite =
                 , Test.fuzz2 Fuzz.int Fuzz.int "tests vector inverse" <|
                     \one two ->
                         let
+                            complexOne =
+                                ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real
+                                        1
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        0
+                                    )
+
+                            complexOneNegative =
+                                ComplexNumbers.ComplexNumberCartesian
+                                    (ComplexNumbers.Real <|
+                                        Basics.negate 1
+                                    )
+                                    (ComplexNumbers.Imaginary
+                                        0
+                                    )
+
                             v =
                                 Vector.Vector
-                                    [ ComplexNumbers.one
-                                    ]
+                                    [ complexOne ]
 
                             w =
                                 Vector.Vector
-                                    [ ComplexNumbers.negate ComplexNumbers.one
-                                    ]
+                                    [ complexOneNegative ]
 
                             zero =
                                 Vector.Vector
-                                    [ ComplexNumbers.zero
-                                    ]
+                                    [ ComplexNumbers.zero ]
                         in
                         Vector.addComplexVectors v w
                             |> Expect.equal zero
                 ]
-            , Test.fuzz2 Fuzz.int Fuzz.int "tests one is product identity" <|
+            , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests one is product identity" <|
                 \one two ->
                     let
                         v =
@@ -171,10 +186,18 @@ suite =
                                         two
                                     )
                                 ]
+
+                        complexOne =
+                            ComplexNumbers.ComplexNumberCartesian
+                                (ComplexNumbers.Real
+                                    1
+                                )
+                                (ComplexNumbers.Imaginary
+                                    0
+                                )
                     in
-                    Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v
-                        |> Expect.equal v
-            , Test.fuzz2 Fuzz.int Fuzz.int "tests scalar multiplication respects complex multiplication" <|
+                    Expect.true "equal" (Vector.equal ComplexNumbers.equal (Vector.map (ComplexNumbers.multiply complexOne) v) v)
+            , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests scalar multiplication respects complex multiplication" <|
                 \one two ->
                     let
                         c1 =

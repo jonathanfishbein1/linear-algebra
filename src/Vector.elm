@@ -138,7 +138,7 @@ multiplyRealVectors vectorOne vectorTwo =
 
 {-| Multiply two Complex Vectors together
 -}
-multiplyComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number)
+multiplyComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
 multiplyComplexVectors vectorOne vectorTwo =
     liftA2 ComplexNumbers.multiply vectorOne vectorTwo
 
@@ -207,7 +207,7 @@ foldl foldFunction acc (Vector list) =
 
 {-| Dot product on two Complex Numbered Vectors
 -}
-complexVectorDotProduct : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> ComplexNumbers.ComplexNumberCartesian number
+complexVectorDotProduct : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
 complexVectorDotProduct vectorOne vectorTwo =
     liftA2 ComplexNumbers.multiply vectorOne vectorTwo
         |> foldl ComplexNumbers.add ComplexNumbers.zero
@@ -232,12 +232,8 @@ realVectorLength =
 {-| Calculate length of a complex vector
 -}
 complexVectorLength : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
-complexVectorLength complexNumbers =
-    let
-        complexNumbersPolar =
-            map ComplexNumbers.convertFromCartesianToPolar complexNumbers
-    in
-    foldl (\x acc -> ComplexNumbers.add (ComplexNumbers.power 2 x |> ComplexNumbers.convertFromPolarToCartesian) acc) ComplexNumbers.zero complexNumbersPolar
+complexVectorLength complexNumberVector =
+    foldl (\x acc -> ComplexNumbers.add (ComplexNumbers.power 2 x) acc) ComplexNumbers.zero complexNumberVector
 
 
 {-| Subtract Real Vectors together
@@ -306,7 +302,7 @@ realVectorSubspace scalar vectorList predicates =
 
 {-| Function to determine if a set of complex valued vectors is a valid subspace
 -}
-complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian number) -> List (Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (ComplexNumbers.ComplexNumberCartesian number -> Bool) -> Bool
+complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian Float) -> List (Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (ComplexNumbers.ComplexNumberCartesian Float -> Bool) -> Bool
 complexVectorSubspace scalar vectorList predicates =
     vectorSubspace ComplexNumbers.zero ComplexNumbers.multiply addComplexVectors scalar vectorList predicates
 

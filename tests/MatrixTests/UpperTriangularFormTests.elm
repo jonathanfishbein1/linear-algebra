@@ -58,7 +58,7 @@ suite =
 
                     Err error ->
                         Expect.fail error
-        , Test.test "tests gaussianReduceComplex put complex matrix into Row Echelon Form" <|
+        , Test.test "tests upperTriangleComplex puts matrix into upper tirangle form" <|
             \_ ->
                 let
                     complexNumberR1C1 =

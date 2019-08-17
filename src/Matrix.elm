@@ -45,7 +45,7 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
-    , invert, upperTriangleComplex
+    , gaussianReduceComplex, invert, upperTriangleComplex
     )
 
 {-| A module for Matrix
@@ -333,6 +333,27 @@ gaussianReduce (Matrix matrix) =
             List.indexedMap
                 Internal.Matrix.scale
                 upperTriangularFormRectangle
+    in
+    rowEchelonForm
+        |> List.map RowVector
+        |> Matrix
+
+
+{-| Gaussian Elimination
+-}
+gaussianReduceComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
+gaussianReduceComplex (Matrix matrix) =
+    let
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
+
+        upperTriangularFormRectangleComplex =
+            List.foldl Internal.Matrix.calculateUpperTriangularFormRectangleComplex listOfVectors (List.range 0 (List.length matrix - 1))
+
+        rowEchelonForm =
+            List.indexedMap
+                Internal.Matrix.scaleComplex
+                upperTriangularFormRectangleComplex
     in
     rowEchelonForm
         |> List.map RowVector

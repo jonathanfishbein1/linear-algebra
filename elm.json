@@ -16,7 +16,7 @@
         "elm-community/maybe-extra": "5.0.0 <= v < 6.0.0",
         "ianmackenzie/elm-float-extra": "1.0.1 <= v < 2.0.0",
         "jonathanfishbein1/complex-numbers": "3.1.2 <= v < 4.0.0",
-        "nikita-volkov/typeclasses": "1.0.1 <= v < 2.0.0"
+        "nikita-volkov/typeclasses": "1.4.1 <= v < 2.0.0"
     },
     "test-dependencies": {
         "elm-explorations/test": "1.2.1 <= v < 2.0.0"

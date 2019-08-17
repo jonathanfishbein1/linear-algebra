@@ -1,5 +1,6 @@
 module Internal.Matrix exposing
     ( calculateUpperTriangularFormRectangle
+    , calculateUpperTriangularFormRectangleComplex
     , diagonal
     , findPivotComplex
     , findPivotReal
@@ -236,6 +237,68 @@ calculateUpperTriangularFormRectangle rowIndex listOfVectors =
                         List.drop nextNonZero listOfVectors
                             |> List.map
                                 (subtractRow nextNonZero currentRow)
+
+                    newMatrixReduceRow =
+                        List.take rowIndex listOfVectors
+                            ++ [ currentRow ]
+                            ++ nextRows
+                in
+                newMatrixReduceRow
+
+
+calculateUpperTriangularFormRectangleComplex : Int -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float))
+calculateUpperTriangularFormRectangleComplex rowIndex listOfVectors =
+    let
+        firstPivot =
+            findPivotComplex listOfVectors rowIndex
+    in
+    case firstPivot of
+        Just fPivot ->
+            let
+                swappedListOfVectors =
+                    List.Extra.swapAt rowIndex fPivot listOfVectors
+
+                currentRow =
+                    List.Extra.getAt rowIndex swappedListOfVectors
+                        |> Maybe.withDefault (Vector.Vector [])
+
+                nextRows =
+                    List.drop (rowIndex + 1) listOfVectors
+                        |> List.map
+                            (\row ->
+                                let
+                                    subtractedRow =
+                                        subtractComplexRow rowIndex currentRow row
+                                in
+                                subtractedRow
+                            )
+
+                newMatrixReduceRow =
+                    List.take rowIndex swappedListOfVectors
+                        ++ [ currentRow ]
+                        ++ nextRows
+            in
+            newMatrixReduceRow
+
+        Nothing ->
+            if rowIndex == (List.length listOfVectors - 1) then
+                listOfVectors
+
+            else
+                let
+                    nextNonZero =
+                        List.Extra.getAt rowIndex listOfVectors
+                            |> Maybe.andThen (Vector.findIndex ((/=) ComplexNumbers.zero))
+                            |> Maybe.withDefault rowIndex
+
+                    currentRow =
+                        List.Extra.getAt rowIndex listOfVectors
+                            |> Maybe.withDefault (Vector.Vector [])
+
+                    nextRows =
+                        List.drop nextNonZero listOfVectors
+                            |> List.map
+                                (subtractComplexRow nextNonZero currentRow)
 
                     newMatrixReduceRow =
                         List.take rowIndex listOfVectors

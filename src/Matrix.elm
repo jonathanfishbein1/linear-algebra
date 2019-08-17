@@ -45,7 +45,7 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
-    , invert
+    , invert, upperTriangleComplex
     )
 
 {-| A module for Matrix
@@ -349,6 +349,24 @@ upperTriangle (Matrix matrix) =
                 List.map (\(RowVector vector) -> vector) matrix
         in
         List.foldl Internal.Matrix.calculateUpperTriangularFormRectangle listOfVectors (List.range 0 (List.length matrix - 1))
+            |> List.map RowVector
+            |> Matrix
+            |> Ok
+
+    else
+        Err "Must be Square Matrix"
+
+
+{-| Put a matrix into Upper Triangular Form
+-}
+upperTriangleComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
+upperTriangleComplex (Matrix matrix) =
+    if mDimension (Matrix matrix) == nDimension (Matrix matrix) then
+        let
+            listOfVectors =
+                List.map (\(RowVector vector) -> vector) matrix
+        in
+        List.foldl Internal.Matrix.calculateUpperTriangularFormRectangleComplex listOfVectors (List.range 0 (List.length matrix - 1))
             |> List.map RowVector
             |> Matrix
             |> Ok

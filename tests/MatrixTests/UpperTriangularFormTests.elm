@@ -58,4 +58,73 @@ suite =
 
                     Err error ->
                         Expect.fail error
+        , Test.test "tests gaussianReduceComplex put complex matrix into Row Echelon Form" <|
+            \_ ->
+                let
+                    complexNumberR1C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                1
+                            )
+
+                    complexNumberR1C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                2
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                3
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                4
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
+                            ]
+
+                    upperTriangularFormMatrix =
+                        Matrix.upperTriangleComplex matrix
+
+                    complexNumberExpectedR2C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                3
+                            )
+
+                    expected =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, complexNumberExpectedR2C2 ]
+                            ]
+                in
+                case upperTriangularFormMatrix of
+                    Ok result ->
+                        Expect.true "matrices are equal" (Matrix.equal ComplexNumbers.equal (Debug.log "result " result) expected)
+
+                    Err error ->
+                        Expect.fail error
         ]

@@ -79,12 +79,9 @@ subtractComplexRow r currentRow nextRow =
 
                             else
                                 ComplexNumbers.divide nElement currentElement
-                                    |> Result.toMaybe
-                                    |> Maybe.map
-                                        (\divideResult ->
+                                    |> (\divideResult ->
                                             Vector.map (ComplexNumbers.multiply divideResult) currentRow
-                                        )
-                                    |> Maybe.withDefault currentRow
+                                       )
                                     |> Vector.subtractComplexVectors nextRow
                         )
             )
@@ -115,18 +112,13 @@ scale rowIndex rowVector =
 -}
 scaleComplex : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
 scaleComplex rowIndex rowVector =
-    Vector.getAt rowIndex rowVector
+    Vector.getAt rowIndex (Debug.log "rowVector" rowVector)
         |> Maybe.map
             (\elementAtRowIndex ->
                 Vector.map
                     (\rowElement ->
-                        if elementAtRowIndex == ComplexNumbers.zero then
-                            rowElement
-
-                        else
-                            ComplexNumbers.divide rowElement elementAtRowIndex
-                                |> Result.toMaybe
-                                |> Maybe.withDefault rowElement
+                        ComplexNumbers.divide (Debug.log "rowElement " rowElement) (Debug.log "elementAtRowIndex " elementAtRowIndex)
+                            |> Debug.log "divide Result "
                     )
                     rowVector
             )

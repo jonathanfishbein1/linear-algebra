@@ -206,6 +206,46 @@ suite =
                         Internal.Matrix.scaleComplex 0 row
                 in
                 Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [])
+        , Test.test "tests matrix complex scale scales Vector" <|
+            \_ ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                0.000001
+                            )
+                            (ComplexNumbers.Imaginary
+                                0.000001
+                            )
+
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                0.000001
+                            )
+                            (ComplexNumbers.Imaginary
+                                0.000001
+                            )
+
+                    complexOne =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    row =
+                        Vector.Vector [ Debug.log "complexNumberOne " complexNumberOne, Debug.log "complexNumberTwo " complexNumberTwo ]
+
+                    (Vector.Vector scaledComplexRow) =
+                        Internal.Matrix.scaleComplex 0 row
+
+                    secondElement =
+                        ComplexNumbers.divide complexNumberTwo complexNumberOne
+                in
+                Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [ complexOne, secondElement ])
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales second element by first" <|
             \one two ->
                 let

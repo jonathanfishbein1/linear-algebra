@@ -352,7 +352,7 @@ gaussianReduceComplex (Matrix matrix) =
 
         rowEchelonForm =
             List.indexedMap
-                Internal.Matrix.scaleComplex
+                (\index row -> Debug.log "scaledRow " <| Internal.Matrix.scaleComplex index row)
                 upperTriangularFormRectangleComplex
     in
     rowEchelonForm

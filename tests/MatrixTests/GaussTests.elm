@@ -177,4 +177,86 @@ suite =
                             ]
                 in
                 Expect.true "matrics equal" (Matrix.equal ComplexNumbers.equal rowEchelonFormMatrix expected)
+        , Test.test "tests gaussianReduceComplex put complex matrix into Row Echelon Form complex entries with imaginary portion" <|
+            \_ ->
+                let
+                    complexNumberR1C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                1
+                            )
+
+                    complexNumberR1C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                2
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                3
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                4
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
+                            ]
+
+                    rowEchelonFormMatrix =
+                        Matrix.gaussianReduceComplex matrix
+
+                    complexNumberExpectedR1C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberExpectedR1C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                -1
+                            )
+
+                    complexNumberExpectedR2C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    expected =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ complexNumberExpectedR1C1, complexNumberExpectedR1C2 ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, complexNumberExpectedR2C2 ]
+                            ]
+                in
+                Expect.true "matricies equal" (Matrix.equal ComplexNumbers.equal (Debug.log "rowEchelonFormMatrix " rowEchelonFormMatrix) (Debug.log "expected " expected))
         ]

@@ -123,7 +123,7 @@ suite =
                 in
                 case upperTriangularFormMatrix of
                     Ok result ->
-                        Expect.true "matrices are equal" (Matrix.equal ComplexNumbers.equal (Debug.log "result " result) expected)
+                        Expect.true "matrices are equal" (Matrix.equal ComplexNumbers.equal result expected)
 
                     Err error ->
                         Expect.fail error

@@ -2,6 +2,7 @@ module Internal.Matrix exposing
     ( calculateUpperTriangularFormRectangle
     , calculateUpperTriangularFormRectangleComplex
     , diagonal
+    , diagonalComplex
     , findPivotComplex
     , findPivotReal
     , map2VectorCartesian
@@ -165,6 +166,21 @@ diagonal columnIndex rowIndex =
 
     else
         0
+
+
+diagonalComplex : Int -> Int -> ComplexNumbers.ComplexNumberCartesian Float
+diagonalComplex columnIndex rowIndex =
+    if columnIndex == rowIndex then
+        ComplexNumbers.ComplexNumberCartesian
+            (ComplexNumbers.Real
+                1
+            )
+            (ComplexNumbers.Imaginary
+                0
+            )
+
+    else
+        ComplexNumbers.zero
 
 
 map2VectorCartesian : List (Vector.Vector number) -> List (Vector.Vector number) -> List (Vector.Vector number)

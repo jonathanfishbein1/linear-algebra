@@ -170,19 +170,10 @@ suite =
 
                     firstElement =
                         List.Extra.getAt 0 scaledComplexRow
-
-                    complexOne =
-                        ComplexNumbers.ComplexNumberCartesian
-                            (ComplexNumbers.Real
-                                1
-                            )
-                            (ComplexNumbers.Imaginary
-                                0
-                            )
                 in
                 case firstElement of
                     Just element ->
-                        Expect.equal element complexOne
+                        Expect.equal element ComplexNumbers.one
 
                     Nothing ->
                         Expect.fail "error"
@@ -227,15 +218,6 @@ suite =
                                 0.000001
                             )
 
-                    complexOne =
-                        ComplexNumbers.ComplexNumberCartesian
-                            (ComplexNumbers.Real
-                                1
-                            )
-                            (ComplexNumbers.Imaginary
-                                0
-                            )
-
                     row =
                         Vector.Vector [ Debug.log "complexNumberOne " complexNumberOne, Debug.log "complexNumberTwo " complexNumberTwo ]
 
@@ -245,7 +227,7 @@ suite =
                     secondElement =
                         ComplexNumbers.divide complexNumberTwo complexNumberOne
                 in
-                Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [ complexOne, secondElement ])
+                Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [ ComplexNumbers.one, secondElement ])
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales second element by first" <|
             \one two ->
                 let

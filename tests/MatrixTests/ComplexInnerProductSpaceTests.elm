@@ -140,15 +140,6 @@ suite =
                 , Test.fuzz2 Fuzz.int Fuzz.int "tests vector inverse" <|
                     \one two ->
                         let
-                            complexOne =
-                                ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        1
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        0
-                                    )
-
                             complexOneNegative =
                                 ComplexNumbers.ComplexNumberCartesian
                                     (ComplexNumbers.Real <|
@@ -160,7 +151,7 @@ suite =
 
                             v =
                                 Vector.Vector
-                                    [ complexOne ]
+                                    [ ComplexNumbers.one ]
 
                             w =
                                 Vector.Vector
@@ -186,17 +177,8 @@ suite =
                                         two
                                     )
                                 ]
-
-                        complexOne =
-                            ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    1
-                                )
-                                (ComplexNumbers.Imaginary
-                                    0
-                                )
                     in
-                    Expect.true "equal" (Vector.equal ComplexNumbers.equal (Vector.map (ComplexNumbers.multiply complexOne) v) v)
+                    Expect.true "equal" (Vector.equal ComplexNumbers.equal (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
             , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests scalar multiplication respects complex multiplication" <|
                 \one two ->
                     let

@@ -144,15 +144,6 @@ suite =
                 , Test.fuzz2 Fuzz.int Fuzz.int "tests matrix inverse" <|
                     \one two ->
                         let
-                            complexOne =
-                                ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real
-                                        1
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        0
-                                    )
-
                             complexOneNegative =
                                 ComplexNumbers.ComplexNumberCartesian
                                     (ComplexNumbers.Real <|
@@ -167,7 +158,7 @@ suite =
                                 Matrix.Matrix
                                     [ Matrix.RowVector <|
                                         Vector.Vector
-                                            [ complexOne ]
+                                            [ ComplexNumbers.one ]
                                     ]
 
                             w =

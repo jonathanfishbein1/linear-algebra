@@ -101,19 +101,10 @@ suite =
                     reducedRowEchelonFormMatrix =
                         Matrix.jordanReduceComplex matrix
 
-                    complexOne =
-                        ComplexNumbers.ComplexNumberCartesian
-                            (ComplexNumbers.Real
-                                1
-                            )
-                            (ComplexNumbers.Imaginary
-                                0
-                            )
-
                     expected =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ complexOne, ComplexNumbers.zero ]
-                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, complexOne ]
+                            [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.one, ComplexNumbers.zero ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.one ]
                             ]
                 in
                 Expect.true "matricies equal" (Matrix.equal ComplexNumbers.equal reducedRowEchelonFormMatrix expected)

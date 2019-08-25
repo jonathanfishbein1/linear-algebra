@@ -873,17 +873,9 @@ determinantComplex matrix =
                 listOfComplexNumbers =
                     Maybe.Extra.combine diagonalMaybeEntries
 
-                complexOne =
-                    ComplexNumbers.ComplexNumberCartesian
-                        (ComplexNumbers.Real
-                            1
-                        )
-                        (ComplexNumbers.Imaginary
-                            0
-                        )
             in
             listOfComplexNumbers
-                |> Maybe.map (\li -> List.foldl (\elem acc -> ComplexNumbers.multiply elem acc) complexOne li)
+                |> Maybe.map (\li -> List.foldl (\elem acc -> ComplexNumbers.multiply elem acc) ComplexNumbers.one li)
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularFormComplex

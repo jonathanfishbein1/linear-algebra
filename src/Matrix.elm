@@ -52,6 +52,7 @@ module Matrix exposing
     , isUnitary
     , jordanReduceComplex
     , upperTriangleComplex
+    , subMatrix
     )
 
 {-| A module for Matrix
@@ -113,6 +114,7 @@ module Matrix exposing
 @docs isUnitary
 @docs jordanReduceComplex
 @docs upperTriangleComplex
+@docs subMatrix
 
 -}
 
@@ -959,6 +961,8 @@ invertComplex matrix =
             Err err
 
 
+{-| Calculate the submatrix given a starting and ending row and column index
+-}
 subMatrix : Int -> Int -> Int -> Int -> Matrix a -> Matrix a
 subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex (Matrix listOfRowVectors) =
     List.take endingRowIndex listOfRowVectors

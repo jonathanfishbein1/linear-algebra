@@ -20,6 +20,7 @@ module Vector exposing
     , normalise
     , realVectorLength
     , subtractRealVectors
+    , subtractComplexVectors
     , vector3ToVector
     , dimension
     , realVectorSubspace
@@ -34,7 +35,6 @@ module Vector exposing
     , print
     , read
     , setAt
-    , subtractComplexVectors
     )
 
 {-| A module for Vectors
@@ -64,6 +64,7 @@ module Vector exposing
 @docs normalise
 @docs realVectorLength
 @docs subtractRealVectors
+@docs subtractComplexVectors
 @docs vector3ToVector
 @docs dimension
 @docs realVectorSubspace

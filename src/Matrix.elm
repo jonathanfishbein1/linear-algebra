@@ -45,7 +45,7 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
-    , gaussianReduceComplex, invert, jordanReduceComplex, upperTriangleComplex
+    , determinantComplex, gaussianReduceComplex, invert, jordanReduceComplex, upperTriangleComplex
     )
 
 {-| A module for Matrix

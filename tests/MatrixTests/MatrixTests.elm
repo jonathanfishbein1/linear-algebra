@@ -551,4 +551,62 @@ suite =
                         Matrix.multiplyRealMatrices inverse matrix
                 in
                 Expect.equal inverseMatrixProduct (Ok identityMatrix)
+        , Test.test "tests complex matrix determinant 2 x 2" <|
+            \_ ->
+                let
+                    complexNumberR1C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                1
+                            )
+
+                    complexNumberR1C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                2
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                0
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                3
+                            )
+
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
+                            ]
+
+                    determinantComplex =
+                        Matrix.determinantComplex matrix
+
+                    expectedDeterminant =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                -2
+                            )
+                            (ComplexNumbers.Imaginary
+                                4
+                            )
+                in
+                Expect.equal determinantComplex (Ok expectedDeterminant)
         ]

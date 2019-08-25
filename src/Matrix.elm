@@ -45,7 +45,7 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
-    , gaussianReduceComplex, invert, upperTriangleComplex
+    , gaussianReduceComplex, invert, jordanReduceComplex, upperTriangleComplex
     )
 
 {-| A module for Matrix
@@ -405,6 +405,19 @@ jordanReduce (Matrix matrix) =
             List.map (\(RowVector vector) -> vector) matrix
     in
     List.foldl Internal.Matrix.reduceRowBackwards listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
+        |> List.map RowVector
+        |> Matrix
+
+
+{-| Internal function for Jordan Elimination
+-}
+jordanReduceComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
+jordanReduceComplex (Matrix matrix) =
+    let
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
+    in
+    List.foldl Internal.Matrix.reduceRowBackwardsComplex listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
         |> List.map RowVector
         |> Matrix
 

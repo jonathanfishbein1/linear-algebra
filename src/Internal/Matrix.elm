@@ -7,6 +7,7 @@ module Internal.Matrix exposing
     , map2VectorCartesian
     , map2VectorCartesianComplex
     , reduceRowBackwards
+    , reduceRowBackwardsComplex
     , scale
     , scaleComplex
     , subtractComplexRow
@@ -53,7 +54,7 @@ subtractRow r currentRow nextRow =
                     |> Maybe.map
                         (\currentElement ->
                             (if currentElement == 0 then
-                                Vector.map ((*) nElement) currentRow
+                                currentRow
 
                              else
                                 Vector.map ((*) (nElement / currentElement)) currentRow
@@ -70,15 +71,15 @@ subtractComplexRow : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian
 subtractComplexRow r currentRow nextRow =
     Vector.getAt r nextRow
         |> Maybe.andThen
-            (\nElement ->
+            (\nextRowElementAtIndex ->
                 Vector.getAt r currentRow
                     |> Maybe.map
-                        (\currentElement ->
-                            if currentElement == ComplexNumbers.zero then
-                                Vector.map (ComplexNumbers.multiply nElement) currentRow
+                        (\currentRowElementAtIndex ->
+                            if currentRowElementAtIndex == ComplexNumbers.zero then
+                                currentRow
 
                             else
-                                ComplexNumbers.divide nElement currentElement
+                                ComplexNumbers.divide nextRowElementAtIndex currentRowElementAtIndex
                                     |> (\divideResult ->
                                             Vector.map (ComplexNumbers.multiply divideResult) currentRow
                                        )
@@ -135,6 +136,22 @@ reduceRowBackwards rowIndex listOfVectors =
             List.take rowIndex listOfVectors
                 |> List.map
                     (subtractRow rowIndex row)
+    in
+    prevRows
+        ++ [ row ]
+        ++ List.drop (rowIndex + 1) listOfVectors
+
+
+reduceRowBackwardsComplex : Int -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float))
+reduceRowBackwardsComplex rowIndex listOfVectors =
+    let
+        row =
+            Maybe.withDefault (Vector.Vector []) (List.Extra.getAt rowIndex listOfVectors)
+
+        prevRows =
+            List.take rowIndex listOfVectors
+                |> List.map
+                    (subtractComplexRow rowIndex row)
     in
     prevRows
         ++ [ row ]

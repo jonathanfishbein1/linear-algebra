@@ -1,5 +1,6 @@
 module MatrixTests.JordanTests exposing (suite)
 
+import ComplexNumbers
 import Expect
 import Fuzz
 import Matrix
@@ -52,4 +53,68 @@ suite =
                             ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
+        , Test.test "tests jordanReduceComplex put complex matrix into Reduced Row Echelon Form complex entries with imaginary portion" <|
+            \_ ->
+                let
+                    complexNumberR1C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR1C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                -1
+                            )
+
+                    complexNumberR2C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                0
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
+                            ]
+
+                    reducedRowEchelonFormMatrix =
+                        Matrix.jordanReduceComplex matrix
+
+                    complexOne =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    expected =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ complexOne, ComplexNumbers.zero ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, complexOne ]
+                            ]
+                in
+                Expect.equal (Debug.log "reducedRowEchelonFormMatrix " reducedRowEchelonFormMatrix) (Debug.log "expected " expected)
         ]

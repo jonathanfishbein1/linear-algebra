@@ -837,6 +837,45 @@ determinant matrix =
         upperTriangularForm
 
 
+{-| Try to calculate the determinant
+-}
+determinantComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (ComplexNumbers.ComplexNumberCartesian Float)
+determinantComplex matrix =
+    let
+        upperTriangularFormComplex =
+            upperTriangleComplex matrix
+    in
+    Result.andThen
+        (\squareMatrix ->
+            let
+                numberOfRows =
+                    mDimension squareMatrix
+
+                indices =
+                    List.Extra.initialize numberOfRows (\index -> ( index, index ))
+
+                diagonalMaybeEntries =
+                    List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
+
+                listOfComplexNumbers =
+                    Maybe.Extra.combine diagonalMaybeEntries
+
+                complexOne =
+                    ComplexNumbers.ComplexNumberCartesian
+                        (ComplexNumbers.Real
+                            1
+                        )
+                        (ComplexNumbers.Imaginary
+                            0
+                        )
+            in
+            listOfComplexNumbers
+                |> Maybe.map (\li -> List.foldl (\elem acc -> ComplexNumbers.multiply elem acc) complexOne li)
+                |> Result.fromMaybe "Index out of range"
+        )
+        upperTriangularFormComplex
+
+
 invert : Matrix Float -> Result String (Matrix Float)
 invert matrix =
     let

@@ -87,7 +87,7 @@ suite =
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests complexVectorSubspace" <|
+        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests complexVectorSubspace" <|
             \one two ->
                 let
                     complexNumber =
@@ -134,8 +134,17 @@ suite =
                             ]
                         ]
 
+                    complexOne =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
                     predicates =
-                        [ ComplexNumbers.equal ComplexNumbers.one ]
+                        [ ComplexNumbers.equal complexOne ]
 
                     scalar =
                         Vector.Scalar complexNumber
@@ -172,4 +181,39 @@ suite =
                         Vector.read printedVector
                 in
                 Expect.equal readVector (Ok vector)
+        , Test.fuzz2 Fuzz.float Fuzz.float "tests subtractRealVectors" <|
+            \one two ->
+                let
+                    vectorOne =
+                        Vector.Vector [ one, two ]
+
+                    vectorTwo =
+                        Vector.Vector [ one, two ]
+
+                    result =
+                        Vector.subtractRealVectors vectorOne vectorTwo
+                in
+                Expect.equal result (Vector.Vector [ 0, 0 ])
+        , Test.fuzz2 Fuzz.float Fuzz.float "tests subtractComplexVectors" <|
+            \one two ->
+                let
+                    complexNumber =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    vectorOne =
+                        Vector.Vector [ complexNumber ]
+
+                    vectorTwo =
+                        Vector.Vector [ complexNumber ]
+
+                    result =
+                        Vector.subtractComplexVectors vectorOne vectorTwo
+                in
+                Expect.equal result (Vector.Vector [ ComplexNumbers.zero ])
         ]

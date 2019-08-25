@@ -45,7 +45,14 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
+    , determinantComplex
+    , gaussianReduceComplex
     , invert
+    , invertComplex
+    , isUnitary
+    , jordanReduceComplex
+    , upperTriangleComplex
+    , subMatrix
     )
 
 {-| A module for Matrix
@@ -100,6 +107,14 @@ module Matrix exposing
 @docs read
 @docs setAt
 @docs upperTriangle
+@docs determinantComplex
+@docs gaussianReduceComplex
+@docs invert
+@docs invertComplex
+@docs isUnitary
+@docs jordanReduceComplex
+@docs upperTriangleComplex
+@docs subMatrix
 
 -}
 
@@ -233,7 +248,7 @@ liftA2 f a b =
 
 {-| Matrix Matrix multiplication for a Complex Numbered Matrix
 -}
-multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian number))
+multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
     if nDimension (Matrix matrixOne) == mDimension matrixTwo then
         let
@@ -290,6 +305,11 @@ identityMatrix dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal columnIndex)))
 
 
+identityMatrixComplex : Int -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
+identityMatrixComplex dimension =
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonalComplex columnIndex)))
+
+
 {-| Multiply a real Vector by a real Matrix
 -}
 multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Vector.Vector number
@@ -339,6 +359,27 @@ gaussianReduce (Matrix matrix) =
         |> Matrix
 
 
+{-| Gaussian Elimination
+-}
+gaussianReduceComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
+gaussianReduceComplex (Matrix matrix) =
+    let
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
+
+        upperTriangularFormRectangleComplex =
+            List.foldl Internal.Matrix.calculateUpperTriangularFormRectangleComplex listOfVectors (List.range 0 (List.length matrix - 1))
+
+        rowEchelonForm =
+            List.indexedMap
+                (\index row -> Internal.Matrix.scaleComplex index row)
+                upperTriangularFormRectangleComplex
+    in
+    rowEchelonForm
+        |> List.map RowVector
+        |> Matrix
+
+
 {-| Put a matrix into Upper Triangular Form
 -}
 upperTriangle : Matrix Float -> Result String (Matrix Float)
@@ -349,6 +390,24 @@ upperTriangle (Matrix matrix) =
                 List.map (\(RowVector vector) -> vector) matrix
         in
         List.foldl Internal.Matrix.calculateUpperTriangularFormRectangle listOfVectors (List.range 0 (List.length matrix - 1))
+            |> List.map RowVector
+            |> Matrix
+            |> Ok
+
+    else
+        Err "Must be Square Matrix"
+
+
+{-| Put a matrix into Upper Triangular Form
+-}
+upperTriangleComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
+upperTriangleComplex (Matrix matrix) =
+    if mDimension (Matrix matrix) == nDimension (Matrix matrix) then
+        let
+            listOfVectors =
+                List.map (\(RowVector vector) -> vector) matrix
+        in
+        List.foldl Internal.Matrix.calculateUpperTriangularFormRectangleComplex listOfVectors (List.range 0 (List.length matrix - 1))
             |> List.map RowVector
             |> Matrix
             |> Ok
@@ -370,12 +429,33 @@ jordanReduce (Matrix matrix) =
         |> Matrix
 
 
+{-| Internal function for Jordan Elimination
+-}
+jordanReduceComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
+jordanReduceComplex (Matrix matrix) =
+    let
+        listOfVectors =
+            List.map (\(RowVector vector) -> vector) matrix
+    in
+    List.foldl Internal.Matrix.reduceRowBackwardsComplex listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
+        |> List.map RowVector
+        |> Matrix
+
+
 {-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
 gaussJordan : Matrix Float -> Matrix Float
 gaussJordan matrix =
     gaussianReduce matrix
         |> jordanReduce
+
+
+{-| Function composition of Gaussian Elimination and Jordan Elimination
+-}
+gaussJordanComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
+gaussJordanComplex matrix =
+    gaussianReduceComplex matrix
+        |> jordanReduceComplex
 
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
@@ -785,6 +865,38 @@ determinant matrix =
         upperTriangularForm
 
 
+{-| Try to calculate the determinant
+-}
+determinantComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (ComplexNumbers.ComplexNumberCartesian Float)
+determinantComplex matrix =
+    let
+        upperTriangularFormComplex =
+            upperTriangleComplex matrix
+    in
+    Result.andThen
+        (\squareMatrix ->
+            let
+                numberOfRows =
+                    mDimension squareMatrix
+
+                indices =
+                    List.Extra.initialize numberOfRows (\index -> ( index, index ))
+
+                diagonalMaybeEntries =
+                    List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
+
+                listOfComplexNumbers =
+                    Maybe.Extra.combine diagonalMaybeEntries
+            in
+            listOfComplexNumbers
+                |> Maybe.map (\li -> List.foldl (\elem acc -> ComplexNumbers.multiply elem acc) ComplexNumbers.one li)
+                |> Result.fromMaybe "Index out of range"
+        )
+        upperTriangularFormComplex
+
+
+{-| Try to calculate the inverse of a real numbered matrix
+-}
 invert : Matrix Float -> Result String (Matrix Float)
 invert matrix =
     let
@@ -816,6 +928,41 @@ invert matrix =
             Err err
 
 
+{-| Try to calculate the inverse of a complex numbered matrix
+-}
+invertComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
+invertComplex matrix =
+    let
+        theDeterminant =
+            determinantComplex matrix
+    in
+    case theDeterminant of
+        Ok value ->
+            if ComplexNumbers.equal value ComplexNumbers.zero then
+                Err "Determinant is zero matrix is not invertable"
+
+            else
+                let
+                    sizeOfMatrix =
+                        mDimension matrix
+
+                    augmentedMatrix =
+                        appendHorizontal matrix (identityMatrixComplex sizeOfMatrix)
+
+                    reducedRowEchelonForm =
+                        gaussJordanComplex augmentedMatrix
+
+                    inverse =
+                        subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
+                in
+                Ok inverse
+
+        Err err ->
+            Err err
+
+
+{-| Calculate the submatrix given a starting and ending row and column index
+-}
 subMatrix : Int -> Int -> Int -> Int -> Matrix a -> Matrix a
 subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex (Matrix listOfRowVectors) =
     List.take endingRowIndex listOfRowVectors
@@ -828,3 +975,15 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
                     |> RowVector
             )
         |> Matrix
+
+
+{-| Determine whether a matirx is unitary
+-}
+isUnitary : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Bool
+isUnitary matrix =
+    case invertComplex matrix of
+        Ok inverse ->
+            equal ComplexNumbers.equal inverse (adjoint matrix)
+
+        Err _ ->
+            False

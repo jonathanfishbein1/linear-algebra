@@ -45,7 +45,13 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
-    , determinantComplex, gaussianReduceComplex, invert, invertComplex, isUnitary, jordanReduceComplex, upperTriangleComplex
+    , determinantComplex
+    , gaussianReduceComplex
+    , invert
+    , invertComplex
+    , isUnitary
+    , jordanReduceComplex
+    , upperTriangleComplex
     )
 
 {-| A module for Matrix
@@ -100,6 +106,13 @@ module Matrix exposing
 @docs read
 @docs setAt
 @docs upperTriangle
+@docs determinantComplex
+@docs gaussianReduceComplex
+@docs invert
+@docs invertComplex
+@docs isUnitary
+@docs jordanReduceComplex
+@docs upperTriangleComplex
 
 -}
 
@@ -880,6 +893,8 @@ determinantComplex matrix =
         upperTriangularFormComplex
 
 
+{-| Try to calculate the inverse of a real numbered matrix
+-}
 invert : Matrix Float -> Result String (Matrix Float)
 invert matrix =
     let
@@ -911,6 +926,8 @@ invert matrix =
             Err err
 
 
+{-| Try to calculate the inverse of a complex numbered matrix
+-}
 invertComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 invertComplex matrix =
     let
@@ -956,6 +973,8 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
         |> Matrix
 
 
+{-| Determine whether a matirx is unitary
+-}
 isUnitary : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Bool
 isUnitary matrix =
     case invertComplex matrix of

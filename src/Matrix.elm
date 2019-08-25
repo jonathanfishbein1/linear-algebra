@@ -45,7 +45,7 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
-    , determinantComplex, gaussianReduceComplex, invert, jordanReduceComplex, upperTriangleComplex
+    , determinantComplex, gaussianReduceComplex, invert, invertComplex, jordanReduceComplex, upperTriangleComplex
     )
 
 {-| A module for Matrix
@@ -872,7 +872,6 @@ determinantComplex matrix =
 
                 listOfComplexNumbers =
                     Maybe.Extra.combine diagonalMaybeEntries
-
             in
             listOfComplexNumbers
                 |> Maybe.map (\li -> List.foldl (\elem acc -> ComplexNumbers.multiply elem acc) ComplexNumbers.one li)

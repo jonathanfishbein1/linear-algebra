@@ -573,15 +573,21 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.zero
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                3
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
 
                     complexNumberR2C2 =
                         ComplexNumbers.ComplexNumberCartesian
                             (ComplexNumbers.Real
-                                1
+                                4
                             )
                             (ComplexNumbers.Imaginary
-                                3
+                                0
                             )
 
                     matrix =
@@ -603,4 +609,100 @@ suite =
                             )
                 in
                 Expect.equal determinantComplex (Ok expectedDeterminant)
+        , Test.test "tests complex matrix inverse 2 x 2" <|
+            \_ ->
+                let
+                    complexNumberR1C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                1
+                            )
+
+                    complexNumberR1C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                2
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                3
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                4
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
+                            ]
+
+                    inverseComplex =
+                        Matrix.invertComplex matrix
+
+                    expectedComplexNumberR1C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                -(2 / 5)
+                            )
+                            (ComplexNumbers.Imaginary
+                                -(4 / 5)
+                            )
+
+                    expectedComplexNumberR1C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                (1 / 5)
+                            )
+                            (ComplexNumbers.Imaginary
+                                (2 / 5)
+                            )
+
+                    expectedComplexNumberR2C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                (3 / 10)
+                            )
+                            (ComplexNumbers.Imaginary
+                                (3 / 5)
+                            )
+
+                    expectedComplexNumberR2C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                (1 / 10)
+                            )
+                            (ComplexNumbers.Imaginary
+                                -(3 / 10)
+                            )
+
+                    expectedInverse =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ expectedComplexNumberR1C1, expectedComplexNumberR1C2 ]
+                            , Matrix.RowVector <| Vector.Vector [ expectedComplexNumberR2C1, expectedComplexNumberR2C2 ]
+                            ]
+                in
+                case inverseComplex of
+                    Ok result ->
+                        Expect.true "matrices are equal" (Matrix.equal ComplexNumbers.equal result expectedInverse)
+
+                    Err error ->
+                        Expect.fail error
         ]

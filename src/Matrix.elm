@@ -45,7 +45,7 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
-    , determinantComplex, gaussianReduceComplex, invert, invertComplex, jordanReduceComplex, upperTriangleComplex
+    , determinantComplex, gaussianReduceComplex, invert, invertComplex, isUnitarian, jordanReduceComplex, upperTriangleComplex
     )
 
 {-| A module for Matrix
@@ -954,3 +954,13 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
                     |> RowVector
             )
         |> Matrix
+
+
+isUnitarian : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Bool
+isUnitarian matrix =
+    case invertComplex matrix of
+        Ok inverse ->
+            inverse == adjoint matrix
+
+        Err _ ->
+            False

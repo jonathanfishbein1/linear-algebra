@@ -20,6 +20,7 @@ module Vector exposing
     , normalise
     , realVectorLength
     , subtractRealVectors
+    , subtractComplexVectors
     , vector3ToVector
     , dimension
     , realVectorSubspace
@@ -63,6 +64,7 @@ module Vector exposing
 @docs normalise
 @docs realVectorLength
 @docs subtractRealVectors
+@docs subtractComplexVectors
 @docs vector3ToVector
 @docs dimension
 @docs realVectorSubspace
@@ -81,11 +83,12 @@ module Vector exposing
 -}
 
 import ComplexNumbers
-import Equal
 import Float.Extra
 import List.Extra
-import Monoid
 import Parser exposing ((|.), (|=))
+import Typeclasses.Classes.Equality
+import Typeclasses.Classes.Monoid
+import Typeclasses.Classes.Semigroup
 
 
 {-| Vector type
@@ -136,7 +139,7 @@ multiplyRealVectors vectorOne vectorTwo =
 
 {-| Multiply two Complex Vectors together
 -}
-multiplyComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number)
+multiplyComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
 multiplyComplexVectors vectorOne vectorTwo =
     liftA2 ComplexNumbers.multiply vectorOne vectorTwo
 
@@ -161,9 +164,9 @@ concatEmpty =
 
 {-| Monoidally append Vectors together
 -}
-concat : Monoid.Monoid (Vector a)
+concat : Typeclasses.Classes.Monoid.Monoid (Vector a)
 concat =
-    Monoid.monoid concatEmpty append
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend append) concatEmpty
 
 
 {-| Append Vectors together
@@ -205,7 +208,7 @@ foldl foldFunction acc (Vector list) =
 
 {-| Dot product on two Complex Numbered Vectors
 -}
-complexVectorDotProduct : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> ComplexNumbers.ComplexNumberCartesian number
+complexVectorDotProduct : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
 complexVectorDotProduct vectorOne vectorTwo =
     liftA2 ComplexNumbers.multiply vectorOne vectorTwo
         |> foldl ComplexNumbers.add ComplexNumbers.zero
@@ -230,12 +233,8 @@ realVectorLength =
 {-| Calculate length of a complex vector
 -}
 complexVectorLength : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
-complexVectorLength complexNumbers =
-    let
-        complexNumbersPolar =
-            map ComplexNumbers.convertFromCartesianToPolar complexNumbers
-    in
-    foldl (\x acc -> ComplexNumbers.add (ComplexNumbers.power 2 x |> ComplexNumbers.convertFromPolarToCartesian) acc) ComplexNumbers.zero complexNumbersPolar
+complexVectorLength complexNumberVector =
+    foldl (\x acc -> ComplexNumbers.add (ComplexNumbers.power 2 x) acc) ComplexNumbers.zero complexNumberVector
 
 
 {-| Subtract Real Vectors together
@@ -243,6 +242,13 @@ complexVectorLength complexNumbers =
 subtractRealVectors : Vector number -> Vector number -> Vector number
 subtractRealVectors =
     liftA2 (-)
+
+
+{-| Subtract Complex Vectors together
+-}
+subtractComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
+subtractComplexVectors =
+    liftA2 ComplexNumbers.subtract
 
 
 {-| Calculate distance between two vectors
@@ -297,7 +303,7 @@ realVectorSubspace scalar vectorList predicates =
 
 {-| Function to determine if a set of complex valued vectors is a valid subspace
 -}
-complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian number) -> List (Vector (ComplexNumbers.ComplexNumberCartesian number)) -> List (ComplexNumbers.ComplexNumberCartesian number -> Bool) -> Bool
+complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian Float) -> List (Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (ComplexNumbers.ComplexNumberCartesian Float -> Bool) -> Bool
 complexVectorSubspace scalar vectorList predicates =
     vectorSubspace ComplexNumbers.zero ComplexNumbers.multiply addComplexVectors scalar vectorList predicates
 
@@ -351,16 +357,16 @@ bind (Vector list) fVector =
 
 {-| `Equal` type for `Vector`.
 -}
-vectorEqual : (a -> a -> Bool) -> Equal.Equal (Vector a)
+vectorEqual : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Vector a)
 vectorEqual comparator =
-    Equal.Equal (equalImplementation comparator)
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
 
 
 {-| Compare two vectors for equality using a comparator
 -}
 equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
 equal comparator =
-    Equal.equal <| vectorEqual comparator
+    (vectorEqual comparator).eq
 
 
 {-| Get the value in a Vector at the specified index

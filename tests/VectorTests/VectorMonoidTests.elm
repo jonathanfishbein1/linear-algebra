@@ -1,9 +1,8 @@
-module VectorMonoidTests exposing (suite)
+module VectorTests.VectorMonoidTests exposing (suite)
 
 import ComplexNumbers
 import Expect
 import Fuzz
-import Monoid
 import Test
 import Vector
 
@@ -25,7 +24,7 @@ suite =
                                 )
                             ]
                 in
-                Monoid.append Vector.concat v (Monoid.empty Vector.concat)
+                Vector.concat.semigroup.prepend v Vector.concat.identity
                     |> Expect.equal v
         , Test.fuzz2 Fuzz.float Fuzz.float "tests Vector empty or identity value left" <|
             \one two ->
@@ -41,9 +40,9 @@ suite =
                                 )
                             ]
                 in
-                Monoid.append Vector.concat (Monoid.empty Vector.concat) v
+                Vector.concat.semigroup.prepend Vector.concat.identity v
                     |> Expect.equal v
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally add" <|
+        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally concat complex vectors" <|
             \one two three ->
                 let
                     complexNumberOne =
@@ -68,8 +67,8 @@ suite =
                         Vector.Vector [ complexNumberOne, complexNumberTwo, complexNumberThree ]
 
                     listOfMonoids =
-                        [ a, b, c ]
+                        [ c, b, a ]
                 in
-                Monoid.concat Vector.concat listOfMonoids
+                Vector.concat.concat listOfMonoids
                     |> Expect.equal expected
         ]

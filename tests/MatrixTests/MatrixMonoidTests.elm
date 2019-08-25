@@ -1,9 +1,8 @@
-module MatrixMonoidTests exposing (suite)
+module MatrixTests.MatrixMonoidTests exposing (suite)
 
 import Expect
 import Fuzz
 import Matrix
-import Monoid
 import Test
 import Vector
 
@@ -22,7 +21,7 @@ suite =
                                     ]
                             ]
                 in
-                Monoid.append Matrix.matrixConcatVertical m (Monoid.empty Matrix.matrixConcatVertical)
+                Matrix.matrixConcatVertical.semigroup.prepend m Matrix.matrixConcatVertical.identity
                     |> Expect.equal m
         , Test.fuzz Fuzz.float "tests Matrix empty or identity value for vertical append left" <|
             \one ->
@@ -35,7 +34,7 @@ suite =
                                     ]
                             ]
                 in
-                Monoid.append Matrix.matrixConcatVertical (Monoid.empty Matrix.matrixConcatVertical) m
+                Matrix.matrixConcatVertical.semigroup.prepend Matrix.matrixConcatVertical.identity m
                     |> Expect.equal m
         , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally concat matricies vertically" <|
             \one two three ->
@@ -60,9 +59,9 @@ suite =
 
                     expected =
                         Matrix.Matrix
-                            [ a
+                            [ c
                             , b
-                            , c
+                            , a
                             ]
 
                     listOfMonoids =
@@ -71,7 +70,7 @@ suite =
                         , m3
                         ]
                 in
-                Monoid.concat Matrix.matrixConcatVertical listOfMonoids
+                Matrix.matrixConcatVertical.concat listOfMonoids
                     |> Expect.equal expected
         , Test.fuzz Fuzz.float "tests Matrix empty or identity value for horizontal append right" <|
             \one ->
@@ -84,7 +83,7 @@ suite =
                                     ]
                             ]
                 in
-                Monoid.append Matrix.matrixConcatHorizontal m (Monoid.empty Matrix.matrixConcatHorizontal)
+                Matrix.matrixConcatHorizontal.semigroup.prepend m Matrix.matrixConcatHorizontal.identity
                     |> Expect.equal m
         , Test.fuzz Fuzz.float "tests Matrix empty or identity value for horizontal append left" <|
             \one ->
@@ -97,7 +96,7 @@ suite =
                                     ]
                             ]
                 in
-                Monoid.append Matrix.matrixConcatHorizontal (Monoid.empty Matrix.matrixConcatHorizontal) m
+                Matrix.matrixConcatHorizontal.semigroup.prepend Matrix.matrixConcatHorizontal.identity m
                     |> Expect.equal m
         , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally concat matricies horizontally" <|
             \one two three ->
@@ -122,13 +121,13 @@ suite =
 
                     expected =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ one, two, three ]
+                            [ Matrix.RowVector <| Vector.Vector [ three, two, one ]
                             ]
 
                     listOfMonoids =
                         [ m1, m2, m3 ]
                 in
-                Monoid.concat Matrix.matrixConcatHorizontal listOfMonoids
+                Matrix.matrixConcatHorizontal.concat listOfMonoids
                     |> Expect.equal expected
         , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally concat matricies horizontally with scenerio that might break map2" <|
             \one two three ->
@@ -153,13 +152,13 @@ suite =
 
                     expected =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ one, three ]
+                            [ Matrix.RowVector <| Vector.Vector [ three, one ]
                             , Matrix.RowVector <| Vector.Vector [ two ]
                             ]
 
                     listOfMonoids =
                         [ m1, m2 ]
                 in
-                Monoid.concat Matrix.matrixConcatHorizontal listOfMonoids
+                Matrix.matrixConcatHorizontal.concat listOfMonoids
                     |> Expect.equal expected
         ]

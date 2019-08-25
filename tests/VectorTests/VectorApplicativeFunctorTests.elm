@@ -1,9 +1,8 @@
-module VectorApplicativeFunctorTests exposing (suite)
+module VectorTests.VectorApplicativeFunctorTests exposing (suite)
 
 import ComplexNumbers
 import Expect
 import Fuzz
-import Monoid
 import Test
 import Vector
 

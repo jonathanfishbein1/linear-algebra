@@ -1,10 +1,9 @@
-module MatrixApplicativeFunctorTests exposing (suite)
+module MatrixTests.MatrixApplicativeFunctorTests exposing (suite)
 
 import ComplexNumbers
 import Expect
 import Fuzz
 import Matrix
-import Monoid
 import Test
 import Vector
 

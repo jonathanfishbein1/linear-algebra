@@ -116,5 +116,5 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, complexOne ]
                             ]
                 in
-                Expect.equal (Debug.log "reducedRowEchelonFormMatrix " reducedRowEchelonFormMatrix) (Debug.log "expected " expected)
+                Expect.true "matricies equal" (Matrix.equal ComplexNumbers.equal reducedRowEchelonFormMatrix expected)
         ]

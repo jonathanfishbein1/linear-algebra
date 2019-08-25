@@ -258,5 +258,5 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, complexNumberExpectedR2C2 ]
                             ]
                 in
-                Expect.true "matricies equal" (Matrix.equal ComplexNumbers.equal (Debug.log "rowEchelonFormMatrix " rowEchelonFormMatrix) (Debug.log "expected " expected))
+                Expect.true "matricies equal" (Matrix.equal ComplexNumbers.equal rowEchelonFormMatrix expected)
         ]

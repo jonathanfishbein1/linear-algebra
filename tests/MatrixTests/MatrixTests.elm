@@ -573,13 +573,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
-                            (ComplexNumbers.Real
-                                0
-                            )
-                            (ComplexNumbers.Imaginary
-                                0
-                            )
+                        ComplexNumbers.zero
 
                     complexNumberR2C2 =
                         ComplexNumbers.ComplexNumberCartesian

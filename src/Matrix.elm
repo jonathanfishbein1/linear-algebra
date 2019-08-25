@@ -45,7 +45,7 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
-    , determinantComplex, gaussianReduceComplex, invert, invertComplex, isUnitarian, jordanReduceComplex, upperTriangleComplex
+    , determinantComplex, gaussianReduceComplex, invert, invertComplex, isUnitary, jordanReduceComplex, upperTriangleComplex
     )
 
 {-| A module for Matrix
@@ -357,7 +357,7 @@ gaussianReduceComplex (Matrix matrix) =
 
         rowEchelonForm =
             List.indexedMap
-                (\index row -> Debug.log "scaledRow " <| Internal.Matrix.scaleComplex index row)
+                (\index row -> Internal.Matrix.scaleComplex index row)
                 upperTriangularFormRectangleComplex
     in
     rowEchelonForm
@@ -956,11 +956,11 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
         |> Matrix
 
 
-isUnitarian : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Bool
-isUnitarian matrix =
+isUnitary : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Bool
+isUnitary matrix =
     case invertComplex matrix of
         Ok inverse ->
-            inverse == adjoint matrix
+            equal ComplexNumbers.equal inverse (adjoint matrix)
 
         Err _ ->
             False

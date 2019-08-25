@@ -114,13 +114,12 @@ scale rowIndex rowVector =
 -}
 scaleComplex : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
 scaleComplex rowIndex rowVector =
-    Vector.getAt rowIndex (Debug.log "rowVector" rowVector)
+    Vector.getAt rowIndex rowVector
         |> Maybe.map
             (\elementAtRowIndex ->
                 Vector.map
                     (\rowElement ->
-                        ComplexNumbers.divide (Debug.log "rowElement " rowElement) (Debug.log "elementAtRowIndex " elementAtRowIndex)
-                            |> Debug.log "divide Result "
+                        ComplexNumbers.divide rowElement elementAtRowIndex
                     )
                     rowVector
             )

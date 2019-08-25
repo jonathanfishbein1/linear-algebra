@@ -219,7 +219,7 @@ suite =
                             )
 
                     row =
-                        Vector.Vector [ Debug.log "complexNumberOne " complexNumberOne, Debug.log "complexNumberTwo " complexNumberTwo ]
+                        Vector.Vector [ complexNumberOne, complexNumberTwo ]
 
                     (Vector.Vector scaledComplexRow) =
                         Internal.Matrix.scaleComplex 0 row

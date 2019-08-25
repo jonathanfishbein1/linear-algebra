@@ -705,4 +705,99 @@ suite =
 
                     Err error ->
                         Expect.fail error
+        , Test.test "tests complex matrix inverse 3 x 3 is unitary" <|
+            \_ ->
+                let
+                    complexNumberR1C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                (1 / 2)
+                            )
+                            (ComplexNumbers.Imaginary
+                                (1 / 2)
+                            )
+
+                    complexNumberR1C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                0
+                            )
+                            (ComplexNumbers.Imaginary
+                                (1 / Basics.sqrt 3)
+                            )
+
+                    complexNumberR1C3 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                (3 / (2 * Basics.sqrt 15))
+                            )
+                            (ComplexNumbers.Imaginary
+                                (1 / (2 * Basics.sqrt 15))
+                            )
+
+                    complexNumberR2C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                (-1 / 2)
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                (1 / Basics.sqrt 3)
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C3 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                (4 / (2 * Basics.sqrt 15))
+                            )
+                            (ComplexNumbers.Imaginary
+                                (3 / (2 * Basics.sqrt 15))
+                            )
+
+                    complexNumberR3C1 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                (1 / 2)
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR3C2 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                0
+                            )
+                            (ComplexNumbers.Imaginary
+                                (-1 / Basics.sqrt 3)
+                            )
+
+                    complexNumberR3C3 =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                0
+                            )
+                            (ComplexNumbers.Imaginary
+                                (5 / (2 * Basics.sqrt 15))
+                            )
+
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2, complexNumberR1C3 ]
+                            , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2, complexNumberR2C3 ]
+                            , Matrix.RowVector <| Vector.Vector [ complexNumberR3C1, complexNumberR3C2, complexNumberR3C3 ]
+                            ]
+
+                    isUnitary =
+                        Matrix.isUnitary matrix
+                in
+                Expect.true "is Unitary" isUnitary
         ]

@@ -290,6 +290,11 @@ identityMatrix dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal columnIndex)))
 
 
+identityMatrixComplex : Int -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
+identityMatrixComplex dimension =
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonalComplex columnIndex)))
+
+
 {-| Multiply a real Vector by a real Matrix
 -}
 multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Vector.Vector number
@@ -428,6 +433,14 @@ gaussJordan : Matrix Float -> Matrix Float
 gaussJordan matrix =
     gaussianReduce matrix
         |> jordanReduce
+
+
+{-| Function composition of Gaussian Elimination and Jordan Elimination
+-}
+gaussJordanComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
+gaussJordanComplex matrix =
+    gaussianReduceComplex matrix
+        |> jordanReduceComplex
 
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
@@ -897,6 +910,37 @@ invert matrix =
 
                     reducedRowEchelonForm =
                         gaussJordan augmentedMatrix
+
+                    inverse =
+                        subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
+                in
+                Ok inverse
+
+        Err err ->
+            Err err
+
+
+invertComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
+invertComplex matrix =
+    let
+        theDeterminant =
+            determinantComplex matrix
+    in
+    case theDeterminant of
+        Ok value ->
+            if ComplexNumbers.equal value ComplexNumbers.zero then
+                Err "Determinant is zero matrix is not invertable"
+
+            else
+                let
+                    sizeOfMatrix =
+                        mDimension matrix
+
+                    augmentedMatrix =
+                        appendHorizontal matrix (identityMatrixComplex sizeOfMatrix)
+
+                    reducedRowEchelonForm =
+                        gaussJordanComplex augmentedMatrix
 
                     inverse =
                         subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm

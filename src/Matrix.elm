@@ -899,30 +899,22 @@ determinantComplex matrix =
 -}
 invert : Matrix Float -> Result String (Matrix Float)
 invert matrix =
-    let
-        theDeterminant =
-            determinant matrix
-    in
-    case theDeterminant of
-        Ok value ->
-            if Float.Extra.equalWithin 0.000000001 value 0.0 then
-                Err "Determinant is zero matrix is not invertable"
+    case isInvertable matrix of
+        Ok invertableMatrix ->
+            let
+                sizeOfMatrix =
+                    mDimension invertableMatrix
 
-            else
-                let
-                    sizeOfMatrix =
-                        mDimension matrix
+                augmentedMatrix =
+                    appendHorizontal invertableMatrix (identityMatrix sizeOfMatrix |> map toFloat)
 
-                    augmentedMatrix =
-                        appendHorizontal matrix (identityMatrix sizeOfMatrix |> map toFloat)
+                reducedRowEchelonForm =
+                    gaussJordan augmentedMatrix
 
-                    reducedRowEchelonForm =
-                        gaussJordan augmentedMatrix
-
-                    inverse =
-                        subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
-                in
-                Ok inverse
+                inverse =
+                    subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
+            in
+            Ok inverse
 
         Err err ->
             Err err
@@ -987,3 +979,17 @@ isUnitary matrix =
 
         Err _ ->
             False
+
+
+isInvertable : Matrix Float -> Result String (Matrix Float)
+isInvertable matrix =
+    case determinant matrix of
+        Ok value ->
+            if Float.Extra.equalWithin 0.000000001 value 0.0 then
+                Err "Determinant is zero matrix is not invertable"
+
+            else
+                Ok matrix
+
+        Err msg ->
+            Err msg

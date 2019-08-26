@@ -924,30 +924,22 @@ invert matrix =
 -}
 invertComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 invertComplex matrix =
-    let
-        theDeterminant =
-            determinantComplex matrix
-    in
-    case theDeterminant of
+    case isInvertableComplex matrix of
         Ok value ->
-            if ComplexNumbers.equal value ComplexNumbers.zero then
-                Err "Determinant is zero matrix is not invertable"
+            let
+                sizeOfMatrix =
+                    mDimension matrix
 
-            else
-                let
-                    sizeOfMatrix =
-                        mDimension matrix
+                augmentedMatrix =
+                    appendHorizontal matrix (identityMatrixComplex sizeOfMatrix)
 
-                    augmentedMatrix =
-                        appendHorizontal matrix (identityMatrixComplex sizeOfMatrix)
+                reducedRowEchelonForm =
+                    gaussJordanComplex augmentedMatrix
 
-                    reducedRowEchelonForm =
-                        gaussJordanComplex augmentedMatrix
-
-                    inverse =
-                        subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
-                in
-                Ok inverse
+                inverse =
+                    subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
+            in
+            Ok inverse
 
         Err err ->
             Err err
@@ -986,6 +978,20 @@ isInvertable matrix =
     case determinant matrix of
         Ok value ->
             if Float.Extra.equalWithin 0.000000001 value 0.0 then
+                Err "Determinant is zero matrix is not invertable"
+
+            else
+                Ok matrix
+
+        Err msg ->
+            Err msg
+
+
+isInvertableComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
+isInvertableComplex matrix =
+    case determinantComplex matrix of
+        Ok value ->
+            if ComplexNumbers.equal value ComplexNumbers.zero then
                 Err "Determinant is zero matrix is not invertable"
 
             else

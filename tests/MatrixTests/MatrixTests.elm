@@ -813,4 +813,24 @@ suite =
                         Matrix.isInvertable matrix
                 in
                 Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
+        , Test.test "tests sumMatrix" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, 3 ]
+                            , Matrix.RowVector <| Vector.Vector [ 4, 5, 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 7, 8, 9 ]
+                            ]
+
+                    subMatrix =
+                        Matrix.subMatrix 1 3 1 3 matrix
+
+                    expected =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 5, 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 8, 9 ]
+                            ]
+                in
+                Expect.equal subMatrix expected
         ]

@@ -20,6 +20,32 @@ import List.Extra
 import Vector
 
 
+type alias Algebra a =
+    { zero : a
+    , multiply : a -> a -> a
+    , divide : a -> a -> a
+    , subtractVectors : Vector.Vector a -> Vector.Vector a -> Vector.Vector a
+    }
+
+
+realAlgebra : Algebra Float
+realAlgebra =
+    { zero = 0
+    , multiply = (*)
+    , divide = (/)
+    , subtractVectors = Vector.subtractRealVectors
+    }
+
+
+complexAlgebra : Algebra (ComplexNumbers.ComplexNumberCartesian Float)
+complexAlgebra =
+    { zero = ComplexNumbers.zero
+    , multiply = ComplexNumbers.multiply
+    , divide = ComplexNumbers.divide
+    , subtractVectors = Vector.subtractComplexVectors
+    }
+
+
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
 findPivotGeneric : a -> List (Vector.Vector a) -> Int -> Maybe Int
@@ -44,50 +70,38 @@ findPivotComplex =
     findPivotGeneric ComplexNumbers.zero
 
 
-{-| Internal function for subtracting rows from each other
--}
-subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
-subtractRow r currentRow nextRow =
+subtractRowGeneric : Algebra a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
+subtractRowGeneric { zero, multiply, divide, subtractVectors } r currentRow nextRow =
     Vector.getAt r nextRow
         |> Maybe.andThen
             (\nElement ->
                 Vector.getAt r currentRow
                     |> Maybe.map
                         (\currentElement ->
-                            (if currentElement == 0 then
+                            (if currentElement == zero then
                                 currentRow
 
                              else
-                                Vector.map ((*) (nElement / currentElement)) currentRow
+                                Vector.map (multiply (divide nElement currentElement)) currentRow
                             )
-                                |> Vector.subtractRealVectors nextRow
+                                |> subtractVectors nextRow
                         )
             )
         |> Maybe.withDefault nextRow
+
+
+{-| Internal function for subtracting rows from each other
+-}
+subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
+subtractRow r currentRow nextRow =
+    subtractRowGeneric realAlgebra r currentRow nextRow
 
 
 {-| Internal function for subtracting complex rows from each other
 -}
 subtractComplexRow : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
 subtractComplexRow r currentRow nextRow =
-    Vector.getAt r nextRow
-        |> Maybe.andThen
-            (\nextRowElementAtIndex ->
-                Vector.getAt r currentRow
-                    |> Maybe.map
-                        (\currentRowElementAtIndex ->
-                            if currentRowElementAtIndex == ComplexNumbers.zero then
-                                currentRow
-
-                            else
-                                ComplexNumbers.divide nextRowElementAtIndex currentRowElementAtIndex
-                                    |> (\divideResult ->
-                                            Vector.map (ComplexNumbers.multiply divideResult) currentRow
-                                       )
-                                    |> Vector.subtractComplexVectors nextRow
-                        )
-            )
-        |> Maybe.withDefault nextRow
+    subtractRowGeneric complexAlgebra r currentRow nextRow
 
 
 {-| Internal function for scalling rows by pivot entry

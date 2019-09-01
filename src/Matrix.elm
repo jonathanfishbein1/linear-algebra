@@ -926,13 +926,13 @@ invert matrix =
 invertComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 invertComplex matrix =
     case isInvertableComplex matrix of
-        Ok value ->
+        Ok invertableMatrix ->
             let
                 sizeOfMatrix =
-                    mDimension matrix
+                    mDimension invertableMatrix
 
                 augmentedMatrix =
-                    appendHorizontal matrix (identityMatrixComplex sizeOfMatrix)
+                    appendHorizontal invertableMatrix (identityMatrixComplex sizeOfMatrix)
 
                 reducedRowEchelonForm =
                     gaussJordanComplex augmentedMatrix
@@ -977,8 +977,8 @@ isUnitary matrix =
 isInvertable : Matrix Float -> Result String (Matrix Float)
 isInvertable matrix =
     case determinant matrix of
-        Ok value ->
-            if Float.Extra.equalWithin 0.000000001 value 0.0 then
+        Ok deter ->
+            if Float.Extra.equalWithin 0.000000001 deter 0.0 then
                 Err "Determinant is zero matrix is not invertable"
 
             else
@@ -991,8 +991,8 @@ isInvertable matrix =
 isInvertableComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 isInvertableComplex matrix =
     case determinantComplex matrix of
-        Ok value ->
-            if ComplexNumbers.equal value ComplexNumbers.zero then
+        Ok deter ->
+            if ComplexNumbers.equal deter ComplexNumbers.zero then
                 Err "Determinant is zero matrix is not invertable"
 
             else

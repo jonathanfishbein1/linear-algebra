@@ -48,8 +48,8 @@ complexAlgebra =
 
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
-findPivotGeneric : a -> List (Vector.Vector a) -> Int -> Maybe Int
-findPivotGeneric zero listOfRowVectors initialRowIndex =
+findPivotGeneric : Algebra a -> List (Vector.Vector a) -> Int -> Maybe Int
+findPivotGeneric { zero } listOfRowVectors initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration listOfRowVectors
@@ -60,14 +60,14 @@ findPivotGeneric zero listOfRowVectors initialRowIndex =
         (List.range initialRowIndex (List.length listOfRowVectors - 1))
 
 
-findPivotReal : List (Vector.Vector number) -> Int -> Maybe Int
+findPivotReal : List (Vector.Vector Float) -> Int -> Maybe Int
 findPivotReal =
-    findPivotGeneric 0
+    findPivotGeneric realAlgebra
 
 
 findPivotComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> Int -> Maybe Int
 findPivotComplex =
-    findPivotGeneric ComplexNumbers.zero
+    findPivotGeneric complexAlgebra
 
 
 subtractRowGeneric : Algebra a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a

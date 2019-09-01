@@ -800,4 +800,17 @@ suite =
                         Matrix.isUnitary matrix
                 in
                 Expect.true "is Unitary" isUnitary
+        , Test.test "tests invertability" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 2, 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1, 3 ]
+                            ]
+
+                    isInvertable =
+                        Matrix.isInvertable matrix
+                in
+                Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
         ]

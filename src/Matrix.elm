@@ -53,6 +53,7 @@ module Matrix exposing
     , jordanReduceComplex
     , upperTriangleComplex
     , subMatrix
+    , isInvertable
     )
 
 {-| A module for Matrix

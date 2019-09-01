@@ -53,7 +53,7 @@ module Matrix exposing
     , jordanReduceComplex
     , upperTriangleComplex
     , subMatrix
-    , isInvertable
+    , isInvertable, isInvertableComplex
     )
 
 {-| A module for Matrix
@@ -406,7 +406,7 @@ upperTriangleComplex (Matrix matrix) =
     if mDimension (Matrix matrix) == nDimension (Matrix matrix) then
         let
             listOfVectors =
-                List.map (\(RowVector vector) -> vector) matrix
+                Debug.log "listOfVectors " <| List.map (\(RowVector vector) -> vector) matrix
         in
         List.foldl Internal.Matrix.calculateUpperTriangularFormRectangleComplex listOfVectors (List.range 0 (List.length matrix - 1))
             |> List.map RowVector
@@ -872,7 +872,7 @@ determinantComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Res
 determinantComplex matrix =
     let
         upperTriangularFormComplex =
-            upperTriangleComplex matrix
+            Debug.log "upperTriangularFormComplex " <| upperTriangleComplex matrix
     in
     Result.andThen
         (\squareMatrix ->
@@ -884,10 +884,10 @@ determinantComplex matrix =
                     List.Extra.initialize numberOfRows (\index -> ( index, index ))
 
                 diagonalMaybeEntries =
-                    List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
+                    Debug.log "diagonalMaybeEntries " <| List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
 
                 listOfComplexNumbers =
-                    Maybe.Extra.combine diagonalMaybeEntries
+                    Debug.log "listOfComplexNumbers " <| Maybe.Extra.combine diagonalMaybeEntries
             in
             listOfComplexNumbers
                 |> Maybe.map (\li -> List.foldl (\elem acc -> ComplexNumbers.multiply elem acc) ComplexNumbers.one li)
@@ -990,7 +990,7 @@ isInvertable matrix =
 
 isInvertableComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 isInvertableComplex matrix =
-    case determinantComplex matrix of
+    case Debug.log "determinantComplex " <| determinantComplex matrix of
         Ok value ->
             if ComplexNumbers.equal value ComplexNumbers.zero then
                 Err "Determinant is zero matrix is not invertable"

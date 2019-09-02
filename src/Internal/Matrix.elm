@@ -16,39 +16,14 @@ module Internal.Matrix exposing
     )
 
 import ComplexNumbers
+import Internal.Algebra
 import List.Extra
 import Vector
 
 
-type alias Algebra a =
-    { zero : a
-    , multiply : a -> a -> a
-    , divide : a -> a -> a
-    , subtractVectors : Vector.Vector a -> Vector.Vector a -> Vector.Vector a
-    }
-
-
-realAlgebra : Algebra Float
-realAlgebra =
-    { zero = 0
-    , multiply = (*)
-    , divide = (/)
-    , subtractVectors = Vector.subtractRealVectors
-    }
-
-
-complexAlgebra : Algebra (ComplexNumbers.ComplexNumberCartesian Float)
-complexAlgebra =
-    { zero = ComplexNumbers.zero
-    , multiply = ComplexNumbers.multiply
-    , divide = ComplexNumbers.divide
-    , subtractVectors = Vector.subtractComplexVectors
-    }
-
-
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
-findPivotGeneric : Algebra a -> List (Vector.Vector a) -> Int -> Maybe Int
+findPivotGeneric : Internal.Algebra.Algebra a -> List (Vector.Vector a) -> Int -> Maybe Int
 findPivotGeneric { zero } listOfRowVectors initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
@@ -62,15 +37,15 @@ findPivotGeneric { zero } listOfRowVectors initialRowIndex =
 
 findPivotReal : List (Vector.Vector Float) -> Int -> Maybe Int
 findPivotReal =
-    findPivotGeneric realAlgebra
+    findPivotGeneric Internal.Algebra.realAlgebra
 
 
 findPivotComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> Int -> Maybe Int
 findPivotComplex =
-    findPivotGeneric complexAlgebra
+    findPivotGeneric Internal.Algebra.complexAlgebra
 
 
-subtractRowGeneric : Algebra a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
+subtractRowGeneric : Internal.Algebra.Algebra a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
 subtractRowGeneric { zero, multiply, divide, subtractVectors } r currentRow nextRow =
     Vector.getAt r nextRow
         |> Maybe.andThen
@@ -94,19 +69,19 @@ subtractRowGeneric { zero, multiply, divide, subtractVectors } r currentRow next
 -}
 subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
 subtractRow r currentRow nextRow =
-    subtractRowGeneric realAlgebra r currentRow nextRow
+    subtractRowGeneric Internal.Algebra.realAlgebra r currentRow nextRow
 
 
 {-| Internal function for subtracting complex rows from each other
 -}
 subtractComplexRow : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
 subtractComplexRow r currentRow nextRow =
-    subtractRowGeneric complexAlgebra r currentRow nextRow
+    subtractRowGeneric Internal.Algebra.complexAlgebra r currentRow nextRow
 
 
 {-| Internal function for scalling rows by pivot entry
 -}
-scaleGeneric : Algebra a -> Int -> Vector.Vector a -> Vector.Vector a
+scaleGeneric : Internal.Algebra.Algebra a -> Int -> Vector.Vector a -> Vector.Vector a
 scaleGeneric { zero, divide } rowIndex rowVector =
     Vector.getAt rowIndex rowVector
         |> Maybe.map
@@ -128,14 +103,14 @@ scaleGeneric { zero, divide } rowIndex rowVector =
 -}
 scale : Int -> Vector.Vector Float -> Vector.Vector Float
 scale rowIndex rowVector =
-    scaleGeneric realAlgebra rowIndex rowVector
+    scaleGeneric Internal.Algebra.realAlgebra rowIndex rowVector
 
 
 {-| Internal function for scalling rows by pivot entry
 -}
 scaleComplex : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
 scaleComplex rowIndex rowVector =
-    scaleGeneric complexAlgebra rowIndex rowVector
+    scaleGeneric Internal.Algebra.complexAlgebra rowIndex rowVector
 
 
 reduceRowBackwards : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)

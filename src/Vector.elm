@@ -33,7 +33,7 @@ module Vector exposing
     , print
     , read
     , setAt
-    , InnerProductSpace, VectorSpace, complexInnerProductSpace, complexVectorSpace, realInnerProductSpace, realVectorSpace
+    , InnerProductSpace, VectorSpace, complexInnerProductSpace, complexVectorSpace, realInnerProductSpace, realVectorSpace, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -490,3 +490,12 @@ complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
     , innerProduct = complexVectorDotProduct
     }
+
+
+vectorTensorProduct : Internal.Field.Field a -> Vector a -> Vector a -> Vector a
+vectorTensorProduct { multiply } vectorOne vectorTwo =
+    bind
+        vectorOne
+        (\vectorOneElement ->
+            map (multiply vectorOneElement) vectorTwo
+        )

@@ -3,6 +3,7 @@ module VectorTests.VectorTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
+import Internal.Field
 import Parser
 import Test
 import Vector
@@ -216,4 +217,17 @@ suite =
                         Vector.subtractComplexVectors vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ ComplexNumbers.zero ])
+        , Test.test "tests vector tensor product" <|
+            \_ ->
+                let
+                    vectorOne =
+                        Vector.Vector [ 1, 2 ]
+
+                    vectorTwo =
+                        Vector.Vector [ 3, 4 ]
+
+                    vectorTensorProduct =
+                        Vector.vectorTensorProduct Internal.Field.realField vectorOne vectorTwo
+                in
+                Expect.equal vectorTensorProduct (Vector.Vector [ 3, 4, 6, 8 ])
         ]

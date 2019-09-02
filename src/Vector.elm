@@ -35,7 +35,7 @@ module Vector exposing
     , print
     , read
     , setAt
-    , VectorSpace, complexVectorSpace, realVectorSpace
+    , InnerProductSpace, VectorSpace, complexInnerProductSpace, complexVectorSpace, realInnerProductSpace, realVectorSpace
     )
 
 {-| A module for Vectors

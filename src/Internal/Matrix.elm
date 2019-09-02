@@ -164,30 +164,27 @@ diagonalComplex columnIndex rowIndex =
     diagonalGeneric Internal.Field.complexField columnIndex rowIndex
 
 
-map2VectorCartesian : List (Vector.Vector number) -> List (Vector.Vector number) -> List (Vector.Vector number)
-map2VectorCartesian left right =
+map2VectorCartesianGeneric : Vector.InnerProductSpace a -> List (Vector.Vector a) -> List (Vector.Vector a) -> List (Vector.Vector a)
+map2VectorCartesianGeneric { innerProduct } left right =
     List.foldl
         (\leftVector finalAcc ->
             finalAcc
-                ++ [ List.foldl (\rightVector intermediateAcc -> intermediateAcc ++ [ Vector.realVectorDotProduct leftVector rightVector ]) [] right
+                ++ [ List.foldl (\rightVector intermediateAcc -> intermediateAcc ++ [ innerProduct leftVector rightVector ]) [] right
                         |> Vector.Vector
                    ]
         )
         []
         left
+
+
+map2VectorCartesian : List (Vector.Vector Float) -> List (Vector.Vector Float) -> List (Vector.Vector Float)
+map2VectorCartesian left right =
+    map2VectorCartesianGeneric Vector.realInnerProductSpace left right
 
 
 map2VectorCartesianComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float))
 map2VectorCartesianComplex left right =
-    List.foldl
-        (\leftVector finalAcc ->
-            finalAcc
-                ++ [ List.foldl (\rightVector intermediateAcc -> intermediateAcc ++ [ Vector.complexVectorDotProduct leftVector rightVector ]) [] right
-                        |> Vector.Vector
-                   ]
-        )
-        []
-        left
+    map2VectorCartesianGeneric Vector.complexInnerProductSpace left right
 
 
 calculateUpperTriangularFormRectangle : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)

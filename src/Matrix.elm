@@ -275,7 +275,7 @@ multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
 
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
 -}
-multiplyRealMatrices : Matrix number -> Matrix number -> Result String (Matrix number)
+multiplyRealMatrices : Matrix Float -> Matrix Float -> Result String (Matrix Float)
 multiplyRealMatrices (Matrix matrixOne) matrixTwo =
     if nDimension (Matrix matrixOne) == mDimension matrixTwo then
         let
@@ -313,7 +313,7 @@ identityMatrixComplex dimension =
 
 {-| Multiply a real Vector by a real Matrix
 -}
-multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Vector.Vector number
+multiplyRealVectorRealMatrix : Matrix Float -> Vector.Vector Float -> Vector.Vector Float
 multiplyRealVectorRealMatrix (Matrix matrix) vector =
     let
         listOfVectors =

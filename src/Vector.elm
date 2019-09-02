@@ -5,6 +5,8 @@ module Vector exposing
     , addComplexVectors
     , addRealVectors
     , map
+    , multiplyRealVectors
+    , multiplyComplexVectors
     , equal
     , apply
     , liftA2
@@ -145,6 +147,20 @@ addRealVectors =
 map : (a -> b) -> Vector a -> Vector b
 map f (Vector vector) =
     Vector <| List.map f vector
+
+
+{-| Multiply two Real Vectors together
+-}
+multiplyRealVectors : Vector number -> Vector number -> Vector number
+multiplyRealVectors vectorOne vectorTwo =
+    liftA2 (*) vectorOne vectorTwo
+
+
+{-| Multiply two Complex Vectors together
+-}
+multiplyComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
+multiplyComplexVectors vectorOne vectorTwo =
+    liftA2 ComplexNumbers.multiply vectorOne vectorTwo
 
 
 {-| Compare two Vectors for equality

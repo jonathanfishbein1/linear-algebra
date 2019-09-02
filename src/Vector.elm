@@ -84,6 +84,7 @@ module Vector exposing
 
 import ComplexNumbers
 import Float.Extra
+import Internal.Field
 import List.Extra
 import Parser exposing ((|.), (|=))
 import Typeclasses.Classes.Equality
@@ -296,20 +297,20 @@ dimension (Vector list) =
 
 {-| Function to determine if a set of real valued vectors is a valid subspace
 -}
-realVectorSubspace : Scalar number -> List (Vector number) -> List (number -> Bool) -> Bool
+realVectorSubspace : Scalar Float -> List (Vector Float) -> List (Float -> Bool) -> Bool
 realVectorSubspace scalar vectorList predicates =
-    vectorSubspace 0 (*) addRealVectors scalar vectorList predicates
+    vectorSubspace Internal.Field.realField addRealVectors scalar vectorList predicates
 
 
 {-| Function to determine if a set of complex valued vectors is a valid subspace
 -}
 complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian Float) -> List (Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (ComplexNumbers.ComplexNumberCartesian Float -> Bool) -> Bool
 complexVectorSubspace scalar vectorList predicates =
-    vectorSubspace ComplexNumbers.zero ComplexNumbers.multiply addComplexVectors scalar vectorList predicates
+    vectorSubspace Internal.Field.complexField addComplexVectors scalar vectorList predicates
 
 
-vectorSubspace : b -> (b -> b -> b) -> (Vector b -> Vector b -> Vector b) -> Scalar b -> List (Vector b) -> List (b -> Bool) -> Bool
-vectorSubspace zero multiply add (Scalar scalar) vectorList predicates =
+vectorSubspace : Internal.Field.Field a -> (Vector a -> Vector a -> Vector a) -> Scalar a -> List (Vector a) -> List (a -> Bool) -> Bool
+vectorSubspace { zero, multiply } add (Scalar scalar) vectorList predicates =
     let
         testZeroVector =
             List.map (map (multiply zero)) vectorList

@@ -16,48 +16,48 @@ module Internal.Matrix exposing
     )
 
 import ComplexNumbers
-import Internal.Algebra
+import Internal.ComplexVectorSpace
 import List.Extra
 import Vector
 
 
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
-findPivotGeneric : Internal.Algebra.Algebra a -> List (Vector.Vector a) -> Int -> Maybe Int
-findPivotGeneric { zero } listOfRowVectors initialRowIndex =
+findPivotGeneric : Internal.ComplexVectorSpace.ComplexVectorSpace a -> List (Vector.Vector a) -> Int -> Maybe Int
+findPivotGeneric { field } listOfRowVectors initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration listOfRowVectors
                 |> Maybe.andThen (Vector.getAt initialRowIndex)
-                |> Maybe.withDefault zero
-                |> (/=) zero
+                |> Maybe.withDefault field.zero
+                |> (/=) field.zero
         )
         (List.range initialRowIndex (List.length listOfRowVectors - 1))
 
 
 findPivotReal : List (Vector.Vector Float) -> Int -> Maybe Int
 findPivotReal =
-    findPivotGeneric Internal.Algebra.realAlgebra
+    findPivotGeneric Internal.ComplexVectorSpace.realAlgebra
 
 
 findPivotComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> Int -> Maybe Int
 findPivotComplex =
-    findPivotGeneric Internal.Algebra.complexAlgebra
+    findPivotGeneric Internal.ComplexVectorSpace.complexAlgebra
 
 
-subtractRowGeneric : Internal.Algebra.Algebra a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
-subtractRowGeneric { zero, multiply, divide, subtractVectors } r currentRow nextRow =
+subtractRowGeneric : Internal.ComplexVectorSpace.ComplexVectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
+subtractRowGeneric { field, subtractVectors } r currentRow nextRow =
     Vector.getAt r nextRow
         |> Maybe.andThen
             (\nElement ->
                 Vector.getAt r currentRow
                     |> Maybe.map
                         (\currentElement ->
-                            (if currentElement == zero then
+                            (if currentElement == field.zero then
                                 currentRow
 
                              else
-                                Vector.map (multiply (divide nElement currentElement)) currentRow
+                                Vector.map (field.multiply (field.divide nElement currentElement)) currentRow
                             )
                                 |> subtractVectors nextRow
                         )
@@ -69,30 +69,30 @@ subtractRowGeneric { zero, multiply, divide, subtractVectors } r currentRow next
 -}
 subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
 subtractRow r currentRow nextRow =
-    subtractRowGeneric Internal.Algebra.realAlgebra r currentRow nextRow
+    subtractRowGeneric Internal.ComplexVectorSpace.realAlgebra r currentRow nextRow
 
 
 {-| Internal function for subtracting complex rows from each other
 -}
 subtractComplexRow : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
 subtractComplexRow r currentRow nextRow =
-    subtractRowGeneric Internal.Algebra.complexAlgebra r currentRow nextRow
+    subtractRowGeneric Internal.ComplexVectorSpace.complexAlgebra r currentRow nextRow
 
 
 {-| Internal function for scalling rows by pivot entry
 -}
-scaleGeneric : Internal.Algebra.Algebra a -> Int -> Vector.Vector a -> Vector.Vector a
-scaleGeneric { zero, divide } rowIndex rowVector =
+scaleGeneric : Internal.ComplexVectorSpace.ComplexVectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a
+scaleGeneric { field } rowIndex rowVector =
     Vector.getAt rowIndex rowVector
         |> Maybe.map
             (\elementAtRowIndex ->
                 Vector.map
                     (\rowElement ->
-                        if elementAtRowIndex == zero then
+                        if elementAtRowIndex == field.zero then
                             rowElement
 
                         else
-                            divide rowElement elementAtRowIndex
+                            field.divide rowElement elementAtRowIndex
                     )
                     rowVector
             )
@@ -103,14 +103,14 @@ scaleGeneric { zero, divide } rowIndex rowVector =
 -}
 scale : Int -> Vector.Vector Float -> Vector.Vector Float
 scale rowIndex rowVector =
-    scaleGeneric Internal.Algebra.realAlgebra rowIndex rowVector
+    scaleGeneric Internal.ComplexVectorSpace.realAlgebra rowIndex rowVector
 
 
 {-| Internal function for scalling rows by pivot entry
 -}
 scaleComplex : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
 scaleComplex rowIndex rowVector =
-    scaleGeneric Internal.Algebra.complexAlgebra rowIndex rowVector
+    scaleGeneric Internal.ComplexVectorSpace.complexAlgebra rowIndex rowVector
 
 
 reduceRowBackwards : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)

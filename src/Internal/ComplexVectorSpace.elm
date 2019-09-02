@@ -1,4 +1,4 @@
-module Internal.ComplexVectorSpace exposing (ComplexVectorSpace, complexAlgebra, realAlgebra)
+module Internal.ComplexVectorSpace exposing (ComplexVectorSpace, complexVectorSpace, realVectorSpace)
 
 import ComplexNumbers
 import Internal.Field
@@ -11,15 +11,15 @@ type alias ComplexVectorSpace a =
     }
 
 
-realAlgebra : ComplexVectorSpace Float
-realAlgebra =
+realVectorSpace : ComplexVectorSpace Float
+realVectorSpace =
     { field = Internal.Field.realField
     , subtractVectors = Vector.subtractRealVectors
     }
 
 
-complexAlgebra : ComplexVectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
-complexAlgebra =
+complexVectorSpace : ComplexVectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
+complexVectorSpace =
     { field = Internal.Field.complexField
     , subtractVectors = Vector.subtractComplexVectors
     }

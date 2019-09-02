@@ -37,12 +37,12 @@ findPivotGeneric { field } listOfRowVectors initialRowIndex =
 
 findPivotReal : List (Vector.Vector Float) -> Int -> Maybe Int
 findPivotReal =
-    findPivotGeneric Internal.ComplexVectorSpace.realAlgebra
+    findPivotGeneric Internal.ComplexVectorSpace.realVectorSpace
 
 
 findPivotComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> Int -> Maybe Int
 findPivotComplex =
-    findPivotGeneric Internal.ComplexVectorSpace.complexAlgebra
+    findPivotGeneric Internal.ComplexVectorSpace.complexVectorSpace
 
 
 subtractRowGeneric : Internal.ComplexVectorSpace.ComplexVectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
@@ -69,14 +69,14 @@ subtractRowGeneric { field, subtractVectors } r currentRow nextRow =
 -}
 subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
 subtractRow r currentRow nextRow =
-    subtractRowGeneric Internal.ComplexVectorSpace.realAlgebra r currentRow nextRow
+    subtractRowGeneric Internal.ComplexVectorSpace.realVectorSpace r currentRow nextRow
 
 
 {-| Internal function for subtracting complex rows from each other
 -}
 subtractComplexRow : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
 subtractComplexRow r currentRow nextRow =
-    subtractRowGeneric Internal.ComplexVectorSpace.complexAlgebra r currentRow nextRow
+    subtractRowGeneric Internal.ComplexVectorSpace.complexVectorSpace r currentRow nextRow
 
 
 {-| Internal function for scalling rows by pivot entry
@@ -103,14 +103,14 @@ scaleGeneric { field } rowIndex rowVector =
 -}
 scale : Int -> Vector.Vector Float -> Vector.Vector Float
 scale rowIndex rowVector =
-    scaleGeneric Internal.ComplexVectorSpace.realAlgebra rowIndex rowVector
+    scaleGeneric Internal.ComplexVectorSpace.realVectorSpace rowIndex rowVector
 
 
 {-| Internal function for scalling rows by pivot entry
 -}
 scaleComplex : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
 scaleComplex rowIndex rowVector =
-    scaleGeneric Internal.ComplexVectorSpace.complexAlgebra rowIndex rowVector
+    scaleGeneric Internal.ComplexVectorSpace.complexVectorSpace rowIndex rowVector
 
 
 reduceRowBackwards : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)

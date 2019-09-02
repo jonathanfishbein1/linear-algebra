@@ -106,18 +106,18 @@ subtractComplexRow r currentRow nextRow =
 
 {-| Internal function for scalling rows by pivot entry
 -}
-scale : Int -> Vector.Vector Float -> Vector.Vector Float
-scale rowIndex rowVector =
+scaleGeneric : Algebra a -> Int -> Vector.Vector a -> Vector.Vector a
+scaleGeneric { zero, divide } rowIndex rowVector =
     Vector.getAt rowIndex rowVector
         |> Maybe.map
             (\elementAtRowIndex ->
                 Vector.map
                     (\rowElement ->
-                        if elementAtRowIndex == 0 then
+                        if elementAtRowIndex == zero then
                             rowElement
 
                         else
-                            rowElement / elementAtRowIndex
+                            divide rowElement elementAtRowIndex
                     )
                     rowVector
             )
@@ -126,18 +126,16 @@ scale rowIndex rowVector =
 
 {-| Internal function for scalling rows by pivot entry
 -}
+scale : Int -> Vector.Vector Float -> Vector.Vector Float
+scale rowIndex rowVector =
+    scaleGeneric realAlgebra rowIndex rowVector
+
+
+{-| Internal function for scalling rows by pivot entry
+-}
 scaleComplex : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
 scaleComplex rowIndex rowVector =
-    Vector.getAt rowIndex rowVector
-        |> Maybe.map
-            (\elementAtRowIndex ->
-                Vector.map
-                    (\rowElement ->
-                        ComplexNumbers.divide rowElement elementAtRowIndex
-                    )
-                    rowVector
-            )
-        |> Maybe.withDefault rowVector
+    scaleGeneric complexAlgebra rowIndex rowVector
 
 
 reduceRowBackwards : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)

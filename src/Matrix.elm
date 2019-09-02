@@ -304,12 +304,12 @@ multiplyRealMatrices (Matrix matrixOne) matrixTwo =
 -}
 identityMatrix : Int -> Matrix Float
 identityMatrix dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal columnIndex)))
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal Internal.Field.realField columnIndex)))
 
 
 identityMatrixComplex : Int -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
 identityMatrixComplex dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonalComplex columnIndex)))
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal Internal.Field.complexField columnIndex)))
 
 
 {-| Multiply a real Vector by a real Matrix
@@ -353,7 +353,7 @@ gaussianReduce (Matrix matrix) =
 
         rowEchelonForm =
             List.indexedMap
-                Internal.Matrix.scale
+                (Internal.Matrix.scale Vector.realVectorSpace)
                 upperTriangularFormRectangle
     in
     rowEchelonForm
@@ -374,7 +374,7 @@ gaussianReduceComplex (Matrix matrix) =
 
         rowEchelonForm =
             List.indexedMap
-                (\index row -> Internal.Matrix.scaleComplex index row)
+                (\index row -> Internal.Matrix.scale Vector.complexVectorSpace index row)
                 upperTriangularFormRectangleComplex
     in
     rowEchelonForm

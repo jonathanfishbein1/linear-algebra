@@ -2,16 +2,12 @@ module Internal.Matrix exposing
     ( calculateUpperTriangularFormRectangle
     , calculateUpperTriangularFormRectangleComplex
     , diagonal
-    , diagonalComplex
-    , findPivotComplex
-    , findPivotReal
+    , findPivot
     , map2VectorCartesian
     , map2VectorCartesianComplex
     , reduceRowBackwards
     , reduceRowBackwardsComplex
     , scale
-    , scaleComplex
-    , subtractComplexRow
     , subtractRow
     )
 
@@ -23,8 +19,8 @@ import Vector
 
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
-findPivotGeneric : Vector.VectorSpace a -> List (Vector.Vector a) -> Int -> Maybe Int
-findPivotGeneric { abelianGroup } listOfRowVectors initialRowIndex =
+findPivot : Vector.VectorSpace a -> List (Vector.Vector a) -> Int -> Maybe Int
+findPivot { abelianGroup } listOfRowVectors initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration listOfRowVectors
@@ -35,18 +31,8 @@ findPivotGeneric { abelianGroup } listOfRowVectors initialRowIndex =
         (List.range initialRowIndex (List.length listOfRowVectors - 1))
 
 
-findPivotReal : List (Vector.Vector Float) -> Int -> Maybe Int
-findPivotReal =
-    findPivotGeneric Vector.realVectorSpace
-
-
-findPivotComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> Int -> Maybe Int
-findPivotComplex =
-    findPivotGeneric Vector.complexVectorSpace
-
-
-subtractRowGeneric : Vector.VectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
-subtractRowGeneric { abelianGroup } r currentRow nextRow =
+subtractRow : Vector.VectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
+subtractRow { abelianGroup } r currentRow nextRow =
     Vector.getAt r nextRow
         |> Maybe.andThen
             (\nElement ->
@@ -65,24 +51,10 @@ subtractRowGeneric { abelianGroup } r currentRow nextRow =
         |> Maybe.withDefault nextRow
 
 
-{-| Internal function for subtracting rows from each other
--}
-subtractRow : Int -> Vector.Vector Float -> Vector.Vector Float -> Vector.Vector Float
-subtractRow r currentRow nextRow =
-    subtractRowGeneric Vector.realVectorSpace r currentRow nextRow
-
-
-{-| Internal function for subtracting complex rows from each other
--}
-subtractComplexRow : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
-subtractComplexRow r currentRow nextRow =
-    subtractRowGeneric Vector.complexVectorSpace r currentRow nextRow
-
-
 {-| Internal function for scalling rows by pivot entry
 -}
-scaleGeneric : Vector.VectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a
-scaleGeneric { abelianGroup } rowIndex rowVector =
+scale : Vector.VectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a
+scale { abelianGroup } rowIndex rowVector =
     Vector.getAt rowIndex rowVector
         |> Maybe.map
             (\elementAtRowIndex ->
@@ -99,20 +71,6 @@ scaleGeneric { abelianGroup } rowIndex rowVector =
         |> Maybe.withDefault rowVector
 
 
-{-| Internal function for scalling rows by pivot entry
--}
-scale : Int -> Vector.Vector Float -> Vector.Vector Float
-scale rowIndex rowVector =
-    scaleGeneric Vector.realVectorSpace rowIndex rowVector
-
-
-{-| Internal function for scalling rows by pivot entry
--}
-scaleComplex : Int -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)
-scaleComplex rowIndex rowVector =
-    scaleGeneric Vector.complexVectorSpace rowIndex rowVector
-
-
 reduceRowBackwards : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
 reduceRowBackwards rowIndex listOfVectors =
     let
@@ -122,7 +80,7 @@ reduceRowBackwards rowIndex listOfVectors =
         prevRows =
             List.take rowIndex listOfVectors
                 |> List.map
-                    (subtractRow rowIndex row)
+                    (subtractRow Vector.realVectorSpace rowIndex row)
     in
     prevRows
         ++ [ row ]
@@ -138,30 +96,20 @@ reduceRowBackwardsComplex rowIndex listOfVectors =
         prevRows =
             List.take rowIndex listOfVectors
                 |> List.map
-                    (subtractComplexRow rowIndex row)
+                    (subtractRow Vector.complexVectorSpace rowIndex row)
     in
     prevRows
         ++ [ row ]
         ++ List.drop (rowIndex + 1) listOfVectors
 
 
-diagonalGeneric : Internal.Field.Field a -> Int -> Int -> a
-diagonalGeneric { zero, one } columnIndex rowIndex =
+diagonal : Internal.Field.Field a -> Int -> Int -> a
+diagonal { zero, one } columnIndex rowIndex =
     if columnIndex == rowIndex then
         one
 
     else
         zero
-
-
-diagonal : Int -> Int -> Float
-diagonal columnIndex rowIndex =
-    diagonalGeneric Internal.Field.realField columnIndex rowIndex
-
-
-diagonalComplex : Int -> Int -> ComplexNumbers.ComplexNumberCartesian Float
-diagonalComplex columnIndex rowIndex =
-    diagonalGeneric Internal.Field.complexField columnIndex rowIndex
 
 
 map2VectorCartesianGeneric : Vector.InnerProductSpace a -> List (Vector.Vector a) -> List (Vector.Vector a) -> List (Vector.Vector a)
@@ -191,7 +139,7 @@ calculateUpperTriangularFormRectangle : Int -> List (Vector.Vector Float) -> Lis
 calculateUpperTriangularFormRectangle rowIndex listOfVectors =
     let
         firstPivot =
-            findPivotReal listOfVectors rowIndex
+            findPivot Vector.realVectorSpace listOfVectors rowIndex
     in
     case firstPivot of
         Just fPivot ->
@@ -209,7 +157,7 @@ calculateUpperTriangularFormRectangle rowIndex listOfVectors =
                             (\row ->
                                 let
                                     subtractedRow =
-                                        subtractRow rowIndex currentRow row
+                                        subtractRow Vector.realVectorSpace rowIndex currentRow row
                                 in
                                 subtractedRow
                             )
@@ -239,7 +187,7 @@ calculateUpperTriangularFormRectangle rowIndex listOfVectors =
                     nextRows =
                         List.drop nextNonZero listOfVectors
                             |> List.map
-                                (subtractRow nextNonZero currentRow)
+                                (subtractRow Vector.realVectorSpace nextNonZero currentRow)
 
                     newMatrixReduceRow =
                         List.take rowIndex listOfVectors
@@ -253,7 +201,7 @@ calculateUpperTriangularFormRectangleComplex : Int -> List (Vector.Vector (Compl
 calculateUpperTriangularFormRectangleComplex rowIndex listOfVectors =
     let
         firstPivot =
-            findPivotComplex listOfVectors rowIndex
+            findPivot Vector.complexVectorSpace listOfVectors rowIndex
     in
     case firstPivot of
         Just fPivot ->
@@ -271,7 +219,7 @@ calculateUpperTriangularFormRectangleComplex rowIndex listOfVectors =
                             (\row ->
                                 let
                                     subtractedRow =
-                                        subtractComplexRow rowIndex currentRow row
+                                        subtractRow Vector.complexVectorSpace rowIndex currentRow row
                                 in
                                 subtractedRow
                             )
@@ -301,7 +249,7 @@ calculateUpperTriangularFormRectangleComplex rowIndex listOfVectors =
                     nextRows =
                         List.drop nextNonZero listOfVectors
                             |> List.map
-                                (subtractComplexRow nextNonZero currentRow)
+                                (subtractRow Vector.complexVectorSpace nextNonZero currentRow)
 
                     newMatrixReduceRow =
                         List.take rowIndex listOfVectors

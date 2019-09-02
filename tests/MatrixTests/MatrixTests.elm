@@ -846,4 +846,14 @@ suite =
                         Matrix.isInvertableComplex matrix
                 in
                 Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
+        , Test.fuzz Fuzz.int "test if matrix is square" <|
+            \one ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ one, one ]
+                            , Matrix.RowVector <| Vector.Vector [ one, one ]
+                            ]
+                in
+                Expect.true "matrix is square" (Matrix.isSquareMatrix matrix)
         ]

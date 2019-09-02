@@ -53,7 +53,7 @@ module Matrix exposing
     , jordanReduceComplex
     , upperTriangleComplex
     , subMatrix
-    , isInvertable, isInvertableComplex
+    , isInvertable, isInvertableComplex, isSquareMatrix
     )
 
 {-| A module for Matrix
@@ -386,7 +386,7 @@ gaussianReduceComplex (Matrix matrix) =
 -}
 upperTriangle : Matrix Float -> Result String (Matrix Float)
 upperTriangle (Matrix matrix) =
-    if mDimension (Matrix matrix) == nDimension (Matrix matrix) then
+    if isSquareMatrix (Matrix matrix) then
         let
             listOfVectors =
                 List.map (\(RowVector vector) -> vector) matrix
@@ -404,7 +404,7 @@ upperTriangle (Matrix matrix) =
 -}
 upperTriangleComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 upperTriangleComplex (Matrix matrix) =
-    if mDimension (Matrix matrix) == nDimension (Matrix matrix) then
+    if isSquareMatrix (Matrix matrix) then
         let
             listOfVectors =
                 List.map (\(RowVector vector) -> vector) matrix
@@ -1000,3 +1000,12 @@ isInvertableComplex matrix =
 
         Err msg ->
             Err msg
+
+
+isSquareMatrix : Matrix a -> Bool
+isSquareMatrix matrix =
+    if mDimension matrix == nDimension matrix then
+        True
+
+    else
+        False

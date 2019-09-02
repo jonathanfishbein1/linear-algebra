@@ -35,7 +35,7 @@ module Vector exposing
     , print
     , read
     , setAt
-    , ComplexVectorSpace, complexVectorSpace, realVectorSpace
+    , VectorSpace, complexVectorSpace, realVectorSpace
     )
 
 {-| A module for Vectors
@@ -117,7 +117,7 @@ type alias AbelianGroup a =
     }
 
 
-type alias ComplexVectorSpace a =
+type alias VectorSpace a =
     { abelianGroup : AbelianGroup a
     }
 
@@ -466,7 +466,7 @@ findIndex predicate (Vector list) =
     List.Extra.findIndex predicate list
 
 
-realVectorSpace : ComplexVectorSpace Float
+realVectorSpace : VectorSpace Float
 realVectorSpace =
     { abelianGroup =
         { field = Internal.Field.realField
@@ -475,7 +475,7 @@ realVectorSpace =
     }
 
 
-complexVectorSpace : ComplexVectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
+complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorSpace =
     { abelianGroup =
         { field = Internal.Field.complexField

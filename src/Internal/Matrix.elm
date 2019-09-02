@@ -23,7 +23,7 @@ import Vector
 
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
-findPivotGeneric : Vector.ComplexVectorSpace a -> List (Vector.Vector a) -> Int -> Maybe Int
+findPivotGeneric : Vector.VectorSpace a -> List (Vector.Vector a) -> Int -> Maybe Int
 findPivotGeneric { abelianGroup } listOfRowVectors initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
@@ -45,7 +45,7 @@ findPivotComplex =
     findPivotGeneric Vector.complexVectorSpace
 
 
-subtractRowGeneric : Vector.ComplexVectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
+subtractRowGeneric : Vector.VectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
 subtractRowGeneric { abelianGroup } r currentRow nextRow =
     Vector.getAt r nextRow
         |> Maybe.andThen
@@ -81,7 +81,7 @@ subtractComplexRow r currentRow nextRow =
 
 {-| Internal function for scalling rows by pivot entry
 -}
-scaleGeneric : Vector.ComplexVectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a
+scaleGeneric : Vector.VectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a
 scaleGeneric { abelianGroup } rowIndex rowVector =
     Vector.getAt rowIndex rowVector
         |> Maybe.map

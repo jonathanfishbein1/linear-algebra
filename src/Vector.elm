@@ -35,6 +35,7 @@ module Vector exposing
     , print
     , read
     , setAt
+    , ComplexVectorSpace, complexVectorSpace, realVectorSpace
     )
 
 {-| A module for Vectors
@@ -108,6 +109,12 @@ type Vector3 a
 -}
 type Scalar a
     = Scalar a
+
+
+type alias ComplexVectorSpace a =
+    { field : Internal.Field.Field a
+    , subtractVectors : Vector a -> Vector a -> Vector a
+    }
 
 
 {-| Add Complex Vectors together
@@ -452,3 +459,17 @@ myNumber =
 findIndex : (a -> Bool) -> Vector a -> Maybe Int
 findIndex predicate (Vector list) =
     List.Extra.findIndex predicate list
+
+
+realVectorSpace : ComplexVectorSpace Float
+realVectorSpace =
+    { field = Internal.Field.realField
+    , subtractVectors = subtractRealVectors
+    }
+
+
+complexVectorSpace : ComplexVectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
+complexVectorSpace =
+    { field = Internal.Field.complexField
+    , subtractVectors = subtractComplexVectors
+    }

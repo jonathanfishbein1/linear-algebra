@@ -130,16 +130,16 @@ type alias InnerProductSpace a =
 
 {-| Add Complex Vectors together
 -}
-addComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number)
+addComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
 addComplexVectors =
-    liftA2 ComplexNumbers.add
+    liftA2 Internal.Field.complexField.add
 
 
 {-| Add Real Vectors together
 -}
-addRealVectors : Vector number -> Vector number -> Vector number
+addRealVectors : Vector Float -> Vector Float -> Vector Float
 addRealVectors =
-    liftA2 (+)
+    liftA2 Internal.Field.realField.add
 
 
 {-| Map over a vector
@@ -262,16 +262,16 @@ complexVectorLength complexNumberVector =
 
 {-| Subtract Real Vectors together
 -}
-subtractRealVectors : Vector number -> Vector number -> Vector number
+subtractRealVectors : Vector Float -> Vector Float -> Vector Float
 subtractRealVectors =
-    liftA2 (-)
+    liftA2 Internal.Field.realField.subtract
 
 
 {-| Subtract Complex Vectors together
 -}
 subtractComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
 subtractComplexVectors =
-    liftA2 ComplexNumbers.subtract
+    liftA2 Internal.Field.complexField.subtract
 
 
 {-| Calculate distance between two vectors

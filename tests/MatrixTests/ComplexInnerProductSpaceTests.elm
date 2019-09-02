@@ -13,7 +13,7 @@ suite =
     Test.describe "Complex Inner Product Vector Space"
         [ Test.describe "Complex Vector Space"
             [ Test.describe "Abelian Group"
-                [ Test.fuzz2 Fuzz.int Fuzz.int "tests Vector add is commutative" <|
+                [ Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Vector add is commutative" <|
                     \one two ->
                         let
                             v =
@@ -54,7 +54,7 @@ suite =
                         in
                         Vector.addComplexVectors v w
                             |> Expect.equal (Vector.addComplexVectors w v)
-                , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Vector add is associative" <|
+                , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Vector add is associative" <|
                     \one two three ->
                         let
                             v =

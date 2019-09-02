@@ -9,6 +9,7 @@ import ComplexNumbers
 
 type alias Field a =
     { zero : a
+    , one : a
     , multiply : a -> a -> a
     , divide : a -> a -> a
     }
@@ -17,6 +18,7 @@ type alias Field a =
 realField : Field Float
 realField =
     { zero = 0
+    , one = 1
     , multiply = (*)
     , divide = (/)
     }
@@ -25,6 +27,7 @@ realField =
 complexField : Field (ComplexNumbers.ComplexNumberCartesian Float)
 complexField =
     { zero = ComplexNumbers.zero
+    , one = ComplexNumbers.one
     , multiply = ComplexNumbers.multiply
     , divide = ComplexNumbers.divide
     }

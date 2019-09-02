@@ -16,6 +16,7 @@ module Internal.Matrix exposing
     )
 
 import ComplexNumbers
+import Internal.Field
 import List.Extra
 import Vector
 
@@ -144,22 +145,23 @@ reduceRowBackwardsComplex rowIndex listOfVectors =
         ++ List.drop (rowIndex + 1) listOfVectors
 
 
-diagonal : Int -> Int -> number
-diagonal columnIndex rowIndex =
+diagonalGeneric : Internal.Field.Field a -> Int -> Int -> a
+diagonalGeneric { zero, one } columnIndex rowIndex =
     if columnIndex == rowIndex then
-        1
+        one
 
     else
-        0
+        zero
+
+
+diagonal : Int -> Int -> Float
+diagonal columnIndex rowIndex =
+    diagonalGeneric Internal.Field.realField columnIndex rowIndex
 
 
 diagonalComplex : Int -> Int -> ComplexNumbers.ComplexNumberCartesian Float
 diagonalComplex columnIndex rowIndex =
-    if columnIndex == rowIndex then
-        ComplexNumbers.one
-
-    else
-        ComplexNumbers.zero
+    diagonalGeneric Internal.Field.complexField columnIndex rowIndex
 
 
 map2VectorCartesian : List (Vector.Vector number) -> List (Vector.Vector number) -> List (Vector.Vector number)

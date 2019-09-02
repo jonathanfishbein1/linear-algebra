@@ -301,7 +301,7 @@ multiplyRealMatrices (Matrix matrixOne) matrixTwo =
 
 {-| Create Identity Matrix with n dimension
 -}
-identityMatrix : Int -> Matrix Int
+identityMatrix : Int -> Matrix Float
 identityMatrix dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal columnIndex)))
 
@@ -598,7 +598,6 @@ doesSetSpanSpace (VectorSpace vectorSpace) vectors =
 
             floatMatrix =
                 identityRowVectors
-                    |> map toFloat
 
             listOfRowVectorsRREF =
                 gaussJordan (Matrix (List.map RowVector vectors))
@@ -907,7 +906,7 @@ invert matrix =
                     mDimension invertableMatrix
 
                 augmentedMatrix =
-                    appendHorizontal invertableMatrix (identityMatrix sizeOfMatrix |> map toFloat)
+                    appendHorizontal invertableMatrix (identityMatrix sizeOfMatrix)
 
                 reducedRowEchelonForm =
                     gaussJordan augmentedMatrix

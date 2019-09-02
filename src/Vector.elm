@@ -111,9 +111,14 @@ type Scalar a
     = Scalar a
 
 
-type alias ComplexVectorSpace a =
+type alias AbelianGroup a =
     { field : Internal.Field.Field a
     , subtractVectors : Vector a -> Vector a -> Vector a
+    }
+
+
+type alias ComplexVectorSpace a =
+    { abelianGroup : AbelianGroup a
     }
 
 
@@ -463,13 +468,17 @@ findIndex predicate (Vector list) =
 
 realVectorSpace : ComplexVectorSpace Float
 realVectorSpace =
-    { field = Internal.Field.realField
-    , subtractVectors = subtractRealVectors
+    { abelianGroup =
+        { field = Internal.Field.realField
+        , subtractVectors = subtractRealVectors
+        }
     }
 
 
 complexVectorSpace : ComplexVectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorSpace =
-    { field = Internal.Field.complexField
-    , subtractVectors = subtractComplexVectors
+    { abelianGroup =
+        { field = Internal.Field.complexField
+        , subtractVectors = subtractComplexVectors
+        }
     }

@@ -24,13 +24,13 @@ import Vector
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
 findPivotGeneric : Vector.ComplexVectorSpace a -> List (Vector.Vector a) -> Int -> Maybe Int
-findPivotGeneric { field } listOfRowVectors initialRowIndex =
+findPivotGeneric { abelianGroup } listOfRowVectors initialRowIndex =
     List.Extra.find
         (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration listOfRowVectors
                 |> Maybe.andThen (Vector.getAt initialRowIndex)
-                |> Maybe.withDefault field.zero
-                |> (/=) field.zero
+                |> Maybe.withDefault abelianGroup.field.zero
+                |> (/=) abelianGroup.field.zero
         )
         (List.range initialRowIndex (List.length listOfRowVectors - 1))
 
@@ -46,20 +46,20 @@ findPivotComplex =
 
 
 subtractRowGeneric : Vector.ComplexVectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
-subtractRowGeneric { field, subtractVectors } r currentRow nextRow =
+subtractRowGeneric { abelianGroup } r currentRow nextRow =
     Vector.getAt r nextRow
         |> Maybe.andThen
             (\nElement ->
                 Vector.getAt r currentRow
                     |> Maybe.map
                         (\currentElement ->
-                            (if currentElement == field.zero then
+                            (if currentElement == abelianGroup.field.zero then
                                 currentRow
 
                              else
-                                Vector.map (field.multiply (field.divide nElement currentElement)) currentRow
+                                Vector.map (abelianGroup.field.multiply (abelianGroup.field.divide nElement currentElement)) currentRow
                             )
-                                |> subtractVectors nextRow
+                                |> abelianGroup.subtractVectors nextRow
                         )
             )
         |> Maybe.withDefault nextRow
@@ -82,17 +82,17 @@ subtractComplexRow r currentRow nextRow =
 {-| Internal function for scalling rows by pivot entry
 -}
 scaleGeneric : Vector.ComplexVectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a
-scaleGeneric { field } rowIndex rowVector =
+scaleGeneric { abelianGroup } rowIndex rowVector =
     Vector.getAt rowIndex rowVector
         |> Maybe.map
             (\elementAtRowIndex ->
                 Vector.map
                     (\rowElement ->
-                        if elementAtRowIndex == field.zero then
+                        if elementAtRowIndex == abelianGroup.field.zero then
                             rowElement
 
                         else
-                            field.divide rowElement elementAtRowIndex
+                            abelianGroup.field.divide rowElement elementAtRowIndex
                     )
                     rowVector
             )

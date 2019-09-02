@@ -166,9 +166,9 @@ type VectorSpace
 
 {-| Add two Real Matrices together
 -}
-addRealMatrices : Matrix number -> Matrix number -> Matrix number
+addRealMatrices : Matrix Float -> Matrix Float -> Matrix Float
 addRealMatrices =
-    liftA2 (+)
+    liftA2 Internal.Field.realField.add
 
 
 {-| Add two Complex Matrices together
@@ -180,7 +180,7 @@ addComplexMatrices =
 
 {-| Monoidally add two Real numbered Matrices together
 -}
-sumRealMatrices : Matrix number -> Typeclasses.Classes.Monoid.Monoid (Matrix number)
+sumRealMatrices : Matrix Float -> Typeclasses.Classes.Monoid.Monoid (Matrix Float)
 sumRealMatrices sumEmptyMatrix =
     Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addRealMatrices) sumEmptyMatrix
 

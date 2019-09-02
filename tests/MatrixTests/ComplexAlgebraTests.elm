@@ -13,7 +13,7 @@ suite =
     Test.describe "Complex Algebra"
         [ Test.describe "Complex Matrix Space"
             [ Test.describe "Abelian Group"
-                [ Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Matrix add is commutative" <|
+                [ Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Matrix add is commutative" <|
                     \one two three ->
                         let
                             v =
@@ -62,7 +62,7 @@ suite =
                         in
                         Matrix.addComplexMatrices m1 m2
                             |> Expect.equal (Matrix.addComplexMatrices m2 m1)
-                , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Matrix add is associative" <|
+                , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Matrix add is associative" <|
                     \one two three ->
                         let
                             v =

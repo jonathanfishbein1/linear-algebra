@@ -121,6 +121,7 @@ module Matrix exposing
 
 import ComplexNumbers
 import Float.Extra
+import Internal.Field
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
@@ -172,9 +173,9 @@ addRealMatrices =
 
 {-| Add two Complex Matrices together
 -}
-addComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+addComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
 addComplexMatrices =
-    liftA2 ComplexNumbers.add
+    liftA2 Internal.Field.complexField.add
 
 
 {-| Monoidally add two Real numbered Matrices together
@@ -186,7 +187,7 @@ sumRealMatrices sumEmptyMatrix =
 
 {-| Monoidally add two Complex numbered Matrices together
 -}
-sumComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Typeclasses.Classes.Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumberCartesian number))
+sumComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Typeclasses.Classes.Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 sumComplexMatrices sumEmptyMatrix =
     Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addComplexMatrices) sumEmptyMatrix
 

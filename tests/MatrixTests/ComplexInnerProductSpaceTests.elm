@@ -330,7 +330,7 @@ suite =
                     in
                     Expect.true "All elements equal" result
             ]
-        , Test.fuzz Fuzz.int "tests dot product is nondegenerative" <|
+        , Test.fuzz (Fuzz.map Basics.toFloat Fuzz.int) "tests dot product is nondegenerative" <|
             \one ->
                 let
                     a =

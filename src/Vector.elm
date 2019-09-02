@@ -225,20 +225,24 @@ foldl foldFunction acc (Vector list) =
     List.foldl foldFunction acc list
 
 
+vectorDotProduct : Internal.Field.Field a -> Vector a -> Vector a -> a
+vectorDotProduct { zero, add, multiply } vectorOne vectorTwo =
+    liftA2 multiply vectorOne vectorTwo
+        |> foldl add zero
+
+
 {-| Dot product on two Complex Numbered Vectors
 -}
 complexVectorDotProduct : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
 complexVectorDotProduct vectorOne vectorTwo =
-    liftA2 ComplexNumbers.multiply vectorOne vectorTwo
-        |> foldl ComplexNumbers.add ComplexNumbers.zero
+    vectorDotProduct Internal.Field.complexField vectorOne vectorTwo
 
 
 {-| Dot product on two Real Numbered Vectors
 -}
-realVectorDotProduct : Vector number -> Vector number -> number
+realVectorDotProduct : Vector Float -> Vector Float -> Float
 realVectorDotProduct vectorOne vectorTwo =
-    liftA2 (*) vectorOne vectorTwo
-        |> foldl (+) 0
+    vectorDotProduct Internal.Field.realField vectorOne vectorTwo
 
 
 {-| Calculate length of a real vector

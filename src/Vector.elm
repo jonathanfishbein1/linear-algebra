@@ -122,6 +122,12 @@ type alias VectorSpace a =
     }
 
 
+type alias InnerProductSpace a =
+    { vectorSpace : VectorSpace a
+    , innerProduct : Vector a -> Vector a -> a
+    }
+
+
 {-| Add Complex Vectors together
 -}
 addComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number)
@@ -481,4 +487,18 @@ complexVectorSpace =
         { field = Internal.Field.complexField
         , subtractVectors = subtractComplexVectors
         }
+    }
+
+
+realInnerProductSpace : InnerProductSpace Float
+realInnerProductSpace =
+    { vectorSpace = realVectorSpace
+    , innerProduct = realVectorDotProduct
+    }
+
+
+complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumberCartesian Float)
+complexInnerProductSpace =
+    { vectorSpace = complexVectorSpace
+    , innerProduct = complexVectorDotProduct
     }

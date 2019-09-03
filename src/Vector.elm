@@ -7,8 +7,6 @@ module Vector exposing
     , apply
     , liftA2
     , foldl
-    , realVectorDotProduct
-    , complexVectorDotProduct
     , concat
     , complexVectorLength
     , cross
@@ -31,7 +29,7 @@ module Vector exposing
     , print
     , read
     , setAt
-    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorSpace, realInnerProductSpace, realVectorSpace, vectorTensorProduct
+    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorSpace, realInnerProductSpace, realVectorSpace, vectorDotProduct, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -202,20 +200,6 @@ vectorDotProduct : Internal.Field.Field a -> Vector a -> Vector a -> a
 vectorDotProduct { zero, add, multiply } vectorOne vectorTwo =
     liftA2 multiply vectorOne vectorTwo
         |> foldl add zero
-
-
-{-| Dot product on two Complex Numbered Vectors
--}
-complexVectorDotProduct : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
-complexVectorDotProduct vectorOne vectorTwo =
-    vectorDotProduct Internal.Field.complexField vectorOne vectorTwo
-
-
-{-| Dot product on two Real Numbered Vectors
--}
-realVectorDotProduct : Vector Float -> Vector Float -> Float
-realVectorDotProduct vectorOne vectorTwo =
-    vectorDotProduct Internal.Field.realField vectorOne vectorTwo
 
 
 {-| Calculate length of a real vector
@@ -470,14 +454,14 @@ complexVectorSpace =
 realInnerProductSpace : InnerProductSpace Float
 realInnerProductSpace =
     { vectorSpace = realVectorSpace
-    , innerProduct = realVectorDotProduct
+    , innerProduct = vectorDotProduct Internal.Field.realField
     }
 
 
 complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
-    , innerProduct = complexVectorDotProduct
+    , innerProduct = vectorDotProduct Internal.Field.complexField
     }
 
 

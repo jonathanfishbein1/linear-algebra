@@ -338,7 +338,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.realVectorDotProduct a a
+                        Vector.vectorDotProduct Internal.Field.realField a a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -355,13 +355,13 @@ suite =
                         Vector.Vector [ three ]
 
                     aPlusBDotc =
-                        Vector.realVectorDotProduct (Vector.addVectors Internal.Field.realField a b) c
+                        Vector.vectorDotProduct Internal.Field.realField (Vector.addVectors Internal.Field.realField a b) c
 
                     aDotB =
-                        Vector.realVectorDotProduct a c
+                        Vector.vectorDotProduct Internal.Field.realField a c
 
                     bDotC =
-                        Vector.realVectorDotProduct b c
+                        Vector.vectorDotProduct Internal.Field.realField b c
 
                     aDotBPlusbDotC =
                         aDotB + bDotC
@@ -378,10 +378,10 @@ suite =
                         Vector.Vector [ two ]
 
                     threeTimesADotB =
-                        Vector.realVectorDotProduct (Vector.map ((*) three) a) b
+                        Vector.vectorDotProduct Internal.Field.realField (Vector.map ((*) three) a) b
 
                     aDotBTimesThree =
-                        Vector.realVectorDotProduct a b * three
+                        Vector.vectorDotProduct Internal.Field.realField a b * three
                 in
                 threeTimesADotB
                     |> Expect.equal aDotBTimesThree
@@ -395,10 +395,10 @@ suite =
                         Vector.Vector [ two ]
 
                     aDotB =
-                        Vector.realVectorDotProduct a b
+                        Vector.vectorDotProduct Internal.Field.realField a b
 
                     bDotA =
-                        Vector.realVectorDotProduct b a
+                        Vector.vectorDotProduct Internal.Field.realField b a
                 in
                 aDotB
                     |> Expect.equal bDotA
@@ -409,7 +409,7 @@ suite =
                         Vector.Vector [ one ]
 
                     squareRootADotA =
-                        Basics.sqrt (Vector.realVectorDotProduct a a)
+                        Basics.sqrt (Vector.vectorDotProduct Internal.Field.realField a a)
 
                     aLength =
                         Vector.realVectorLength a
@@ -502,10 +502,10 @@ suite =
                         Vector.Vector [ two ]
 
                     distanceAB =
-                        Vector.realVectorDotProduct a b
+                        Vector.vectorDotProduct Internal.Field.realField a b
 
                     distanceBA =
-                        Vector.realVectorDotProduct b a
+                        Vector.vectorDotProduct Internal.Field.realField b a
                 in
                 distanceAB
                     |> Expect.equal distanceBA

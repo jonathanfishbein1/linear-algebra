@@ -193,7 +193,7 @@ suite =
                         Vector.Vector [ one, two ]
 
                     result =
-                        Vector.subtractRealVectors vectorOne vectorTwo
+                        Vector.subtractVectors Internal.Field.realField vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ 0, 0 ])
         , Test.fuzz2 Fuzz.float Fuzz.float "tests subtractComplexVectors" <|
@@ -215,7 +215,7 @@ suite =
                         Vector.Vector [ complexNumber ]
 
                     result =
-                        Vector.subtractComplexVectors vectorOne vectorTwo
+                        Vector.subtractVectors Internal.Field.complexField vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ ComplexNumbers.zero ])
         , Test.test "tests vector tensor product" <|

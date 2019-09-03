@@ -13,8 +13,6 @@ module Vector exposing
     , distance
     , normalise
     , realVectorLength
-    , subtractRealVectors
-    , subtractComplexVectors
     , vector3ToVector
     , dimension
     , realVectorSubspace
@@ -29,7 +27,7 @@ module Vector exposing
     , print
     , read
     , setAt
-    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorSpace, realInnerProductSpace, realVectorSpace, vectorDotProduct, vectorTensorProduct
+    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorSpace, realInnerProductSpace, realVectorSpace, subtractVectors, vectorDotProduct, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -219,23 +217,16 @@ complexVectorLength complexNumberVector =
 
 {-| Subtract Real Vectors together
 -}
-subtractRealVectors : Vector Float -> Vector Float -> Vector Float
-subtractRealVectors =
-    liftA2 Internal.Field.realField.subtract
-
-
-{-| Subtract Complex Vectors together
--}
-subtractComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
-subtractComplexVectors =
-    liftA2 Internal.Field.complexField.subtract
+subtractVectors : Internal.Field.Field a -> Vector a -> Vector a -> Vector a
+subtractVectors { subtract } =
+    liftA2 subtract
 
 
 {-| Calculate distance between two vectors
 -}
 distance : Vector Float -> Vector Float -> Float
 distance vectorOne vectorTwo =
-    subtractRealVectors vectorOne vectorTwo
+    subtractVectors Internal.Field.realField vectorOne vectorTwo
         |> realVectorLength
 
 
@@ -437,7 +428,7 @@ realVectorSpace : VectorSpace Float
 realVectorSpace =
     { abelianGroup =
         { field = Internal.Field.realField
-        , subtractVectors = subtractRealVectors
+        , subtractVectors = subtractVectors Internal.Field.realField
         }
     }
 
@@ -446,7 +437,7 @@ complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorSpace =
     { abelianGroup =
         { field = Internal.Field.complexField
-        , subtractVectors = subtractComplexVectors
+        , subtractVectors = subtractVectors Internal.Field.complexField
         }
     }
 

@@ -2,8 +2,6 @@ module Vector exposing
     ( Vector(..)
     , Vector3(..)
     , Scalar(..)
-    , addComplexVectors
-    , addRealVectors
     , map
     , equal
     , apply
@@ -33,7 +31,7 @@ module Vector exposing
     , print
     , read
     , setAt
-    , InnerProductSpace, VectorSpace, complexInnerProductSpace, complexVectorSpace, realInnerProductSpace, realVectorSpace, vectorTensorProduct
+    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorSpace, realInnerProductSpace, realVectorSpace, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -126,18 +124,9 @@ type alias InnerProductSpace a =
     }
 
 
-{-| Add Complex Vectors together
--}
-addComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
-addComplexVectors =
-    liftA2 Internal.Field.complexField.add
-
-
-{-| Add Real Vectors together
--}
-addRealVectors : Vector Float -> Vector Float -> Vector Float
-addRealVectors =
-    liftA2 Internal.Field.realField.add
+addVectors : Internal.Field.Field a -> Vector a -> Vector a -> Vector a
+addVectors { add } =
+    liftA2 add
 
 
 {-| Map over a vector
@@ -305,14 +294,14 @@ dimension (Vector list) =
 -}
 realVectorSubspace : Scalar Float -> List (Vector Float) -> List (Float -> Bool) -> Bool
 realVectorSubspace scalar vectorList predicates =
-    vectorSubspace Internal.Field.realField addRealVectors scalar vectorList predicates
+    vectorSubspace Internal.Field.realField (addVectors Internal.Field.realField) scalar vectorList predicates
 
 
 {-| Function to determine if a set of complex valued vectors is a valid subspace
 -}
 complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian Float) -> List (Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (ComplexNumbers.ComplexNumberCartesian Float -> Bool) -> Bool
 complexVectorSubspace scalar vectorList predicates =
-    vectorSubspace Internal.Field.complexField addComplexVectors scalar vectorList predicates
+    vectorSubspace Internal.Field.complexField (addVectors Internal.Field.complexField) scalar vectorList predicates
 
 
 vectorSubspace : Internal.Field.Field a -> (Vector a -> Vector a -> Vector a) -> Scalar a -> List (Vector a) -> List (a -> Bool) -> Bool

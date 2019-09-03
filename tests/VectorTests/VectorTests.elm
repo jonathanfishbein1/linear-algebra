@@ -244,7 +244,7 @@ suite =
                         Vector.Vector [ two, three ]
 
                     vectorSumIJ =
-                        Vector.addRealVectors vectorI vectorJ
+                        Vector.addVectors Internal.Field.realField vectorI vectorJ
 
                     vectorTensorProductIJK =
                         Vector.vectorTensorProduct Internal.Field.realField vectorSumIJ vectorK
@@ -256,7 +256,7 @@ suite =
                         Vector.vectorTensorProduct Internal.Field.realField vectorJ vectorK
 
                     vectorSumTensorProductIKJK =
-                        Vector.addRealVectors vectorTensorProductIK vectorTensorProductJK
+                        Vector.addVectors Internal.Field.realField vectorTensorProductIK vectorTensorProductJK
                 in
                 Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) vectorTensorProductIJK vectorSumTensorProductIKJK)
         ]

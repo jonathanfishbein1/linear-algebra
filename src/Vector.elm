@@ -15,8 +15,6 @@ module Vector exposing
     , realVectorLength
     , vector3ToVector
     , dimension
-    , realVectorSubspace
-    , complexVectorSubspace
     , append
     , concatEmpty
     , pure
@@ -27,7 +25,7 @@ module Vector exposing
     , print
     , read
     , setAt
-    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorSpace, realInnerProductSpace, realVectorSpace, subtractVectors, vectorDotProduct, vectorTensorProduct
+    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, subtractVectors, vectorDotProduct, vectorSubspace, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -105,6 +103,7 @@ type Scalar a
 
 type alias AbelianGroup a =
     { field : Internal.Field.Field a
+    , addVects : Vector a -> Vector a -> Vector a
     , subtractVectors : Vector a -> Vector a -> Vector a
     }
 
@@ -265,31 +264,17 @@ dimension (Vector list) =
     List.length list
 
 
-{-| Function to determine if a set of real valued vectors is a valid subspace
--}
-realVectorSubspace : Scalar Float -> List (Vector Float) -> List (Float -> Bool) -> Bool
-realVectorSubspace scalar vectorList predicates =
-    vectorSubspace Internal.Field.realField (addVectors Internal.Field.realField) scalar vectorList predicates
-
-
-{-| Function to determine if a set of complex valued vectors is a valid subspace
--}
-complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian Float) -> List (Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (ComplexNumbers.ComplexNumberCartesian Float -> Bool) -> Bool
-complexVectorSubspace scalar vectorList predicates =
-    vectorSubspace Internal.Field.complexField (addVectors Internal.Field.complexField) scalar vectorList predicates
-
-
-vectorSubspace : Internal.Field.Field a -> (Vector a -> Vector a -> Vector a) -> Scalar a -> List (Vector a) -> List (a -> Bool) -> Bool
-vectorSubspace { zero, multiply } add (Scalar scalar) vectorList predicates =
+vectorSubspace : AbelianGroup a -> Scalar a -> List (Vector a) -> List (a -> Bool) -> Bool
+vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
     let
         testZeroVector =
-            List.map (map (multiply zero)) vectorList
+            List.map (map (field.multiply field.zero)) vectorList
 
         containsZeroVector =
             closurePassCriteria testZeroVector
 
         scaledVectors =
-            List.map (map (multiply scalar)) vectorList
+            List.map (map (field.multiply scalar)) vectorList
 
         closurePassCriteria =
             List.map (\(Vector vector) -> Vector <| List.map2 (\predicate x -> predicate x) predicates vector)
@@ -299,7 +284,7 @@ vectorSubspace { zero, multiply } add (Scalar scalar) vectorList predicates =
             closurePassCriteria scaledVectors
 
         cartesianAddVectors =
-            List.Extra.lift2 add
+            List.Extra.lift2 addVects
 
         additionOfVectors =
             cartesianAddVectors vectorList vectorList
@@ -424,21 +409,31 @@ findIndex predicate (Vector list) =
     List.Extra.findIndex predicate list
 
 
+realVectorAbelianGroup : AbelianGroup Float
+realVectorAbelianGroup =
+    { field = Internal.Field.realField
+    , addVects = addVectors Internal.Field.realField
+    , subtractVectors = subtractVectors Internal.Field.realField
+    }
+
+
+complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumberCartesian Float)
+complexVectorAbelianGroup =
+    { field = Internal.Field.complexField
+    , addVects = addVectors Internal.Field.complexField
+    , subtractVectors = subtractVectors Internal.Field.complexField
+    }
+
+
 realVectorSpace : VectorSpace Float
 realVectorSpace =
-    { abelianGroup =
-        { field = Internal.Field.realField
-        , subtractVectors = subtractVectors Internal.Field.realField
-        }
+    { abelianGroup = realVectorAbelianGroup
     }
 
 
 complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorSpace =
-    { abelianGroup =
-        { field = Internal.Field.complexField
-        , subtractVectors = subtractVectors Internal.Field.complexField
-        }
+    { abelianGroup = complexVectorAbelianGroup
     }
 
 

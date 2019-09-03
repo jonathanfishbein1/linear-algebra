@@ -62,7 +62,7 @@ suite =
                         Vector.Scalar one
 
                     isSubspace =
-                        Vector.realVectorSubspace scalar vectors predicates
+                        Vector.vectorSubspace Vector.realVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
@@ -85,7 +85,7 @@ suite =
                         Vector.Scalar one
 
                     isSubspace =
-                        Vector.realVectorSubspace scalar vectors predicates
+                        Vector.vectorSubspace Vector.realVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
@@ -114,7 +114,7 @@ suite =
                         Vector.Scalar complexNumber
 
                     isSubspace =
-                        Vector.complexVectorSubspace scalar vectors predicates
+                        Vector.vectorSubspace Vector.complexVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
@@ -152,7 +152,7 @@ suite =
                         Vector.Scalar complexNumber
 
                     isSubspace =
-                        Vector.complexVectorSubspace scalar vectors predicates
+                        Vector.vectorSubspace Vector.complexVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"

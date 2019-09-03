@@ -2,6 +2,7 @@ module VectorTests.VectorTests exposing (suite)
 
 import ComplexNumbers
 import Expect
+import Float.Extra
 import Fuzz
 import Internal.Field
 import Parser
@@ -230,4 +231,32 @@ suite =
                         Vector.vectorTensorProduct Internal.Field.realField vectorOne vectorTwo
                 in
                 Expect.equal vectorTensorProduct (Vector.Vector [ 3, 4, 6, 8 ])
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector tensor product respects addition" <|
+            \one two three ->
+                let
+                    vectorI =
+                        Vector.Vector [ one, two ]
+
+                    vectorJ =
+                        Vector.Vector [ three, one ]
+
+                    vectorK =
+                        Vector.Vector [ two, three ]
+
+                    vectorSumIJ =
+                        Vector.addRealVectors vectorI vectorJ
+
+                    vectorTensorProductIJK =
+                        Vector.vectorTensorProduct Internal.Field.realField vectorSumIJ vectorK
+
+                    vectorTensorProductIK =
+                        Vector.vectorTensorProduct Internal.Field.realField vectorI vectorK
+
+                    vectorTensorProductJK =
+                        Vector.vectorTensorProduct Internal.Field.realField vectorJ vectorK
+
+                    vectorSumTensorProductIKJK =
+                        Vector.addRealVectors vectorTensorProductIK vectorTensorProductJK
+                in
+                Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) vectorTensorProductIJK vectorSumTensorProductIKJK)
         ]

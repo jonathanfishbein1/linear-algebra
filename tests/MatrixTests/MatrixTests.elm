@@ -6,7 +6,7 @@ import Fuzz
 import Matrix
 import Test
 import Vector
-
+import Field
 
 suite : Test.Test
 suite =
@@ -521,7 +521,7 @@ suite =
                             ]
 
                     identityMatrix =
-                        Matrix.identityMatrix (Matrix.mDimension matrix)
+                        Matrix.identityMatrix Field.realField (Matrix.mDimension matrix)
 
                     matrixInverseProduct =
                         (Matrix.multiplyMatrices Vector.realInnerProductSpace) matrix inverse
@@ -545,7 +545,7 @@ suite =
                             ]
 
                     identityMatrix =
-                        Matrix.identityMatrix (Matrix.mDimension matrix)
+                        Matrix.identityMatrix Field.realField (Matrix.mDimension matrix)
 
                     inverseMatrixProduct =
                         (Matrix.multiplyMatrices Vector.realInnerProductSpace) inverse matrix

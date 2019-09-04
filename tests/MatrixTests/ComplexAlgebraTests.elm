@@ -652,7 +652,7 @@ suite =
                         Matrix.Matrix
                             [ v1, v2, v3 ]
                 in
-                Expect.equal (Matrix.identityMatrix 3) m1
+                Expect.equal (Matrix.identityMatrix Field.realField 3) m1
         , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests In*A = A" <|
             \one two three ->
                 let
@@ -685,7 +685,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) (Matrix.identityMatrix 3) m1
+                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) (Matrix.identityMatrix Field.realField 3) m1
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests A*In = a" <|
@@ -720,7 +720,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) m1 (Matrix.identityMatrix 3)
+                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) m1 (Matrix.identityMatrix Field.realField 3)
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition" <|
@@ -900,7 +900,7 @@ suite =
                             ]
 
                     aTimebThenConjugate =
-                        (Matrix.multiplyMatrices Vector.complexInnerProductSpace) a b
+                        (Matrix.multiplyMatrices Vector.complexInnerProductSpace) a b 
                             |> Result.map Matrix.conjugate
 
                     cTimesm1ThenTimesm2 =

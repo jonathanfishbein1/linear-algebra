@@ -267,15 +267,9 @@ multiplyMatrices innerProductSpace (Matrix matrixOne) matrixTwo =
 
 {-| Create Identity Matrix with n dimension
 -}
-identityMatrix : Int -> Matrix Float
-identityMatrix dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal Field.realField columnIndex)))
-
-
-identityMatrixComplex : Int -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
-identityMatrixComplex dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal Field.complexField columnIndex)))
-
+identityMatrix : Field.Field a -> Int -> Matrix a
+identityMatrix field dimension =
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal field columnIndex)))
 
 {-| Multiply a real Vector by a real Matrix
 -}
@@ -560,7 +554,7 @@ doesSetSpanSpace (VectorSpace vectorSpace) vectors =
     else
         let
             identityRowVectors =
-                identityMatrix vectorSpace
+                identityMatrix Field.realField vectorSpace
 
             floatMatrix =
                 identityRowVectors
@@ -872,7 +866,7 @@ invert matrix =
                     mDimension invertableMatrix
 
                 augmentedMatrix =
-                    appendHorizontal invertableMatrix (identityMatrix sizeOfMatrix)
+                    appendHorizontal invertableMatrix (identityMatrix Field.realField sizeOfMatrix)
 
                 reducedRowEchelonForm =
                     gaussJordan augmentedMatrix
@@ -897,7 +891,7 @@ invertComplex matrix =
                     mDimension invertableMatrix
 
                 augmentedMatrix =
-                    appendHorizontal invertableMatrix (identityMatrixComplex sizeOfMatrix)
+                    appendHorizontal invertableMatrix (identityMatrix Field.complexField sizeOfMatrix)
 
                 reducedRowEchelonForm =
                     gaussJordanComplex augmentedMatrix

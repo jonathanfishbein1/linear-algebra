@@ -7,9 +7,9 @@ import Field
 import Parser
 import Test
 import Vector
+import Field 
 
-
-suite : Test.Test
+suite : Test.Test 
 suite =
     Test.describe "Complex Inner Product Vector Space" 
         [ Test.describe "Complex Vector Space"

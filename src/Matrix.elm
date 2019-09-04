@@ -4,8 +4,7 @@ module Matrix exposing
     , ColumnVector(..)
     , Solution(..)
     , VectorSpace(..)
-    , addRealMatrices
-    , addComplexMatrices
+    , addMatrices
     , sumRealMatrices
     , sumComplexMatrices
     , map
@@ -166,30 +165,23 @@ type VectorSpace
 
 {-| Add two Real Matrices together
 -}
-addRealMatrices : Matrix Float -> Matrix Float -> Matrix Float
-addRealMatrices =
-    liftA2 Field.realField.add
-
-
-{-| Add two Complex Matrices together
--}
-addComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
-addComplexMatrices =
-    liftA2 Field.complexField.add
+addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+addMatrices { add } =
+    liftA2 add
 
 
 {-| Monoidally add two Real numbered Matrices together
 -}
 sumRealMatrices : Matrix Float -> Typeclasses.Classes.Monoid.Monoid (Matrix Float)
 sumRealMatrices sumEmptyMatrix =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addRealMatrices) sumEmptyMatrix
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend (addMatrices Field.realField)) sumEmptyMatrix
 
 
 {-| Monoidally add two Complex numbered Matrices together
 -}
 sumComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Typeclasses.Classes.Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 sumComplexMatrices sumEmptyMatrix =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addComplexMatrices) sumEmptyMatrix
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend (addMatrices Field.complexField)) sumEmptyMatrix
 
 
 {-| Map over a Matrix

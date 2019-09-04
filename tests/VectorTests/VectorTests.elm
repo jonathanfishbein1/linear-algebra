@@ -2,9 +2,9 @@ module VectorTests.VectorTests exposing (suite)
 
 import ComplexNumbers
 import Expect
+import Field
 import Float.Extra
 import Fuzz
-import Internal.Field
 import Parser
 import Test
 import Vector
@@ -27,7 +27,7 @@ suite =
                             |> Vector.vector3ToVector
 
                     aDotACrossB =
-                        Vector.vectorDotProduct Internal.Field.realField (Vector.vector3ToVector a) aCrossB
+                        Vector.vectorDotProduct Field.realField (Vector.vector3ToVector a) aCrossB
                 in
                 aDotACrossB
                     |> Expect.equal 0
@@ -193,7 +193,7 @@ suite =
                         Vector.Vector [ one, two ]
 
                     result =
-                        Vector.subtractVectors Internal.Field.realField vectorOne vectorTwo
+                        Vector.subtractVectors Field.realField vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ 0, 0 ])
         , Test.fuzz2 Fuzz.float Fuzz.float "tests subtractComplexVectors" <|
@@ -215,7 +215,7 @@ suite =
                         Vector.Vector [ complexNumber ]
 
                     result =
-                        Vector.subtractVectors Internal.Field.complexField vectorOne vectorTwo
+                        Vector.subtractVectors Field.complexField vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ ComplexNumbers.zero ])
         , Test.test "tests vector tensor product" <|
@@ -228,7 +228,7 @@ suite =
                         Vector.Vector [ 3, 4 ]
 
                     vectorTensorProduct =
-                        Vector.vectorTensorProduct Internal.Field.realField vectorOne vectorTwo
+                        Vector.vectorTensorProduct Field.realField vectorOne vectorTwo
                 in
                 Expect.equal vectorTensorProduct (Vector.Vector [ 3, 4, 6, 8 ])
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector tensor product respects addition" <|
@@ -244,19 +244,19 @@ suite =
                         Vector.Vector [ two, three ]
 
                     vectorSumIJ =
-                        Vector.addVectors Internal.Field.realField vectorI vectorJ
+                        Vector.addVectors Field.realField vectorI vectorJ
 
                     vectorTensorProductIJK =
-                        Vector.vectorTensorProduct Internal.Field.realField vectorSumIJ vectorK
+                        Vector.vectorTensorProduct Field.realField vectorSumIJ vectorK
 
                     vectorTensorProductIK =
-                        Vector.vectorTensorProduct Internal.Field.realField vectorI vectorK
+                        Vector.vectorTensorProduct Field.realField vectorI vectorK
 
                     vectorTensorProductJK =
-                        Vector.vectorTensorProduct Internal.Field.realField vectorJ vectorK
+                        Vector.vectorTensorProduct Field.realField vectorJ vectorK
 
                     vectorSumTensorProductIKJK =
-                        Vector.addVectors Internal.Field.realField vectorTensorProductIK vectorTensorProductJK
+                        Vector.addVectors Field.realField vectorTensorProductIK vectorTensorProductJK
                 in
                 Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) vectorTensorProductIJK vectorSumTensorProductIKJK)
         ]

@@ -12,7 +12,7 @@ module Internal.Matrix exposing
     )
 
 import ComplexNumbers
-import Internal.Field
+import Field
 import List.Extra
 import Vector
 
@@ -103,7 +103,7 @@ reduceRowBackwardsComplex rowIndex listOfVectors =
         ++ List.drop (rowIndex + 1) listOfVectors
 
 
-diagonal : Internal.Field.Field a -> Int -> Int -> a
+diagonal : Field.Field a -> Int -> Int -> a
 diagonal { zero, one } columnIndex rowIndex =
     if columnIndex == rowIndex then
         one

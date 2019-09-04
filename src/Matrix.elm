@@ -6,7 +6,7 @@ module Matrix exposing
     , VectorSpace(..)
     , addRealMatrices
     , addComplexMatrices
-    , sumRealMatrices
+    , sumRealMatrices 
     , sumComplexMatrices
     , map
     , equal
@@ -121,7 +121,7 @@ module Matrix exposing
 
 import ComplexNumbers
 import Float.Extra
-import Internal.Field
+import Field
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
@@ -168,14 +168,14 @@ type VectorSpace
 -}
 addRealMatrices : Matrix Float -> Matrix Float -> Matrix Float
 addRealMatrices =
-    liftA2 Internal.Field.realField.add
+    liftA2 Field.realField.add
 
 
 {-| Add two Complex Matrices together
 -}
 addComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
 addComplexMatrices =
-    liftA2 Internal.Field.complexField.add
+    liftA2 Field.complexField.add
 
 
 {-| Monoidally add two Real numbered Matrices together
@@ -304,12 +304,12 @@ multiplyRealMatrices (Matrix matrixOne) matrixTwo =
 -}
 identityMatrix : Int -> Matrix Float
 identityMatrix dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal Internal.Field.realField columnIndex)))
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal Field.realField columnIndex)))
 
 
 identityMatrixComplex : Int -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
 identityMatrixComplex dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal Internal.Field.complexField columnIndex)))
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal Field.complexField columnIndex)))
 
 
 {-| Multiply a real Vector by a real Matrix

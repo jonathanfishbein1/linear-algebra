@@ -74,8 +74,8 @@ module Vector exposing
 -}
 
 import ComplexNumbers
+import Field
 import Float.Extra
-import Internal.Field
 import List.Extra
 import Parser exposing ((|.), (|=))
 import Typeclasses.Classes.Equality
@@ -102,7 +102,7 @@ type Scalar a
 
 
 type alias AbelianGroup a =
-    { field : Internal.Field.Field a
+    { field : Field.Field a
     , addVects : Vector a -> Vector a -> Vector a
     , subtractVectors : Vector a -> Vector a -> Vector a
     }
@@ -119,7 +119,7 @@ type alias InnerProductSpace a =
     }
 
 
-addVectors : Internal.Field.Field a -> Vector a -> Vector a -> Vector a
+addVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 addVectors { add } =
     liftA2 add
 
@@ -193,7 +193,7 @@ foldl foldFunction acc (Vector list) =
     List.foldl foldFunction acc list
 
 
-vectorDotProduct : Internal.Field.Field a -> Vector a -> Vector a -> a
+vectorDotProduct : Field.Field a -> Vector a -> Vector a -> a
 vectorDotProduct { zero, add, multiply } vectorOne vectorTwo =
     liftA2 multiply vectorOne vectorTwo
         |> foldl add zero
@@ -216,7 +216,7 @@ complexVectorLength complexNumberVector =
 
 {-| Subtract Real Vectors together
 -}
-subtractVectors : Internal.Field.Field a -> Vector a -> Vector a -> Vector a
+subtractVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 subtractVectors { subtract } =
     liftA2 subtract
 
@@ -225,7 +225,7 @@ subtractVectors { subtract } =
 -}
 distance : Vector Float -> Vector Float -> Float
 distance vectorOne vectorTwo =
-    subtractVectors Internal.Field.realField vectorOne vectorTwo
+    subtractVectors Field.realField vectorOne vectorTwo
         |> realVectorLength
 
 
@@ -411,17 +411,17 @@ findIndex predicate (Vector list) =
 
 realVectorAbelianGroup : AbelianGroup Float
 realVectorAbelianGroup =
-    { field = Internal.Field.realField
-    , addVects = addVectors Internal.Field.realField
-    , subtractVectors = subtractVectors Internal.Field.realField
+    { field = Field.realField
+    , addVects = addVectors Field.realField
+    , subtractVectors = subtractVectors Field.realField
     }
 
 
 complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorAbelianGroup =
-    { field = Internal.Field.complexField
-    , addVects = addVectors Internal.Field.complexField
-    , subtractVectors = subtractVectors Internal.Field.complexField
+    { field = Field.complexField
+    , addVects = addVectors Field.complexField
+    , subtractVectors = subtractVectors Field.complexField
     }
 
 
@@ -440,18 +440,18 @@ complexVectorSpace =
 realInnerProductSpace : InnerProductSpace Float
 realInnerProductSpace =
     { vectorSpace = realVectorSpace
-    , innerProduct = vectorDotProduct Internal.Field.realField
+    , innerProduct = vectorDotProduct Field.realField
     }
 
 
 complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
-    , innerProduct = vectorDotProduct Internal.Field.complexField
+    , innerProduct = vectorDotProduct Field.complexField
     }
 
 
-vectorTensorProduct : Internal.Field.Field a -> Vector a -> Vector a -> Vector a
+vectorTensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
 vectorTensorProduct { multiply } vectorOne vectorTwo =
     bind
         vectorOne

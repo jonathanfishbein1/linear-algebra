@@ -14,8 +14,7 @@ module Matrix exposing
     , adjoint
     , apply
     , liftA2
-    , multiplyComplexMatrices
-    , multiplyRealMatrices
+    , multiplyMatrices
     , identityMatrix
     , gaussJordan
     , gaussianReduce
@@ -240,36 +239,10 @@ liftA2 f a b =
     apply (map f a) b
 
 
-{-| Matrix Matrix multiplication for a Complex Numbered Matrix
--}
-multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
-multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
-    if nDimension (Matrix matrixOne) == mDimension matrixTwo then
-        let
-            (Matrix matrixTranspose) =
-                transpose matrixTwo
-
-            listOfVectors =
-                matrixTranspose
-                    |> List.map (\(RowVector vector) -> vector)
-
-            listOfVectorsOne =
-                matrixOne
-                    |> List.map (\(RowVector vector) -> vector)
-        in
-        Internal.Matrix.map2VectorCartesian Vector.complexInnerProductSpace listOfVectorsOne listOfVectors
-            |> List.map RowVector
-            |> Matrix
-            |> Ok
-
-    else
-        Err "first matrix must have same number of columns as the second matrix has rows"
-
-
 {-| Matrix Matrix multiplication for a Real Numbered Matrix
 -}
-multiplyRealMatrices : Matrix Float -> Matrix Float -> Result String (Matrix Float)
-multiplyRealMatrices (Matrix matrixOne) matrixTwo =
+multiplyMatrices : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String (Matrix a)
+multiplyMatrices innerProductSpace (Matrix matrixOne) matrixTwo =
     if nDimension (Matrix matrixOne) == mDimension matrixTwo then
         let
             (Matrix matrixTranspose) =
@@ -283,7 +256,7 @@ multiplyRealMatrices (Matrix matrixOne) matrixTwo =
                 matrixOne
                     |> List.map (\(RowVector vector) -> vector)
         in
-        Internal.Matrix.map2VectorCartesian Vector.realInnerProductSpace listOfVectorsOne listOfVectors
+        Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectorsOne listOfVectors
             |> List.map RowVector
             |> Matrix
             |> Ok

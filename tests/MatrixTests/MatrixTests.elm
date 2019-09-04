@@ -524,7 +524,7 @@ suite =
                         Matrix.identityMatrix (Matrix.mDimension matrix)
 
                     matrixInverseProduct =
-                        Matrix.multiplyRealMatrices matrix inverse
+                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) matrix inverse
                 in
                 Expect.equal matrixInverseProduct (Ok identityMatrix)
         , Test.test "tests inverse times matrix equals identity" <|
@@ -548,7 +548,7 @@ suite =
                         Matrix.identityMatrix (Matrix.mDimension matrix)
 
                     inverseMatrixProduct =
-                        Matrix.multiplyRealMatrices inverse matrix
+                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) inverse matrix
                 in
                 Expect.equal inverseMatrixProduct (Ok identityMatrix)
         , Test.test "tests complex matrix determinant 2 x 2" <|

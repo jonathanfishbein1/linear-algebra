@@ -5,7 +5,6 @@ module Internal.Matrix exposing
     , findPivot
     , map2VectorCartesian
     , reduceRowBackwards
-    , reduceRowBackwardsComplex
     , scale
     , subtractRow
     )
@@ -70,8 +69,8 @@ scale { abelianGroup } rowIndex rowVector =
         |> Maybe.withDefault rowVector
 
 
-reduceRowBackwards : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)
-reduceRowBackwards rowIndex listOfVectors =
+reduceRowBackwards : Vector.VectorSpace a -> Int -> List (Vector.Vector a) -> List (Vector.Vector a)
+reduceRowBackwards vectorSpace rowIndex listOfVectors =
     let
         row =
             Maybe.withDefault (Vector.Vector []) (List.Extra.getAt rowIndex listOfVectors)
@@ -79,23 +78,7 @@ reduceRowBackwards rowIndex listOfVectors =
         prevRows =
             List.take rowIndex listOfVectors
                 |> List.map
-                    (subtractRow Vector.realVectorSpace rowIndex row)
-    in
-    prevRows
-        ++ [ row ]
-        ++ List.drop (rowIndex + 1) listOfVectors
-
-
-reduceRowBackwardsComplex : Int -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float))
-reduceRowBackwardsComplex rowIndex listOfVectors =
-    let
-        row =
-            Maybe.withDefault (Vector.Vector []) (List.Extra.getAt rowIndex listOfVectors)
-
-        prevRows =
-            List.take rowIndex listOfVectors
-                |> List.map
-                    (subtractRow Vector.complexVectorSpace rowIndex row)
+                    (subtractRow vectorSpace rowIndex row)
     in
     prevRows
         ++ [ row ]

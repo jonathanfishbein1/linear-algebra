@@ -314,7 +314,7 @@ identityMatrixComplex dimension =
 
 {-| Multiply a real Vector by a real Matrix
 -}
-multiplyRealVectorRealMatrix : Matrix Float -> Vector.Vector Float -> Vector.Vector Float
+multiplyRealVectorRealMatrix : Matrix Float -> Vector.Vector Float -> Vector.Vector Float 
 multiplyRealVectorRealMatrix (Matrix matrix) vector =
     let
         listOfVectors =
@@ -426,10 +426,10 @@ jordanReduce (Matrix matrix) =
         listOfVectors =
             List.map (\(RowVector vector) -> vector) matrix
     in
-    List.foldl Internal.Matrix.reduceRowBackwards listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
+    List.foldl (Internal.Matrix.reduceRowBackwards Vector.realVectorSpace) listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
         |> List.map RowVector
         |> Matrix
-
+ 
 
 {-| Internal function for Jordan Elimination
 -}
@@ -439,7 +439,7 @@ jordanReduceComplex (Matrix matrix) =
         listOfVectors =
             List.map (\(RowVector vector) -> vector) matrix
     in
-    List.foldl Internal.Matrix.reduceRowBackwardsComplex listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
+    List.foldl (Internal.Matrix.reduceRowBackwards Vector.complexVectorSpace) listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
         |> List.map RowVector
         |> Matrix
 

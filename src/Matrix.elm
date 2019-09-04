@@ -314,7 +314,7 @@ identityMatrixComplex dimension =
 
 {-| Multiply a real Vector by a real Matrix
 -}
-multiplyRealVectorRealMatrix : Matrix Float -> Vector.Vector Float -> Vector.Vector Float 
+multiplyRealVectorRealMatrix : Matrix Float -> Vector.Vector Float -> Vector.Vector Float
 multiplyRealVectorRealMatrix (Matrix matrix) vector =
     let
         listOfVectors =
@@ -349,7 +349,7 @@ gaussianReduce (Matrix matrix) =
             List.map (\(RowVector vector) -> vector) matrix
 
         upperTriangularFormRectangle =
-            List.foldl Internal.Matrix.calculateUpperTriangularFormRectangle listOfVectors (List.range 0 (List.length matrix - 1))
+            List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle Vector.realVectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
 
         rowEchelonForm =
             List.indexedMap
@@ -370,7 +370,7 @@ gaussianReduceComplex (Matrix matrix) =
             List.map (\(RowVector vector) -> vector) matrix
 
         upperTriangularFormRectangleComplex =
-            List.foldl Internal.Matrix.calculateUpperTriangularFormRectangleComplex listOfVectors (List.range 0 (List.length matrix - 1))
+            List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle Vector.complexVectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
 
         rowEchelonForm =
             List.indexedMap
@@ -391,7 +391,7 @@ upperTriangle (Matrix matrix) =
             listOfVectors =
                 List.map (\(RowVector vector) -> vector) matrix
         in
-        List.foldl Internal.Matrix.calculateUpperTriangularFormRectangle listOfVectors (List.range 0 (List.length matrix - 1))
+        List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle Vector.realVectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
             |> List.map RowVector
             |> Matrix
             |> Ok
@@ -409,7 +409,7 @@ upperTriangleComplex (Matrix matrix) =
             listOfVectors =
                 List.map (\(RowVector vector) -> vector) matrix
         in
-        List.foldl Internal.Matrix.calculateUpperTriangularFormRectangleComplex listOfVectors (List.range 0 (List.length matrix - 1))
+        List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle Vector.complexVectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
             |> List.map RowVector
             |> Matrix
             |> Ok
@@ -429,7 +429,7 @@ jordanReduce (Matrix matrix) =
     List.foldl (Internal.Matrix.reduceRowBackwards Vector.realVectorSpace) listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
         |> List.map RowVector
         |> Matrix
- 
+
 
 {-| Internal function for Jordan Elimination
 -}

@@ -8,6 +8,7 @@ module Vector exposing
     , liftA2
     , foldl
     , concat
+    , scalarMultiplicaiton
     , complexVectorLength
     , cross
     , distance
@@ -133,8 +134,8 @@ map f (Vector vector) =
 
 
 scalarMultiplicaiton : Field.Field a -> a -> Vector a -> Vector a
-scalarMultiplicaiton { multiply } a =
-    map (multiply a)
+scalarMultiplicaiton { multiply } scalar =
+    map (multiply scalar)
 
 
 {-| Compare two Vectors for equality

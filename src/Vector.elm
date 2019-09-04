@@ -110,6 +110,7 @@ type alias AbelianGroup a =
 
 type alias VectorSpace a =
     { abelianGroup : AbelianGroup a
+    , vectorScalarMultiplication : a -> Vector a -> Vector a
     }
 
 
@@ -129,6 +130,11 @@ addVectors { add } =
 map : (a -> b) -> Vector a -> Vector b
 map f (Vector vector) =
     Vector <| List.map f vector
+
+
+scalarMultiplicaiton : Field.Field a -> a -> Vector a -> Vector a
+scalarMultiplicaiton { multiply } a =
+    map (multiply a)
 
 
 {-| Compare two Vectors for equality
@@ -428,12 +434,14 @@ complexVectorAbelianGroup =
 realVectorSpace : VectorSpace Float
 realVectorSpace =
     { abelianGroup = realVectorAbelianGroup
+    , vectorScalarMultiplication = scalarMultiplicaiton Field.realField
     }
 
 
 complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorSpace =
     { abelianGroup = complexVectorAbelianGroup
+    , vectorScalarMultiplication = scalarMultiplicaiton Field.complexField
     }
 
 

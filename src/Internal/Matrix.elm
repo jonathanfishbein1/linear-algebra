@@ -40,7 +40,7 @@ subtractRow { abelianGroup } r currentRow nextRow =
                                 currentRow
 
                              else
-                                Vector.map (abelianGroup.field.multiply (abelianGroup.field.divide nElement currentElement)) currentRow
+                                Vector.scalarMultiplication abelianGroup.field (abelianGroup.field.divide nElement currentElement) currentRow
                             )
                                 |> abelianGroup.subtractVectors nextRow
                         )

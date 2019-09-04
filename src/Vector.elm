@@ -8,7 +8,7 @@ module Vector exposing
     , liftA2
     , foldl
     , concat
-    , scalarMultiplicaiton
+    , scalarMultiplication
     , complexVectorLength
     , cross
     , distance
@@ -133,8 +133,8 @@ map f (Vector vector) =
     Vector <| List.map f vector
 
 
-scalarMultiplicaiton : Field.Field a -> a -> Vector a -> Vector a
-scalarMultiplicaiton { multiply } scalar =
+scalarMultiplication : Field.Field a -> a -> Vector a -> Vector a
+scalarMultiplication { multiply } scalar =
     map (multiply scalar)
 
 
@@ -435,14 +435,14 @@ complexVectorAbelianGroup =
 realVectorSpace : VectorSpace Float
 realVectorSpace =
     { abelianGroup = realVectorAbelianGroup
-    , vectorScalarMultiplication = scalarMultiplicaiton Field.realField
+    , vectorScalarMultiplication = scalarMultiplication Field.realField
     }
 
 
 complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorSpace =
     { abelianGroup = complexVectorAbelianGroup
-    , vectorScalarMultiplication = scalarMultiplicaiton Field.complexField
+    , vectorScalarMultiplication = scalarMultiplication Field.complexField
     }
 
 

@@ -4,7 +4,6 @@ module Internal.Matrix exposing
     , diagonal
     , findPivot
     , map2VectorCartesian
-    , map2VectorCartesianComplex
     , reduceRowBackwards
     , reduceRowBackwardsComplex
     , scale
@@ -112,8 +111,8 @@ diagonal { zero, one } columnIndex rowIndex =
         zero
 
 
-map2VectorCartesianGeneric : Vector.InnerProductSpace a -> List (Vector.Vector a) -> List (Vector.Vector a) -> List (Vector.Vector a)
-map2VectorCartesianGeneric { innerProduct } left right =
+map2VectorCartesian : Vector.InnerProductSpace a -> List (Vector.Vector a) -> List (Vector.Vector a) -> List (Vector.Vector a)
+map2VectorCartesian { innerProduct } left right =
     List.foldl
         (\leftVector finalAcc ->
             finalAcc
@@ -123,16 +122,6 @@ map2VectorCartesianGeneric { innerProduct } left right =
         )
         []
         left
-
-
-map2VectorCartesian : List (Vector.Vector Float) -> List (Vector.Vector Float) -> List (Vector.Vector Float)
-map2VectorCartesian left right =
-    map2VectorCartesianGeneric Vector.realInnerProductSpace left right
-
-
-map2VectorCartesianComplex : List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (Vector.Vector (ComplexNumbers.ComplexNumberCartesian Float))
-map2VectorCartesianComplex left right =
-    map2VectorCartesianGeneric Vector.complexInnerProductSpace left right
 
 
 calculateUpperTriangularFormRectangle : Int -> List (Vector.Vector Float) -> List (Vector.Vector Float)

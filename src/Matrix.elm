@@ -6,7 +6,7 @@ module Matrix exposing
     , VectorSpace(..)
     , addRealMatrices
     , addComplexMatrices
-    , sumRealMatrices 
+    , sumRealMatrices
     , sumComplexMatrices
     , map
     , equal
@@ -120,8 +120,8 @@ module Matrix exposing
 -}
 
 import ComplexNumbers
-import Float.Extra
 import Field
+import Float.Extra
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
@@ -265,7 +265,7 @@ multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
                 matrixOne
                     |> List.map (\(RowVector vector) -> vector)
         in
-        Internal.Matrix.map2VectorCartesianComplex listOfVectorsOne listOfVectors
+        Internal.Matrix.map2VectorCartesian Vector.complexInnerProductSpace listOfVectorsOne listOfVectors
             |> List.map RowVector
             |> Matrix
             |> Ok
@@ -291,7 +291,7 @@ multiplyRealMatrices (Matrix matrixOne) matrixTwo =
                 matrixOne
                     |> List.map (\(RowVector vector) -> vector)
         in
-        Internal.Matrix.map2VectorCartesian listOfVectorsOne listOfVectors
+        Internal.Matrix.map2VectorCartesian Vector.realInnerProductSpace listOfVectorsOne listOfVectors
             |> List.map RowVector
             |> Matrix
             |> Ok
@@ -321,7 +321,7 @@ multiplyRealVectorRealMatrix (Matrix matrix) vector =
             matrix
                 |> List.map (\(RowVector vec) -> vec)
     in
-    Internal.Matrix.map2VectorCartesian listOfVectors [ vector ]
+    Internal.Matrix.map2VectorCartesian Vector.realInnerProductSpace listOfVectors [ vector ]
         |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
         |> Vector.Vector
 

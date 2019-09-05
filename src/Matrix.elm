@@ -370,7 +370,7 @@ solve matrix (ColumnVector (Vector.Vector b)) =
     solveMatrix augmentedMatrix
 
 
-variablePortion : Matrix Float -> Matrix Float
+variablePortion : Matrix a -> Matrix a
 variablePortion matrix =
     subMatrix 0 (mDimension matrix) 0 (nDimension matrix - 1) matrix
 

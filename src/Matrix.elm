@@ -4,7 +4,6 @@ module Matrix exposing
     , ColumnVector(..)
     , Solution(..)
     , VectorSpace(..)
-    , addMatrices
     , sumRealMatrices
     , sumComplexMatrices
     , map
@@ -14,7 +13,6 @@ module Matrix exposing
     , adjoint
     , apply
     , liftA2
-    , multiplyMatrices
     , identityMatrix
     , gaussJordan
     , gaussianReduce
@@ -22,11 +20,10 @@ module Matrix exposing
     , isSymmetric
     , jordanReduce
     , areLinearlyIndependent
-    , multiplyVectorMatrix
     , nullSpace
     , solve
     , areBasis
-    , basisOfVectorSpace 
+    , basisOfVectorSpace
     , doesSetSpanSpace
     , mDimension
     , nDimension
@@ -48,9 +45,8 @@ module Matrix exposing
     , invertComplex
     , isUnitary
     , jordanReduceComplex
-    , upperTriangleComplex
     , subMatrix
-    , isInvertable, isInvertableComplex, isSquareMatrix
+    , addMatrices, isInvertable, isInvertableComplex, isSquareMatrix, multiplyMatrices, multiplyVectorMatrix
     )
 
 {-| A module for Matrix
@@ -270,6 +266,7 @@ identityMatrix : Field.Field a -> Int -> Matrix a
 identityMatrix field dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal field columnIndex)))
 
+
 {-| Multiply a real Vector by a real Matrix
 -}
 multiplyVectorMatrix : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Vector.Vector a
@@ -321,32 +318,14 @@ gaussianReduce vectorSpace (Matrix matrix) =
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Matrix Float -> Result String (Matrix Float)
-upperTriangle (Matrix matrix) =
+upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+upperTriangle vectorSpace (Matrix matrix) =
     if isSquareMatrix (Matrix matrix) then
         let
             listOfVectors =
                 List.map (\(RowVector vector) -> vector) matrix
         in
-        List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle Vector.realVectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
-            |> List.map RowVector
-            |> Matrix
-            |> Ok
-
-    else
-        Err "Must be Square Matrix"
-
-
-{-| Put a matrix into Upper Triangular Form
--}
-upperTriangleComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
-upperTriangleComplex (Matrix matrix) =
-    if isSquareMatrix (Matrix matrix) then
-        let
-            listOfVectors =
-                List.map (\(RowVector vector) -> vector) matrix
-        in
-        List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle Vector.complexVectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
+        List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
             |> List.map RowVector
             |> Matrix
             |> Ok
@@ -396,7 +375,7 @@ gaussJordanComplex matrix =
     gaussianReduce Vector.complexVectorSpace matrix
         |> jordanReduceComplex
 
- 
+
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
 -}
 solve : Matrix Float -> ColumnVector Float -> Solution
@@ -782,7 +761,7 @@ determinant : Matrix Float -> Result String Float
 determinant matrix =
     let
         upperTriangularForm =
-            upperTriangle matrix
+            upperTriangle Vector.realVectorSpace matrix
     in
     Result.andThen
         (\squareMatrix ->
@@ -809,7 +788,7 @@ determinantComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Res
 determinantComplex matrix =
     let
         upperTriangularFormComplex =
-            upperTriangleComplex matrix
+            upperTriangle Vector.complexVectorSpace matrix
     in
     Result.andThen
         (\squareMatrix ->

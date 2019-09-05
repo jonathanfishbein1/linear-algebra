@@ -348,18 +348,10 @@ jordanReduce vectorSpace (Matrix matrix) =
 
 {-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
-gaussJordan : Matrix Float -> Matrix Float
-gaussJordan matrix =
-    gaussianReduce Vector.realVectorSpace matrix
-        |> jordanReduce Vector.realVectorSpace
-
-
-{-| Function composition of Gaussian Elimination and Jordan Elimination
--}
-gaussJordanComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
-gaussJordanComplex matrix =
-    gaussianReduce Vector.complexVectorSpace matrix
-        |> jordanReduce Vector.complexVectorSpace
+gaussJordan : Vector.VectorSpace a -> Matrix a -> Matrix a
+gaussJordan vectorSpace matrix =
+    gaussianReduce vectorSpace matrix
+        |> jordanReduce vectorSpace
 
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
@@ -389,7 +381,7 @@ solveMatrix : Matrix Float -> Solution
 solveMatrix (Matrix listOfRowVectors) =
     let
         (Matrix listOfRowVectorsRREF) =
-            gaussJordan (Matrix listOfRowVectors)
+            gaussJordan Vector.realVectorSpace (Matrix listOfRowVectors)
 
         (Matrix variableSide) =
             variablePortion (Matrix listOfRowVectorsRREF)
@@ -503,7 +495,7 @@ doesSetSpanSpace (VectorSpace vectorSpace) vectors =
                 identityRowVectors
 
             listOfRowVectorsRREF =
-                gaussJordan (Matrix (List.map RowVector vectors))
+                gaussJordan Vector.realVectorSpace (Matrix (List.map RowVector vectors))
         in
         floatMatrix
             == listOfRowVectorsRREF
@@ -812,7 +804,7 @@ invert matrix =
                     appendHorizontal invertableMatrix (identityMatrix Field.realField sizeOfMatrix)
 
                 reducedRowEchelonForm =
-                    gaussJordan augmentedMatrix
+                    gaussJordan Vector.realVectorSpace augmentedMatrix
 
                 inverse =
                     subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
@@ -837,7 +829,7 @@ invertComplex matrix =
                     appendHorizontal invertableMatrix (identityMatrix Field.complexField sizeOfMatrix)
 
                 reducedRowEchelonForm =
-                    gaussJordanComplex augmentedMatrix
+                    gaussJordan Vector.complexVectorSpace augmentedMatrix
 
                 inverse =
                     subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm

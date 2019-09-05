@@ -859,7 +859,7 @@ suite =
                             ]
 
                     mTimesV =
-                        Matrix.multiplyRealVectorRealMatrix m v
+                        Matrix.multiplyVectorMatrix Vector.realInnerProductSpace m v
 
                     expected =
                         Vector.Vector [ 14, 32, 50 ]

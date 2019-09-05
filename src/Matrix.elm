@@ -22,11 +22,11 @@ module Matrix exposing
     , isSymmetric
     , jordanReduce
     , areLinearlyIndependent
-    , multiplyRealVectorRealMatrix
+    , multiplyVectorMatrix
     , nullSpace
     , solve
     , areBasis
-    , basisOfVectorSpace
+    , basisOfVectorSpace 
     , doesSetSpanSpace
     , mDimension
     , nDimension
@@ -273,14 +273,14 @@ identityMatrix field dimension =
 
 {-| Multiply a real Vector by a real Matrix
 -}
-multiplyRealVectorRealMatrix : Matrix Float -> Vector.Vector Float -> Vector.Vector Float
-multiplyRealVectorRealMatrix (Matrix matrix) vector =
+multiplyVectorMatrix : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Vector.Vector a
+multiplyVectorMatrix innerProductSpace (Matrix matrix) vector =
     let
         listOfVectors =
             matrix
                 |> List.map (\(RowVector vec) -> vec)
     in
-    Internal.Matrix.map2VectorCartesian Vector.realInnerProductSpace listOfVectors [ vector ]
+    Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
         |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
         |> Vector.Vector
 

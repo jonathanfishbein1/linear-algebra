@@ -44,7 +44,6 @@ module Matrix exposing
     , invert
     , invertComplex
     , isUnitary
-    , jordanReduceComplex
     , subMatrix
     , addMatrices, isInvertable, isInvertableComplex, isSquareMatrix, multiplyMatrices, multiplyVectorMatrix
     )
@@ -336,26 +335,13 @@ upperTriangle vectorSpace (Matrix matrix) =
 
 {-| Internal function for Jordan Elimination
 -}
-jordanReduce : Matrix Float -> Matrix Float
-jordanReduce (Matrix matrix) =
+jordanReduce : Vector.VectorSpace a -> Matrix a -> Matrix a
+jordanReduce vectorSpace (Matrix matrix) =
     let
         listOfVectors =
             List.map (\(RowVector vector) -> vector) matrix
     in
-    List.foldl (Internal.Matrix.reduceRowBackwards Vector.realVectorSpace) listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
-        |> List.map RowVector
-        |> Matrix
-
-
-{-| Internal function for Jordan Elimination
--}
-jordanReduceComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
-jordanReduceComplex (Matrix matrix) =
-    let
-        listOfVectors =
-            List.map (\(RowVector vector) -> vector) matrix
-    in
-    List.foldl (Internal.Matrix.reduceRowBackwards Vector.complexVectorSpace) listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
+    List.foldl (Internal.Matrix.reduceRowBackwards vectorSpace) listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
         |> List.map RowVector
         |> Matrix
 
@@ -365,7 +351,7 @@ jordanReduceComplex (Matrix matrix) =
 gaussJordan : Matrix Float -> Matrix Float
 gaussJordan matrix =
     gaussianReduce Vector.realVectorSpace matrix
-        |> jordanReduce
+        |> jordanReduce Vector.realVectorSpace
 
 
 {-| Function composition of Gaussian Elimination and Jordan Elimination
@@ -373,7 +359,7 @@ gaussJordan matrix =
 gaussJordanComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
 gaussJordanComplex matrix =
     gaussianReduce Vector.complexVectorSpace matrix
-        |> jordanReduceComplex
+        |> jordanReduce Vector.complexVectorSpace
 
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
@@ -564,7 +550,7 @@ basisOfVectorSpace vectorSpace vectors =
     else
         let
             (Matrix reducedRowEchelonFormListOfRowVectors) =
-                jordanReduce (Matrix (List.map RowVector vectors))
+                jordanReduce Vector.realVectorSpace (Matrix (List.map RowVector vectors))
         in
         reducedRowEchelonFormListOfRowVectors
             |> List.map (\(RowVector vector) -> vector)

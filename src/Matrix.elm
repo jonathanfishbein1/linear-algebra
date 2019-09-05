@@ -144,8 +144,8 @@ type Matrix a
 
 {-| Type to represent result of Gauss-Jordan reduction
 -}
-type Solution
-    = UniqueSolution (ColumnVector Float)
+type Solution a
+    = UniqueSolution (ColumnVector a)
     | InfiniteSolutions { nullity : Int, rank : Int }
     | NoUniqueSolution String
 
@@ -356,7 +356,7 @@ gaussJordan vectorSpace matrix =
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
 -}
-solve : Matrix Float -> ColumnVector Float -> Solution
+solve : Matrix Float -> ColumnVector Float -> Solution Float
 solve matrix (ColumnVector (Vector.Vector b)) =
     let
         matrixB =
@@ -377,7 +377,7 @@ variablePortion matrix =
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination
 -}
-solveMatrix : Matrix Float -> Solution
+solveMatrix : Matrix Float -> Solution Float
 solveMatrix (Matrix listOfRowVectors) =
     let
         (Matrix listOfRowVectorsRREF) =
@@ -428,7 +428,7 @@ solveMatrix (Matrix listOfRowVectors) =
 
 {-| Calculate the null space of a matrix
 -}
-nullSpace : Matrix Float -> Solution
+nullSpace : Matrix Float -> Solution Float
 nullSpace matrix =
     let
         numberOfRows =

@@ -44,7 +44,6 @@ module Matrix exposing
     , setAt
     , upperTriangle
     , determinantComplex
-    , gaussianReduceComplex
     , invert
     , invertComplex
     , isUnitary
@@ -301,40 +300,19 @@ isHermitian matrix =
 
 {-| Gaussian Elimination
 -}
-gaussianReduce : Matrix Float -> Matrix Float
-gaussianReduce (Matrix matrix) =
+gaussianReduce : Vector.VectorSpace a -> Matrix a -> Matrix a
+gaussianReduce vectorSpace (Matrix matrix) =
     let
         listOfVectors =
             List.map (\(RowVector vector) -> vector) matrix
 
         upperTriangularFormRectangle =
-            List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle Vector.realVectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
+            List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
 
         rowEchelonForm =
             List.indexedMap
-                (Internal.Matrix.scale Vector.realVectorSpace)
+                (Internal.Matrix.scale vectorSpace)
                 upperTriangularFormRectangle
-    in
-    rowEchelonForm
-        |> List.map RowVector
-        |> Matrix
-
-
-{-| Gaussian Elimination
--}
-gaussianReduceComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
-gaussianReduceComplex (Matrix matrix) =
-    let
-        listOfVectors =
-            List.map (\(RowVector vector) -> vector) matrix
-
-        upperTriangularFormRectangleComplex =
-            List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle Vector.complexVectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
-
-        rowEchelonForm =
-            List.indexedMap
-                (\index row -> Internal.Matrix.scale Vector.complexVectorSpace index row)
-                upperTriangularFormRectangleComplex
     in
     rowEchelonForm
         |> List.map RowVector
@@ -407,7 +385,7 @@ jordanReduceComplex (Matrix matrix) =
 -}
 gaussJordan : Matrix Float -> Matrix Float
 gaussJordan matrix =
-    gaussianReduce matrix
+    gaussianReduce Vector.realVectorSpace matrix
         |> jordanReduce
 
 
@@ -415,10 +393,10 @@ gaussJordan matrix =
 -}
 gaussJordanComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
 gaussJordanComplex matrix =
-    gaussianReduceComplex matrix
+    gaussianReduce Vector.complexVectorSpace matrix
         |> jordanReduceComplex
 
-
+ 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
 -}
 solve : Matrix Float -> ColumnVector Float -> Solution

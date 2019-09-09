@@ -38,7 +38,7 @@ suite =
                         Vector.Vector [ one ]
 
                     normalisedALength =
-                        Vector.normalise (==) Field.realField a 
+                        Vector.normalise Field.realField a
                             |> Vector.vectorLength Field.realField
                 in
                 normalisedALength

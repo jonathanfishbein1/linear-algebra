@@ -243,9 +243,9 @@ vector3ToVector (Vector3 x y z) =
 
 {-| Adjust a vector so that its length is exactly one
 -}
-normalise : (a -> a -> Bool) -> Field.Field a -> Vector a -> Vector a
-normalise equality field v =
-    if equality (vectorLength field v) field.zero then
+normalise : Field.Field a -> Vector a -> Vector a
+normalise field v =
+    if vectorLength field v == field.zero then
         v
 
     else

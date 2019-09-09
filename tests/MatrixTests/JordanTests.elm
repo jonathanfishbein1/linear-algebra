@@ -22,7 +22,7 @@ suite =
                             ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.jordanReduce rowEchelonFormMatrix
+                        Matrix.jordanReduce Vector.realVectorSpace rowEchelonFormMatrix
 
                     expected =
                         Matrix.Matrix <|
@@ -43,7 +43,7 @@ suite =
                             ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.jordanReduce rowEchelonFormMatrix
+                        Matrix.jordanReduce Vector.realVectorSpace rowEchelonFormMatrix
 
                     expected =
                         Matrix.Matrix <|
@@ -99,7 +99,7 @@ suite =
                             ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.jordanReduceComplex matrix
+                        Matrix.jordanReduce Vector.complexVectorSpace matrix
 
                     expected =
                         Matrix.Matrix

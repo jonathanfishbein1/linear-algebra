@@ -2,11 +2,12 @@ module MatrixTests.MatrixTests exposing (suite)
 
 import ComplexNumbers
 import Expect
+import Field
 import Fuzz
 import Matrix
 import Test
 import Vector
-import Field
+
 
 suite : Test.Test
 suite =
@@ -22,7 +23,7 @@ suite =
                             ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.gaussJordan matrix
+                        Matrix.gaussJordan Vector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -524,7 +525,7 @@ suite =
                         Matrix.identityMatrix Field.realField (Matrix.mDimension matrix)
 
                     matrixInverseProduct =
-                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) matrix inverse
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace matrix inverse
                 in
                 Expect.equal matrixInverseProduct (Ok identityMatrix)
         , Test.test "tests inverse times matrix equals identity" <|
@@ -548,7 +549,7 @@ suite =
                         Matrix.identityMatrix Field.realField (Matrix.mDimension matrix)
 
                     inverseMatrixProduct =
-                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) inverse matrix
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace inverse matrix
                 in
                 Expect.equal inverseMatrixProduct (Ok identityMatrix)
         , Test.test "tests complex matrix determinant 2 x 2" <|

@@ -22,7 +22,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce matrix
+                        Matrix.gaussianReduce Vector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -43,7 +43,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce matrix
+                        Matrix.gaussianReduce Vector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -71,7 +71,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce matrix
+                        Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
         , Test.test "tests gaussianReduce with infinite solutions two" <|
@@ -90,7 +90,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce matrix
+                        Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
         , Test.test "tests gaussianReduce with no solutions" <|
@@ -111,7 +111,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce matrix
+                        Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
         , Test.test "tests gaussianReduce wikibooks example" <|
@@ -132,7 +132,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce matrix
+                        Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
         , Test.test "tests matrix gaussianReduce put matrix into Row Echelon Form" <|
@@ -146,7 +146,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce matrix
+                        Matrix.gaussianReduce Vector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -167,7 +167,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduceComplex matrix
+                        Matrix.gaussianReduce Vector.complexVectorSpace matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -223,7 +223,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduceComplex matrix
+                        Matrix.gaussianReduce Vector.complexVectorSpace matrix
 
                     complexNumberExpectedR1C1 =
                         ComplexNumbers.ComplexNumberCartesian

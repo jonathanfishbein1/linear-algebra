@@ -117,7 +117,7 @@ suite =
                             ]
 
                     nullSpace =
-                        Matrix.nullSpace matrix
+                        Matrix.nullSpace Vector.realVectorSpace matrix
 
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ 0, 0 ]

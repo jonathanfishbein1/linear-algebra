@@ -433,18 +433,18 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
 
 {-| Calculate the null space of a matrix
 -}
-nullSpace : Matrix Float -> Solution Float
-nullSpace matrix =
+nullSpace : Vector.VectorSpace a -> Matrix a -> Solution a
+nullSpace vectorSpace matrix =
     let
         numberOfRows =
             mDimension matrix
 
         b =
-            List.repeat numberOfRows 0
+            List.repeat numberOfRows vectorSpace.abelianGroup.field.zero
                 |> Vector.Vector
                 |> ColumnVector
     in
-    solve Vector.realVectorSpace matrix b
+    solve vectorSpace matrix b
 
 
 {-| Predicate to determine if a list of Vectors are linearly independent
@@ -459,7 +459,7 @@ areLinearlyIndependent listOfVectors =
             Matrix listOfRowVectors
 
         matrixNullSpace =
-            nullSpace matrix
+            nullSpace Vector.realVectorSpace matrix
 
         numberOfRows =
             List.length listOfRowVectors

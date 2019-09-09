@@ -463,7 +463,7 @@ solveMatrix (Matrix listOfRowVectors) =
 
         anyAllZeroExceptAugmentedSide =
             listOfRowVectorsRREF
-                |> List.any (\(RowVector (Vector.Vector row)) -> List.all ((==) 0) (List.take (List.length row - 1) row) && Vector.realVectorLength (Vector.Vector row) /= 0)
+                |> List.any (\(RowVector (Vector.Vector row)) -> List.all ((==) 0) (List.take (List.length row - 1) row) && Vector.vectorLength Field.realField (Vector.Vector row) /= 0)
 
         solution =
             List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectorsRREF
@@ -475,7 +475,7 @@ solveMatrix (Matrix listOfRowVectors) =
         let
             rank =
                 listOfRowVectorsRREF
-                    |> List.Extra.count (\(RowVector vector) -> Vector.realVectorLength vector /= 0)
+                    |> List.Extra.count (\(RowVector vector) -> Vector.vectorLength Field.realField vector /= 0)
 
             nullity =
                 nDimension (Matrix listOfRowVectorsRREF) - rank

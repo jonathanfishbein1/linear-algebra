@@ -10,7 +10,7 @@ import Vector
 import Field 
 
 suite : Test.Test 
-suite =
+suite = 
     Test.describe "Complex Inner Product Vector Space" 
         [ Test.describe "Complex Vector Space"
             [ Test.describe "Abelian Group"
@@ -412,7 +412,7 @@ suite =
                         Basics.sqrt (Vector.vectorDotProduct Field.realField a a)
 
                     aLength =
-                        Vector.realVectorLength a
+                        Vector.vectorLength Field.realField a
                 in
                 squareRootADotA
                     |> Expect.equal aLength
@@ -423,7 +423,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.realVectorLength a
+                        Vector.vectorLength Field.realField a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -437,10 +437,10 @@ suite =
                         Vector.Vector [ two ]
 
                     aPlusBLength =
-                        Vector.realVectorLength <| Vector.addVectors Field.realField a b
+                        Vector.vectorLength Field.realField <| Vector.addVectors Field.realField a b
 
                     lengthAPlusLengthB =
-                        Vector.realVectorLength a + Vector.realVectorLength b
+                        Vector.vectorLength Field.realField a + Vector.vectorLength Field.realField b
                 in
                 aPlusBLength
                     |> Expect.atMost lengthAPlusLengthB
@@ -451,10 +451,10 @@ suite =
                         Vector.Vector [ one ]
 
                     legnthOfTwoTimesA =
-                        Vector.realVectorLength (Vector.map ((*) two) a)
+                        Vector.vectorLength Field.realField (Vector.map ((*) two) a)
 
                     lengthOfATimesTwo =
-                        Basics.abs two * Vector.realVectorLength a
+                        Basics.abs two * Vector.vectorLength Field.realField a
                 in
                 legnthOfTwoTimesA
                     |> Expect.within (Expect.Absolute 0.1) lengthOfATimesTwo

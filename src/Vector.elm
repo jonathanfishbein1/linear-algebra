@@ -12,7 +12,6 @@ module Vector exposing
     , cross
     , distance
     , normalise
-    , realVectorLength
     , vector3ToVector
     , dimension
     , append
@@ -25,7 +24,7 @@ module Vector exposing
     , print
     , read
     , setAt
-    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, subtractVectors, vectorDotProduct, vectorSubspace, vectorTensorProduct
+    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, subtractVectors, vectorDotProduct, vectorLength, vectorSubspace, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -53,7 +52,7 @@ module Vector exposing
 @docs cross
 @docs distance
 @docs normalise
-@docs realVectorLength
+@docs vectorLength Field.realField
 @docs subtractRealVectors
 @docs subtractComplexVectors
 @docs vector3ToVector
@@ -211,14 +210,6 @@ vectorLength { power, add, zero } =
         >> power (1 / 2)
 
 
-{-| Calculate length of a real vector
--}
-realVectorLength : Vector Float -> Float
-realVectorLength =
-    foldl (\x acc -> x ^ 2 + acc) 0
-        >> Basics.sqrt
-
-
 {-| Calculate length of a complex vector
 -}
 complexVectorLength : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
@@ -238,7 +229,7 @@ subtractVectors { subtract } =
 distance : Vector Float -> Vector Float -> Float
 distance vectorOne vectorTwo =
     subtractVectors Field.realField vectorOne vectorTwo
-        |> realVectorLength
+        |> vectorLength Field.realField
 
 
 {-| Take the cross product of two 3D vectors
@@ -262,11 +253,11 @@ vector3ToVector (Vector3 x y z) =
 -}
 normalise : Vector Float -> Vector Float
 normalise v =
-    if Float.Extra.equalWithin 0.000000001 (realVectorLength v) 0.0 then
+    if Float.Extra.equalWithin 0.000000001 (vectorLength Field.realField v) 0.0 then
         v
 
     else
-        map ((/) (realVectorLength v)) v
+        map ((/) (vectorLength Field.realField v)) v
 
 
 {-| Count of number of elements in a vector

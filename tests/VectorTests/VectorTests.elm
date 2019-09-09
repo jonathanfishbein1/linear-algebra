@@ -39,7 +39,7 @@ suite =
 
                     normalisedALength =
                         Vector.normalise a
-                            |> Vector.realVectorLength
+                            |> Vector.vectorLength Field.realField
                 in
                 normalisedALength
                     |> Expect.equal 1

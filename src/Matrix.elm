@@ -4,8 +4,6 @@ module Matrix exposing
     , ColumnVector(..)
     , Solution(..)
     , VectorSpace(..)
-    , sumRealMatrices
-    , sumComplexMatrices
     , map
     , equal
     , transpose
@@ -45,7 +43,7 @@ module Matrix exposing
     , invertComplex
     , isUnitary
     , subMatrix
-    , addMatrices, isInvertable, isInvertableComplex, isSquareMatrix, multiplyMatrices, multiplyVectorMatrix
+    , addMatrices, isInvertable, isInvertableComplex, isSquareMatrix, multiplyMatrices, multiplyVectorMatrix, sumMatrices
     )
 
 {-| A module for Matrix
@@ -156,6 +154,13 @@ type VectorSpace
     = VectorSpace Int
 
 
+type alias AbelianGroup a =
+    { field : Field.Field a
+    , addMatrcs : Matrix a -> Matrix a -> Matrix a
+    , subtractMatrcs : Matrix a -> Matrix a -> Matrix a
+    }
+
+
 {-| Add two Real Matrices together
 -}
 addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
@@ -163,18 +168,18 @@ addMatrices { add } =
     liftA2 add
 
 
+{-| Add two Real Matrices together
+-}
+subtractMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+subtractMatrices { subtract } =
+    liftA2 subtract
+
+
 {-| Monoidally add two Real numbered Matrices together
 -}
-sumRealMatrices : Matrix Float -> Typeclasses.Classes.Monoid.Monoid (Matrix Float)
-sumRealMatrices sumEmptyMatrix =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend (addMatrices Field.realField)) sumEmptyMatrix
-
-
-{-| Monoidally add two Complex numbered Matrices together
--}
-sumComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Typeclasses.Classes.Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
-sumComplexMatrices sumEmptyMatrix =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend (addMatrices ComplexNumbers.complexField)) sumEmptyMatrix
+sumMatrices : AbelianGroup a -> Matrix a -> Typeclasses.Classes.Monoid.Monoid (Matrix a)
+sumMatrices { addMatrcs } sumEmptyMatrix =
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addMatrcs) sumEmptyMatrix
 
 
 {-| Map over a Matrix
@@ -903,3 +908,11 @@ isSquareMatrix matrix =
 
     else
         False
+
+
+realMatrixAbelianGroup : AbelianGroup Float
+realMatrixAbelianGroup =
+    { field = Field.realField
+    , addMatrcs = addMatrices Field.realField
+    , subtractMatrcs = subtractMatrices Field.realField
+    }

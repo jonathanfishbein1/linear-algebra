@@ -23,7 +23,7 @@ suite =
                         Vector.Vector3 two three one
 
                     aCrossB =
-                        Vector.cross a b
+                        Vector.cross Field.realField a b
                             |> Vector.vector3ToVector
 
                     aDotACrossB =

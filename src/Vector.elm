@@ -226,12 +226,12 @@ distance { subtractVects, field } vectorOne vectorTwo =
 
 {-| Take the cross product of two 3D vectors
 -}
-cross : Vector3 number -> Vector3 number -> Vector3 number
-cross (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
+cross : Field.Field a -> Vector3 a -> Vector3 a -> Vector3 a
+cross { subtract, multiply } (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
     Vector3
-        (y1 * z2 - y2 * z1)
-        (z1 * x2 - z2 * x1)
-        (x1 * y2 - x2 * y1)
+        (subtract (multiply y1 z2) (multiply y2 z1))
+        (subtract (multiply z1 x2) (multiply z2 x1))
+        (subtract (multiply x1 y2) (multiply x2 y1))
 
 
 {-| Convert a Vector3 type to a Vector typeZ

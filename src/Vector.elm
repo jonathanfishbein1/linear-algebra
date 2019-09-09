@@ -243,13 +243,13 @@ vector3ToVector (Vector3 x y z) =
 
 {-| Adjust a vector so that its length is exactly one
 -}
-normalise : Vector Float -> Vector Float
-normalise v =
-    if Float.Extra.equalWithin 0.000000001 (vectorLength Field.realField v) 0.0 then
+normalise : (a -> a -> Bool) -> Field.Field a -> Vector a -> Vector a
+normalise equality field v =
+    if equality (vectorLength field v) field.zero then
         v
 
     else
-        map ((/) (vectorLength Field.realField v)) v
+        map (field.divide (vectorLength field v)) v
 
 
 {-| Count of number of elements in a vector

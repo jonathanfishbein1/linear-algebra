@@ -47,7 +47,7 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ -4, -11, 22 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve matrix b
+                        Matrix.solve Vector.realVectorSpace matrix b
 
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
@@ -67,7 +67,7 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ 3, 0, -2 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve matrix b
+                        Matrix.solve Vector.realVectorSpace matrix b
 
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ 5, -1.0, -1.0 ]
@@ -87,7 +87,7 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ 8, 12, 4 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve matrix b
+                        Matrix.solve Vector.realVectorSpace matrix b
                 in
                 Expect.equal reducedRowEchelonFormMatrix (Matrix.NoUniqueSolution "No Unique Solution")
         , Test.test "tests matrix gaussJordan with infinite solutions" <|
@@ -104,7 +104,7 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ 7, 12, 4 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve matrix b
+                        Matrix.solve Vector.realVectorSpace matrix b
                 in
                 Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
         , Test.test "tests matrix null space calculation" <|

@@ -361,8 +361,8 @@ gaussJordan vectorSpace matrix =
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
 -}
-solve : Matrix Float -> ColumnVector Float -> Solution Float
-solve matrix (ColumnVector (Vector.Vector b)) =
+solve : Vector.VectorSpace a -> Matrix a -> ColumnVector a -> Solution a
+solve vectorSpace matrix (ColumnVector (Vector.Vector b)) =
     let
         matrixB =
             b
@@ -372,7 +372,7 @@ solve matrix (ColumnVector (Vector.Vector b)) =
         augmentedMatrix =
             matrixConcatHorizontal.semigroup.prepend matrix matrixB
     in
-    solveMatrix Vector.realVectorSpace augmentedMatrix
+    solveMatrix vectorSpace augmentedMatrix
 
 
 variablePortion : Matrix a -> Matrix a
@@ -444,7 +444,7 @@ nullSpace matrix =
                 |> Vector.Vector
                 |> ColumnVector
     in
-    solve matrix b
+    solve Vector.realVectorSpace matrix b
 
 
 {-| Predicate to determine if a list of Vectors are linearly independent

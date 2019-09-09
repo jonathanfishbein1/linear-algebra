@@ -215,7 +215,7 @@ suite =
                         Vector.Vector [ complexNumber ]
 
                     result =
-                        Vector.subtractVectors Field.complexField vectorOne vectorTwo
+                        Vector.subtractVectors ComplexNumbers.complexField vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ ComplexNumbers.zero ])
         , Test.test "tests vector tensor product" <|

@@ -53,8 +53,8 @@ suite =
                                         )
                                     ]
                         in
-                        Vector.addVectors Field.complexField v w
-                            |> Expect.equal (Vector.addVectors Field.complexField w v)
+                        Vector.addVectors ComplexNumbers.complexField v w
+                            |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
                 , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Vector add is associative" <|
                     \one two three ->
                         let
@@ -113,15 +113,15 @@ suite =
                                     ]
 
                             vPlusWPlusX =
-                                Vector.addVectors Field.complexField v w
-                                    |> Vector.addVectors Field.complexField x
+                                Vector.addVectors ComplexNumbers.complexField v w
+                                    |> Vector.addVectors ComplexNumbers.complexField x
 
                             wPlusXPlusV =
-                                Vector.addVectors Field.complexField w x
-                                    |> Vector.addVectors Field.complexField v
+                                Vector.addVectors ComplexNumbers.complexField w x
+                                    |> Vector.addVectors ComplexNumbers.complexField v
                         in
-                        Vector.addVectors Field.complexField v w
-                            |> Expect.equal (Vector.addVectors Field.complexField w v)
+                        Vector.addVectors ComplexNumbers.complexField v w
+                            |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
                 , Test.fuzz2 Fuzz.int Fuzz.int "tests empty vector is additive identity" <|
                     \one two ->
                         let
@@ -162,7 +162,7 @@ suite =
                                 Vector.Vector
                                     [ ComplexNumbers.zero ]
                         in
-                        Vector.addVectors Field.complexField v w
+                        Vector.addVectors ComplexNumbers.complexField v w
                             |> Expect.equal zero
                 ]
             , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests one is product identity" <|
@@ -261,7 +261,7 @@ suite =
                                 ]
 
                         vPlusW =
-                            Vector.addVectors Field.complexField v w
+                            Vector.addVectors ComplexNumbers.complexField v w
 
                         cvPlusW =
                             Vector.map (ComplexNumbers.multiply c) vPlusW
@@ -273,7 +273,7 @@ suite =
                             Vector.map (ComplexNumbers.multiply c) v
 
                         cVPluscW =
-                            Vector.addVectors Field.complexField cW cV
+                            Vector.addVectors ComplexNumbers.complexField cW cV
 
                         result =
                             Vector.equal ComplexNumbers.equal cvPlusW cVPluscW
@@ -324,7 +324,7 @@ suite =
                             Vector.map (ComplexNumbers.multiply c2) v
 
                         c1VPlusc2V =
-                            Vector.addVectors Field.complexField c1V c2V
+                            Vector.addVectors ComplexNumbers.complexField c1V c2V
 
                         result =
                             Vector.equal ComplexNumbers.equal c1VPlusc2V c1Plusc2V

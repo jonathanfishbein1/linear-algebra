@@ -4,7 +4,6 @@ module Matrix exposing
     , ColumnVector(..)
     , Solution(..)
     , VectorSpace(..)
-    , addMatrices
     , sumRealMatrices
     , sumComplexMatrices
     , map
@@ -14,7 +13,6 @@ module Matrix exposing
     , adjoint
     , apply
     , liftA2
-    , multiplyMatrices
     , identityMatrix
     , gaussJordan
     , gaussianReduce
@@ -51,7 +49,7 @@ module Matrix exposing
     , jordanReduceComplex
     , upperTriangleComplex
     , subMatrix
-    , isInvertable, isInvertableComplex, isSquareMatrix
+    , addMatrices, isInvertable, isInvertableComplex, isSquareMatrix, multiplyMatrices
     )
 
 {-| A module for Matrix
@@ -180,7 +178,7 @@ sumRealMatrices sumEmptyMatrix =
 -}
 sumComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Typeclasses.Classes.Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 sumComplexMatrices sumEmptyMatrix =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend (addMatrices Field.complexField)) sumEmptyMatrix
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend (addMatrices ComplexNumbers.complexField)) sumEmptyMatrix
 
 
 {-| Map over a Matrix
@@ -270,6 +268,7 @@ multiplyMatrices innerProductSpace (Matrix matrixOne) matrixTwo =
 identityMatrix : Field.Field a -> Int -> Matrix a
 identityMatrix field dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal field columnIndex)))
+
 
 {-| Multiply a real Vector by a real Matrix
 -}
@@ -891,7 +890,7 @@ invertComplex matrix =
                     mDimension invertableMatrix
 
                 augmentedMatrix =
-                    appendHorizontal invertableMatrix (identityMatrix Field.complexField sizeOfMatrix)
+                    appendHorizontal invertableMatrix (identityMatrix ComplexNumbers.complexField sizeOfMatrix)
 
                 reducedRowEchelonForm =
                     gaussJordanComplex augmentedMatrix

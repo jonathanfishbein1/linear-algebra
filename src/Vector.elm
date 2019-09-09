@@ -8,7 +8,6 @@ module Vector exposing
     , liftA2
     , foldl
     , concat
-    , scalarMultiplication
     , complexVectorLength
     , cross
     , distance
@@ -26,7 +25,7 @@ module Vector exposing
     , print
     , read
     , setAt
-    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, subtractVectors, vectorDotProduct, vectorSubspace, vectorTensorProduct
+    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, subtractVectors, vectorDotProduct, vectorSubspace, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -426,9 +425,9 @@ realVectorAbelianGroup =
 
 complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorAbelianGroup =
-    { field = Field.complexField
-    , addVects = addVectors Field.complexField
-    , subtractVectors = subtractVectors Field.complexField
+    { field = ComplexNumbers.complexField
+    , addVects = addVectors ComplexNumbers.complexField
+    , subtractVectors = subtractVectors ComplexNumbers.complexField
     }
 
 
@@ -442,7 +441,7 @@ realVectorSpace =
 complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorSpace =
     { abelianGroup = complexVectorAbelianGroup
-    , vectorScalarMultiplication = scalarMultiplication Field.complexField
+    , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
     }
 
 
@@ -456,7 +455,7 @@ realInnerProductSpace =
 complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
-    , innerProduct = vectorDotProduct Field.complexField
+    , innerProduct = vectorDotProduct ComplexNumbers.complexField
     }
 
 

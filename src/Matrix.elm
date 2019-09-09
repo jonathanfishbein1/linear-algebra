@@ -449,8 +449,8 @@ nullSpace vectorSpace matrix =
 
 {-| Predicate to determine if a list of Vectors are linearly independent
 -}
-areLinearlyIndependent : List (Vector.Vector Float) -> Bool
-areLinearlyIndependent listOfVectors =
+areLinearlyIndependent : Vector.VectorSpace a -> List (Vector.Vector a) -> Bool
+areLinearlyIndependent vectorSpace listOfVectors =
     let
         listOfRowVectors =
             List.map RowVector listOfVectors
@@ -459,13 +459,13 @@ areLinearlyIndependent listOfVectors =
             Matrix listOfRowVectors
 
         matrixNullSpace =
-            nullSpace Vector.realVectorSpace matrix
+            nullSpace vectorSpace matrix
 
         numberOfRows =
             List.length listOfRowVectors
 
         zeroVector =
-            List.repeat numberOfRows 0
+            List.repeat numberOfRows vectorSpace.abelianGroup.field.zero
                 |> Vector.Vector
                 |> ColumnVector
     in
@@ -530,7 +530,7 @@ mDimension (Matrix listOfRowVectors) =
 -}
 areBasis : VectorSpace -> List (Vector.Vector Float) -> Bool
 areBasis vectorSpace vectors =
-    if doesSetSpanSpace vectorSpace vectors == Ok True && areLinearlyIndependent vectors then
+    if doesSetSpanSpace vectorSpace vectors == Ok True && areLinearlyIndependent Vector.realVectorSpace vectors then
         True
 
     else

@@ -131,7 +131,7 @@ suite =
                         , Vector.Vector [ 0, -3 ]
                         ]
                 in
-                Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent listOfVectors)
+                Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent Vector.realVectorSpace listOfVectors)
         , Test.test "tests matrix linearlyIndependent with two colinear vectors" <|
             \_ ->
                 let
@@ -140,7 +140,7 @@ suite =
                         , Vector.Vector [ 2, 4 ]
                         ]
                 in
-                Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent listOfVectors)
+                Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent Vector.realVectorSpace listOfVectors)
         , Test.test "tests matrix doesSetSpanSpace with standard basis vectors" <|
             \_ ->
                 let

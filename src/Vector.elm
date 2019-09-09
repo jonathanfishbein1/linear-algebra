@@ -8,7 +8,6 @@ module Vector exposing
     , liftA2
     , foldl
     , concat
-    , complexVectorLength
     , cross
     , distance
     , normalise
@@ -208,13 +207,6 @@ vectorLength : Field.Field a -> Vector a -> a
 vectorLength { power, add, zero } =
     foldl (\x acc -> add (power 2 x) acc) zero
         >> power (1 / 2)
-
-
-{-| Calculate length of a complex vector
--}
-complexVectorLength : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
-complexVectorLength complexNumberVector =
-    foldl (\x acc -> ComplexNumbers.add (ComplexNumbers.power 2 x) acc) ComplexNumbers.zero complexNumberVector
 
 
 {-| Subtract Real Vectors together

@@ -352,7 +352,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
                             ]
                 in
-                Expect.equal (Matrix.solveMatrix matrix) (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
+                Expect.equal (Matrix.solveMatrix Vector.realVectorSpace matrix) (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
         , Test.test "tests basisOfVectorSpace returns R2 basis vectors" <|
             \_ ->
                 let

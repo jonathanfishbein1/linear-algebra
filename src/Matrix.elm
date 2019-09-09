@@ -372,7 +372,7 @@ solve matrix (ColumnVector (Vector.Vector b)) =
         augmentedMatrix =
             matrixConcatHorizontal.semigroup.prepend matrix matrixB
     in
-    solveMatrix augmentedMatrix
+    solveMatrix Vector.realVectorSpace augmentedMatrix
 
 
 variablePortion : Matrix a -> Matrix a
@@ -382,11 +382,11 @@ variablePortion matrix =
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination
 -}
-solveMatrix : Matrix Float -> Solution Float
-solveMatrix (Matrix listOfRowVectors) =
+solveMatrix : Vector.VectorSpace a -> Matrix a -> Solution a
+solveMatrix vectorSpace (Matrix listOfRowVectors) =
     let
         (Matrix listOfRowVectorsRREF) =
-            gaussJordan Vector.realVectorSpace (Matrix listOfRowVectors)
+            gaussJordan vectorSpace (Matrix listOfRowVectors)
 
         (Matrix variableSide) =
             variablePortion (Matrix listOfRowVectorsRREF)
@@ -397,14 +397,14 @@ solveMatrix (Matrix listOfRowVectors) =
                     (\(RowVector (Vector.Vector row)) ->
                         let
                             countOfOnes =
-                                List.Extra.count ((/=) 0) row
+                                List.Extra.count ((/=) vectorSpace.abelianGroup.field.zero) row
                         in
                         countOfOnes > 1
                     )
 
         anyAllZeroExceptAugmentedSide =
             listOfRowVectorsRREF
-                |> List.any (\(RowVector (Vector.Vector row)) -> List.all ((==) 0) (List.take (List.length row - 1) row) && Vector.vectorLength Field.realField (Vector.Vector row) /= 0)
+                |> List.any (\(RowVector (Vector.Vector row)) -> List.all ((==) vectorSpace.abelianGroup.field.zero) (List.take (List.length row - 1) row) && Vector.vectorLength vectorSpace.abelianGroup.field (Vector.Vector row) /= vectorSpace.abelianGroup.field.zero)
 
         solution =
             List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectorsRREF
@@ -416,7 +416,7 @@ solveMatrix (Matrix listOfRowVectors) =
         let
             rank =
                 listOfRowVectorsRREF
-                    |> List.Extra.count (\(RowVector vector) -> Vector.vectorLength Field.realField vector /= 0)
+                    |> List.Extra.count (\(RowVector vector) -> Vector.vectorLength vectorSpace.abelianGroup.field vector /= vectorSpace.abelianGroup.field.zero)
 
             nullity =
                 nDimension (Matrix listOfRowVectorsRREF) - rank

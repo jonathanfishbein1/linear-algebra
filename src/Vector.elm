@@ -205,6 +205,12 @@ vectorDotProduct { zero, add, multiply } vectorOne vectorTwo =
         |> foldl add zero
 
 
+vectorLength : Field.Field a -> Vector a -> a
+vectorLength { power, add, zero } =
+    foldl (\x acc -> add (power 2 x) acc) zero
+        >> power (1 / 2)
+
+
 {-| Calculate length of a real vector
 -}
 realVectorLength : Vector Float -> Float

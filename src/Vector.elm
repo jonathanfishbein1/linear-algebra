@@ -102,7 +102,7 @@ type Scalar a
 type alias AbelianGroup a =
     { field : Field.Field a
     , addVects : Vector a -> Vector a -> Vector a
-    , subtractVectors : Vector a -> Vector a -> Vector a
+    , subtractVects : Vector a -> Vector a -> Vector a
     }
 
 
@@ -218,10 +218,10 @@ subtractVectors { subtract } =
 
 {-| Calculate distance between two vectors
 -}
-distance : Vector Float -> Vector Float -> Float
-distance vectorOne vectorTwo =
-    subtractVectors Field.realField vectorOne vectorTwo
-        |> vectorLength Field.realField
+distance : AbelianGroup a -> Vector a -> Vector a -> a
+distance { subtractVects, field } vectorOne vectorTwo =
+    subtractVects vectorOne vectorTwo
+        |> vectorLength field
 
 
 {-| Take the cross product of two 3D vectors
@@ -408,7 +408,7 @@ realVectorAbelianGroup : AbelianGroup Float
 realVectorAbelianGroup =
     { field = Field.realField
     , addVects = addVectors Field.realField
-    , subtractVectors = subtractVectors Field.realField
+    , subtractVects = subtractVectors Field.realField
     }
 
 
@@ -416,7 +416,7 @@ complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumberCartesian 
 complexVectorAbelianGroup =
     { field = ComplexNumbers.complexField
     , addVects = addVectors ComplexNumbers.complexField
-    , subtractVectors = subtractVectors ComplexNumbers.complexField
+    , subtractVects = subtractVectors ComplexNumbers.complexField
     }
 
 

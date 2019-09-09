@@ -42,7 +42,7 @@ subtractRow { abelianGroup } r currentRow nextRow =
                              else
                                 Vector.scalarMultiplication abelianGroup.field (abelianGroup.field.divide nElement currentElement) currentRow
                             )
-                                |> abelianGroup.subtractVectors nextRow
+                                |> abelianGroup.subtractVects nextRow
                         )
             )
         |> Maybe.withDefault nextRow

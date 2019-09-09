@@ -465,7 +465,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.distance a a
+                        Vector.distance Vector.realVectorAbelianGroup a a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -482,13 +482,13 @@ suite =
                         Vector.Vector [ three ]
 
                     distanceAB =
-                        Vector.distance a b
+                        Vector.distance Vector.realVectorAbelianGroup a b
 
                     distanceAC =
-                        Vector.distance a c
+                        Vector.distance Vector.realVectorAbelianGroup a c
 
                     distanceCB =
-                        Vector.distance c b
+                        Vector.distance Vector.realVectorAbelianGroup c b
                 in
                 distanceAB
                     |> Expect.atMost (distanceAC + distanceCB)

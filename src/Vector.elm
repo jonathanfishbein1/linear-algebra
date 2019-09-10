@@ -73,7 +73,6 @@ module Vector exposing
 
 import ComplexNumbers
 import Field
-import Float.Extra
 import List.Extra
 import Parser exposing ((|.), (|=))
 import Typeclasses.Classes.Equality

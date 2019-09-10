@@ -109,7 +109,6 @@ module Matrix exposing
 
 import ComplexNumbers
 import Field
-import Float.Extra
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra

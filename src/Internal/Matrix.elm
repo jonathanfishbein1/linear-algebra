@@ -8,7 +8,6 @@ module Internal.Matrix exposing
     , subtractRow
     )
 
-import ComplexNumbers
 import Field
 import List.Extra
 import Vector

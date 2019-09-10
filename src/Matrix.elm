@@ -528,9 +528,9 @@ mDimension (Matrix listOfRowVectors) =
 
 {-| Determine whether list of vectors are a basis for a space
 -}
-areBasis : VectorDimension -> List (Vector.Vector Float) -> Bool
-areBasis vectorSpace vectors =
-    if doesSetSpanSpace Vector.realVectorSpace vectorSpace vectors == Ok True && areLinearlyIndependent Vector.realVectorSpace vectors then
+areBasis : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> Bool
+areBasis vectorSpace vectorDimension vectors =
+    if doesSetSpanSpace vectorSpace vectorDimension vectors == Ok True && areLinearlyIndependent vectorSpace vectors then
         True
 
     else
@@ -541,7 +541,7 @@ areBasis vectorSpace vectors =
 -}
 basisOfVectorSpace : VectorDimension -> List (Vector.Vector Float) -> List (Vector.Vector Float)
 basisOfVectorSpace vectorSpace vectors =
-    if areBasis vectorSpace vectors then
+    if areBasis Vector.realVectorSpace vectorSpace vectors then
         vectors
 
     else

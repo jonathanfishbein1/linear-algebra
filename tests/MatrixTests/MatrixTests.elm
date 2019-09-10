@@ -246,7 +246,7 @@ suite =
                         Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis r2 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.true "Vectors are basis for R2" result
         , Test.test "tests matrix areBasis with zero vectors" <|
@@ -261,7 +261,7 @@ suite =
                         Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis r2 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R2" result
         , Test.test "tests matrix areBasis with standard basis vectors 3 dimensions" <|
@@ -277,7 +277,7 @@ suite =
                         Matrix.VectorDimension 3
 
                     result =
-                        Matrix.areBasis r3 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R3" result
         , Test.test "tests matrix areBasis with zero vectors 3 dimensions" <|
@@ -293,7 +293,7 @@ suite =
                         Matrix.VectorDimension 3
 
                     result =
-                        Matrix.areBasis r3 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.true "Vectors are basis fro R3" result
         , Test.test "tests matrix areBasis with three vectors" <|
@@ -309,7 +309,7 @@ suite =
                         Matrix.VectorDimension 3
 
                     result =
-                        Matrix.areBasis r3 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.false "Vectors are not basis R3" result
         , Test.test "tests matrix areBasis with three vectors testing r2" <|
@@ -325,7 +325,7 @@ suite =
                         Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis r2 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R2" result
         , Test.test "tests matrix areBasis with three dimensional vector against R2" <|
@@ -340,7 +340,7 @@ suite =
                         Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis r2 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.false "Vectos are not basis for R2" result
         , Test.test "tests matrix nullity with infinite solutions" <|

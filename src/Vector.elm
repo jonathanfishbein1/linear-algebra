@@ -202,7 +202,7 @@ vectorLength { power, add, zero } =
         >> power (1 / 2)
 
 
-{-| Subtract Real Vectors together
+{-| Subtract Vectors
 -}
 subtractVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 subtractVectors { subtract } =
@@ -227,7 +227,7 @@ cross { subtract, multiply } (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
         (subtract (multiply x1 y2) (multiply x2 y1))
 
 
-{-| Convert a Vector3 type to a Vector typeZ
+{-| Convert a Vector3 type to a Vector type
 -}
 vector3ToVector : Vector3 a -> Vector a
 vector3ToVector (Vector3 x y z) =

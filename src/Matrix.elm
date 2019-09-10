@@ -53,12 +53,10 @@ module Matrix exposing
 @docs RowVector
 @docs ColumnVector
 @docs Solution
-@docs VectorSpace
+@docs VectorDimension
 
-@docs addRealMatrices
-@docs addComplexMatrices
-@docs sumRealMatrices
-@docs sumComplexMatrices
+@docs addMatrices
+@docs sumMatrices
 @docs map
 @docs equal
 @docs transpose
@@ -66,8 +64,7 @@ module Matrix exposing
 @docs adjoint
 @docs apply
 @docs liftA2
-@docs multiplyComplexMatrices
-@docs multiplyRealMatrices
+@docs multiplyMatrices
 @docs identityMatrix
 @docs gaussJordan
 @docs gaussianReduce
@@ -75,7 +72,7 @@ module Matrix exposing
 @docs isSymmetric
 @docs jordanReduce
 @docs areLinearlyIndependent
-@docs multiplyRealVectorRealMatrix
+@docs multiplyVectorMatrix
 @docs nullSpace
 @docs solve
 @docs areBasis
@@ -96,13 +93,8 @@ module Matrix exposing
 @docs read
 @docs setAt
 @docs upperTriangle
-@docs determinantComplex
-@docs gaussianReduceComplex
 @docs invert
-@docs invertComplex
 @docs isUnitary
-@docs jordanReduceComplex
-@docs upperTriangleComplex
 @docs subMatrix
 
 -}

@@ -35,29 +35,23 @@ module Vector exposing
 @docs Vector3
 @docs Scalar
 
-@docs addComplexVectors
-@docs addRealVectors
+@docs addVectors
 @docs map
-@docs multiplyRealVectors
-@docs multiplyComplexVectors
+@docs multiplyVectors
 @docs equal
 @docs apply
 @docs liftA2
 @docs foldl
-@docs realVectorDotProduct
-@docs complexVectorDotProduct
+@docs vectorDotProduct
 @docs concat
-@docs complexVectorLength
+@docs vectorLength
 @docs cross
 @docs distance
 @docs normalise
-@docs vectorLength Field.realField
-@docs subtractRealVectors
-@docs subtractComplexVectors
+@docs subtractVectors
 @docs vector3ToVector
 @docs dimension
-@docs realVectorSubspace
-@docs complexVectorSubspace
+@docs vectorSubspace
 @docs append
 @docs concatEmpty
 @docs pure

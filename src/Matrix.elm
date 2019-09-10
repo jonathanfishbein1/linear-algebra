@@ -38,7 +38,6 @@ module Matrix exposing
     , read
     , setAt
     , upperTriangle
-    , determinantComplex
     , invert
     , invertComplex
     , isUnitary
@@ -740,11 +739,11 @@ parseRowVector =
 
 {-| Try to calculate the determinant
 -}
-determinant : Matrix Float -> Result String Float
-determinant matrix =
+determinant : Vector.VectorSpace a -> Matrix a -> Result String a
+determinant vectorSpace matrix =
     let
         upperTriangularForm =
-            upperTriangle Vector.realVectorSpace matrix
+            upperTriangle vectorSpace matrix
     in
     Result.andThen
         (\squareMatrix ->
@@ -759,40 +758,10 @@ determinant matrix =
                     List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
             in
             Maybe.Extra.combine diagonalMaybeEntries
-                |> Maybe.map List.product
+                |> Maybe.map (\li -> List.foldl (\elem acc -> vectorSpace.abelianGroup.field.multiply elem acc) vectorSpace.abelianGroup.field.one li)
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularForm
-
-
-{-| Try to calculate the determinant
--}
-determinantComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (ComplexNumbers.ComplexNumberCartesian Float)
-determinantComplex matrix =
-    let
-        upperTriangularFormComplex =
-            upperTriangle Vector.complexVectorSpace matrix
-    in
-    Result.andThen
-        (\squareMatrix ->
-            let
-                numberOfRows =
-                    mDimension squareMatrix
-
-                indices =
-                    List.Extra.initialize numberOfRows (\index -> ( index, index ))
-
-                diagonalMaybeEntries =
-                    List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
-
-                listOfComplexNumbers =
-                    Maybe.Extra.combine diagonalMaybeEntries
-            in
-            listOfComplexNumbers
-                |> Maybe.map (\li -> List.foldl (\elem acc -> ComplexNumbers.multiply elem acc) ComplexNumbers.one li)
-                |> Result.fromMaybe "Index out of range"
-        )
-        upperTriangularFormComplex
 
 
 {-| Try to calculate the inverse of a real numbered matrix
@@ -875,7 +844,7 @@ isUnitary matrix =
 
 isInvertable : Matrix Float -> Result String (Matrix Float)
 isInvertable matrix =
-    case determinant matrix of
+    case determinant Vector.realVectorSpace matrix of
         Ok deter ->
             if Float.Extra.equalWithin 0.000000001 deter 0.0 then
                 Err "Determinant is zero matrix is not invertable"
@@ -889,7 +858,7 @@ isInvertable matrix =
 
 isInvertableComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 isInvertableComplex matrix =
-    case determinantComplex matrix of
+    case determinant Vector.complexVectorSpace matrix of
         Ok deter ->
             if ComplexNumbers.equal deter ComplexNumbers.zero then
                 Err "Determinant is zero matrix is not invertable"

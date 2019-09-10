@@ -451,7 +451,7 @@ suite =
                             ]
 
                     determinant =
-                        Matrix.determinant matrix
+                        Matrix.determinant Vector.realVectorSpace  matrix
                 in
                 Expect.equal determinant (Ok -2)
         , Test.test "tests matrix determinant 3 x 3" <|
@@ -465,7 +465,7 @@ suite =
                             ]
 
                     determinant =
-                        Matrix.determinant matrix
+                        Matrix.determinant Vector.realVectorSpace  matrix
                 in
                 Expect.equal determinant (Ok 35)
         , Test.test "tests matrix determinant 4 x 4" <|
@@ -480,7 +480,7 @@ suite =
                             ]
 
                     determinant =
-                        Matrix.determinant matrix
+                        Matrix.determinant Vector.realVectorSpace  matrix
                 in
                 Expect.equal determinant (Ok 7)
         , Test.test "tests matrix invert" <|
@@ -598,7 +598,7 @@ suite =
                             ]
 
                     determinantComplex =
-                        Matrix.determinantComplex matrix
+                        Matrix.determinant Vector.complexVectorSpace matrix
 
                     expectedDeterminant =
                         ComplexNumbers.ComplexNumberCartesian

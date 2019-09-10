@@ -6,6 +6,7 @@ module Matrix exposing
     , VectorDimension(..)
     , map
     , equal
+    , matrixTensorProduct
     , transpose
     , conjugate
     , adjoint
@@ -836,3 +837,12 @@ realMatrixAbelianGroup =
     , addMatrcs = addMatrices Field.realField
     , subtractMatrcs = subtractMatrices Field.realField
     }
+
+
+matrixTensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+matrixTensorProduct { multiply } matrixOne matrixTwo =
+    bind
+        matrixOne
+        (\matrixOneElement ->
+            map (multiply matrixOneElement) matrixTwo
+        )

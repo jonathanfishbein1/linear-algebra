@@ -150,21 +150,21 @@ type alias AbelianGroup a =
     }
 
 
-{-| Add two Real Matrices together
+{-| Add two Matrices together
 -}
 addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
 addMatrices { add } =
     liftA2 add
 
 
-{-| Add two Real Matrices together
+{-| Subtract two Matrices
 -}
 subtractMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
 subtractMatrices { subtract } =
     liftA2 subtract
 
 
-{-| Monoidally add two Real numbered Matrices together
+{-| Monoidally add two Matrices together
 -}
 sumMatrices : AbelianGroup a -> Matrix a -> Typeclasses.Classes.Monoid.Monoid (Matrix a)
 sumMatrices { addMatrcs } sumEmptyMatrix =
@@ -227,7 +227,7 @@ liftA2 f a b =
     apply (map f a) b
 
 
-{-| Matrix Matrix multiplication for a Real Numbered Matrix
+{-| Matrix Matrix multiplication
 -}
 multiplyMatrices : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String (Matrix a)
 multiplyMatrices innerProductSpace (Matrix matrixOne) matrixTwo =
@@ -260,7 +260,7 @@ identityMatrix field dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal field columnIndex)))
 
 
-{-| Multiply a real Vector by a real Matrix
+{-| Multiply a Vector by a Matrix
 -}
 multiplyVectorMatrix : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Vector.Vector a
 multiplyVectorMatrix innerProductSpace (Matrix matrix) vector =
@@ -754,7 +754,7 @@ determinant vectorSpace matrix =
         upperTriangularForm
 
 
-{-| Try to calculate the inverse of a real numbered matrix
+{-| Try to calculate the inverse of a matrix
 -}
 invert : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
 invert vectorSpace matrix =

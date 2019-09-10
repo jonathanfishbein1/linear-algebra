@@ -354,7 +354,7 @@ listParser =
         , separator = ","
         , end = "]"
         , spaces = Parser.spaces
-        , item = myNumber
+        , item = negativeOrPositiveFloat
         , trailing = Parser.Forbidden
         }
 
@@ -387,8 +387,8 @@ float =
         }
 
 
-myNumber : Parser.Parser Float
-myNumber =
+negativeOrPositiveFloat : Parser.Parser Float
+negativeOrPositiveFloat =
     Parser.oneOf
         [ Parser.succeed negate
             |. Parser.symbol "-"

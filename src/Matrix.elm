@@ -3,7 +3,7 @@ module Matrix exposing
     , RowVector(..)
     , ColumnVector(..)
     , Solution(..)
-    , VectorSpace(..)
+    , VectorDimension(..)
     , map
     , equal
     , transpose
@@ -150,8 +150,8 @@ type Solution a
 
 {-| Type to represent vector space such as R, R2, R3
 -}
-type VectorSpace
-    = VectorSpace Int
+type VectorDimension
+    = VectorDimension Int
 
 
 type alias AbelianGroup a =
@@ -483,18 +483,18 @@ areLinearlyIndependent vectorSpace listOfVectors =
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : Vector.VectorSpace a -> VectorSpace -> List (Vector.Vector a) -> Result String Bool
-doesSetSpanSpace vSpace (VectorSpace vectorSpace) vectors =
-    if List.length vectors /= vectorSpace then
+doesSetSpanSpace : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> Result String Bool
+doesSetSpanSpace vSpace (VectorDimension vectorDimension) vectors =
+    if List.length vectors /= vectorDimension then
         Err "Please input same number of vectors as vector space"
 
-    else if not <| List.all (\vector -> Vector.dimension vector == vectorSpace) vectors then
+    else if not <| List.all (\vector -> Vector.dimension vector == vectorDimension) vectors then
         Err "Please input vectors of equal length as vector space"
 
     else
         let
             identityRowVectors =
-                identityMatrix vSpace.abelianGroup.field vectorSpace
+                identityMatrix vSpace.abelianGroup.field vectorDimension
 
             floatMatrix =
                 identityRowVectors
@@ -528,7 +528,7 @@ mDimension (Matrix listOfRowVectors) =
 
 {-| Determine whether list of vectors are a basis for a space
 -}
-areBasis : VectorSpace -> List (Vector.Vector Float) -> Bool
+areBasis : VectorDimension -> List (Vector.Vector Float) -> Bool
 areBasis vectorSpace vectors =
     if doesSetSpanSpace Vector.realVectorSpace vectorSpace vectors == Ok True && areLinearlyIndependent Vector.realVectorSpace vectors then
         True
@@ -539,7 +539,7 @@ areBasis vectorSpace vectors =
 
 {-| Determine the basis vectors of a vector space
 -}
-basisOfVectorSpace : VectorSpace -> List (Vector.Vector Float) -> List (Vector.Vector Float)
+basisOfVectorSpace : VectorDimension -> List (Vector.Vector Float) -> List (Vector.Vector Float)
 basisOfVectorSpace vectorSpace vectors =
     if areBasis vectorSpace vectors then
         vectors

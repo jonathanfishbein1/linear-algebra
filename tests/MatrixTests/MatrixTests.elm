@@ -150,7 +150,7 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
@@ -165,7 +165,7 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
@@ -181,7 +181,7 @@ suite =
                         ]
 
                     r3 =
-                        Matrix.VectorSpace 3
+                        Matrix.VectorDimension 3
 
                     result =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
@@ -197,7 +197,7 @@ suite =
                         ]
 
                     r3 =
-                        Matrix.VectorSpace 3
+                        Matrix.VectorDimension 3
 
                     result =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
@@ -213,7 +213,7 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
@@ -228,7 +228,7 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
@@ -243,7 +243,7 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
                         Matrix.areBasis r2 listOfVectors
@@ -258,7 +258,7 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
                         Matrix.areBasis r2 listOfVectors
@@ -274,7 +274,7 @@ suite =
                         ]
 
                     r3 =
-                        Matrix.VectorSpace 3
+                        Matrix.VectorDimension 3
 
                     result =
                         Matrix.areBasis r3 listOfVectors
@@ -290,7 +290,7 @@ suite =
                         ]
 
                     r3 =
-                        Matrix.VectorSpace 3
+                        Matrix.VectorDimension 3
 
                     result =
                         Matrix.areBasis r3 listOfVectors
@@ -306,7 +306,7 @@ suite =
                         ]
 
                     r3 =
-                        Matrix.VectorSpace 3
+                        Matrix.VectorDimension 3
 
                     result =
                         Matrix.areBasis r3 listOfVectors
@@ -322,7 +322,7 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
                         Matrix.areBasis r2 listOfVectors
@@ -337,7 +337,7 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
                         Matrix.areBasis r2 listOfVectors
@@ -362,7 +362,7 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     testbasisVectors =
                         Matrix.basisOfVectorSpace r2 r2BasisVectors
@@ -382,7 +382,7 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     testbasisVectors =
                         Matrix.basisOfVectorSpace r2 testVectors
@@ -398,7 +398,7 @@ suite =
                             ]
 
                     result =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     foldResult =
                         Matrix.foldl (+) 0 matrix

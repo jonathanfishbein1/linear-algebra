@@ -483,8 +483,8 @@ areLinearlyIndependent vectorSpace listOfVectors =
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : VectorSpace -> List (Vector.Vector Float) -> Result String Bool
-doesSetSpanSpace (VectorSpace vectorSpace) vectors =
+doesSetSpanSpace : Vector.VectorSpace a -> VectorSpace -> List (Vector.Vector a) -> Result String Bool
+doesSetSpanSpace vSpace (VectorSpace vectorSpace) vectors =
     if List.length vectors /= vectorSpace then
         Err "Please input same number of vectors as vector space"
 
@@ -494,13 +494,13 @@ doesSetSpanSpace (VectorSpace vectorSpace) vectors =
     else
         let
             identityRowVectors =
-                identityMatrix Field.realField vectorSpace
+                identityMatrix vSpace.abelianGroup.field vectorSpace
 
             floatMatrix =
                 identityRowVectors
 
             listOfRowVectorsRREF =
-                gaussJordan Vector.realVectorSpace (Matrix (List.map RowVector vectors))
+                gaussJordan vSpace (Matrix (List.map RowVector vectors))
         in
         floatMatrix
             == listOfRowVectorsRREF
@@ -530,7 +530,7 @@ mDimension (Matrix listOfRowVectors) =
 -}
 areBasis : VectorSpace -> List (Vector.Vector Float) -> Bool
 areBasis vectorSpace vectors =
-    if doesSetSpanSpace vectorSpace vectors == Ok True && areLinearlyIndependent Vector.realVectorSpace vectors then
+    if doesSetSpanSpace Vector.realVectorSpace vectorSpace vectors == Ok True && areLinearlyIndependent Vector.realVectorSpace vectors then
         True
 
     else

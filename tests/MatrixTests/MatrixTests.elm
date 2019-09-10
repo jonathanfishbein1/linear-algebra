@@ -153,7 +153,7 @@ suite =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Ok True)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors" <|
@@ -168,7 +168,7 @@ suite =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Ok False)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors 3 dimensions" <|
@@ -184,7 +184,7 @@ suite =
                         Matrix.VectorSpace 3
 
                     result =
-                        Matrix.doesSetSpanSpace r3 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.equal result (Ok True)
         , Test.test "tests matrix doesSetSpanSpace with three vectors" <|
@@ -200,7 +200,7 @@ suite =
                         Matrix.VectorSpace 3
 
                     result =
-                        Matrix.doesSetSpanSpace r3 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.equal result (Ok False)
         , Test.test "tests matrix doesSetSpanSpace with three vectors testing r2" <|
@@ -216,7 +216,7 @@ suite =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Err "Please input same number of vectors as vector space")
         , Test.test "tests matrix doesSetSpanSpace with three dimensional vector against R2" <|
@@ -231,7 +231,7 @@ suite =
                         Matrix.VectorSpace 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Err "Please input vectors of equal length as vector space")
         , Test.test "tests matrix areBasis with standard basis vectors" <|

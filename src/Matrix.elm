@@ -539,15 +539,15 @@ areBasis vectorSpace vectorDimension vectors =
 
 {-| Determine the basis vectors of a vector space
 -}
-basisOfVectorSpace : VectorDimension -> List (Vector.Vector Float) -> List (Vector.Vector Float)
-basisOfVectorSpace vectorSpace vectors =
-    if areBasis Vector.realVectorSpace vectorSpace vectors then
+basisOfVectorSpace : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> List (Vector.Vector a)
+basisOfVectorSpace vectorSpace vectorDimension vectors =
+    if areBasis vectorSpace vectorDimension vectors then
         vectors
 
     else
         let
             (Matrix reducedRowEchelonFormListOfRowVectors) =
-                jordanReduce Vector.realVectorSpace (Matrix (List.map RowVector vectors))
+                jordanReduce vectorSpace (Matrix (List.map RowVector vectors))
         in
         reducedRowEchelonFormListOfRowVectors
             |> List.map (\(RowVector vector) -> vector)

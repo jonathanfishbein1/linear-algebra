@@ -365,7 +365,7 @@ suite =
                         Matrix.VectorDimension 2
 
                     testbasisVectors =
-                        Matrix.basisOfVectorSpace r2 r2BasisVectors
+                        Matrix.basisOfVectorSpace Vector.realVectorSpace r2 r2BasisVectors
                 in
                 Expect.equal r2BasisVectors testbasisVectors
         , Test.test "tests basisOfVectorSpace returns R2 basis vectors for non basis vectors" <|
@@ -385,7 +385,7 @@ suite =
                         Matrix.VectorDimension 2
 
                     testbasisVectors =
-                        Matrix.basisOfVectorSpace r2 testVectors
+                        Matrix.basisOfVectorSpace Vector.realVectorSpace r2 testVectors
                 in
                 Expect.equal r2BasisVectors testbasisVectors
         , Test.test "tests matrix fold" <|

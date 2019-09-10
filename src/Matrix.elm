@@ -42,7 +42,7 @@ module Matrix exposing
     , invertComplex
     , isUnitary
     , subMatrix
-    , addMatrices, isInvertable, isInvertableComplex, isSquareMatrix, multiplyMatrices, multiplyVectorMatrix, sumMatrices
+    , addMatrices, isInvertable, isSquareMatrix, multiplyMatrices, multiplyVectorMatrix, sumMatrices
     )
 
 {-| A module for Matrix
@@ -768,7 +768,7 @@ determinant vectorSpace matrix =
 -}
 invert : Matrix Float -> Result String (Matrix Float)
 invert matrix =
-    case isInvertable matrix of
+    case isInvertable Vector.realVectorSpace matrix of
         Ok invertableMatrix ->
             let
                 sizeOfMatrix =
@@ -793,7 +793,7 @@ invert matrix =
 -}
 invertComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
 invertComplex matrix =
-    case isInvertableComplex matrix of
+    case isInvertable Vector.complexVectorSpace matrix of
         Ok invertableMatrix ->
             let
                 sizeOfMatrix =
@@ -842,25 +842,11 @@ isUnitary matrix =
             False
 
 
-isInvertable : Matrix Float -> Result String (Matrix Float)
-isInvertable matrix =
-    case determinant Vector.realVectorSpace matrix of
+isInvertable : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+isInvertable vectorSpace matrix =
+    case determinant vectorSpace matrix of
         Ok deter ->
-            if Float.Extra.equalWithin 0.000000001 deter 0.0 then
-                Err "Determinant is zero matrix is not invertable"
-
-            else
-                Ok matrix
-
-        Err msg ->
-            Err msg
-
-
-isInvertableComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
-isInvertableComplex matrix =
-    case determinant Vector.complexVectorSpace matrix of
-        Ok deter ->
-            if ComplexNumbers.equal deter ComplexNumbers.zero then
+            if deter == vectorSpace.abelianGroup.field.zero then
                 Err "Determinant is zero matrix is not invertable"
 
             else

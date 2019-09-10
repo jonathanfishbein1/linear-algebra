@@ -593,7 +593,7 @@ suite =
 
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ] 
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
 
@@ -811,7 +811,7 @@ suite =
                             ]
 
                     isInvertable =
-                        Matrix.isInvertable matrix
+                        Matrix.isInvertable Vector.realVectorSpace matrix
                 in
                 Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
         , Test.test "tests sumMatrix" <|
@@ -844,7 +844,7 @@ suite =
                             ]
 
                     isInvertable =
-                        Matrix.isInvertableComplex matrix
+                        Matrix.isInvertable Vector.complexVectorSpace matrix
                 in
                 Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
         , Test.fuzz Fuzz.int "test if matrix is square" <|

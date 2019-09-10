@@ -501,7 +501,7 @@ suite =
                             ]
 
                     inverse =
-                        Matrix.invert matrix
+                        Matrix.invert Vector.realVectorSpace matrix
                 in
                 Expect.equal inverse (Ok expectedInverse)
         , Test.test "tests matrix times inverse equals identity" <|
@@ -656,7 +656,7 @@ suite =
                             ]
 
                     inverseComplex =
-                        Matrix.invertComplex matrix
+                        Matrix.invert Vector.complexVectorSpace matrix
 
                     expectedComplexNumberR1C1 =
                         ComplexNumbers.ComplexNumberCartesian

@@ -39,7 +39,6 @@ module Matrix exposing
     , setAt
     , upperTriangle
     , invert
-    , invertComplex
     , isUnitary
     , subMatrix
     , addMatrices, isInvertable, isSquareMatrix, multiplyMatrices, multiplyVectorMatrix, sumMatrices
@@ -766,44 +765,19 @@ determinant vectorSpace matrix =
 
 {-| Try to calculate the inverse of a real numbered matrix
 -}
-invert : Matrix Float -> Result String (Matrix Float)
-invert matrix =
-    case isInvertable Vector.realVectorSpace matrix of
+invert : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+invert vectorSpace matrix =
+    case isInvertable vectorSpace matrix of
         Ok invertableMatrix ->
             let
                 sizeOfMatrix =
                     mDimension invertableMatrix
 
                 augmentedMatrix =
-                    appendHorizontal invertableMatrix (identityMatrix Field.realField sizeOfMatrix)
+                    appendHorizontal invertableMatrix (identityMatrix vectorSpace.abelianGroup.field sizeOfMatrix)
 
                 reducedRowEchelonForm =
-                    gaussJordan Vector.realVectorSpace augmentedMatrix
-
-                inverse =
-                    subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
-            in
-            Ok inverse
-
-        Err err ->
-            Err err
-
-
-{-| Try to calculate the inverse of a complex numbered matrix
--}
-invertComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
-invertComplex matrix =
-    case isInvertable Vector.complexVectorSpace matrix of
-        Ok invertableMatrix ->
-            let
-                sizeOfMatrix =
-                    mDimension invertableMatrix
-
-                augmentedMatrix =
-                    appendHorizontal invertableMatrix (identityMatrix ComplexNumbers.complexField sizeOfMatrix)
-
-                reducedRowEchelonForm =
-                    gaussJordan Vector.complexVectorSpace augmentedMatrix
+                    gaussJordan vectorSpace augmentedMatrix
 
                 inverse =
                     subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
@@ -834,7 +808,7 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 -}
 isUnitary : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Bool
 isUnitary matrix =
-    case invertComplex matrix of
+    case invert Vector.complexVectorSpace matrix of
         Ok inverse ->
             equal ComplexNumbers.equal inverse (adjoint matrix)
 

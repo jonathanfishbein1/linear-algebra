@@ -43,7 +43,7 @@ module Matrix exposing
     , invert
     , isUnitary
     , subMatrix
-    , isInvertable, isSquareMatrix, matrixTensorProduct, printComplexMatrix, printRealMatrix, readRealMatrix
+    , isInvertable, isSquareMatrix, matrixTensorProduct, printComplexMatrix, printRealMatrix, readComplexMatrix, readRealMatrix
     )
 
 {-| A module for Matrix

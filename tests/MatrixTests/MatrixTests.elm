@@ -438,7 +438,7 @@ suite =
                         Matrix.printRealMatrix matrix
 
                     readMatrix =
-                        Matrix.read printedMatrix
+                        Matrix.readRealMatrix printedMatrix
                 in
                 Expect.equal readMatrix (Ok matrix)
         , Test.test "tests matrix determinant 2 x 2" <|

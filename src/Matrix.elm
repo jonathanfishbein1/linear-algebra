@@ -38,13 +38,12 @@ module Matrix exposing
     , bind
     , determinant
     , getAt
-    , read
     , setAt
     , upperTriangle
     , invert
     , isUnitary
     , subMatrix
-    , isInvertable, isSquareMatrix, matrixTensorProduct, printRealMatrix
+    , isInvertable, isSquareMatrix, matrixTensorProduct, printComplexMatrix, printRealMatrix, readRealMatrix
     )
 
 {-| A module for Matrix
@@ -708,37 +707,44 @@ printComplexMatrix (Matrix listOfRowVectors) =
 
 {-| Try to read a string into a Matrix
 -}
-read : String -> Result (List Parser.DeadEnd) (Matrix Float)
-read matrixString =
-    Parser.run parseMatrix matrixString
+readRealMatrix : String -> Result (List Parser.DeadEnd) (Matrix Float)
+readRealMatrix matrixString =
+    Parser.run (parseMatrix Vector.negativeOrPositiveFloat) matrixString
 
 
-listOfRowVectorParser : Parser.Parser (List (RowVector Float))
-listOfRowVectorParser =
+{-| Try to read a string into a Matrix
+-}
+readComplexMatrix : String -> Result (List Parser.DeadEnd) (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
+readComplexMatrix matrixString =
+    Parser.run (parseMatrix ComplexNumbers.parseComplexNumber) matrixString
+
+
+listOfRowVectorParser : Parser.Parser (RowVector a) -> Parser.Parser (List (RowVector a))
+listOfRowVectorParser rowVectorParser =
     Parser.sequence
         { start = "["
         , separator = ","
         , end = "]"
         , spaces = Parser.spaces
-        , item = parseRowVector
+        , item = rowVectorParser
         , trailing = Parser.Forbidden
         }
 
 
-parseMatrix : Parser.Parser (Matrix Float)
-parseMatrix =
+parseMatrix : Parser.Parser a -> Parser.Parser (Matrix a)
+parseMatrix matrixElementParser =
     Parser.succeed Matrix
         |. Parser.keyword "Matrix"
         |. Parser.spaces
-        |= listOfRowVectorParser
+        |= listOfRowVectorParser (parseRowVector matrixElementParser)
 
 
-parseRowVector : Parser.Parser (RowVector Float)
-parseRowVector =
+parseRowVector : Parser.Parser a -> Parser.Parser (RowVector a)
+parseRowVector rowVectorElementsParser =
     Parser.succeed RowVector
         |. Parser.keyword "RowVector"
         |. Parser.spaces
-        |= Vector.parseVector Vector.negativeOrPositiveFloat
+        |= Vector.parseVector rowVectorElementsParser
 
 
 {-| Try to calculate the determinant

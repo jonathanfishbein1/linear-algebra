@@ -21,9 +21,8 @@ module Vector exposing
     , getAt
     , parseVector
     , print
-    , read
     , setAt
-    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, subtractVectors, vectorDotProduct, vectorLength, vectorSubspace, vectorTensorProduct
+    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, negativeOrPositiveFloat, readRealVector, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, subtractVectors, vectorDotProduct, vectorLength, vectorSubspace, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -347,33 +346,40 @@ print (Vector list) =
     "Vector [" ++ values ++ "]"
 
 
-listParser : Parser.Parser (List Float)
-listParser =
+listParser : Parser.Parser a -> Parser.Parser (List a)
+listParser itemParser =
     Parser.sequence
         { start = "["
         , separator = ","
         , end = "]"
         , spaces = Parser.spaces
-        , item = myNumber
+        , item = itemParser
         , trailing = Parser.Forbidden
         }
 
 
 {-| Parse a Vector
 -}
-parseVector : Parser.Parser (Vector Float)
-parseVector =
+parseVector : Parser.Parser a -> Parser.Parser (Vector a)
+parseVector vectorElementsParser =
     Parser.succeed Vector
         |. Parser.keyword "Vector"
         |. Parser.spaces
-        |= listParser
+        |= listParser vectorElementsParser
 
 
 {-| Try to read a string into a Vector
 -}
-read : String -> Result (List Parser.DeadEnd) (Vector Float)
-read vectorString =
-    Parser.run parseVector vectorString
+readRealVector : String -> Result (List Parser.DeadEnd) (Vector Float)
+readRealVector vectorString =
+    Parser.run (parseVector negativeOrPositiveFloat) vectorString
+
+
+{-| Try to read a string into a Vector
+-}
+readComplexVector : String -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumberCartesian Float))
+readComplexVector vectorString =
+    Parser.run (parseVector ComplexNumbers.parseComplexNumber) vectorString
 
 
 float : Parser.Parser Float
@@ -387,8 +393,8 @@ float =
         }
 
 
-myNumber : Parser.Parser Float
-myNumber =
+negativeOrPositiveFloat : Parser.Parser Float
+negativeOrPositiveFloat =
     Parser.oneOf
         [ Parser.succeed negate
             |. Parser.symbol "-"

@@ -735,7 +735,7 @@ parseRowVector =
     Parser.succeed RowVector
         |. Parser.keyword "RowVector"
         |. Parser.spaces
-        |= Vector.parseVector
+        |= Vector.parseVector Vector.negativeOrPositiveFloat
 
 
 {-| Try to calculate the determinant

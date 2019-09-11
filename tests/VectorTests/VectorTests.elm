@@ -180,7 +180,7 @@ suite =
                         Vector.print vector
 
                     readVector =
-                        Vector.read printedVector
+                        Vector.readRealVector printedVector
                 in
                 Expect.equal readVector (Ok vector)
         , Test.fuzz2 Fuzz.float Fuzz.float "tests subtractRealVectors" <|

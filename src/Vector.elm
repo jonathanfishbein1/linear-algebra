@@ -20,9 +20,8 @@ module Vector exposing
     , findIndex
     , getAt
     , parseVector
-    , print
     , setAt
-    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, negativeOrPositiveFloat, readRealVector, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, subtractVectors, vectorDotProduct, vectorLength, vectorSubspace, vectorTensorProduct
+    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, negativeOrPositiveFloat, printComplexVector, printRealVector, readRealVector, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, subtractVectors, vectorDotProduct, vectorLength, vectorSubspace, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -334,13 +333,25 @@ setAt index element (Vector list) =
         |> Vector
 
 
-{-| Print a Vector as a string
+{-| Print a Real Vector as a string
 -}
-print : Vector Float -> String
-print (Vector list) =
+printRealVector : Vector Float -> String
+printRealVector (Vector list) =
     let
         values =
             List.map String.fromFloat list
+                |> String.join ", "
+    in
+    "Vector [" ++ values ++ "]"
+
+
+{-| Print a Complex Vector as a string
+-}
+printComplexVector : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> String
+printComplexVector (Vector list) =
+    let
+        values =
+            List.map ComplexNumbers.print list
                 |> String.join ", "
     in
     "Vector [" ++ values ++ "]"

@@ -34,7 +34,6 @@ module Matrix exposing
     , bind
     , determinant
     , getAt
-    , print
     , read
     , setAt
     , upperTriangle
@@ -43,7 +42,7 @@ module Matrix exposing
     , invertComplex
     , isUnitary
     , subMatrix
-    , addMatrices, isInvertable, isInvertableComplex, isSquareMatrix, multiplyMatrices, multiplyVectorMatrix, sumMatrices
+    , addMatrices, isInvertable, isInvertableComplex, isSquareMatrix, multiplyMatrices, multiplyVectorMatrix, printRealMatrix, sumMatrices
     )
 
 {-| A module for Matrix
@@ -692,13 +691,24 @@ setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
         |> Matrix
 
 
-{-| Print a matrix to a string
+{-| Print a Real matrix to a string
 -}
-print : Matrix Float -> String
-print (Matrix listOfRowVectors) =
+printRealMatrix : Matrix Float -> String
+printRealMatrix (Matrix listOfRowVectors) =
     let
         values =
-            List.foldl (\(RowVector row) acc -> "RowVector " ++ Vector.print row ++ " ]" ++ acc) "" listOfRowVectors
+            List.foldl (\(RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc) "" listOfRowVectors
+    in
+    "Matrix [ " ++ values ++ " ]"
+
+
+{-| Print a Complex matrix to a string
+-}
+printComplexMatrix : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> String
+printComplexMatrix (Matrix listOfRowVectors) =
+    let
+        values =
+            List.foldl (\(RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc) "" listOfRowVectors
     in
     "Matrix [ " ++ values ++ " ]"
 

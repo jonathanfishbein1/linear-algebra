@@ -425,7 +425,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ 0, 1 ] ]
 
                     printedMatrix =
-                        Matrix.print matrix
+                        Matrix.printRealVector matrix
                 in
                 Expect.equal printedMatrix "Matrix [ RowVector Vector [0, 1] ] ]"
         , Test.fuzz2 Fuzz.float Fuzz.float "read Matrix" <|

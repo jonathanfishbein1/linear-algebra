@@ -177,7 +177,7 @@ suite =
                         Vector.Vector [ one, two ]
 
                     printedVector =
-                        Vector.print vector
+                        Vector.printRealVector vector
 
                     readVector =
                         Vector.readRealVector printedVector

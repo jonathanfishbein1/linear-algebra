@@ -2,17 +2,22 @@ module Vector exposing
     ( Vector(..)
     , Vector3(..)
     , Scalar(..)
+    , addVectors
     , map
     , equal
     , apply
     , liftA2
     , foldl
+    , vectorDotProduct
     , concat
+    , vectorLength
     , cross
     , distance
     , normalise
+    , subtractVectors
     , vector3ToVector
     , dimension
+    , vectorSubspace
     , append
     , concatEmpty
     , pure
@@ -21,7 +26,7 @@ module Vector exposing
     , getAt
     , parseVector
     , setAt
-    , InnerProductSpace, VectorSpace, addVectors, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, negativeOrPositiveFloat, printComplexVector, printRealVector, readRealVector, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, subtractVectors, vectorDotProduct, vectorLength, vectorSubspace, vectorTensorProduct
+    , InnerProductSpace, VectorSpace, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, negativeOrPositiveFloat, printComplexVector, printRealVector, readRealVector, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -33,29 +38,23 @@ module Vector exposing
 @docs Vector3
 @docs Scalar
 
-@docs addComplexVectors
-@docs addRealVectors
+@docs addVectors
 @docs map
-@docs multiplyRealVectors
-@docs multiplyComplexVectors
+@docs multiplyVectors
 @docs equal
 @docs apply
 @docs liftA2
 @docs foldl
-@docs realVectorDotProduct
-@docs complexVectorDotProduct
+@docs vectorDotProduct
 @docs concat
-@docs complexVectorLength
+@docs vectorLength
 @docs cross
 @docs distance
 @docs normalise
-@docs vectorLength Field.realField
-@docs subtractRealVectors
-@docs subtractComplexVectors
+@docs subtractVectors
 @docs vector3ToVector
 @docs dimension
-@docs realVectorSubspace
-@docs complexVectorSubspace
+@docs vectorSubspace
 @docs append
 @docs concatEmpty
 @docs pure
@@ -71,7 +70,6 @@ module Vector exposing
 
 import ComplexNumbers
 import Field
-import Float.Extra
 import List.Extra
 import Parser exposing ((|.), (|=))
 import Typeclasses.Classes.Equality
@@ -207,7 +205,7 @@ vectorLength { power, add, zero } =
         >> power (1 / 2)
 
 
-{-| Subtract Real Vectors together
+{-| Subtract Vectors
 -}
 subtractVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 subtractVectors { subtract } =
@@ -232,7 +230,7 @@ cross { subtract, multiply } (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
         (subtract (multiply x1 y2) (multiply x2 y1))
 
 
-{-| Convert a Vector3 type to a Vector typeZ
+{-| Convert a Vector3 type to a Vector type
 -}
 vector3ToVector : Vector3 a -> Vector a
 vector3ToVector (Vector3 x y z) =

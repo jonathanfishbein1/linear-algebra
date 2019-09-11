@@ -150,10 +150,10 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Ok True)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors" <|
@@ -165,10 +165,10 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Ok False)
         , Test.test "tests matrix doesSetSpanSpace with zero vectors 3 dimensions" <|
@@ -181,10 +181,10 @@ suite =
                         ]
 
                     r3 =
-                        Matrix.VectorSpace 3
+                        Matrix.VectorDimension 3
 
                     result =
-                        Matrix.doesSetSpanSpace r3 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.equal result (Ok True)
         , Test.test "tests matrix doesSetSpanSpace with three vectors" <|
@@ -197,10 +197,10 @@ suite =
                         ]
 
                     r3 =
-                        Matrix.VectorSpace 3
+                        Matrix.VectorDimension 3
 
                     result =
-                        Matrix.doesSetSpanSpace r3 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.equal result (Ok False)
         , Test.test "tests matrix doesSetSpanSpace with three vectors testing r2" <|
@@ -213,10 +213,10 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Err "Please input same number of vectors as vector space")
         , Test.test "tests matrix doesSetSpanSpace with three dimensional vector against R2" <|
@@ -228,10 +228,10 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
-                        Matrix.doesSetSpanSpace r2 listOfVectors
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Err "Please input vectors of equal length as vector space")
         , Test.test "tests matrix areBasis with standard basis vectors" <|
@@ -243,10 +243,10 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis r2 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.true "Vectors are basis for R2" result
         , Test.test "tests matrix areBasis with zero vectors" <|
@@ -258,10 +258,10 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis r2 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R2" result
         , Test.test "tests matrix areBasis with standard basis vectors 3 dimensions" <|
@@ -274,10 +274,10 @@ suite =
                         ]
 
                     r3 =
-                        Matrix.VectorSpace 3
+                        Matrix.VectorDimension 3
 
                     result =
-                        Matrix.areBasis r3 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R3" result
         , Test.test "tests matrix areBasis with zero vectors 3 dimensions" <|
@@ -290,10 +290,10 @@ suite =
                         ]
 
                     r3 =
-                        Matrix.VectorSpace 3
+                        Matrix.VectorDimension 3
 
                     result =
-                        Matrix.areBasis r3 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.true "Vectors are basis fro R3" result
         , Test.test "tests matrix areBasis with three vectors" <|
@@ -306,10 +306,10 @@ suite =
                         ]
 
                     r3 =
-                        Matrix.VectorSpace 3
+                        Matrix.VectorDimension 3
 
                     result =
-                        Matrix.areBasis r3 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.false "Vectors are not basis R3" result
         , Test.test "tests matrix areBasis with three vectors testing r2" <|
@@ -322,10 +322,10 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis r2 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R2" result
         , Test.test "tests matrix areBasis with three dimensional vector against R2" <|
@@ -337,10 +337,10 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis r2 listOfVectors
+                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.false "Vectos are not basis for R2" result
         , Test.test "tests matrix nullity with infinite solutions" <|
@@ -362,10 +362,10 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     testbasisVectors =
-                        Matrix.basisOfVectorSpace r2 r2BasisVectors
+                        Matrix.basisOfVectorSpace Vector.realVectorSpace r2 r2BasisVectors
                 in
                 Expect.equal r2BasisVectors testbasisVectors
         , Test.test "tests basisOfVectorSpace returns R2 basis vectors for non basis vectors" <|
@@ -382,10 +382,10 @@ suite =
                         ]
 
                     r2 =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     testbasisVectors =
-                        Matrix.basisOfVectorSpace r2 testVectors
+                        Matrix.basisOfVectorSpace Vector.realVectorSpace r2 testVectors
                 in
                 Expect.equal r2BasisVectors testbasisVectors
         , Test.test "tests matrix fold" <|
@@ -398,7 +398,7 @@ suite =
                             ]
 
                     result =
-                        Matrix.VectorSpace 2
+                        Matrix.VectorDimension 2
 
                     foldResult =
                         Matrix.foldl (+) 0 matrix
@@ -425,7 +425,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ 0, 1 ] ]
 
                     printedMatrix =
-                        Matrix.printRealVector matrix
+                        Matrix.printRealMatrix matrix
                 in
                 Expect.equal printedMatrix "Matrix [ RowVector Vector [0, 1] ] ]"
         , Test.fuzz2 Fuzz.float Fuzz.float "read Matrix" <|
@@ -435,7 +435,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one, two ] ]
 
                     printedMatrix =
-                        Matrix.print matrix
+                        Matrix.printRealMatrix matrix
 
                     readMatrix =
                         Matrix.read printedMatrix
@@ -451,7 +451,7 @@ suite =
                             ]
 
                     determinant =
-                        Matrix.determinant matrix
+                        Matrix.determinant Vector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok -2)
         , Test.test "tests matrix determinant 3 x 3" <|
@@ -465,7 +465,7 @@ suite =
                             ]
 
                     determinant =
-                        Matrix.determinant matrix
+                        Matrix.determinant Vector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok 35)
         , Test.test "tests matrix determinant 4 x 4" <|
@@ -480,7 +480,7 @@ suite =
                             ]
 
                     determinant =
-                        Matrix.determinant matrix
+                        Matrix.determinant Vector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok 7)
         , Test.test "tests matrix invert" <|
@@ -501,7 +501,7 @@ suite =
                             ]
 
                     inverse =
-                        Matrix.invert matrix
+                        Matrix.invert Vector.realVectorSpace matrix
                 in
                 Expect.equal inverse (Ok expectedInverse)
         , Test.test "tests matrix times inverse equals identity" <|
@@ -598,7 +598,7 @@ suite =
                             ]
 
                     determinantComplex =
-                        Matrix.determinantComplex matrix
+                        Matrix.determinant Vector.complexVectorSpace matrix
 
                     expectedDeterminant =
                         ComplexNumbers.ComplexNumberCartesian
@@ -656,7 +656,7 @@ suite =
                             ]
 
                     inverseComplex =
-                        Matrix.invertComplex matrix
+                        Matrix.invert Vector.complexVectorSpace matrix
 
                     expectedComplexNumberR1C1 =
                         ComplexNumbers.ComplexNumberCartesian
@@ -811,7 +811,7 @@ suite =
                             ]
 
                     isInvertable =
-                        Matrix.isInvertable matrix
+                        Matrix.isInvertable Vector.realVectorSpace matrix
                 in
                 Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
         , Test.test "tests sumMatrix" <|
@@ -844,7 +844,7 @@ suite =
                             ]
 
                     isInvertable =
-                        Matrix.isInvertableComplex matrix
+                        Matrix.isInvertable Vector.complexVectorSpace matrix
                 in
                 Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
         , Test.fuzz Fuzz.int "test if matrix is square" <|

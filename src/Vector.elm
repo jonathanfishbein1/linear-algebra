@@ -2,6 +2,9 @@ module Vector exposing
     ( Vector(..)
     , Vector3(..)
     , Scalar(..)
+    , AbelianGroup
+    , VectorSpace
+    , InnerProductSpace
     , addVectors
     , map
     , equal
@@ -30,7 +33,8 @@ module Vector exposing
     , readRealVector
     , readComplexVector
     , setAt
-    , InnerProductSpace, VectorSpace, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, negativeOrPositiveFloat, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, vectorTensorProduct
+    , vectorTensorProduct
+    , complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, negativeOrPositiveFloat, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication
     )
 
 {-| A module for Vectors
@@ -41,6 +45,9 @@ module Vector exposing
 @docs Vector
 @docs Vector3
 @docs Scalar
+@docs AbelianGroup
+@docs VectorSpace
+@docs InnerProductSpace
 
 @docs addVectors
 @docs map
@@ -70,6 +77,7 @@ module Vector exposing
 @docs readRealVector
 @docs readComplexVector
 @docs setAt
+@docs vectorTensorProduct
 
 -}
 
@@ -100,6 +108,8 @@ type Scalar a
     = Scalar a
 
 
+{-| Type to represent a Abelian Group
+-}
 type alias AbelianGroup a =
     { field : Field.Field a
     , addVects : Vector a -> Vector a -> Vector a
@@ -107,12 +117,16 @@ type alias AbelianGroup a =
     }
 
 
+{-| Type to represent a Vector Space
+-}
 type alias VectorSpace a =
     { abelianGroup : AbelianGroup a
     , vectorScalarMultiplication : a -> Vector a -> Vector a
     }
 
 
+{-| Type to represent an Inner Product Space
+-}
 type alias InnerProductSpace a =
     { vectorSpace : VectorSpace a
     , innerProduct : Vector a -> Vector a -> a
@@ -131,6 +145,8 @@ map f (Vector vector) =
     Vector <| List.map f vector
 
 
+{-| Scalar multiplication over a Vector
+-}
 scalarMultiplication : Field.Field a -> a -> Vector a -> Vector a
 scalarMultiplication { multiply } scalar =
     map (multiply scalar)
@@ -264,13 +280,13 @@ vectorSubspace : AbelianGroup a -> Scalar a -> List (Vector a) -> List (a -> Boo
 vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
     let
         testZeroVector =
-            List.map (map (field.multiply field.zero)) vectorList
+            List.map (scalarMultiplication field field.zero) vectorList
 
         containsZeroVector =
             closurePassCriteria testZeroVector
 
         scaledVectors =
-            List.map (map (field.multiply scalar)) vectorList
+            List.map (scalarMultiplication field scalar) vectorList
 
         closurePassCriteria =
             List.map (\(Vector vector) -> Vector <| List.map2 (\predicate x -> predicate x) predicates vector)
@@ -468,6 +484,8 @@ complexInnerProductSpace =
     }
 
 
+{-| Calculate the tensor product of two vectors
+-}
 vectorTensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
 vectorTensorProduct { multiply } vectorOne vectorTwo =
     bind

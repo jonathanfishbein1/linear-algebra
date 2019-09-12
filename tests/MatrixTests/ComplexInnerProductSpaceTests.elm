@@ -3,17 +3,18 @@ module MatrixTests.ComplexInnerProductSpaceTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
+import Field
 import Parser
 import Test
 import Vector
+import Field 
 
-
-suite : Test.Test
-suite =
-    Test.describe "Complex Inner Product Vector Space"
+suite : Test.Test 
+suite = 
+    Test.describe "Complex Inner Product Vector Space" 
         [ Test.describe "Complex Vector Space"
             [ Test.describe "Abelian Group"
-                [ Test.fuzz2 Fuzz.int Fuzz.int "tests Vector add is commutative" <|
+                [ Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Vector add is commutative" <|
                     \one two ->
                         let
                             v =
@@ -52,9 +53,9 @@ suite =
                                         )
                                     ]
                         in
-                        Vector.addComplexVectors v w
-                            |> Expect.equal (Vector.addComplexVectors w v)
-                , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests Vector add is associative" <|
+                        Vector.addVectors ComplexNumbers.complexField v w
+                            |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
+                , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Vector add is associative" <|
                     \one two three ->
                         let
                             v =
@@ -112,15 +113,15 @@ suite =
                                     ]
 
                             vPlusWPlusX =
-                                Vector.addComplexVectors v w
-                                    |> Vector.addComplexVectors x
+                                Vector.addVectors ComplexNumbers.complexField v w
+                                    |> Vector.addVectors ComplexNumbers.complexField x
 
                             wPlusXPlusV =
-                                Vector.addComplexVectors w x
-                                    |> Vector.addComplexVectors v
+                                Vector.addVectors ComplexNumbers.complexField w x
+                                    |> Vector.addVectors ComplexNumbers.complexField v
                         in
-                        Vector.addComplexVectors v w
-                            |> Expect.equal (Vector.addComplexVectors w v)
+                        Vector.addVectors ComplexNumbers.complexField v w
+                            |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
                 , Test.fuzz2 Fuzz.int Fuzz.int "tests empty vector is additive identity" <|
                     \one two ->
                         let
@@ -161,7 +162,7 @@ suite =
                                 Vector.Vector
                                     [ ComplexNumbers.zero ]
                         in
-                        Vector.addComplexVectors v w
+                        Vector.addVectors ComplexNumbers.complexField v w
                             |> Expect.equal zero
                 ]
             , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests one is product identity" <|
@@ -260,7 +261,7 @@ suite =
                                 ]
 
                         vPlusW =
-                            Vector.addComplexVectors v w
+                            Vector.addVectors ComplexNumbers.complexField v w
 
                         cvPlusW =
                             Vector.map (ComplexNumbers.multiply c) vPlusW
@@ -272,7 +273,7 @@ suite =
                             Vector.map (ComplexNumbers.multiply c) v
 
                         cVPluscW =
-                            Vector.addComplexVectors cW cV
+                            Vector.addVectors ComplexNumbers.complexField cW cV
 
                         result =
                             Vector.equal ComplexNumbers.equal cvPlusW cVPluscW
@@ -323,21 +324,21 @@ suite =
                             Vector.map (ComplexNumbers.multiply c2) v
 
                         c1VPlusc2V =
-                            Vector.addComplexVectors c1V c2V
+                            Vector.addVectors ComplexNumbers.complexField c1V c2V
 
                         result =
                             Vector.equal ComplexNumbers.equal c1VPlusc2V c1Plusc2V
                     in
                     Expect.true "All elements equal" result
             ]
-        , Test.fuzz Fuzz.int "tests dot product is nondegenerative" <|
+        , Test.fuzz (Fuzz.map Basics.toFloat Fuzz.int) "tests dot product is nondegenerative" <|
             \one ->
                 let
                     a =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.realVectorDotProduct a a
+                        Vector.vectorDotProduct Field.realField a a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -354,13 +355,13 @@ suite =
                         Vector.Vector [ three ]
 
                     aPlusBDotc =
-                        Vector.realVectorDotProduct (Vector.addRealVectors a b) c
+                        Vector.vectorDotProduct Field.realField (Vector.addVectors Field.realField a b) c
 
                     aDotB =
-                        Vector.realVectorDotProduct a c
+                        Vector.vectorDotProduct Field.realField a c
 
                     bDotC =
-                        Vector.realVectorDotProduct b c
+                        Vector.vectorDotProduct Field.realField b c
 
                     aDotBPlusbDotC =
                         aDotB + bDotC
@@ -377,10 +378,10 @@ suite =
                         Vector.Vector [ two ]
 
                     threeTimesADotB =
-                        Vector.realVectorDotProduct (Vector.map ((*) three) a) b
+                        Vector.vectorDotProduct Field.realField (Vector.map ((*) three) a) b
 
                     aDotBTimesThree =
-                        Vector.realVectorDotProduct a b * three
+                        Vector.vectorDotProduct Field.realField a b * three
                 in
                 threeTimesADotB
                     |> Expect.equal aDotBTimesThree
@@ -394,10 +395,10 @@ suite =
                         Vector.Vector [ two ]
 
                     aDotB =
-                        Vector.realVectorDotProduct a b
+                        Vector.vectorDotProduct Field.realField a b
 
                     bDotA =
-                        Vector.realVectorDotProduct b a
+                        Vector.vectorDotProduct Field.realField b a
                 in
                 aDotB
                     |> Expect.equal bDotA
@@ -408,10 +409,10 @@ suite =
                         Vector.Vector [ one ]
 
                     squareRootADotA =
-                        Basics.sqrt (Vector.realVectorDotProduct a a)
+                        Basics.sqrt (Vector.vectorDotProduct Field.realField a a)
 
                     aLength =
-                        Vector.realVectorLength a
+                        Vector.vectorLength Field.realField a
                 in
                 squareRootADotA
                     |> Expect.equal aLength
@@ -422,7 +423,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.realVectorLength a
+                        Vector.vectorLength Field.realField a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -436,10 +437,10 @@ suite =
                         Vector.Vector [ two ]
 
                     aPlusBLength =
-                        Vector.realVectorLength <| Vector.addRealVectors a b
+                        Vector.vectorLength Field.realField <| Vector.addVectors Field.realField a b
 
                     lengthAPlusLengthB =
-                        Vector.realVectorLength a + Vector.realVectorLength b
+                        Vector.vectorLength Field.realField a + Vector.vectorLength Field.realField b
                 in
                 aPlusBLength
                     |> Expect.atMost lengthAPlusLengthB
@@ -450,10 +451,10 @@ suite =
                         Vector.Vector [ one ]
 
                     legnthOfTwoTimesA =
-                        Vector.realVectorLength (Vector.map ((*) two) a)
+                        Vector.vectorLength Field.realField (Vector.map ((*) two) a)
 
                     lengthOfATimesTwo =
-                        Basics.abs two * Vector.realVectorLength a
+                        Basics.abs two * Vector.vectorLength Field.realField a
                 in
                 legnthOfTwoTimesA
                     |> Expect.within (Expect.Absolute 0.1) lengthOfATimesTwo
@@ -464,7 +465,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.distance a a
+                        Vector.distance Vector.realVectorAbelianGroup a a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -481,13 +482,13 @@ suite =
                         Vector.Vector [ three ]
 
                     distanceAB =
-                        Vector.distance a b
+                        Vector.distance Vector.realVectorAbelianGroup a b
 
                     distanceAC =
-                        Vector.distance a c
+                        Vector.distance Vector.realVectorAbelianGroup a c
 
                     distanceCB =
-                        Vector.distance c b
+                        Vector.distance Vector.realVectorAbelianGroup c b
                 in
                 distanceAB
                     |> Expect.atMost (distanceAC + distanceCB)
@@ -501,10 +502,10 @@ suite =
                         Vector.Vector [ two ]
 
                     distanceAB =
-                        Vector.realVectorDotProduct a b
+                        Vector.vectorDotProduct Field.realField a b
 
                     distanceBA =
-                        Vector.realVectorDotProduct b a
+                        Vector.vectorDotProduct Field.realField b a
                 in
                 distanceAB
                     |> Expect.equal distanceBA

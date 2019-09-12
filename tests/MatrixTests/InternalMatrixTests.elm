@@ -23,7 +23,7 @@ suite =
                         ]
 
                     pivotLocation =
-                        Internal.Matrix.findPivotReal m1 0
+                        Internal.Matrix.findPivot Vector.realVectorSpace m1 0
                 in
                 case pivotLocation of
                     Just location ->
@@ -42,7 +42,7 @@ suite =
                         ]
 
                     pivotLocation =
-                        Internal.Matrix.findPivotReal m1 0
+                        Internal.Matrix.findPivot Vector.realVectorSpace m1 0
                 in
                 case pivotLocation of
                     Just location ->
@@ -78,7 +78,7 @@ suite =
                         ]
 
                     pivotLocation =
-                        Internal.Matrix.findPivotComplex m1 0
+                        Internal.Matrix.findPivot Vector.complexVectorSpace m1 0
                 in
                 case pivotLocation of
                     Just location ->
@@ -115,7 +115,7 @@ suite =
                         ]
 
                     pivotLocation =
-                        Internal.Matrix.findPivotComplex m1 0
+                        Internal.Matrix.findPivot Vector.complexVectorSpace m1 0
                 in
                 case pivotLocation of
                     Just location ->
@@ -130,7 +130,7 @@ suite =
                         Vector.Vector [ one, two ]
 
                     (Vector.Vector scaledRow) =
-                        Internal.Matrix.scale 0 row
+                        Internal.Matrix.scale Vector.realVectorSpace 0 row
 
                     firstElement =
                         List.Extra.getAt 0 scaledRow
@@ -166,7 +166,7 @@ suite =
                         Vector.Vector [ complexNumberOne, complexNumberTwo ]
 
                     (Vector.Vector scaledComplexRow) =
-                        Internal.Matrix.scaleComplex 0 row
+                        Internal.Matrix.scale Vector.complexVectorSpace 0 row
 
                     firstElement =
                         List.Extra.getAt 0 scaledComplexRow
@@ -184,7 +184,7 @@ suite =
                         Vector.Vector []
 
                     (Vector.Vector scaledRow) =
-                        Internal.Matrix.scale 0 row
+                        Internal.Matrix.scale Vector.realVectorSpace 0 row
                 in
                 Expect.equal (Vector.Vector scaledRow) (Vector.Vector [])
         , Test.test "tests matrix complex scale scales empty Vector" <|
@@ -194,7 +194,7 @@ suite =
                         Vector.Vector []
 
                     (Vector.Vector scaledComplexRow) =
-                        Internal.Matrix.scaleComplex 0 row
+                        Internal.Matrix.scale Vector.complexVectorSpace 0 row
                 in
                 Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [])
         , Test.test "tests matrix complex scale scales Vector" <|
@@ -222,7 +222,7 @@ suite =
                         Vector.Vector [ complexNumberOne, complexNumberTwo ]
 
                     (Vector.Vector scaledComplexRow) =
-                        Internal.Matrix.scaleComplex 0 row
+                        Internal.Matrix.scale Vector.complexVectorSpace 0 row
 
                     secondElement =
                         ComplexNumbers.divide complexNumberTwo complexNumberOne
@@ -235,7 +235,7 @@ suite =
                         Vector.Vector [ one, two ]
 
                     (Vector.Vector scaledRow) =
-                        Internal.Matrix.scale 0 row
+                        Internal.Matrix.scale Vector.realVectorSpace 0 row
 
                     secondElement =
                         List.Extra.getAt 1 scaledRow
@@ -256,7 +256,7 @@ suite =
                         Vector.Vector [ two, two ]
 
                     (Vector.Vector subRow) =
-                        Internal.Matrix.subtractRow 0 (Internal.Matrix.scale 0 currentRow) nextRow
+                        Internal.Matrix.subtractRow Vector.realVectorSpace 0 (Internal.Matrix.scale Vector.realVectorSpace 0 currentRow) nextRow
 
                     firstElementSecondRow =
                         List.Extra.getAt 0 subRow
@@ -295,7 +295,7 @@ suite =
                         Vector.Vector [ complexNumberTwo, complexNumberTwo ]
 
                     (Vector.Vector subRow) =
-                        Internal.Matrix.subtractComplexRow 0 (Internal.Matrix.scaleComplex 0 currentRow) nextRow
+                        Internal.Matrix.subtractRow Vector.complexVectorSpace 0 (Internal.Matrix.scale Vector.complexVectorSpace 0 currentRow) nextRow
 
                     firstElementSecondRow =
                         List.Extra.getAt 0 subRow

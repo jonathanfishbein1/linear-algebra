@@ -22,7 +22,7 @@ suite =
                             ]
 
                     upperTriangularFormMatrix =
-                        Matrix.upperTriangle matrix
+                        Matrix.upperTriangle Vector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -43,7 +43,7 @@ suite =
                             ]
 
                     upperTriangularFormMatrix =
-                        Matrix.upperTriangleComplex matrix
+                        Matrix.upperTriangle Vector.complexVectorSpace matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -104,7 +104,7 @@ suite =
                             ]
 
                     upperTriangularFormMatrix =
-                        Matrix.upperTriangleComplex matrix
+                        Matrix.upperTriangle Vector.complexVectorSpace matrix
 
                     complexNumberExpectedR2C2 =
                         ComplexNumbers.ComplexNumberCartesian

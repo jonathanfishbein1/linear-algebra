@@ -2,29 +2,25 @@ module Vector exposing
     ( Vector(..)
     , Vector3(..)
     , Scalar(..)
-    , addComplexVectors
-    , addRealVectors
+    , AbelianGroup
+    , VectorSpace
+    , InnerProductSpace
+    , addVectors
     , map
-    , multiplyRealVectors
-    , multiplyComplexVectors
     , equal
     , apply
     , liftA2
     , foldl
-    , realVectorDotProduct
-    , complexVectorDotProduct
+    , vectorDotProduct
     , concat
-    , complexVectorLength
+    , vectorLength
     , cross
     , distance
     , normalise
-    , realVectorLength
-    , subtractRealVectors
-    , subtractComplexVectors
+    , subtractVectors
     , vector3ToVector
     , dimension
-    , realVectorSubspace
-    , complexVectorSubspace
+    , vectorSubspace
     , append
     , concatEmpty
     , pure
@@ -32,9 +28,20 @@ module Vector exposing
     , findIndex
     , getAt
     , parseVector
-    , print
-    , read
+    , printRealVector
+    , printComplexVector
+    , readRealVector
+    , readComplexVector
     , setAt
+    , vectorTensorProduct
+    , scalarMultiplication
+    , realVectorSpace
+    , realVectorAbelianGroup
+    , realInnerProductSpace
+    , negativeOrPositiveFloat
+    , complexVectorSpace
+    , complexVectorAbelianGroup
+    , complexInnerProductSpace
     )
 
 {-| A module for Vectors
@@ -45,30 +52,26 @@ module Vector exposing
 @docs Vector
 @docs Vector3
 @docs Scalar
+@docs AbelianGroup
+@docs VectorSpace
+@docs InnerProductSpace
 
-@docs addComplexVectors
-@docs addRealVectors
+@docs addVectors
 @docs map
-@docs multiplyRealVectors
-@docs multiplyComplexVectors
 @docs equal
 @docs apply
 @docs liftA2
 @docs foldl
-@docs realVectorDotProduct
-@docs complexVectorDotProduct
+@docs vectorDotProduct
 @docs concat
-@docs complexVectorLength
+@docs vectorLength
 @docs cross
 @docs distance
 @docs normalise
-@docs realVectorLength
-@docs subtractRealVectors
-@docs subtractComplexVectors
+@docs subtractVectors
 @docs vector3ToVector
 @docs dimension
-@docs realVectorSubspace
-@docs complexVectorSubspace
+@docs vectorSubspace
 @docs append
 @docs concatEmpty
 @docs pure
@@ -76,14 +79,25 @@ module Vector exposing
 @docs findIndex
 @docs getAt
 @docs parseVector
-@docs print
-@docs read
+@docs printRealVector
+@docs printComplexVector
+@docs readRealVector
+@docs readComplexVector
 @docs setAt
+@docs vectorTensorProduct
+@docs scalarMultiplication
+@docs realVectorSpace
+@docs realVectorAbelianGroup
+@docs realInnerProductSpace
+@docs negativeOrPositiveFloat
+@docs complexVectorSpace
+@docs complexVectorAbelianGroup
+@docs complexInnerProductSpace
 
 -}
 
 import ComplexNumbers
-import Float.Extra
+import Field
 import List.Extra
 import Parser exposing ((|.), (|=))
 import Typeclasses.Classes.Equality
@@ -109,18 +123,36 @@ type Scalar a
     = Scalar a
 
 
-{-| Add Complex Vectors together
+{-| Type to represent a Abelian Group
 -}
-addComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number) -> Vector (ComplexNumbers.ComplexNumberCartesian number)
-addComplexVectors =
-    liftA2 ComplexNumbers.add
+type alias AbelianGroup a =
+    { field : Field.Field a
+    , addVects : Vector a -> Vector a -> Vector a
+    , subtractVects : Vector a -> Vector a -> Vector a
+    }
 
 
-{-| Add Real Vectors together
+{-| Type to represent a Vector Space
 -}
-addRealVectors : Vector number -> Vector number -> Vector number
-addRealVectors =
-    liftA2 (+)
+type alias VectorSpace a =
+    { abelianGroup : AbelianGroup a
+    , vectorScalarMultiplication : a -> Vector a -> Vector a
+    }
+
+
+{-| Type to represent an Inner Product Space
+-}
+type alias InnerProductSpace a =
+    { vectorSpace : VectorSpace a
+    , innerProduct : Vector a -> Vector a -> a
+    }
+
+
+{-| Add two Vectors
+-}
+addVectors : Field.Field a -> Vector a -> Vector a -> Vector a
+addVectors { add } =
+    liftA2 add
 
 
 {-| Map over a vector
@@ -130,18 +162,11 @@ map f (Vector vector) =
     Vector <| List.map f vector
 
 
-{-| Multiply two Real Vectors together
+{-| Scalar multiplication over a Vector
 -}
-multiplyRealVectors : Vector number -> Vector number -> Vector number
-multiplyRealVectors vectorOne vectorTwo =
-    liftA2 (*) vectorOne vectorTwo
-
-
-{-| Multiply two Complex Vectors together
--}
-multiplyComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
-multiplyComplexVectors vectorOne vectorTwo =
-    liftA2 ComplexNumbers.multiply vectorOne vectorTwo
+scalarMultiplication : Field.Field a -> a -> Vector a -> Vector a
+scalarMultiplication { multiply } scalar =
+    map (multiply scalar)
 
 
 {-| Compare two Vectors for equality
@@ -206,85 +231,63 @@ foldl foldFunction acc (Vector list) =
     List.foldl foldFunction acc list
 
 
-{-| Dot product on two Complex Numbered Vectors
+{-| Calculate the dot product of two Vectors
 -}
-complexVectorDotProduct : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
-complexVectorDotProduct vectorOne vectorTwo =
-    liftA2 ComplexNumbers.multiply vectorOne vectorTwo
-        |> foldl ComplexNumbers.add ComplexNumbers.zero
+vectorDotProduct : Field.Field a -> Vector a -> Vector a -> a
+vectorDotProduct { zero, add, multiply } vectorOne vectorTwo =
+    liftA2 multiply vectorOne vectorTwo
+        |> foldl add zero
 
 
-{-| Dot product on two Real Numbered Vectors
+{-| Calculate the length of a Vector
 -}
-realVectorDotProduct : Vector number -> Vector number -> number
-realVectorDotProduct vectorOne vectorTwo =
-    liftA2 (*) vectorOne vectorTwo
-        |> foldl (+) 0
+vectorLength : Field.Field a -> Vector a -> a
+vectorLength { power, add, zero } =
+    foldl (\x acc -> add (power 2 x) acc) zero
+        >> power (1 / 2)
 
 
-{-| Calculate length of a real vector
+{-| Subtract Vectors
 -}
-realVectorLength : Vector Float -> Float
-realVectorLength =
-    foldl (\x acc -> x ^ 2 + acc) 0
-        >> Basics.sqrt
-
-
-{-| Calculate length of a complex vector
--}
-complexVectorLength : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> ComplexNumbers.ComplexNumberCartesian Float
-complexVectorLength complexNumberVector =
-    foldl (\x acc -> ComplexNumbers.add (ComplexNumbers.power 2 x) acc) ComplexNumbers.zero complexNumberVector
-
-
-{-| Subtract Real Vectors together
--}
-subtractRealVectors : Vector number -> Vector number -> Vector number
-subtractRealVectors =
-    liftA2 (-)
-
-
-{-| Subtract Complex Vectors together
--}
-subtractComplexVectors : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float) -> Vector (ComplexNumbers.ComplexNumberCartesian Float)
-subtractComplexVectors =
-    liftA2 ComplexNumbers.subtract
+subtractVectors : Field.Field a -> Vector a -> Vector a -> Vector a
+subtractVectors { subtract } =
+    liftA2 subtract
 
 
 {-| Calculate distance between two vectors
 -}
-distance : Vector Float -> Vector Float -> Float
-distance vectorOne vectorTwo =
-    subtractRealVectors vectorOne vectorTwo
-        |> realVectorLength
+distance : AbelianGroup a -> Vector a -> Vector a -> a
+distance { subtractVects, field } vectorOne vectorTwo =
+    subtractVects vectorOne vectorTwo
+        |> vectorLength field
 
 
 {-| Take the cross product of two 3D vectors
 -}
-cross : Vector3 number -> Vector3 number -> Vector3 number
-cross (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
+cross : Field.Field a -> Vector3 a -> Vector3 a -> Vector3 a
+cross { subtract, multiply } (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
     Vector3
-        (y1 * z2 - y2 * z1)
-        (z1 * x2 - z2 * x1)
-        (x1 * y2 - x2 * y1)
+        (subtract (multiply y1 z2) (multiply y2 z1))
+        (subtract (multiply z1 x2) (multiply z2 x1))
+        (subtract (multiply x1 y2) (multiply x2 y1))
 
 
-{-| Convert a Vector3 type to a Vector typeZ
+{-| Convert a Vector3 type to a Vector type
 -}
-vector3ToVector : Vector3 number -> Vector number
+vector3ToVector : Vector3 a -> Vector a
 vector3ToVector (Vector3 x y z) =
     Vector [ x, y, z ]
 
 
 {-| Adjust a vector so that its length is exactly one
 -}
-normalise : Vector Float -> Vector Float
-normalise v =
-    if Float.Extra.equalWithin 0.000000001 (realVectorLength v) 0.0 then
+normalise : Field.Field a -> Vector a -> Vector a
+normalise field v =
+    if vectorLength field v == field.zero then
         v
 
     else
-        map ((/) (realVectorLength v)) v
+        map (field.divide (vectorLength field v)) v
 
 
 {-| Count of number of elements in a vector
@@ -294,31 +297,19 @@ dimension (Vector list) =
     List.length list
 
 
-{-| Function to determine if a set of real valued vectors is a valid subspace
+{-| Determine whether a list of Vectors makes a Subspace
 -}
-realVectorSubspace : Scalar number -> List (Vector number) -> List (number -> Bool) -> Bool
-realVectorSubspace scalar vectorList predicates =
-    vectorSubspace 0 (*) addRealVectors scalar vectorList predicates
-
-
-{-| Function to determine if a set of complex valued vectors is a valid subspace
--}
-complexVectorSubspace : Scalar (ComplexNumbers.ComplexNumberCartesian Float) -> List (Vector (ComplexNumbers.ComplexNumberCartesian Float)) -> List (ComplexNumbers.ComplexNumberCartesian Float -> Bool) -> Bool
-complexVectorSubspace scalar vectorList predicates =
-    vectorSubspace ComplexNumbers.zero ComplexNumbers.multiply addComplexVectors scalar vectorList predicates
-
-
-vectorSubspace : b -> (b -> b -> b) -> (Vector b -> Vector b -> Vector b) -> Scalar b -> List (Vector b) -> List (b -> Bool) -> Bool
-vectorSubspace zero multiply add (Scalar scalar) vectorList predicates =
+vectorSubspace : AbelianGroup a -> Scalar a -> List (Vector a) -> List (a -> Bool) -> Bool
+vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
     let
         testZeroVector =
-            List.map (map (multiply zero)) vectorList
+            List.map (scalarMultiplication field field.zero) vectorList
 
         containsZeroVector =
             closurePassCriteria testZeroVector
 
         scaledVectors =
-            List.map (map (multiply scalar)) vectorList
+            List.map (scalarMultiplication field scalar) vectorList
 
         closurePassCriteria =
             List.map (\(Vector vector) -> Vector <| List.map2 (\predicate x -> predicate x) predicates vector)
@@ -328,7 +319,7 @@ vectorSubspace zero multiply add (Scalar scalar) vectorList predicates =
             closurePassCriteria scaledVectors
 
         cartesianAddVectors =
-            List.Extra.lift2 add
+            List.Extra.lift2 addVects
 
         additionOfVectors =
             cartesianAddVectors vectorList vectorList
@@ -384,10 +375,10 @@ setAt index element (Vector list) =
         |> Vector
 
 
-{-| Print a Vector as a string
+{-| Print a Real Vector as a string
 -}
-print : Vector Float -> String
-print (Vector list) =
+printRealVector : Vector Float -> String
+printRealVector (Vector list) =
     let
         values =
             List.map String.fromFloat list
@@ -396,33 +387,52 @@ print (Vector list) =
     "Vector [" ++ values ++ "]"
 
 
-listParser : Parser.Parser (List Float)
-listParser =
+{-| Print a Complex Vector as a string
+-}
+printComplexVector : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> String
+printComplexVector (Vector list) =
+    let
+        values =
+            List.map ComplexNumbers.print list
+                |> String.join ", "
+    in
+    "Vector [" ++ values ++ "]"
+
+
+listParser : Parser.Parser a -> Parser.Parser (List a)
+listParser itemParser =
     Parser.sequence
         { start = "["
         , separator = ","
         , end = "]"
         , spaces = Parser.spaces
-        , item = myNumber
+        , item = itemParser
         , trailing = Parser.Forbidden
         }
 
 
 {-| Parse a Vector
 -}
-parseVector : Parser.Parser (Vector Float)
-parseVector =
+parseVector : Parser.Parser a -> Parser.Parser (Vector a)
+parseVector vectorElementsParser =
     Parser.succeed Vector
         |. Parser.keyword "Vector"
         |. Parser.spaces
-        |= listParser
+        |= listParser vectorElementsParser
 
 
-{-| Try to read a string into a Vector
+{-| Try to read a string into a Real Vector
 -}
-read : String -> Result (List Parser.DeadEnd) (Vector Float)
-read vectorString =
-    Parser.run parseVector vectorString
+readRealVector : String -> Result (List Parser.DeadEnd) (Vector Float)
+readRealVector vectorString =
+    Parser.run (parseVector negativeOrPositiveFloat) vectorString
+
+
+{-| Try to read a string into a Complex Vector
+-}
+readComplexVector : String -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumberCartesian Float))
+readComplexVector vectorString =
+    Parser.run (parseVector ComplexNumbers.parseComplexNumber) vectorString
 
 
 float : Parser.Parser Float
@@ -436,8 +446,10 @@ float =
         }
 
 
-myNumber : Parser.Parser Float
-myNumber =
+{-| Parse a Float that can be negative or positive
+-}
+negativeOrPositiveFloat : Parser.Parser Float
+negativeOrPositiveFloat =
     Parser.oneOf
         [ Parser.succeed negate
             |. Parser.symbol "-"
@@ -451,3 +463,70 @@ myNumber =
 findIndex : (a -> Bool) -> Vector a -> Maybe Int
 findIndex predicate (Vector list) =
     List.Extra.findIndex predicate list
+
+
+{-| Real Numbered Abelian Group
+-}
+realVectorAbelianGroup : AbelianGroup Float
+realVectorAbelianGroup =
+    { field = Field.realField
+    , addVects = addVectors Field.realField
+    , subtractVects = subtractVectors Field.realField
+    }
+
+
+{-| Complex Numbered Abelian Group
+-}
+complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumberCartesian Float)
+complexVectorAbelianGroup =
+    { field = ComplexNumbers.complexField
+    , addVects = addVectors ComplexNumbers.complexField
+    , subtractVects = subtractVectors ComplexNumbers.complexField
+    }
+
+
+{-| Real Numbered Vector Space
+-}
+realVectorSpace : VectorSpace Float
+realVectorSpace =
+    { abelianGroup = realVectorAbelianGroup
+    , vectorScalarMultiplication = scalarMultiplication Field.realField
+    }
+
+
+{-| Complex Numbered Vector Space
+-}
+complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
+complexVectorSpace =
+    { abelianGroup = complexVectorAbelianGroup
+    , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
+    }
+
+
+{-| Real Numbered Inner Product Space
+-}
+realInnerProductSpace : InnerProductSpace Float
+realInnerProductSpace =
+    { vectorSpace = realVectorSpace
+    , innerProduct = vectorDotProduct Field.realField
+    }
+
+
+{-| Complex Numbered Inner Product Space
+-}
+complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumberCartesian Float)
+complexInnerProductSpace =
+    { vectorSpace = complexVectorSpace
+    , innerProduct = vectorDotProduct ComplexNumbers.complexField
+    }
+
+
+{-| Calculate the tensor product of two vectors
+-}
+vectorTensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
+vectorTensorProduct field vectorOne vectorTwo =
+    bind
+        vectorOne
+        (\vectorOneElement ->
+            scalarMultiplication field vectorOneElement vectorTwo
+        )

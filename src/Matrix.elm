@@ -3,11 +3,9 @@ module Matrix exposing
     , RowVector(..)
     , ColumnVector(..)
     , Solution(..)
-    , VectorSpace(..)
-    , addRealMatrices
-    , addComplexMatrices
-    , sumRealMatrices
-    , sumComplexMatrices
+    , VectorDimension(..)
+    , addMatrices
+    , sumMatrices
     , map
     , equal
     , transpose
@@ -15,8 +13,7 @@ module Matrix exposing
     , adjoint
     , apply
     , liftA2
-    , multiplyComplexMatrices
-    , multiplyRealMatrices
+    , multiplyMatrices
     , identityMatrix
     , gaussJordan
     , gaussianReduce
@@ -24,7 +21,7 @@ module Matrix exposing
     , isSymmetric
     , jordanReduce
     , areLinearlyIndependent
-    , multiplyRealVectorRealMatrix
+    , multiplyVectorMatrix
     , nullSpace
     , solve
     , areBasis
@@ -41,18 +38,18 @@ module Matrix exposing
     , bind
     , determinant
     , getAt
-    , print
-    , read
+    , printRealMatrix
+    , printComplexMatrix
+    , readRealMatrix
+    , readComplexMatrix
     , setAt
     , upperTriangle
-    , determinantComplex
-    , gaussianReduceComplex
     , invert
-    , invertComplex
     , isUnitary
-    , jordanReduceComplex
-    , upperTriangleComplex
     , subMatrix
+    , matrixTensorProduct
+    , isSquareMatrix
+    , isInvertable
     )
 
 {-| A module for Matrix
@@ -64,12 +61,10 @@ module Matrix exposing
 @docs RowVector
 @docs ColumnVector
 @docs Solution
-@docs VectorSpace
+@docs VectorDimension
 
-@docs addRealMatrices
-@docs addComplexMatrices
-@docs sumRealMatrices
-@docs sumComplexMatrices
+@docs addMatrices
+@docs sumMatrices
 @docs map
 @docs equal
 @docs transpose
@@ -77,8 +72,7 @@ module Matrix exposing
 @docs adjoint
 @docs apply
 @docs liftA2
-@docs multiplyComplexMatrices
-@docs multiplyRealMatrices
+@docs multiplyMatrices
 @docs identityMatrix
 @docs gaussJordan
 @docs gaussianReduce
@@ -86,7 +80,7 @@ module Matrix exposing
 @docs isSymmetric
 @docs jordanReduce
 @docs areLinearlyIndependent
-@docs multiplyRealVectorRealMatrix
+@docs multiplyVectorMatrix
 @docs nullSpace
 @docs solve
 @docs areBasis
@@ -103,23 +97,23 @@ module Matrix exposing
 @docs bind
 @docs determinant
 @docs getAt
-@docs print
-@docs read
+@docs printRealMatrix
+@docs printComplexMatrix
+@docs readRealMatrix
+@docs readComplexMatrix
 @docs setAt
 @docs upperTriangle
-@docs determinantComplex
-@docs gaussianReduceComplex
 @docs invert
-@docs invertComplex
 @docs isUnitary
-@docs jordanReduceComplex
-@docs upperTriangleComplex
 @docs subMatrix
+@docs matrixTensorProduct
+@docs isSquareMatrix
+@docs isInvertable
 
 -}
 
 import ComplexNumbers
-import Float.Extra
+import Field
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
@@ -150,44 +144,53 @@ type Matrix a
 
 {-| Type to represent result of Gauss-Jordan reduction
 -}
-type Solution
-    = UniqueSolution (ColumnVector Float)
+type Solution a
+    = UniqueSolution (ColumnVector a)
     | InfiniteSolutions { nullity : Int, rank : Int }
     | NoUniqueSolution String
 
 
 {-| Type to represent vector space such as R, R2, R3
 -}
-type VectorSpace
-    = VectorSpace Int
+type VectorDimension
+    = VectorDimension Int
 
 
-{-| Add two Real Matrices together
+{-| Type to represent a Abelian Group for Matrix
 -}
-addRealMatrices : Matrix number -> Matrix number -> Matrix number
-addRealMatrices =
-    liftA2 (+)
+type alias AbelianGroup a =
+    { field : Field.Field a
+    , addMatrcs : Matrix a -> Matrix a -> Matrix a
+    , subtractMatrcs : Matrix a -> Matrix a -> Matrix a
+    }
 
 
-{-| Add two Complex Matrices together
+{-| Add two Matrices together
 -}
-addComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-addComplexMatrices =
-    liftA2 ComplexNumbers.add
+addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+addMatrices { add } =
+    liftA2 add
 
 
-{-| Monoidally add two Real numbered Matrices together
+{-| Subtract two Matrices
 -}
-sumRealMatrices : Matrix number -> Typeclasses.Classes.Monoid.Monoid (Matrix number)
-sumRealMatrices sumEmptyMatrix =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addRealMatrices) sumEmptyMatrix
+subtractMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+subtractMatrices { subtract } =
+    liftA2 subtract
 
 
-{-| Monoidally add two Complex numbered Matrices together
+{-| Scalar multiplication over a Matrix
 -}
-sumComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Typeclasses.Classes.Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumberCartesian number))
-sumComplexMatrices sumEmptyMatrix =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addComplexMatrices) sumEmptyMatrix
+scalarMultiplication : Field.Field a -> a -> Matrix a -> Matrix a
+scalarMultiplication { multiply } scalar =
+    map (multiply scalar)
+
+
+{-| Monoidally add two Matrices together
+-}
+sumMatrices : AbelianGroup a -> Matrix a -> Typeclasses.Classes.Monoid.Monoid (Matrix a)
+sumMatrices { addMatrcs } sumEmptyMatrix =
+    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addMatrcs) sumEmptyMatrix
 
 
 {-| Map over a Matrix
@@ -246,10 +249,10 @@ liftA2 f a b =
     apply (map f a) b
 
 
-{-| Matrix Matrix multiplication for a Complex Numbered Matrix
+{-| Matrix Matrix multiplication
 -}
-multiplyComplexMatrices : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
-multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
+multiplyMatrices : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String (Matrix a)
+multiplyMatrices innerProductSpace (Matrix matrixOne) matrixTwo =
     if nDimension (Matrix matrixOne) == mDimension matrixTwo then
         let
             (Matrix matrixTranspose) =
@@ -263,33 +266,7 @@ multiplyComplexMatrices (Matrix matrixOne) matrixTwo =
                 matrixOne
                     |> List.map (\(RowVector vector) -> vector)
         in
-        Internal.Matrix.map2VectorCartesianComplex listOfVectorsOne listOfVectors
-            |> List.map RowVector
-            |> Matrix
-            |> Ok
-
-    else
-        Err "first matrix must have same number of columns as the second matrix has rows"
-
-
-{-| Matrix Matrix multiplication for a Real Numbered Matrix
--}
-multiplyRealMatrices : Matrix number -> Matrix number -> Result String (Matrix number)
-multiplyRealMatrices (Matrix matrixOne) matrixTwo =
-    if nDimension (Matrix matrixOne) == mDimension matrixTwo then
-        let
-            (Matrix matrixTranspose) =
-                transpose matrixTwo
-
-            listOfVectors =
-                matrixTranspose
-                    |> List.map (\(RowVector vector) -> vector)
-
-            listOfVectorsOne =
-                matrixOne
-                    |> List.map (\(RowVector vector) -> vector)
-        in
-        Internal.Matrix.map2VectorCartesian listOfVectorsOne listOfVectors
+        Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectorsOne listOfVectors
             |> List.map RowVector
             |> Matrix
             |> Ok
@@ -300,26 +277,21 @@ multiplyRealMatrices (Matrix matrixOne) matrixTwo =
 
 {-| Create Identity Matrix with n dimension
 -}
-identityMatrix : Int -> Matrix Int
-identityMatrix dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal columnIndex)))
+identityMatrix : Field.Field a -> Int -> Matrix a
+identityMatrix field dimension =
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal field columnIndex)))
 
 
-identityMatrixComplex : Int -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
-identityMatrixComplex dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonalComplex columnIndex)))
-
-
-{-| Multiply a real Vector by a real Matrix
+{-| Multiply a Vector by a Matrix
 -}
-multiplyRealVectorRealMatrix : Matrix number -> Vector.Vector number -> Vector.Vector number
-multiplyRealVectorRealMatrix (Matrix matrix) vector =
+multiplyVectorMatrix : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Vector.Vector a
+multiplyVectorMatrix innerProductSpace (Matrix matrix) vector =
     let
         listOfVectors =
             matrix
                 |> List.map (\(RowVector vec) -> vec)
     in
-    Internal.Matrix.map2VectorCartesian listOfVectors [ vector ]
+    Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
         |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
         |> Vector.Vector
 
@@ -340,18 +312,18 @@ isHermitian matrix =
 
 {-| Gaussian Elimination
 -}
-gaussianReduce : Matrix Float -> Matrix Float
-gaussianReduce (Matrix matrix) =
+gaussianReduce : Vector.VectorSpace a -> Matrix a -> Matrix a
+gaussianReduce vectorSpace (Matrix matrix) =
     let
         listOfVectors =
             List.map (\(RowVector vector) -> vector) matrix
 
         upperTriangularFormRectangle =
-            List.foldl Internal.Matrix.calculateUpperTriangularFormRectangle listOfVectors (List.range 0 (List.length matrix - 1))
+            List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
 
         rowEchelonForm =
             List.indexedMap
-                Internal.Matrix.scale
+                (Internal.Matrix.scale vectorSpace)
                 upperTriangularFormRectangle
     in
     rowEchelonForm
@@ -359,55 +331,16 @@ gaussianReduce (Matrix matrix) =
         |> Matrix
 
 
-{-| Gaussian Elimination
--}
-gaussianReduceComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
-gaussianReduceComplex (Matrix matrix) =
-    let
-        listOfVectors =
-            List.map (\(RowVector vector) -> vector) matrix
-
-        upperTriangularFormRectangleComplex =
-            List.foldl Internal.Matrix.calculateUpperTriangularFormRectangleComplex listOfVectors (List.range 0 (List.length matrix - 1))
-
-        rowEchelonForm =
-            List.indexedMap
-                (\index row -> Internal.Matrix.scaleComplex index row)
-                upperTriangularFormRectangleComplex
-    in
-    rowEchelonForm
-        |> List.map RowVector
-        |> Matrix
-
-
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Matrix Float -> Result String (Matrix Float)
-upperTriangle (Matrix matrix) =
-    if mDimension (Matrix matrix) == nDimension (Matrix matrix) then
+upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+upperTriangle vectorSpace (Matrix matrix) =
+    if isSquareMatrix (Matrix matrix) then
         let
             listOfVectors =
                 List.map (\(RowVector vector) -> vector) matrix
         in
-        List.foldl Internal.Matrix.calculateUpperTriangularFormRectangle listOfVectors (List.range 0 (List.length matrix - 1))
-            |> List.map RowVector
-            |> Matrix
-            |> Ok
-
-    else
-        Err "Must be Square Matrix"
-
-
-{-| Put a matrix into Upper Triangular Form
--}
-upperTriangleComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
-upperTriangleComplex (Matrix matrix) =
-    if mDimension (Matrix matrix) == nDimension (Matrix matrix) then
-        let
-            listOfVectors =
-                List.map (\(RowVector vector) -> vector) matrix
-        in
-        List.foldl Internal.Matrix.calculateUpperTriangularFormRectangleComplex listOfVectors (List.range 0 (List.length matrix - 1))
+        List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
             |> List.map RowVector
             |> Matrix
             |> Ok
@@ -418,50 +351,29 @@ upperTriangleComplex (Matrix matrix) =
 
 {-| Internal function for Jordan Elimination
 -}
-jordanReduce : Matrix Float -> Matrix Float
-jordanReduce (Matrix matrix) =
+jordanReduce : Vector.VectorSpace a -> Matrix a -> Matrix a
+jordanReduce vectorSpace (Matrix matrix) =
     let
         listOfVectors =
             List.map (\(RowVector vector) -> vector) matrix
     in
-    List.foldl Internal.Matrix.reduceRowBackwards listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
-        |> List.map RowVector
-        |> Matrix
-
-
-{-| Internal function for Jordan Elimination
--}
-jordanReduceComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
-jordanReduceComplex (Matrix matrix) =
-    let
-        listOfVectors =
-            List.map (\(RowVector vector) -> vector) matrix
-    in
-    List.foldl Internal.Matrix.reduceRowBackwardsComplex listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
+    List.foldl (Internal.Matrix.reduceRowBackwards vectorSpace) listOfVectors (List.reverse (List.range 0 (List.length matrix - 1)))
         |> List.map RowVector
         |> Matrix
 
 
 {-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
-gaussJordan : Matrix Float -> Matrix Float
-gaussJordan matrix =
-    gaussianReduce matrix
-        |> jordanReduce
-
-
-{-| Function composition of Gaussian Elimination and Jordan Elimination
--}
-gaussJordanComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Matrix (ComplexNumbers.ComplexNumberCartesian Float)
-gaussJordanComplex matrix =
-    gaussianReduceComplex matrix
-        |> jordanReduceComplex
+gaussJordan : Vector.VectorSpace a -> Matrix a -> Matrix a
+gaussJordan vectorSpace matrix =
+    gaussianReduce vectorSpace matrix
+        |> jordanReduce vectorSpace
 
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
 -}
-solve : Matrix Float -> ColumnVector Float -> Solution
-solve matrix (ColumnVector (Vector.Vector b)) =
+solve : Vector.VectorSpace a -> Matrix a -> ColumnVector a -> Solution a
+solve vectorSpace matrix (ColumnVector (Vector.Vector b)) =
     let
         matrixB =
             b
@@ -471,21 +383,21 @@ solve matrix (ColumnVector (Vector.Vector b)) =
         augmentedMatrix =
             matrixConcatHorizontal.semigroup.prepend matrix matrixB
     in
-    solveMatrix augmentedMatrix
+    solveMatrix vectorSpace augmentedMatrix
 
 
-variablePortion : Matrix Float -> Matrix Float
+variablePortion : Matrix a -> Matrix a
 variablePortion matrix =
     subMatrix 0 (mDimension matrix) 0 (nDimension matrix - 1) matrix
 
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination
 -}
-solveMatrix : Matrix Float -> Solution
-solveMatrix (Matrix listOfRowVectors) =
+solveMatrix : Vector.VectorSpace a -> Matrix a -> Solution a
+solveMatrix vectorSpace (Matrix listOfRowVectors) =
     let
         (Matrix listOfRowVectorsRREF) =
-            gaussJordan (Matrix listOfRowVectors)
+            gaussJordan vectorSpace (Matrix listOfRowVectors)
 
         (Matrix variableSide) =
             variablePortion (Matrix listOfRowVectorsRREF)
@@ -496,14 +408,14 @@ solveMatrix (Matrix listOfRowVectors) =
                     (\(RowVector (Vector.Vector row)) ->
                         let
                             countOfOnes =
-                                List.Extra.count ((/=) 0) row
+                                List.Extra.count ((/=) vectorSpace.abelianGroup.field.zero) row
                         in
                         countOfOnes > 1
                     )
 
         anyAllZeroExceptAugmentedSide =
             listOfRowVectorsRREF
-                |> List.any (\(RowVector (Vector.Vector row)) -> List.all ((==) 0) (List.take (List.length row - 1) row) && Vector.realVectorLength (Vector.Vector row) /= 0)
+                |> List.any (\(RowVector (Vector.Vector row)) -> List.all ((==) vectorSpace.abelianGroup.field.zero) (List.take (List.length row - 1) row) && Vector.vectorLength vectorSpace.abelianGroup.field (Vector.Vector row) /= vectorSpace.abelianGroup.field.zero)
 
         solution =
             List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectorsRREF
@@ -515,7 +427,7 @@ solveMatrix (Matrix listOfRowVectors) =
         let
             rank =
                 listOfRowVectorsRREF
-                    |> List.Extra.count (\(RowVector vector) -> Vector.realVectorLength vector /= 0)
+                    |> List.Extra.count (\(RowVector vector) -> Vector.vectorLength vectorSpace.abelianGroup.field vector /= vectorSpace.abelianGroup.field.zero)
 
             nullity =
                 nDimension (Matrix listOfRowVectorsRREF) - rank
@@ -532,24 +444,24 @@ solveMatrix (Matrix listOfRowVectors) =
 
 {-| Calculate the null space of a matrix
 -}
-nullSpace : Matrix Float -> Solution
-nullSpace matrix =
+nullSpace : Vector.VectorSpace a -> Matrix a -> Solution a
+nullSpace vectorSpace matrix =
     let
         numberOfRows =
             mDimension matrix
 
         b =
-            List.repeat numberOfRows 0
+            List.repeat numberOfRows vectorSpace.abelianGroup.field.zero
                 |> Vector.Vector
                 |> ColumnVector
     in
-    solve matrix b
+    solve vectorSpace matrix b
 
 
 {-| Predicate to determine if a list of Vectors are linearly independent
 -}
-areLinearlyIndependent : List (Vector.Vector Float) -> Bool
-areLinearlyIndependent listOfVectors =
+areLinearlyIndependent : Vector.VectorSpace a -> List (Vector.Vector a) -> Bool
+areLinearlyIndependent vectorSpace listOfVectors =
     let
         listOfRowVectors =
             List.map RowVector listOfVectors
@@ -558,13 +470,13 @@ areLinearlyIndependent listOfVectors =
             Matrix listOfRowVectors
 
         matrixNullSpace =
-            nullSpace matrix
+            nullSpace vectorSpace matrix
 
         numberOfRows =
             List.length listOfRowVectors
 
         zeroVector =
-            List.repeat numberOfRows 0
+            List.repeat numberOfRows vectorSpace.abelianGroup.field.zero
                 |> Vector.Vector
                 |> ColumnVector
     in
@@ -582,25 +494,24 @@ areLinearlyIndependent listOfVectors =
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : VectorSpace -> List (Vector.Vector Float) -> Result String Bool
-doesSetSpanSpace (VectorSpace vectorSpace) vectors =
-    if List.length vectors /= vectorSpace then
+doesSetSpanSpace : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> Result String Bool
+doesSetSpanSpace vSpace (VectorDimension vectorDimension) vectors =
+    if List.length vectors /= vectorDimension then
         Err "Please input same number of vectors as vector space"
 
-    else if not <| List.all (\vector -> Vector.dimension vector == vectorSpace) vectors then
+    else if not <| List.all (\vector -> Vector.dimension vector == vectorDimension) vectors then
         Err "Please input vectors of equal length as vector space"
 
     else
         let
             identityRowVectors =
-                identityMatrix vectorSpace
+                identityMatrix vSpace.abelianGroup.field vectorDimension
 
             floatMatrix =
                 identityRowVectors
-                    |> map toFloat
 
             listOfRowVectorsRREF =
-                gaussJordan (Matrix (List.map RowVector vectors))
+                gaussJordan vSpace (Matrix (List.map RowVector vectors))
         in
         floatMatrix
             == listOfRowVectorsRREF
@@ -628,9 +539,9 @@ mDimension (Matrix listOfRowVectors) =
 
 {-| Determine whether list of vectors are a basis for a space
 -}
-areBasis : VectorSpace -> List (Vector.Vector Float) -> Bool
-areBasis vectorSpace vectors =
-    if doesSetSpanSpace vectorSpace vectors == Ok True && areLinearlyIndependent vectors then
+areBasis : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> Bool
+areBasis vectorSpace vectorDimension vectors =
+    if doesSetSpanSpace vectorSpace vectorDimension vectors == Ok True && areLinearlyIndependent vectorSpace vectors then
         True
 
     else
@@ -639,15 +550,15 @@ areBasis vectorSpace vectors =
 
 {-| Determine the basis vectors of a vector space
 -}
-basisOfVectorSpace : VectorSpace -> List (Vector.Vector Float) -> List (Vector.Vector Float)
-basisOfVectorSpace vectorSpace vectors =
-    if areBasis vectorSpace vectors then
+basisOfVectorSpace : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> List (Vector.Vector a)
+basisOfVectorSpace vectorSpace vectorDimension vectors =
+    if areBasis vectorSpace vectorDimension vectors then
         vectors
 
     else
         let
             (Matrix reducedRowEchelonFormListOfRowVectors) =
-                jordanReduce (Matrix (List.map RowVector vectors))
+                jordanReduce vectorSpace (Matrix (List.map RowVector vectors))
         in
         reducedRowEchelonFormListOfRowVectors
             |> List.map (\(RowVector vector) -> vector)
@@ -792,59 +703,77 @@ setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
         |> Matrix
 
 
-{-| Print a matrix to a string
+{-| Print a Real matrix to a string
 -}
-print : Matrix Float -> String
-print (Matrix listOfRowVectors) =
+printRealMatrix : Matrix Float -> String
+printRealMatrix (Matrix listOfRowVectors) =
     let
         values =
-            List.foldl (\(RowVector row) acc -> "RowVector " ++ Vector.print row ++ " ]" ++ acc) "" listOfRowVectors
+            List.foldl (\(RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc) "" listOfRowVectors
+    in
+    "Matrix [ " ++ values ++ " ]"
+
+
+{-| Print a Complex matrix to a string
+-}
+printComplexMatrix : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> String
+printComplexMatrix (Matrix listOfRowVectors) =
+    let
+        values =
+            List.foldl (\(RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc) "" listOfRowVectors
     in
     "Matrix [ " ++ values ++ " ]"
 
 
 {-| Try to read a string into a Matrix
 -}
-read : String -> Result (List Parser.DeadEnd) (Matrix Float)
-read matrixString =
-    Parser.run parseMatrix matrixString
+readRealMatrix : String -> Result (List Parser.DeadEnd) (Matrix Float)
+readRealMatrix matrixString =
+    Parser.run (parseMatrix Vector.negativeOrPositiveFloat) matrixString
 
 
-listOfRowVectorParser : Parser.Parser (List (RowVector Float))
-listOfRowVectorParser =
+{-| Try to read a string into a Matrix
+-}
+readComplexMatrix : String -> Result (List Parser.DeadEnd) (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
+readComplexMatrix matrixString =
+    Parser.run (parseMatrix ComplexNumbers.parseComplexNumber) matrixString
+
+
+listOfRowVectorParser : Parser.Parser (RowVector a) -> Parser.Parser (List (RowVector a))
+listOfRowVectorParser rowVectorParser =
     Parser.sequence
         { start = "["
         , separator = ","
         , end = "]"
         , spaces = Parser.spaces
-        , item = parseRowVector
+        , item = rowVectorParser
         , trailing = Parser.Forbidden
         }
 
 
-parseMatrix : Parser.Parser (Matrix Float)
-parseMatrix =
+parseMatrix : Parser.Parser a -> Parser.Parser (Matrix a)
+parseMatrix matrixElementParser =
     Parser.succeed Matrix
         |. Parser.keyword "Matrix"
         |. Parser.spaces
-        |= listOfRowVectorParser
+        |= listOfRowVectorParser (parseRowVector matrixElementParser)
 
 
-parseRowVector : Parser.Parser (RowVector Float)
-parseRowVector =
+parseRowVector : Parser.Parser a -> Parser.Parser (RowVector a)
+parseRowVector rowVectorElementsParser =
     Parser.succeed RowVector
         |. Parser.keyword "RowVector"
         |. Parser.spaces
-        |= Vector.parseVector
+        |= Vector.parseVector rowVectorElementsParser
 
 
 {-| Try to calculate the determinant
 -}
-determinant : Matrix Float -> Result String Float
-determinant matrix =
+determinant : Vector.VectorSpace a -> Matrix a -> Result String a
+determinant vectorSpace matrix =
     let
         upperTriangularForm =
-            upperTriangle matrix
+            upperTriangle vectorSpace matrix
     in
     Result.andThen
         (\squareMatrix ->
@@ -859,82 +788,27 @@ determinant matrix =
                     List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
             in
             Maybe.Extra.combine diagonalMaybeEntries
-                |> Maybe.map List.product
+                |> Maybe.map (\li -> List.foldl (\elem acc -> vectorSpace.abelianGroup.field.multiply elem acc) vectorSpace.abelianGroup.field.one li)
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularForm
 
 
-{-| Try to calculate the determinant
+{-| Try to calculate the inverse of a matrix
 -}
-determinantComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (ComplexNumbers.ComplexNumberCartesian Float)
-determinantComplex matrix =
-    let
-        upperTriangularFormComplex =
-            upperTriangleComplex matrix
-    in
-    Result.andThen
-        (\squareMatrix ->
-            let
-                numberOfRows =
-                    mDimension squareMatrix
-
-                indices =
-                    List.Extra.initialize numberOfRows (\index -> ( index, index ))
-
-                diagonalMaybeEntries =
-                    List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
-
-                listOfComplexNumbers =
-                    Maybe.Extra.combine diagonalMaybeEntries
-            in
-            listOfComplexNumbers
-                |> Maybe.map (\li -> List.foldl (\elem acc -> ComplexNumbers.multiply elem acc) ComplexNumbers.one li)
-                |> Result.fromMaybe "Index out of range"
-        )
-        upperTriangularFormComplex
-
-
-{-| Try to calculate the inverse of a real numbered matrix
--}
-invert : Matrix Float -> Result String (Matrix Float)
-invert matrix =
-    case isInvertable matrix of
+invert : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+invert vectorSpace matrix =
+    case isInvertable vectorSpace matrix of
         Ok invertableMatrix ->
             let
                 sizeOfMatrix =
                     mDimension invertableMatrix
 
                 augmentedMatrix =
-                    appendHorizontal invertableMatrix (identityMatrix sizeOfMatrix |> map toFloat)
+                    appendHorizontal invertableMatrix (identityMatrix vectorSpace.abelianGroup.field sizeOfMatrix)
 
                 reducedRowEchelonForm =
-                    gaussJordan augmentedMatrix
-
-                inverse =
-                    subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
-            in
-            Ok inverse
-
-        Err err ->
-            Err err
-
-
-{-| Try to calculate the inverse of a complex numbered matrix
--}
-invertComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
-invertComplex matrix =
-    case isInvertableComplex matrix of
-        Ok value ->
-            let
-                sizeOfMatrix =
-                    mDimension matrix
-
-                augmentedMatrix =
-                    appendHorizontal matrix (identityMatrixComplex sizeOfMatrix)
-
-                reducedRowEchelonForm =
-                    gaussJordanComplex augmentedMatrix
+                    gaussJordan vectorSpace augmentedMatrix
 
                 inverse =
                     subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
@@ -965,7 +839,7 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 -}
 isUnitary : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Bool
 isUnitary matrix =
-    case invertComplex matrix of
+    case invert Vector.complexVectorSpace matrix of
         Ok inverse ->
             equal ComplexNumbers.equal inverse (adjoint matrix)
 
@@ -973,11 +847,13 @@ isUnitary matrix =
             False
 
 
-isInvertable : Matrix Float -> Result String (Matrix Float)
-isInvertable matrix =
-    case determinant matrix of
-        Ok value ->
-            if Float.Extra.equalWithin 0.000000001 value 0.0 then
+{-| Determine whether a matirx is invertable
+-}
+isInvertable : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+isInvertable vectorSpace matrix =
+    case determinant vectorSpace matrix of
+        Ok deter ->
+            if deter == vectorSpace.abelianGroup.field.zero then
                 Err "Determinant is zero matrix is not invertable"
 
             else
@@ -987,15 +863,33 @@ isInvertable matrix =
             Err msg
 
 
-isInvertableComplex : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Result String (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
-isInvertableComplex matrix =
-    case determinantComplex matrix of
-        Ok value ->
-            if ComplexNumbers.equal value ComplexNumbers.zero then
-                Err "Determinant is zero matrix is not invertable"
+{-| Determine whether a matirx is square
+-}
+isSquareMatrix : Matrix a -> Bool
+isSquareMatrix matrix =
+    if mDimension matrix == nDimension matrix then
+        True
 
-            else
-                Ok matrix
+    else
+        False
 
-        Err msg ->
-            Err msg
+
+{-| Real numbered Abelian Group for Matrix
+-}
+realMatrixAbelianGroup : AbelianGroup Float
+realMatrixAbelianGroup =
+    { field = Field.realField
+    , addMatrcs = addMatrices Field.realField
+    , subtractMatrcs = subtractMatrices Field.realField
+    }
+
+
+{-| Calculate the tensor product of two Matricies
+-}
+matrixTensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+matrixTensorProduct field matrixOne matrixTwo =
+    bind
+        matrixOne
+        (\matrixOneElement ->
+            scalarMultiplication field matrixOneElement matrixTwo
+        )

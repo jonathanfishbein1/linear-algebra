@@ -2,6 +2,8 @@ module VectorTests.VectorTests exposing (suite)
 
 import ComplexNumbers
 import Expect
+import Field
+import Float.Extra
 import Fuzz
 import Parser
 import Test
@@ -21,11 +23,11 @@ suite =
                         Vector.Vector3 two three one
 
                     aCrossB =
-                        Vector.cross a b
+                        Vector.cross Field.realField a b
                             |> Vector.vector3ToVector
 
                     aDotACrossB =
-                        Vector.realVectorDotProduct (Vector.vector3ToVector a) aCrossB
+                        Vector.vectorDotProduct Field.realField (Vector.vector3ToVector a) aCrossB
                 in
                 aDotACrossB
                     |> Expect.equal 0
@@ -36,12 +38,12 @@ suite =
                         Vector.Vector [ one ]
 
                     normalisedALength =
-                        Vector.normalise a
-                            |> Vector.realVectorLength
+                        Vector.normalise Field.realField a
+                            |> Vector.vectorLength Field.realField
                 in
                 normalisedALength
                     |> Expect.equal 1
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests realVectorSubspace" <|
+        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests realVectorSubspace" <|
             \one two ->
                 let
                     vectors =
@@ -60,11 +62,11 @@ suite =
                         Vector.Scalar one
 
                     isSubspace =
-                        Vector.realVectorSubspace scalar vectors predicates
+                        Vector.vectorSubspace Vector.realVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests realVectorSubspace x > 10 not a subspace" <|
+        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests realVectorSubspace x > 10 not a subspace" <|
             \one two ->
                 let
                     vectors =
@@ -83,7 +85,7 @@ suite =
                         Vector.Scalar one
 
                     isSubspace =
-                        Vector.realVectorSubspace scalar vectors predicates
+                        Vector.vectorSubspace Vector.realVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
@@ -112,7 +114,7 @@ suite =
                         Vector.Scalar complexNumber
 
                     isSubspace =
-                        Vector.complexVectorSubspace scalar vectors predicates
+                        Vector.vectorSubspace Vector.complexVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
@@ -150,7 +152,7 @@ suite =
                         Vector.Scalar complexNumber
 
                     isSubspace =
-                        Vector.complexVectorSubspace scalar vectors predicates
+                        Vector.vectorSubspace Vector.complexVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
@@ -175,10 +177,10 @@ suite =
                         Vector.Vector [ one, two ]
 
                     printedVector =
-                        Vector.print vector
+                        Vector.printRealVector vector
 
                     readVector =
-                        Vector.read printedVector
+                        Vector.readRealVector printedVector
                 in
                 Expect.equal readVector (Ok vector)
         , Test.fuzz2 Fuzz.float Fuzz.float "tests subtractRealVectors" <|
@@ -191,7 +193,7 @@ suite =
                         Vector.Vector [ one, two ]
 
                     result =
-                        Vector.subtractRealVectors vectorOne vectorTwo
+                        Vector.subtractVectors Field.realField vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ 0, 0 ])
         , Test.fuzz2 Fuzz.float Fuzz.float "tests subtractComplexVectors" <|
@@ -213,7 +215,48 @@ suite =
                         Vector.Vector [ complexNumber ]
 
                     result =
-                        Vector.subtractComplexVectors vectorOne vectorTwo
+                        Vector.subtractVectors ComplexNumbers.complexField vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ ComplexNumbers.zero ])
+        , Test.test "tests vector tensor product" <|
+            \_ ->
+                let
+                    vectorOne =
+                        Vector.Vector [ 1, 2 ]
+
+                    vectorTwo =
+                        Vector.Vector [ 3, 4 ]
+
+                    vectorTensorProduct =
+                        Vector.vectorTensorProduct Field.realField vectorOne vectorTwo
+                in
+                Expect.equal vectorTensorProduct (Vector.Vector [ 3, 4, 6, 8 ])
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector tensor product respects addition" <|
+            \one two three ->
+                let
+                    vectorI =
+                        Vector.Vector [ one, two ]
+
+                    vectorJ =
+                        Vector.Vector [ three, one ]
+
+                    vectorK =
+                        Vector.Vector [ two, three ]
+
+                    vectorSumIJ =
+                        Vector.addVectors Field.realField vectorI vectorJ
+
+                    vectorTensorProductIJK =
+                        Vector.vectorTensorProduct Field.realField vectorSumIJ vectorK
+
+                    vectorTensorProductIK =
+                        Vector.vectorTensorProduct Field.realField vectorI vectorK
+
+                    vectorTensorProductJK =
+                        Vector.vectorTensorProduct Field.realField vectorJ vectorK
+
+                    vectorSumTensorProductIKJK =
+                        Vector.addVectors Field.realField vectorTensorProductIK vectorTensorProductJK
+                in
+                Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) vectorTensorProductIJK vectorSumTensorProductIKJK)
         ]

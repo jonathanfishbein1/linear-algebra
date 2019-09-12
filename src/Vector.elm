@@ -487,9 +487,9 @@ complexInnerProductSpace =
 {-| Calculate the tensor product of two vectors
 -}
 vectorTensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
-vectorTensorProduct { multiply } vectorOne vectorTwo =
+vectorTensorProduct field vectorOne vectorTwo =
     bind
         vectorOne
         (\vectorOneElement ->
-            map (multiply vectorOneElement) vectorTwo
+            scalarMultiplication field vectorOneElement vectorTwo
         )

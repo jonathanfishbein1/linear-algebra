@@ -34,7 +34,14 @@ module Vector exposing
     , readComplexVector
     , setAt
     , vectorTensorProduct
-    , complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, negativeOrPositiveFloat, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication
+    , scalarMultiplication
+    , realVectorSpace
+    , realVectorAbelianGroup
+    , realInnerProductSpace
+    , negativeOrPositiveFloat
+    , complexVectorSpace
+    , complexVectorAbelianGroup
+    , complexInnerProductSpace
     )
 
 {-| A module for Vectors
@@ -78,6 +85,14 @@ module Vector exposing
 @docs readComplexVector
 @docs setAt
 @docs vectorTensorProduct
+@docs scalarMultiplication
+@docs realVectorSpace
+@docs realVectorAbelianGroup
+@docs realInnerProductSpace
+@docs negativeOrPositiveFloat
+@docs complexVectorSpace
+@docs complexVectorAbelianGroup
+@docs complexInnerProductSpace
 
 -}
 
@@ -133,6 +148,8 @@ type alias InnerProductSpace a =
     }
 
 
+{-| Add two Vectors
+-}
 addVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 addVectors { add } =
     liftA2 add
@@ -214,12 +231,16 @@ foldl foldFunction acc (Vector list) =
     List.foldl foldFunction acc list
 
 
+{-| Calculate the dot product of two Vectors
+-}
 vectorDotProduct : Field.Field a -> Vector a -> Vector a -> a
 vectorDotProduct { zero, add, multiply } vectorOne vectorTwo =
     liftA2 multiply vectorOne vectorTwo
         |> foldl add zero
 
 
+{-| Calculate the length of a Vector
+-}
 vectorLength : Field.Field a -> Vector a -> a
 vectorLength { power, add, zero } =
     foldl (\x acc -> add (power 2 x) acc) zero
@@ -276,6 +297,8 @@ dimension (Vector list) =
     List.length list
 
 
+{-| Determine whether a list of Vectors makes a Subspace
+-}
 vectorSubspace : AbelianGroup a -> Scalar a -> List (Vector a) -> List (a -> Bool) -> Bool
 vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
     let
@@ -423,6 +446,8 @@ float =
         }
 
 
+{-| Parse a Float that can be negative or positive
+-}
 negativeOrPositiveFloat : Parser.Parser Float
 negativeOrPositiveFloat =
     Parser.oneOf
@@ -440,6 +465,8 @@ findIndex predicate (Vector list) =
     List.Extra.findIndex predicate list
 
 
+{-| Real Numbered Abelian Group
+-}
 realVectorAbelianGroup : AbelianGroup Float
 realVectorAbelianGroup =
     { field = Field.realField
@@ -448,6 +475,8 @@ realVectorAbelianGroup =
     }
 
 
+{-| Complex Numbered Abelian Group
+-}
 complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorAbelianGroup =
     { field = ComplexNumbers.complexField
@@ -456,6 +485,8 @@ complexVectorAbelianGroup =
     }
 
 
+{-| Real Numbered Vector Space
+-}
 realVectorSpace : VectorSpace Float
 realVectorSpace =
     { abelianGroup = realVectorAbelianGroup
@@ -463,6 +494,8 @@ realVectorSpace =
     }
 
 
+{-| Complex Numbered Vector Space
+-}
 complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexVectorSpace =
     { abelianGroup = complexVectorAbelianGroup
@@ -470,6 +503,8 @@ complexVectorSpace =
     }
 
 
+{-| Real Numbered Inner Product Space
+-}
 realInnerProductSpace : InnerProductSpace Float
 realInnerProductSpace =
     { vectorSpace = realVectorSpace
@@ -477,6 +512,8 @@ realInnerProductSpace =
     }
 
 
+{-| Complex Numbered Inner Product Space
+-}
 complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexInnerProductSpace =
     { vectorSpace = complexVectorSpace

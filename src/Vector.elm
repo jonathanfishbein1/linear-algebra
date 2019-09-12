@@ -25,8 +25,12 @@ module Vector exposing
     , findIndex
     , getAt
     , parseVector
+    , printRealVector
+    , printComplexVector
+    , readRealVector
+    , readComplexVector
     , setAt
-    , InnerProductSpace, VectorSpace, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, negativeOrPositiveFloat, printComplexVector, printRealVector, readRealVector, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, vectorTensorProduct
+    , InnerProductSpace, VectorSpace, complexInnerProductSpace, complexVectorAbelianGroup, complexVectorSpace, negativeOrPositiveFloat, realInnerProductSpace, realVectorAbelianGroup, realVectorSpace, scalarMultiplication, vectorTensorProduct
     )
 
 {-| A module for Vectors
@@ -40,7 +44,6 @@ module Vector exposing
 
 @docs addVectors
 @docs map
-@docs multiplyVectors
 @docs equal
 @docs apply
 @docs liftA2
@@ -62,8 +65,10 @@ module Vector exposing
 @docs findIndex
 @docs getAt
 @docs parseVector
-@docs print
-@docs read
+@docs printRealVector
+@docs printComplexVector
+@docs readRealVector
+@docs readComplexVector
 @docs setAt
 
 -}
@@ -377,14 +382,14 @@ parseVector vectorElementsParser =
         |= listParser vectorElementsParser
 
 
-{-| Try to read a string into a Vector
+{-| Try to read a string into a Real Vector
 -}
 readRealVector : String -> Result (List Parser.DeadEnd) (Vector Float)
 readRealVector vectorString =
     Parser.run (parseVector negativeOrPositiveFloat) vectorString
 
 
-{-| Try to read a string into a Vector
+{-| Try to read a string into a Complex Vector
 -}
 readComplexVector : String -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumberCartesian Float))
 readComplexVector vectorString =

@@ -179,6 +179,13 @@ subtractMatrices { subtract } =
     liftA2 subtract
 
 
+{-| Scalar multiplication over a Matrix
+-}
+scalarMultiplication : Field.Field a -> a -> Matrix a -> Matrix a
+scalarMultiplication { multiply } scalar =
+    map (multiply scalar)
+
+
 {-| Monoidally add two Matrices together
 -}
 sumMatrices : AbelianGroup a -> Matrix a -> Typeclasses.Classes.Monoid.Monoid (Matrix a)
@@ -880,9 +887,9 @@ realMatrixAbelianGroup =
 {-| Calculate the tensor product of two Matricies
 -}
 matrixTensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
-matrixTensorProduct { multiply } matrixOne matrixTwo =
+matrixTensorProduct field matrixOne matrixTwo =
     bind
         matrixOne
         (\matrixOneElement ->
-            map (multiply matrixOneElement) matrixTwo
+            scalarMultiplication field matrixOneElement matrixTwo
         )

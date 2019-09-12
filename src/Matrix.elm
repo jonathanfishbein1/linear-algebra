@@ -38,12 +38,18 @@ module Matrix exposing
     , bind
     , determinant
     , getAt
+    , printRealMatrix
+    , printComplexMatrix
+    , readRealMatrix
+    , readComplexMatrix
     , setAt
     , upperTriangle
     , invert
     , isUnitary
     , subMatrix
-    , isInvertable, isSquareMatrix, matrixTensorProduct, printComplexMatrix, printRealMatrix, readComplexMatrix, readRealMatrix
+    , matrixTensorProduct
+    , isSquareMatrix
+    , isInvertable
     )
 
 {-| A module for Matrix
@@ -91,13 +97,18 @@ module Matrix exposing
 @docs bind
 @docs determinant
 @docs getAt
-@docs print
-@docs read
+@docs printRealMatrix
+@docs printComplexMatrix
+@docs readRealMatrix
+@docs readComplexMatrix
 @docs setAt
 @docs upperTriangle
 @docs invert
 @docs isUnitary
 @docs subMatrix
+@docs matrixTensorProduct
+@docs isSquareMatrix
+@docs isInvertable
 
 -}
 
@@ -145,6 +156,8 @@ type VectorDimension
     = VectorDimension Int
 
 
+{-| Type to represent a Abelian Group for Matrix
+-}
 type alias AbelianGroup a =
     { field : Field.Field a
     , addMatrcs : Matrix a -> Matrix a -> Matrix a
@@ -827,6 +840,8 @@ isUnitary matrix =
             False
 
 
+{-| Determine whether a matirx is invertable
+-}
 isInvertable : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
 isInvertable vectorSpace matrix =
     case determinant vectorSpace matrix of
@@ -841,6 +856,8 @@ isInvertable vectorSpace matrix =
             Err msg
 
 
+{-| Determine whether a matirx is square
+-}
 isSquareMatrix : Matrix a -> Bool
 isSquareMatrix matrix =
     if mDimension matrix == nDimension matrix then
@@ -850,6 +867,8 @@ isSquareMatrix matrix =
         False
 
 
+{-| Real numbered Abelian Group for Matrix
+-}
 realMatrixAbelianGroup : AbelianGroup Float
 realMatrixAbelianGroup =
     { field = Field.realField
@@ -858,6 +877,8 @@ realMatrixAbelianGroup =
     }
 
 
+{-| Calculate the tensor product of two Matricies
+-}
 matrixTensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
 matrixTensorProduct { multiply } matrixOne matrixTwo =
     bind

@@ -120,7 +120,7 @@ suite =
                 in
                 Vector.addVectors ComplexNumbers.complexField v w
                     |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests empty vector is additive identity" <|
+        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests empty vector is additive identity" <|
             \one two ->
                 let
                     w =
@@ -134,7 +134,7 @@ suite =
                                 )
                             ]
                 in
-                Vector.append Vector.concatEmpty w
+                Vector.addVectors ComplexNumbers.complexField (Vector.Vector [ ComplexNumbers.zero ]) w
                     |> Expect.equal w
         , Test.fuzz2 Fuzz.int Fuzz.int "tests vector inverse" <|
             \one two ->

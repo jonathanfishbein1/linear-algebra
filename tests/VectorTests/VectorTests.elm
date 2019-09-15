@@ -196,28 +196,6 @@ suite =
                         Vector.subtractVectors Field.realField vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ 0, 0 ])
-        , Test.fuzz2 Fuzz.float Fuzz.float "tests subtractComplexVectors" <|
-            \one two ->
-                let
-                    complexNumber =
-                        ComplexNumbers.ComplexNumberCartesian
-                            (ComplexNumbers.Real
-                                one
-                            )
-                            (ComplexNumbers.Imaginary
-                                two
-                            )
-
-                    vectorOne =
-                        Vector.Vector [ complexNumber ]
-
-                    vectorTwo =
-                        Vector.Vector [ complexNumber ]
-
-                    result =
-                        Vector.subtractVectors ComplexNumbers.complexField vectorOne vectorTwo
-                in
-                Expect.equal result (Vector.Vector [ ComplexNumbers.zero ])
         , Test.test "tests vector tensor product" <|
             \_ ->
                 let

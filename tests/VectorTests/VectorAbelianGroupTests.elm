@@ -11,7 +11,7 @@ import Vector
 
 suite : Test.Test
 suite =
-    Test.describe "Complex Inner Product Vector Space"
+    Test.describe "Vector Abelian Group Tests"
         [ Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Vector add is commutative" <|
             \one two ->
                 let

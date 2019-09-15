@@ -2,184 +2,18 @@ module MatrixTests.ComplexAlgebraTests exposing (suite)
 
 import ComplexNumbers
 import Expect
+import Field
 import Fuzz
 import Matrix
 import Test
 import Vector
-import Field
- 
+
+
 suite : Test.Test
 suite =
     Test.describe "Complex Algebra"
         [ Test.describe "Complex Matrix Space"
-            [ Test.describe "Abelian Group"
-                [ Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Matrix add is commutative" <|
-                    \one two three ->
-                        let
-                            v =
-                                Matrix.RowVector <|
-                                    Vector.Vector
-                                        [ ComplexNumbers.ComplexNumberCartesian
-                                            (ComplexNumbers.Real
-                                                three
-                                            )
-                                            (ComplexNumbers.Imaginary
-                                                one
-                                            )
-                                        , ComplexNumbers.ComplexNumberCartesian
-                                            (ComplexNumbers.Real
-                                                three
-                                            )
-                                            (ComplexNumbers.Imaginary
-                                                two
-                                            )
-                                        ]
-
-                            w =
-                                Matrix.RowVector <|
-                                    Vector.Vector
-                                        [ ComplexNumbers.ComplexNumberCartesian
-                                            (ComplexNumbers.Real
-                                                two
-                                            )
-                                            (ComplexNumbers.Imaginary
-                                                two
-                                            )
-                                        , ComplexNumbers.ComplexNumberCartesian
-                                            (ComplexNumbers.Real
-                                                one
-                                            )
-                                            (ComplexNumbers.Imaginary
-                                                three
-                                            )
-                                        ]
-
-                            m1 =
-                                Matrix.Matrix [ v, w ]
-
-                            m2 =
-                                Matrix.Matrix [ w, v ]
-                        in
-                        (Matrix.addMatrices ComplexNumbers.complexField) m1 m2
-                            |> Expect.equal ((Matrix.addMatrices ComplexNumbers.complexField) m2 m1)
-                , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Matrix add is associative" <|
-                    \one two three ->
-                        let
-                            v =
-                                Matrix.RowVector <|
-                                    Vector.Vector
-                                        [ ComplexNumbers.ComplexNumberCartesian
-                                            (ComplexNumbers.Real
-                                                three
-                                            )
-                                            (ComplexNumbers.Imaginary
-                                                one
-                                            )
-                                        , ComplexNumbers.ComplexNumberCartesian
-                                            (ComplexNumbers.Real
-                                                three
-                                            )
-                                            (ComplexNumbers.Imaginary
-                                                two
-                                            )
-                                        ]
-
-                            w =
-                                Matrix.RowVector <|
-                                    Vector.Vector
-                                        [ ComplexNumbers.ComplexNumberCartesian
-                                            (ComplexNumbers.Real
-                                                two
-                                            )
-                                            (ComplexNumbers.Imaginary
-                                                two
-                                            )
-                                        , ComplexNumbers.ComplexNumberCartesian
-                                            (ComplexNumbers.Real
-                                                one
-                                            )
-                                            (ComplexNumbers.Imaginary
-                                                three
-                                            )
-                                        ]
-
-                            x =
-                                Matrix.RowVector <|
-                                    Vector.Vector
-                                        [ ComplexNumbers.ComplexNumberCartesian
-                                            (ComplexNumbers.Real
-                                                one
-                                            )
-                                            (ComplexNumbers.Imaginary
-                                                two
-                                            )
-                                        , ComplexNumbers.ComplexNumberCartesian
-                                            (ComplexNumbers.Real
-                                                three
-                                            )
-                                            (ComplexNumbers.Imaginary
-                                                one
-                                            )
-                                        ]
-
-                            m1 =
-                                Matrix.Matrix [ v, w, x ]
-
-                            m2 =
-                                Matrix.Matrix [ w, v, x ] 
-
-                            m3 =
-                                Matrix.Matrix [ x, w, v ]
-
-                            m1Plusm2AndThenPlusm3 =
-                                (Matrix.addMatrices ComplexNumbers.complexField) m1 m2
-                                    |> (Matrix.addMatrices ComplexNumbers.complexField) m3
-
-                            m2Plusm3AndThenm1 =
-                                (Matrix.addMatrices ComplexNumbers.complexField) m2 m3
-                                    |> (Matrix.addMatrices ComplexNumbers.complexField) m1
-                        in
-                        m1Plusm2AndThenPlusm3
-                            |> Expect.equal m2Plusm3AndThenm1
-                , Test.fuzz2 Fuzz.int Fuzz.int "tests matrix inverse" <|
-                    \one two ->
-                        let
-                            complexOneNegative =
-                                ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real <|
-                                        Basics.negate
-                                            1
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        0
-                                    )
-
-                            v =
-                                Matrix.Matrix
-                                    [ Matrix.RowVector <|
-                                        Vector.Vector
-                                            [ ComplexNumbers.one ]
-                                    ]
-
-                            w =
-                                Matrix.Matrix
-                                    [ Matrix.RowVector <|
-                                        Vector.Vector
-                                            [ complexOneNegative ]
-                                    ]
-
-                            zero =
-                                Matrix.Matrix
-                                    [ Matrix.RowVector <|
-                                        Vector.Vector
-                                            [ ComplexNumbers.zero
-                                            ]
-                                    ]
-                        in
-                        (Matrix.addMatrices ComplexNumbers.complexField) v w
-                            |> Expect.equal zero
-                ]
-            , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scalar multiplication distributes over addition" <|
+            [ Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scalar multiplication distributes over addition" <|
                 \one two ->
                     let
                         c =
@@ -220,7 +54,7 @@ suite =
                                 ]
 
                         vPlusW =
-                            (Matrix.addMatrices ComplexNumbers.complexField) v w
+                            Matrix.addMatrices ComplexNumbers.complexField v w
 
                         cvPlusW =
                             Matrix.map (ComplexNumbers.multiply c) vPlusW
@@ -232,7 +66,7 @@ suite =
                             Matrix.map (ComplexNumbers.multiply c) v
 
                         cVPluscW =
-                            (Matrix.addMatrices ComplexNumbers.complexField) cW cV
+                            Matrix.addMatrices ComplexNumbers.complexField cW cV
 
                         result =
                             Matrix.equal ComplexNumbers.equal cvPlusW cVPluscW
@@ -292,12 +126,12 @@ suite =
                                 ]
 
                         m1Plusm2Transpose =
-                            (Matrix.addMatrices ComplexNumbers.complexField) m1 m2
+                            Matrix.addMatrices ComplexNumbers.complexField m1 m2
                                 |> Matrix.transpose
 
                         m1TransposePlusm2Transpose =
                             Matrix.transpose m1
-                                |> (Matrix.addMatrices ComplexNumbers.complexField) (Matrix.transpose m2)
+                                |> Matrix.addMatrices ComplexNumbers.complexField (Matrix.transpose m2)
                     in
                     Expect.equal m1Plusm2Transpose m1TransposePlusm2Transpose
             , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose respects scalar multiplication" <|
@@ -389,12 +223,12 @@ suite =
                                 ]
 
                         m1Plusm2Conjugate =
-                            (Matrix.addMatrices ComplexNumbers.complexField) m1 m2
+                            Matrix.addMatrices ComplexNumbers.complexField m1 m2
                                 |> Matrix.conjugate
 
                         m1ConjugatePlusm2Conjugate =
                             Matrix.conjugate m1
-                                |> (Matrix.addMatrices ComplexNumbers.complexField) (Matrix.conjugate m2)
+                                |> Matrix.addMatrices ComplexNumbers.complexField (Matrix.conjugate m2)
                     in
                     Expect.equal m1Plusm2Conjugate m1ConjugatePlusm2Conjugate
             , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix conjugate respects scalar multiplication" <|
@@ -489,12 +323,12 @@ suite =
                                 ]
 
                         m1Plusm2Adjoint =
-                            (Matrix.addMatrices ComplexNumbers.complexField) m1 m2
+                            Matrix.addMatrices ComplexNumbers.complexField m1 m2
                                 |> Matrix.adjoint
 
                         m1ConjugatePlusm2Adjoint =
                             Matrix.adjoint m1
-                                |> (Matrix.addMatrices ComplexNumbers.complexField) (Matrix.conjugate m2)
+                                |> Matrix.addMatrices ComplexNumbers.complexField (Matrix.conjugate m2)
                     in
                     Expect.equal m1Plusm2Adjoint m1ConjugatePlusm2Adjoint
             , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix adjoint respects scalar multiplication" <|
@@ -564,11 +398,11 @@ suite =
                             Matrix.Matrix [ v2 ]
 
                         cTimesm1Timem2 =
-                            (Matrix.multiplyMatrices Vector.realInnerProductSpace) m1 m2
+                            Matrix.multiplyMatrices Vector.realInnerProductSpace m1 m2
                                 |> Result.map (Matrix.map ((*) one))
 
                         cTimesm1ThenTimesm2 =
-                            (Matrix.multiplyMatrices Vector.realInnerProductSpace) (Matrix.map ((*) one) m1) m2
+                            Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.map ((*) one) m1) m2
                     in
                     Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
             ]
@@ -613,12 +447,12 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m1Timesm2AndThenTimesm3 =
-                        Result.andThen ((Matrix.multiplyMatrices Vector.realInnerProductSpace) m3)
-                            ((Matrix.multiplyMatrices Vector.realInnerProductSpace) m1 m2)
+                        Result.andThen (Matrix.multiplyMatrices Vector.realInnerProductSpace m3)
+                            (Matrix.multiplyMatrices Vector.realInnerProductSpace m1 m2)
 
                     m2Timesm3AndThenTimesm1 =
-                        Result.andThen ((Matrix.multiplyMatrices Vector.realInnerProductSpace) m1)
-                            ((Matrix.multiplyMatrices Vector.realInnerProductSpace) m2 m3)
+                        Result.andThen (Matrix.multiplyMatrices Vector.realInnerProductSpace m1)
+                            (Matrix.multiplyMatrices Vector.realInnerProductSpace m2 m3)
                 in
                 Expect.equal m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
         , Test.test "tests identityMatrix is an identity matrix" <|
@@ -685,7 +519,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) (Matrix.identityMatrix Field.realField 3) m1
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.identityMatrix Field.realField 3) m1
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests A*In = a" <|
@@ -720,7 +554,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) m1 (Matrix.identityMatrix Field.realField 3)
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace m1 (Matrix.identityMatrix Field.realField 3)
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition" <|
@@ -764,10 +598,10 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m1Timesm2Plus3 =
-                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) m1 (Matrix.addMatrices Field.realField m2 m3)
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace m1 (Matrix.addMatrices Field.realField m2 m3)
 
                     m1Timesm2Plusem1Timesm3 =
-                        Result.map2 (Matrix.addMatrices Field.realField) ((Matrix.multiplyMatrices Vector.realInnerProductSpace) m1 m2) ((Matrix.multiplyMatrices Vector.realInnerProductSpace) m1 m3)
+                        Result.map2 (Matrix.addMatrices Field.realField) (Matrix.multiplyMatrices Vector.realInnerProductSpace m1 m2) (Matrix.multiplyMatrices Vector.realInnerProductSpace m1 m3)
                 in
                 Expect.equal m1Timesm2Plus3 m1Timesm2Plusem1Timesm3
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition second test" <|
@@ -811,10 +645,10 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m2Plusm3Timesm1 =
-                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) ((Matrix.addMatrices Field.realField) m2 m3) m1
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.addMatrices Field.realField m2 m3) m1
 
                     m2Timesm1Plusm3Timesm1 =
-                        Result.map2 (Matrix.addMatrices Field.realField) ((Matrix.multiplyMatrices Vector.realInnerProductSpace) m2 m1) ((Matrix.multiplyMatrices Vector.realInnerProductSpace) m3 m1)
+                        Result.map2 (Matrix.addMatrices Field.realField) (Matrix.multiplyMatrices Vector.realInnerProductSpace m2 m1) (Matrix.multiplyMatrices Vector.realInnerProductSpace m3 m1)
                 in
                 Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication relates to the transpose" <|
@@ -837,11 +671,11 @@ suite =
                         Matrix.Matrix [ v2 ]
 
                     aTimebThenTranspose =
-                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) a b
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace a b
                             |> Result.map Matrix.transpose
 
                     cTimesm1ThenTimesm2 =
-                        (Matrix.multiplyMatrices Vector.realInnerProductSpace) (Matrix.transpose b) (Matrix.transpose a)
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.transpose b) (Matrix.transpose a)
                 in
                 Expect.equal aTimebThenTranspose cTimesm1ThenTimesm2
         , Test.test "tests matrix vector multiplication" <|
@@ -900,11 +734,11 @@ suite =
                             ]
 
                     aTimebThenConjugate =
-                        (Matrix.multiplyMatrices Vector.complexInnerProductSpace) a b 
+                        Matrix.multiplyMatrices Vector.complexInnerProductSpace a b
                             |> Result.map Matrix.conjugate
 
                     cTimesm1ThenTimesm2 =
-                        (Matrix.multiplyMatrices Vector.complexInnerProductSpace) (Matrix.conjugate a) (Matrix.conjugate b)
+                        Matrix.multiplyMatrices Vector.complexInnerProductSpace (Matrix.conjugate a) (Matrix.conjugate b)
 
                     result =
                         Result.map2 (Matrix.equal ComplexNumbers.equal) aTimebThenConjugate cTimesm1ThenTimesm2
@@ -936,11 +770,11 @@ suite =
                         Matrix.Matrix [ v2 ]
 
                     aTimebThenAdjoint =
-                        (Matrix.multiplyMatrices Vector.complexInnerProductSpace) a b
+                        Matrix.multiplyMatrices Vector.complexInnerProductSpace a b
                             |> Result.map Matrix.adjoint
 
                     bAdjointTimesAAdjoint =
-                        (Matrix.multiplyMatrices Vector.complexInnerProductSpace) (Matrix.adjoint a) (Matrix.adjoint b)
+                        Matrix.multiplyMatrices Vector.complexInnerProductSpace (Matrix.adjoint a) (Matrix.adjoint b)
 
                     result =
                         Result.map2 (Matrix.equal ComplexNumbers.equal) aTimebThenAdjoint bAdjointTimesAAdjoint

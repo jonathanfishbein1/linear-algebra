@@ -50,6 +50,7 @@ module Matrix exposing
     , matrixTensorProduct
     , isSquareMatrix
     , isInvertable
+    , dotProduct
     )
 
 {-| A module for Matrix
@@ -893,3 +894,33 @@ matrixTensorProduct field matrixOne matrixTwo =
         (\matrixOneElement ->
             scalarMultiplication field matrixOneElement matrixTwo
         )
+
+
+dotProduct : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String a
+dotProduct vectorInnerProductSpace matrixOne matrixTwo =
+    let
+        productMatrix =
+            multiplyMatrices vectorInnerProductSpace matrixOne matrixTwo
+    in
+    case productMatrix of
+        Ok pMatrix ->
+            if isSquareMatrix pMatrix then
+                let
+                    numberOfRows =
+                        mDimension pMatrix
+
+                    indices =
+                        List.Extra.initialize numberOfRows (\index -> ( index, index ))
+
+                    diagonalMaybeEntries =
+                        List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) pMatrix :: acc) [] indices
+                in
+                Maybe.Extra.combine diagonalMaybeEntries
+                    |> Maybe.map (\li -> List.foldl (\elem acc -> vectorInnerProductSpace.vectorSpace.abelianGroup.field.multiply elem acc) vectorInnerProductSpace.vectorSpace.abelianGroup.field.one li)
+                    |> Result.fromMaybe "Index out of range"
+
+            else
+                Err "Must be Square Matrix"
+
+        Err err ->
+            Err err

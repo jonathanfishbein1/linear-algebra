@@ -11,7 +11,7 @@ import Vector
 
 suite : Test.Test
 suite =
-    Test.describe "Complex Inner Product Vector Space"
+    Test.describe "Inner Product Vector Space"
         [ Test.fuzz (Fuzz.map Basics.toFloat Fuzz.int) "tests dot product is nondegenerative" <|
             \one ->
                 let

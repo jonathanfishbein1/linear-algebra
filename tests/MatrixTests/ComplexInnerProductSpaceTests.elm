@@ -2,170 +2,18 @@ module MatrixTests.ComplexInnerProductSpaceTests exposing (suite)
 
 import ComplexNumbers
 import Expect
-import Fuzz
 import Field
+import Fuzz
 import Parser
 import Test
 import Vector
-import Field 
 
-suite : Test.Test 
-suite = 
-    Test.describe "Complex Inner Product Vector Space" 
+
+suite : Test.Test
+suite =
+    Test.describe "Complex Inner Product Vector Space"
         [ Test.describe "Complex Vector Space"
-            [ Test.describe "Abelian Group"
-                [ Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Vector add is commutative" <|
-                    \one two ->
-                        let
-                            v =
-                                Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            one
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            one
-                                        )
-                                    , ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            two
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            two
-                                        )
-                                    ]
-
-                            w =
-                                Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            one
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            one
-                                        )
-                                    , ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            two
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            two
-                                        )
-                                    ]
-                        in
-                        Vector.addVectors ComplexNumbers.complexField v w
-                            |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
-                , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Vector add is associative" <|
-                    \one two three ->
-                        let
-                            v =
-                                Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            one
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            one
-                                        )
-                                    , ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            two
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            two
-                                        )
-                                    ]
-
-                            w =
-                                Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            one
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            one
-                                        )
-                                    , ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            two
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            two
-                                        )
-                                    ]
-
-                            x =
-                                Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            three
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            three
-                                        )
-                                    , ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            three
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            three
-                                        )
-                                    ]
-
-                            vPlusWPlusX =
-                                Vector.addVectors ComplexNumbers.complexField v w
-                                    |> Vector.addVectors ComplexNumbers.complexField x
-
-                            wPlusXPlusV =
-                                Vector.addVectors ComplexNumbers.complexField w x
-                                    |> Vector.addVectors ComplexNumbers.complexField v
-                        in
-                        Vector.addVectors ComplexNumbers.complexField v w
-                            |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
-                , Test.fuzz2 Fuzz.int Fuzz.int "tests empty vector is additive identity" <|
-                    \one two ->
-                        let
-                            w =
-                                Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
-                                        (ComplexNumbers.Real
-                                            one
-                                        )
-                                        (ComplexNumbers.Imaginary
-                                            one
-                                        )
-                                    ]
-                        in
-                        Vector.append Vector.concatEmpty w
-                            |> Expect.equal w
-                , Test.fuzz2 Fuzz.int Fuzz.int "tests vector inverse" <|
-                    \one two ->
-                        let
-                            complexOneNegative =
-                                ComplexNumbers.ComplexNumberCartesian
-                                    (ComplexNumbers.Real <|
-                                        Basics.negate 1
-                                    )
-                                    (ComplexNumbers.Imaginary
-                                        0
-                                    )
-
-                            v =
-                                Vector.Vector
-                                    [ ComplexNumbers.one ]
-
-                            w =
-                                Vector.Vector
-                                    [ complexOneNegative ]
-
-                            zero =
-                                Vector.Vector
-                                    [ ComplexNumbers.zero ]
-                        in
-                        Vector.addVectors ComplexNumbers.complexField v w
-                            |> Expect.equal zero
-                ]
-            , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests one is product identity" <|
+            [ Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests one is product identity" <|
                 \one two ->
                     let
                         v =

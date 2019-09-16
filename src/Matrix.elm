@@ -110,6 +110,7 @@ module Matrix exposing
 @docs matrixTensorProduct
 @docs isSquareMatrix
 @docs isInvertable
+@docs dotProduct
 
 -}
 
@@ -896,6 +897,8 @@ matrixTensorProduct field matrixOne matrixTwo =
         )
 
 
+{-| Calculate the dot product of two Matricies
+-}
 dotProduct : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String a
 dotProduct vectorInnerProductSpace matrixOne matrixTwo =
     let

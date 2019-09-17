@@ -59,7 +59,7 @@ suite =
                         Vector.Vector [ two ]
 
                     threeTimesADotB =
-                        Vector.vectorDotProduct Field.realField (Vector.map ((*) three) a) b
+                        Vector.vectorDotProduct Field.realField (Vector.scalarMultiplication Field.realField three a) b
 
                     aDotBTimesThree =
                         Vector.vectorDotProduct Field.realField a b * three
@@ -132,7 +132,7 @@ suite =
                         Vector.Vector [ one ]
 
                     legnthOfTwoTimesA =
-                        Vector.vectorLength Field.realField (Vector.map ((*) two) a)
+                        Vector.vectorLength Field.realField (Vector.scalarMultiplication Field.realField two a)
 
                     lengthOfATimesTwo =
                         Basics.abs two * Vector.vectorLength Field.realField a

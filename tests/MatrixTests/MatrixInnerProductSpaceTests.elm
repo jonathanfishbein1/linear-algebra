@@ -65,7 +65,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
 
                     threeTimesADotB =
-                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.map ((*) three) a) b
+                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField three a) b
 
                     aDotBTimesThree =
                         Result.map2 (*) (Matrix.dotProduct Vector.realInnerProductSpace a b) (Ok three)

@@ -60,16 +60,16 @@ suite =
                             ]
 
                     c2V =
-                        Vector.map (ComplexNumbers.multiply c2) v
+                        Vector.scalarMultiplication ComplexNumbers.complexField c2 v
 
                     c2VThenc1 =
-                        Vector.map (ComplexNumbers.multiply c1) c2V
+                        Vector.scalarMultiplication ComplexNumbers.complexField c1 c2V
 
                     c1c2 =
                         ComplexNumbers.multiply c1 c2
 
                     c1c2ThenV =
-                        Vector.map (ComplexNumbers.multiply c1c2) v
+                        Vector.scalarMultiplication ComplexNumbers.complexField c1c2 v
                 in
                 c2VThenc1
                     |> Expect.equal c1c2ThenV
@@ -111,13 +111,13 @@ suite =
                         Vector.addVectors ComplexNumbers.complexField v w
 
                     cvPlusW =
-                        Vector.map (ComplexNumbers.multiply c) vPlusW
+                        Vector.scalarMultiplication ComplexNumbers.complexField c vPlusW
 
                     cW =
-                        Vector.map (ComplexNumbers.multiply c) w
+                        Vector.scalarMultiplication ComplexNumbers.complexField c w
 
                     cV =
-                        Vector.map (ComplexNumbers.multiply c) v
+                        Vector.scalarMultiplication ComplexNumbers.complexField c v
 
                     cVPluscW =
                         Vector.addVectors ComplexNumbers.complexField cW cV
@@ -162,13 +162,13 @@ suite =
                         ComplexNumbers.add c1 c2
 
                     c1Plusc2V =
-                        Vector.map (ComplexNumbers.multiply c1Plusc2) v
+                        Vector.scalarMultiplication ComplexNumbers.complexField c1Plusc2 v
 
                     c1V =
-                        Vector.map (ComplexNumbers.multiply c1) v
+                        Vector.scalarMultiplication ComplexNumbers.complexField c1 v
 
                     c2V =
-                        Vector.map (ComplexNumbers.multiply c2) v
+                        Vector.scalarMultiplication ComplexNumbers.complexField c2 v
 
                     c1VPlusc2V =
                         Vector.addVectors ComplexNumbers.complexField c1V c2V

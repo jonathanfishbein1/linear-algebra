@@ -946,12 +946,12 @@ suite =
                             ]
 
                     cAThenTranspose =
-                        Matrix.map (ComplexNumbers.multiply c) m1
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c m1
                             |> Matrix.transpose
 
                     cTransposeOfA =
                         Matrix.transpose m1
-                            |> Matrix.map (ComplexNumbers.multiply c)
+                            |> Matrix.scalarMultiplication ComplexNumbers.complexField c
                 in
                 Expect.equal cAThenTranspose cTransposeOfA
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix conjugate conjugate is idempotent" <|
@@ -1046,12 +1046,12 @@ suite =
                             ]
 
                     cAThenConjugate =
-                        Matrix.map (ComplexNumbers.multiply c) m1
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c m1
                             |> Matrix.conjugate
 
                     cConjugateOfA =
                         Matrix.conjugate m1
-                            |> Matrix.map (ComplexNumbers.multiply cConjugate)
+                            |> Matrix.scalarMultiplication ComplexNumbers.complexField cConjugate
                 in
                 Expect.equal cAThenConjugate cConjugateOfA
         , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix adjoint is idempotent" <|
@@ -1146,12 +1146,12 @@ suite =
                             ]
 
                     cAThenAdjoint =
-                        Matrix.map (ComplexNumbers.multiply c) m1
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c m1
                             |> Matrix.adjoint
 
                     cAdjointOfA =
                         Matrix.adjoint m1
-                            |> Matrix.map (ComplexNumbers.multiply cConjugate)
+                            |> Matrix.scalarMultiplication ComplexNumbers.complexField cConjugate
                 in
                 Expect.equal cAThenAdjoint cAdjointOfA
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication respects scalar multiplication" <|
@@ -1184,10 +1184,10 @@ suite =
 
                     cTimesm1Timem2 =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace m1 m2
-                            |> Result.map (Matrix.map ((*) one))
+                            |> Result.map (Matrix.scalarMultiplication Field.realField one)
 
                     cTimesm1ThenTimesm2 =
-                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.map ((*) one) m1) m2
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField one m1) m2
                 in
                 Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
         ]

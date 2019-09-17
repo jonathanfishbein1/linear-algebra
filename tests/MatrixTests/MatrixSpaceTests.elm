@@ -49,27 +49,30 @@ suite =
                             )
 
                     v =
-                        Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
-                                (ComplexNumbers.Real
-                                    one
-                                )
-                                (ComplexNumbers.Imaginary
-                                    two
-                                )
+                        Matrix.Matrix <|
+                            [ Matrix.RowVector <|
+                                Vector.Vector
+                                    [ ComplexNumbers.ComplexNumberCartesian
+                                        (ComplexNumbers.Real
+                                            one
+                                        )
+                                        (ComplexNumbers.Imaginary
+                                            two
+                                        )
+                                    ]
                             ]
 
                     c2V =
-                        Vector.map (ComplexNumbers.multiply c2) v
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c2 v
 
                     c2VThenc1 =
-                        Vector.map (ComplexNumbers.multiply c1) c2V
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c1 c2V
 
                     c1c2 =
                         ComplexNumbers.multiply c1 c2
 
                     c1c2ThenV =
-                        Vector.map (ComplexNumbers.multiply c1c2) v
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c1c2 v
                 in
                 c2VThenc1
                     |> Expect.equal c1c2ThenV
@@ -117,13 +120,13 @@ suite =
                         Matrix.addMatrices ComplexNumbers.complexField v w
 
                     cvPlusW =
-                        Matrix.map (ComplexNumbers.multiply c) vPlusW
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c vPlusW
 
                     cW =
-                        Matrix.map (ComplexNumbers.multiply c) w
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c w
 
                     cV =
-                        Matrix.map (ComplexNumbers.multiply c) v
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c v
 
                     cVPluscW =
                         Matrix.addMatrices ComplexNumbers.complexField cW cV
@@ -176,13 +179,13 @@ suite =
                         Matrix.addMatrices ComplexNumbers.complexField v w
 
                     cvPlusW =
-                        Matrix.map (ComplexNumbers.multiply c) vPlusW
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c vPlusW
 
                     cW =
-                        Matrix.map (ComplexNumbers.multiply c) w
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c w
 
                     cV =
-                        Matrix.map (ComplexNumbers.multiply c) v
+                        Matrix.scalarMultiplication ComplexNumbers.complexField c v
 
                     cVPluscW =
                         Matrix.addMatrices ComplexNumbers.complexField cW cV

@@ -1195,13 +1195,22 @@ suite =
             \one two three ->
                 let
                     matrixI =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one, two ] ]
+                        Matrix.Matrix <|
+                            [ Matrix.RowVector <| Vector.Vector [ one, two ]
+                            , Matrix.RowVector <| Vector.Vector [ one, two ]
+                            ]
 
                     matrixJ =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ three, one ] ]
+                        Matrix.Matrix <|
+                            [ Matrix.RowVector <| Vector.Vector [ three, one ]
+                            , Matrix.RowVector <| Vector.Vector [ one, two ]
+                            ]
 
                     matrixK =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two, three ] ]
+                        Matrix.Matrix <|
+                            [ Matrix.RowVector <| Vector.Vector [ two, three ]
+                            , Matrix.RowVector <| Vector.Vector [ one, two ]
+                            ]
 
                     matrixSumIJ =
                         Matrix.addMatrices Field.realField matrixI matrixJ

@@ -237,4 +237,53 @@ suite =
                         Vector.addVectors Field.realField vectorTensorProductIK vectorTensorProductJK
                 in
                 Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) vectorTensorProductIJK vectorSumTensorProductIKJK)
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector tensor product respects scalar multiplication" <|
+            \one two three ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    complexNumberThree =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    vectorJ =
+                        Vector.Vector [ complexNumberTwo, complexNumberThree ]
+
+                    vectorK =
+                        Vector.Vector [ complexNumberThree, complexNumberTwo ]
+
+                    vectorTensorProductJK =
+                        Vector.vectorTensorProduct ComplexNumbers.complexField vectorJ vectorK
+
+                    cScalarMultiplicationVectorTensorProductJK =
+                        Vector.scalarMultiplication ComplexNumbers.complexField complexNumberOne vectorTensorProductJK
+
+                    cScalarMultiplicationVectorJ =
+                        Vector.scalarMultiplication ComplexNumbers.complexField complexNumberOne vectorJ
+
+                    cScalarMultiplicationVectorJTensorProductVectorK =
+                        Vector.vectorTensorProduct ComplexNumbers.complexField cScalarMultiplicationVectorJ vectorK
+                in
+                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal cScalarMultiplicationVectorTensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
         ]

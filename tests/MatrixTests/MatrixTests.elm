@@ -3,6 +3,7 @@ module MatrixTests.MatrixTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Field
+import Float.Extra
 import Fuzz
 import Matrix
 import Test
@@ -1190,4 +1191,32 @@ suite =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField one m1) m2
                 in
                 Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
+        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix tensor product respects addition" <|
+            \one two three ->
+                let
+                    matrixI =
+                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one, two ] ]
+
+                    matrixJ =
+                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ three, one ] ]
+
+                    matrixK =
+                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two, three ] ]
+
+                    matrixSumIJ =
+                        Matrix.addMatrices Field.realField matrixI matrixJ
+
+                    matrixTensorProductIJK =
+                        Matrix.matrixTensorProduct Field.realField matrixSumIJ matrixK
+
+                    matrixTensorProductIK =
+                        Matrix.matrixTensorProduct Field.realField matrixI matrixK
+
+                    matrixTensorProductJK =
+                        Matrix.matrixTensorProduct Field.realField matrixJ matrixK
+
+                    matrixSumTensorProductIKJK =
+                        Matrix.addMatrices Field.realField matrixTensorProductIK matrixTensorProductJK
+                in
+                Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) matrixTensorProductIJK matrixSumTensorProductIKJK)
         ]

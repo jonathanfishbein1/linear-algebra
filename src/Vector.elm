@@ -242,9 +242,9 @@ vectorDotProduct { zero, add, multiply } vectorOne vectorTwo =
 {-| Calculate the length of a Vector
 -}
 vectorLength : Field.Field a -> Vector a -> a
-vectorLength { power, add, zero } =
-    foldl (\x acc -> add (power 2 x) acc) zero
-        >> power (1 / 2)
+vectorLength field vector =
+    vectorDotProduct field vector vector
+        |> field.power (1 / 2)
 
 
 {-| Subtract Vectors

@@ -89,4 +89,68 @@ suite =
                 in
                 aDotB
                     |> Expect.equal bDotA
+        , Test.fuzz Fuzz.float "tests matrix norm is nondegenerative" <|
+            \one ->
+                let
+                    a =
+                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
+
+                    expected =
+                        Matrix.matrixNorm Vector.realInnerProductSpace a
+                in
+                case expected of
+                    Ok norm ->
+                        Expect.atLeast 0 norm
+
+                    Err err ->
+                        Expect.fail err
+        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix norm satisfies triangle inequality" <|
+            \one two ->
+                let
+                    a =
+                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
+
+                    b =
+                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
+
+                    aPlusBLength =
+                        Matrix.matrixNorm Vector.realInnerProductSpace <| Matrix.addMatrices Field.realField a b
+
+                    lengthAPlusLengthB =
+                        Result.map2 (+) (Matrix.matrixNorm Vector.realInnerProductSpace a) (Matrix.matrixNorm Vector.realInnerProductSpace b)
+                in
+                case aPlusBLength of
+                    Ok aBLength ->
+                        case lengthAPlusLengthB of
+                            Ok otherLength ->
+                                Expect.atMost otherLength aBLength
+
+                            Err err ->
+                                Expect.fail err
+
+                    Err err ->
+                        Expect.fail err
+        , Test.fuzz2 (Fuzz.floatRange -10 10) (Fuzz.floatRange -10 10) "tests matrix norm respects scalar multiplication" <|
+            \one two ->
+                let
+                    a =
+                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
+
+                    legnthOfTwoTimesA =
+                        Matrix.matrixNorm Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField two a)
+
+                    lengthOfATimesTwo =
+                        Result.map ((*) two >> Basics.abs) (Matrix.matrixNorm Vector.realInnerProductSpace a)
+                in
+                case legnthOfTwoTimesA of
+                    Ok twoAL ->
+                        case lengthOfATimesTwo of
+                            Ok lTimesTwo ->
+                                Expect.within (Expect.Absolute 0.1) twoAL lTimesTwo
+
+                            Err err ->
+                                Expect.fail err
+
+                    Err err ->
+                        Expect.fail err
         ]

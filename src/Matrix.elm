@@ -51,7 +51,7 @@ module Matrix exposing
     , isSquareMatrix
     , isInvertable
     , dotProduct
-    , scalarMultiplication
+    , matrixNorm, scalarMultiplication
     )
 
 {-| A module for Matrix
@@ -928,3 +928,11 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
 
         Err err ->
             Err err
+
+
+{-| Calculate the norm of a Matrix
+-}
+matrixNorm : Vector.InnerProductSpace a -> Matrix a -> Result String a
+matrixNorm innerProductSpace matrix =
+    dotProduct innerProductSpace matrix matrix
+        |> Result.map (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))

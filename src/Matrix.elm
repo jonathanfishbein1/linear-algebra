@@ -510,13 +510,10 @@ doesSetSpanSpace vSpace (VectorDimension vectorDimension) vectors =
             identityRowVectors =
                 identityMatrix vSpace.abelianGroup.field vectorDimension
 
-            floatMatrix =
-                identityRowVectors
-
             listOfRowVectorsRREF =
                 gaussJordan vSpace (Matrix (List.map RowVector vectors))
         in
-        floatMatrix
+        identityRowVectors
             == listOfRowVectorsRREF
             |> Ok
 

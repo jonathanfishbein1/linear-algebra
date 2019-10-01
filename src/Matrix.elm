@@ -936,3 +936,10 @@ matrixNorm : Vector.InnerProductSpace a -> Matrix a -> Result String a
 matrixNorm innerProductSpace matrix =
     dotProduct innerProductSpace matrix matrix
         |> Result.map (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))
+
+
+{-| Calculate the left nullspace of a Matrix
+-}
+leftNullSpace : Vector.VectorSpace a -> Matrix a -> Solution a
+leftNullSpace vectorSpace =
+    transpose >> nullSpace vectorSpace

@@ -237,6 +237,34 @@ scalarMultiplication { multiply } scalar =
     map (multiply scalar)
 
 
+{-| Transpose a Matrix
+-}
+transpose : Matrix a -> Matrix a
+transpose (Matrix listOfRowVectors) =
+    listOfRowVectors
+        |> List.map (\(RowVector (Vector.Vector x)) -> x)
+        |> List.Extra.transpose
+        |> List.map (Vector.Vector >> RowVector)
+        |> Matrix
+
+
+{-| Take the complex conjugate of a Complex Numbered Matrix
+-}
+conjugate : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+conjugate matrix =
+    matrix
+        |> map ComplexNumbers.conjugate
+
+
+{-| Perform the adjoint operation on a Complex Numbered Matrix
+-}
+adjoint : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+adjoint matrix =
+    matrix
+        |> map ComplexNumbers.conjugate
+        |> transpose
+
+
 {-| Add two Matrices together
 -}
 addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
@@ -330,13 +358,6 @@ sumMatrices { addMatrcs } sumEmptyMatrix =
     Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addMatrcs) sumEmptyMatrix
 
 
-{-| Map over a Matrix
--}
-map : (a -> b) -> Matrix a -> Matrix b
-map f (Matrix listOfRowVectors) =
-    Matrix <| List.map (rowVectorMap f) listOfRowVectors
-
-
 {-| Compare two Matrices for equality
 -}
 equalImplementation : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
@@ -344,32 +365,18 @@ equalImplementation comparator (Matrix listOfRowVectorsOne) (Matrix listOfRowVec
     List.all ((==) True) <| List.map2 (\(RowVector vectorOne) (RowVector vectorTwo) -> Vector.equal comparator vectorOne vectorTwo) listOfRowVectorsOne listOfRowVectorsTwo
 
 
-{-| Transpose a Matrix
+{-| Map over a Matrix
 -}
-transpose : Matrix a -> Matrix a
-transpose (Matrix listOfRowVectors) =
-    listOfRowVectors
-        |> List.map (\(RowVector (Vector.Vector x)) -> x)
-        |> List.Extra.transpose
-        |> List.map (Vector.Vector >> RowVector)
-        |> Matrix
+map : (a -> b) -> Matrix a -> Matrix b
+map f (Matrix listOfRowVectors) =
+    Matrix <| List.map (rowVectorMap f) listOfRowVectors
 
 
-{-| Take the complex conjugate of a Complex Numbered Matrix
+{-| Applicative pure for Matrix
 -}
-conjugate : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-conjugate matrix =
-    matrix
-        |> map ComplexNumbers.conjugate
-
-
-{-| Perform the adjoint operation on a Complex Numbered Matrix
--}
-adjoint : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
-adjoint matrix =
-    matrix
-        |> map ComplexNumbers.conjugate
-        |> transpose
+pure : a -> Matrix a
+pure a =
+    Matrix [ RowVector <| Vector.Vector <| [ a ] ]
 
 
 {-| Apply for Matrix
@@ -400,6 +407,24 @@ isHermitian matrix =
     adjoint matrix == matrix
 
 
+{-| Put a matrix into Upper Triangular Form
+-}
+upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+upperTriangle vectorSpace (Matrix matrix) =
+    if isSquareMatrix (Matrix matrix) then
+        let
+            listOfVectors =
+                List.map (\(RowVector vector) -> vector) matrix
+        in
+        List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
+            |> List.map RowVector
+            |> Matrix
+            |> Ok
+
+    else
+        Err "Must be Square Matrix"
+
+
 {-| Gaussian Elimination
 -}
 gaussianReduce : Vector.VectorSpace a -> Matrix a -> Matrix a
@@ -419,24 +444,6 @@ gaussianReduce vectorSpace (Matrix matrix) =
     rowEchelonForm
         |> List.map RowVector
         |> Matrix
-
-
-{-| Put a matrix into Upper Triangular Form
--}
-upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
-upperTriangle vectorSpace (Matrix matrix) =
-    if isSquareMatrix (Matrix matrix) then
-        let
-            listOfVectors =
-                List.map (\(RowVector vector) -> vector) matrix
-        in
-        List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
-            |> List.map RowVector
-            |> Matrix
-            |> Ok
-
-    else
-        Err "Must be Square Matrix"
 
 
 {-| Internal function for Jordan Elimination
@@ -720,13 +727,6 @@ appendHorizontal (Matrix listOne) (Matrix listTwo) =
 matrixConcatHorizontal : Typeclasses.Classes.Monoid.Monoid (Matrix a)
 matrixConcatHorizontal =
     Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend appendHorizontal) matrixEmpty
-
-
-{-| Applicative pure for Matrix
--}
-pure : a -> Matrix a
-pure a =
-    Matrix [ RowVector <| Vector.Vector <| [ a ] ]
 
 
 {-| Monad bind for Matrix

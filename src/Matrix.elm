@@ -34,7 +34,6 @@ module Matrix exposing
     , mDimension
     , nDimension
     , matrixEmpty
-    , sumMatrices
     , matrixConcatHorizontal
     , matrixConcatVertical
     , map
@@ -118,7 +117,6 @@ module Matrix exposing
 # Monoid
 
 @docs matrixEmpty
-@docs sumMatrices
 @docs matrixConcatHorizontal
 @docs matrixConcatVertical
 
@@ -349,13 +347,6 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
 
         Err err ->
             Err err
-
-
-{-| Monoidally add two Matrices together
--}
-sumMatrices : AbelianGroup a -> Matrix a -> Typeclasses.Classes.Monoid.Monoid (Matrix a)
-sumMatrices { addMatrcs } sumEmptyMatrix =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addMatrcs) sumEmptyMatrix
 
 
 {-| Compare two Matrices for equality

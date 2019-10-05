@@ -51,7 +51,7 @@ module Matrix exposing
     , isSquareMatrix
     , isInvertable
     , dotProduct
-    , matrixNorm, scalarMultiplication
+    , leftNullSpace, matrixNorm, scalarMultiplication
     )
 
 {-| A module for Matrix

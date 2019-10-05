@@ -1,10 +1,11 @@
 module Matrix exposing
-    ( Matrix(..)
-    , RowVector(..)
+    ( RowVector(..)
     , ColumnVector(..)
+    , Matrix(..)
     , Solution(..)
     , VectorDimension(..)
     , identityMatrix
+    , zeroSquareMatrix
     , scalarMultiplication
     , transpose
     , conjugate
@@ -15,8 +16,9 @@ module Matrix exposing
     , determinant
     , matrixNorm
     , leftNullSpace
-    , multiplyVectorMatrix
     , addMatrices
+    , subtractMatrices
+    , multiplyVectorMatrix
     , multiplyMatrices
     , dotProduct
     , matrixTensorProduct
@@ -32,7 +34,6 @@ module Matrix exposing
     , mDimension
     , nDimension
     , matrixEmpty
-    , sumMatrices
     , matrixConcatHorizontal
     , matrixConcatVertical
     , map
@@ -61,9 +62,9 @@ module Matrix exposing
 
 # Types
 
-@docs Matrix
 @docs RowVector
 @docs ColumnVector
+@docs Matrix
 @docs Solution
 @docs VectorDimension
 
@@ -71,6 +72,7 @@ module Matrix exposing
 # Values
 
 @docs identityMatrix
+@docs zeroSquareMatrix
 
 
 # Unitary Operations
@@ -89,8 +91,9 @@ module Matrix exposing
 
 # Binary Operations
 
-@docs multiplyVectorMatrix
 @docs addMatrices
+@docs subtractMatrices
+@docs multiplyVectorMatrix
 @docs multiplyMatrices
 @docs dotProduct
 @docs matrixTensorProduct
@@ -114,7 +117,6 @@ module Matrix exposing
 # Monoid
 
 @docs matrixEmpty
-@docs sumMatrices
 @docs matrixConcatHorizontal
 @docs matrixConcatVertical
 
@@ -212,18 +214,18 @@ type alias AbelianGroup a =
     }
 
 
-{-| Add two Matrices together
+{-| Create Identity Matrix with n dimension
 -}
-addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
-addMatrices { add } =
-    liftA2 add
+identityMatrix : Field.Field a -> Int -> Matrix a
+identityMatrix field dimension =
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal field columnIndex)))
 
 
-{-| Subtract two Matrices
+{-| Create square Matrix with n dimension filled with zeros
 -}
-subtractMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
-subtractMatrices { subtract } =
-    liftA2 subtract
+zeroSquareMatrix : Field.Field a -> Int -> Matrix a
+zeroSquareMatrix field dimension =
+    Matrix (List.Extra.initialize dimension (\_ -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (\_ -> field.zero)))
 
 
 {-| Scalar multiplication over a Matrix
@@ -231,27 +233,6 @@ subtractMatrices { subtract } =
 scalarMultiplication : Field.Field a -> a -> Matrix a -> Matrix a
 scalarMultiplication { multiply } scalar =
     map (multiply scalar)
-
-
-{-| Monoidally add two Matrices together
--}
-sumMatrices : AbelianGroup a -> Matrix a -> Typeclasses.Classes.Monoid.Monoid (Matrix a)
-sumMatrices { addMatrcs } sumEmptyMatrix =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend addMatrcs) sumEmptyMatrix
-
-
-{-| Map over a Matrix
--}
-map : (a -> b) -> Matrix a -> Matrix b
-map f (Matrix listOfRowVectors) =
-    Matrix <| List.map (rowVectorMap f) listOfRowVectors
-
-
-{-| Compare two Matrices for equality
--}
-equalImplementation : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
-equalImplementation comparator (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
-    List.all ((==) True) <| List.map2 (\(RowVector vectorOne) (RowVector vectorTwo) -> Vector.equal comparator vectorOne vectorTwo) listOfRowVectorsOne listOfRowVectorsTwo
 
 
 {-| Transpose a Matrix
@@ -282,18 +263,131 @@ adjoint matrix =
         |> transpose
 
 
-{-| Apply for Matrix
+{-| Calculate the norm of a Matrix
 -}
-apply : Matrix (a -> b) -> Matrix a -> Matrix b
-apply (Matrix listOfRowVectorsWithFunctions) (Matrix listOfRowVectors) =
-    Matrix <| List.map2 (\(RowVector fVector) (RowVector xVector) -> RowVector <| Vector.apply fVector xVector) listOfRowVectorsWithFunctions listOfRowVectors
+matrixNorm : Vector.InnerProductSpace a -> Matrix a -> Result String a
+matrixNorm innerProductSpace matrix =
+    dotProduct innerProductSpace matrix matrix
+        |> Result.map (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))
 
 
-{-| Lift a function to work on Matrix
+{-| Try to calculate the determinant
 -}
-liftA2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
-liftA2 f a b =
-    apply (map f a) b
+determinant : Vector.VectorSpace a -> Matrix a -> Result String a
+determinant vectorSpace matrix =
+    let
+        upperTriangularForm =
+            upperTriangle vectorSpace matrix
+    in
+    Result.andThen
+        (\squareMatrix ->
+            let
+                numberOfRows =
+                    mDimension squareMatrix
+
+                indices =
+                    List.Extra.initialize numberOfRows (\index -> ( index, index ))
+
+                diagonalMaybeEntries =
+                    List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
+            in
+            Maybe.Extra.combine diagonalMaybeEntries
+                |> Maybe.map (\li -> List.foldl (\elem acc -> vectorSpace.abelianGroup.field.multiply elem acc) vectorSpace.abelianGroup.field.one li)
+                |> Result.fromMaybe "Index out of range"
+        )
+        upperTriangularForm
+
+
+{-| Try to calculate the inverse of a matrix
+-}
+invert : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+invert vectorSpace matrix =
+    case isInvertable vectorSpace matrix of
+        Ok invertableMatrix ->
+            let
+                sizeOfMatrix =
+                    mDimension invertableMatrix
+
+                augmentedMatrix =
+                    appendHorizontal invertableMatrix (identityMatrix vectorSpace.abelianGroup.field sizeOfMatrix)
+
+                reducedRowEchelonForm =
+                    gaussJordan vectorSpace augmentedMatrix
+
+                inverse =
+                    subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
+            in
+            Ok inverse
+
+        Err err ->
+            Err err
+
+
+{-| Calculate the submatrix given a starting and ending row and column index
+-}
+subMatrix : Int -> Int -> Int -> Int -> Matrix a -> Matrix a
+subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex (Matrix listOfRowVectors) =
+    List.take endingRowIndex listOfRowVectors
+        |> List.drop startingRowIndex
+        |> List.map
+            (\(RowVector (Vector.Vector row)) ->
+                List.take endingColumnIndex row
+                    |> List.drop startingColumnIndex
+                    |> Vector.Vector
+                    |> RowVector
+            )
+        |> Matrix
+
+
+{-| Calculate the null space of a matrix
+-}
+nullSpace : Vector.VectorSpace a -> Matrix a -> Solution a
+nullSpace vectorSpace matrix =
+    let
+        numberOfRows =
+            mDimension matrix
+
+        b =
+            List.repeat numberOfRows vectorSpace.abelianGroup.field.zero
+                |> Vector.Vector
+                |> ColumnVector
+    in
+    solve vectorSpace matrix b
+
+
+{-| Calculate the left nullspace of a Matrix
+-}
+leftNullSpace : Vector.VectorSpace a -> Matrix a -> Solution a
+leftNullSpace vectorSpace =
+    transpose >> nullSpace vectorSpace
+
+
+{-| Add two Matrices together
+-}
+addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+addMatrices { add } =
+    liftA2 add
+
+
+{-| Subtract two Matrices
+-}
+subtractMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+subtractMatrices { subtract } =
+    liftA2 subtract
+
+
+{-| Multiply a Vector by a Matrix
+-}
+multiplyVectorMatrix : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Vector.Vector a
+multiplyVectorMatrix innerProductSpace (Matrix matrix) vector =
+    let
+        listOfVectors =
+            matrix
+                |> List.map (\(RowVector vec) -> vec)
+    in
+    Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
+        |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
+        |> Vector.Vector
 
 
 {-| Matrix Matrix multiplication
@@ -322,25 +416,111 @@ multiplyMatrices innerProductSpace (Matrix matrixOne) matrixTwo =
         Err "first matrix must have same number of columns as the second matrix has rows"
 
 
-{-| Create Identity Matrix with n dimension
+{-| Calculate the dot product of two Matricies
 -}
-identityMatrix : Field.Field a -> Int -> Matrix a
-identityMatrix field dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal field columnIndex)))
-
-
-{-| Multiply a Vector by a Matrix
--}
-multiplyVectorMatrix : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Vector.Vector a
-multiplyVectorMatrix innerProductSpace (Matrix matrix) vector =
+dotProduct : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String a
+dotProduct vectorInnerProductSpace matrixOne matrixTwo =
     let
-        listOfVectors =
-            matrix
-                |> List.map (\(RowVector vec) -> vec)
+        productMatrix =
+            multiplyMatrices vectorInnerProductSpace matrixOne matrixTwo
     in
-    Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
-        |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
-        |> Vector.Vector
+    case productMatrix of
+        Ok pMatrix ->
+            if isSquareMatrix pMatrix then
+                let
+                    numberOfRows =
+                        mDimension pMatrix
+
+                    indices =
+                        List.Extra.initialize numberOfRows (\index -> ( index, index ))
+
+                    diagonalMaybeEntries =
+                        List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) pMatrix :: acc) [] indices
+                in
+                Maybe.Extra.combine diagonalMaybeEntries
+                    |> Maybe.map (\li -> List.foldl (\elem acc -> vectorInnerProductSpace.vectorSpace.abelianGroup.field.multiply elem acc) vectorInnerProductSpace.vectorSpace.abelianGroup.field.one li)
+                    |> Result.fromMaybe "Index out of range"
+
+            else
+                Err "Must be Square Matrix"
+
+        Err err ->
+            Err err
+
+
+{-| Calculate the tensor product of two Matricies
+-}
+matrixTensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+matrixTensorProduct field matrixOne matrixTwo =
+    bind
+        matrixOne
+        (\matrixOneElement ->
+            scalarMultiplication field matrixOneElement matrixTwo
+        )
+
+
+{-| Map over a Matrix
+-}
+map : (a -> b) -> Matrix a -> Matrix b
+map f (Matrix listOfRowVectors) =
+    Matrix <| List.map (rowVectorMap f) listOfRowVectors
+
+
+{-| Applicative pure for Matrix
+-}
+pure : a -> Matrix a
+pure a =
+    Matrix [ RowVector <| Vector.Vector <| [ a ] ]
+
+
+{-| Apply for Matrix
+-}
+apply : Matrix (a -> b) -> Matrix a -> Matrix b
+apply (Matrix listOfRowVectorsWithFunctions) (Matrix listOfRowVectors) =
+    Matrix <| List.map2 (\(RowVector fVector) (RowVector xVector) -> RowVector <| Vector.apply fVector xVector) listOfRowVectorsWithFunctions listOfRowVectors
+
+
+{-| Lift a function to work on Matrix
+-}
+liftA2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
+liftA2 f a b =
+    apply (map f a) b
+
+
+{-| Monad bind for Matrix
+-}
+bind : Matrix a -> (a -> Matrix b) -> Matrix b
+bind (Matrix listOfRowVectors) fMatrix =
+    List.concatMap
+        (\(RowVector (Vector.Vector listOfElements)) ->
+            let
+                (Matrix result) =
+                    List.concatMap
+                        (\element ->
+                            let
+                                (Matrix resultInner) =
+                                    fMatrix element
+                            in
+                            resultInner
+                        )
+                        listOfElements
+                        |> Matrix
+            in
+            result
+        )
+        listOfRowVectors
+        |> Matrix
+
+
+{-| Determine whether a matirx is square
+-}
+isSquareMatrix : Matrix a -> Bool
+isSquareMatrix matrix =
+    if mDimension matrix == nDimension matrix then
+        True
+
+    else
+        False
 
 
 {-| Predicate to determine if Matrix is symmetric
@@ -355,6 +535,52 @@ isSymmetric matrix =
 isHermitian : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Bool
 isHermitian matrix =
     adjoint matrix == matrix
+
+
+{-| Determine whether a matirx is unitary
+-}
+isUnitary : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Bool
+isUnitary matrix =
+    case invert Vector.complexVectorSpace matrix of
+        Ok inverse ->
+            equal ComplexNumbers.equal inverse (adjoint matrix)
+
+        Err _ ->
+            False
+
+
+{-| Determine whether a matirx is invertable
+-}
+isInvertable : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+isInvertable vectorSpace matrix =
+    case determinant vectorSpace matrix of
+        Ok deter ->
+            if deter == vectorSpace.abelianGroup.field.zero then
+                Err "Determinant is zero matrix is not invertable"
+
+            else
+                Ok matrix
+
+        Err msg ->
+            Err msg
+
+
+{-| Put a matrix into Upper Triangular Form
+-}
+upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+upperTriangle vectorSpace (Matrix matrix) =
+    if isSquareMatrix (Matrix matrix) then
+        let
+            listOfVectors =
+                List.map (\(RowVector vector) -> vector) matrix
+        in
+        List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
+            |> List.map RowVector
+            |> Matrix
+            |> Ok
+
+    else
+        Err "Must be Square Matrix"
 
 
 {-| Gaussian Elimination
@@ -378,24 +604,6 @@ gaussianReduce vectorSpace (Matrix matrix) =
         |> Matrix
 
 
-{-| Put a matrix into Upper Triangular Form
--}
-upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
-upperTriangle vectorSpace (Matrix matrix) =
-    if isSquareMatrix (Matrix matrix) then
-        let
-            listOfVectors =
-                List.map (\(RowVector vector) -> vector) matrix
-        in
-        List.foldl (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace) listOfVectors (List.range 0 (List.length matrix - 1))
-            |> List.map RowVector
-            |> Matrix
-            |> Ok
-
-    else
-        Err "Must be Square Matrix"
-
-
 {-| Internal function for Jordan Elimination
 -}
 jordanReduce : Vector.VectorSpace a -> Matrix a -> Matrix a
@@ -415,22 +623,6 @@ gaussJordan : Vector.VectorSpace a -> Matrix a -> Matrix a
 gaussJordan vectorSpace matrix =
     gaussianReduce vectorSpace matrix
         |> jordanReduce vectorSpace
-
-
-{-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
--}
-solve : Vector.VectorSpace a -> Matrix a -> ColumnVector a -> Solution a
-solve vectorSpace matrix (ColumnVector (Vector.Vector b)) =
-    let
-        matrixB =
-            b
-                |> List.map (List.singleton >> Vector.Vector >> RowVector)
-                |> Matrix
-
-        augmentedMatrix =
-            matrixConcatHorizontal.semigroup.prepend matrix matrixB
-    in
-    solveMatrix vectorSpace augmentedMatrix
 
 
 variablePortion : Matrix a -> Matrix a
@@ -489,20 +681,20 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
             )
 
 
-{-| Calculate the null space of a matrix
+{-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
 -}
-nullSpace : Vector.VectorSpace a -> Matrix a -> Solution a
-nullSpace vectorSpace matrix =
+solve : Vector.VectorSpace a -> Matrix a -> ColumnVector a -> Solution a
+solve vectorSpace matrix (ColumnVector (Vector.Vector b)) =
     let
-        numberOfRows =
-            mDimension matrix
+        matrixB =
+            b
+                |> List.map (List.singleton >> Vector.Vector >> RowVector)
+                |> Matrix
 
-        b =
-            List.repeat numberOfRows vectorSpace.abelianGroup.field.zero
-                |> Vector.Vector
-                |> ColumnVector
+        augmentedMatrix =
+            matrixConcatHorizontal.semigroup.prepend matrix matrixB
     in
-    solve vectorSpace matrix b
+    solveMatrix vectorSpace augmentedMatrix
 
 
 {-| Predicate to determine if a list of Vectors are linearly independent
@@ -628,6 +820,13 @@ foldl foldFunction acc (Matrix listOfRowVectors) =
     List.foldl (\row accumlator -> rowVectorFoldl foldFunction accumlator row) acc listOfRowVectors
 
 
+{-| Monoid empty for Vector
+-}
+matrixEmpty : Matrix a
+matrixEmpty =
+    Matrix []
+
+
 {-| Append Matricies together vertically
 -}
 appendVertical : Matrix a -> Matrix a -> Matrix a
@@ -635,13 +834,6 @@ appendVertical (Matrix listOne) (Matrix listTwo) =
     listOne
         ++ listTwo
         |> Matrix
-
-
-{-| Monoid empty for Vector
--}
-matrixEmpty : Matrix a
-matrixEmpty =
-    Matrix []
 
 
 {-| Monoidally append Matricies together vertically
@@ -679,36 +871,11 @@ matrixConcatHorizontal =
     Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend appendHorizontal) matrixEmpty
 
 
-{-| Applicative pure for Matrix
+{-| Compare two Matrices for equality
 -}
-pure : a -> Matrix a
-pure a =
-    Matrix [ RowVector <| Vector.Vector <| [ a ] ]
-
-
-{-| Monad bind for Matrix
--}
-bind : Matrix a -> (a -> Matrix b) -> Matrix b
-bind (Matrix listOfRowVectors) fMatrix =
-    List.concatMap
-        (\(RowVector (Vector.Vector listOfElements)) ->
-            let
-                (Matrix result) =
-                    List.concatMap
-                        (\element ->
-                            let
-                                (Matrix resultInner) =
-                                    fMatrix element
-                            in
-                            resultInner
-                        )
-                        listOfElements
-                        |> Matrix
-            in
-            result
-        )
-        listOfRowVectors
-        |> Matrix
+equalImplementation : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
+equalImplementation comparator (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
+    List.all ((==) True) <| List.map2 (\(RowVector vectorOne) (RowVector vectorTwo) -> Vector.equal comparator vectorOne vectorTwo) listOfRowVectorsOne listOfRowVectorsTwo
 
 
 {-| `Equal` type for `Matrix`.
@@ -795,14 +962,6 @@ listOfRowVectorParser rowVectorParser =
         }
 
 
-parseMatrix : Parser.Parser a -> Parser.Parser (Matrix a)
-parseMatrix matrixElementParser =
-    Parser.succeed Matrix
-        |. Parser.keyword "Matrix"
-        |. Parser.spaces
-        |= listOfRowVectorParser (parseRowVector matrixElementParser)
-
-
 parseRowVector : Parser.Parser a -> Parser.Parser (RowVector a)
 parseRowVector rowVectorElementsParser =
     Parser.succeed RowVector
@@ -811,111 +970,12 @@ parseRowVector rowVectorElementsParser =
         |= Vector.parseVector rowVectorElementsParser
 
 
-{-| Try to calculate the determinant
--}
-determinant : Vector.VectorSpace a -> Matrix a -> Result String a
-determinant vectorSpace matrix =
-    let
-        upperTriangularForm =
-            upperTriangle vectorSpace matrix
-    in
-    Result.andThen
-        (\squareMatrix ->
-            let
-                numberOfRows =
-                    mDimension squareMatrix
-
-                indices =
-                    List.Extra.initialize numberOfRows (\index -> ( index, index ))
-
-                diagonalMaybeEntries =
-                    List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc) [] indices
-            in
-            Maybe.Extra.combine diagonalMaybeEntries
-                |> Maybe.map (\li -> List.foldl (\elem acc -> vectorSpace.abelianGroup.field.multiply elem acc) vectorSpace.abelianGroup.field.one li)
-                |> Result.fromMaybe "Index out of range"
-        )
-        upperTriangularForm
-
-
-{-| Try to calculate the inverse of a matrix
--}
-invert : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
-invert vectorSpace matrix =
-    case isInvertable vectorSpace matrix of
-        Ok invertableMatrix ->
-            let
-                sizeOfMatrix =
-                    mDimension invertableMatrix
-
-                augmentedMatrix =
-                    appendHorizontal invertableMatrix (identityMatrix vectorSpace.abelianGroup.field sizeOfMatrix)
-
-                reducedRowEchelonForm =
-                    gaussJordan vectorSpace augmentedMatrix
-
-                inverse =
-                    subMatrix 0 (mDimension reducedRowEchelonForm) sizeOfMatrix (nDimension reducedRowEchelonForm) reducedRowEchelonForm
-            in
-            Ok inverse
-
-        Err err ->
-            Err err
-
-
-{-| Calculate the submatrix given a starting and ending row and column index
--}
-subMatrix : Int -> Int -> Int -> Int -> Matrix a -> Matrix a
-subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex (Matrix listOfRowVectors) =
-    List.take endingRowIndex listOfRowVectors
-        |> List.drop startingRowIndex
-        |> List.map
-            (\(RowVector (Vector.Vector row)) ->
-                List.take endingColumnIndex row
-                    |> List.drop startingColumnIndex
-                    |> Vector.Vector
-                    |> RowVector
-            )
-        |> Matrix
-
-
-{-| Determine whether a matirx is unitary
--}
-isUnitary : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Bool
-isUnitary matrix =
-    case invert Vector.complexVectorSpace matrix of
-        Ok inverse ->
-            equal ComplexNumbers.equal inverse (adjoint matrix)
-
-        Err _ ->
-            False
-
-
-{-| Determine whether a matirx is invertable
--}
-isInvertable : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
-isInvertable vectorSpace matrix =
-    case determinant vectorSpace matrix of
-        Ok deter ->
-            if deter == vectorSpace.abelianGroup.field.zero then
-                Err "Determinant is zero matrix is not invertable"
-
-            else
-                Ok matrix
-
-        Err msg ->
-            Err msg
-
-
-{-| Determine whether a matirx is square
--}
-isSquareMatrix : Matrix a -> Bool
-isSquareMatrix matrix =
-    if mDimension matrix == nDimension matrix then
-        True
-
-    else
-        False
+parseMatrix : Parser.Parser a -> Parser.Parser (Matrix a)
+parseMatrix matrixElementParser =
+    Parser.succeed Matrix
+        |. Parser.keyword "Matrix"
+        |. Parser.spaces
+        |= listOfRowVectorParser (parseRowVector matrixElementParser)
 
 
 {-| Real numbered Abelian Group for Matrix
@@ -926,61 +986,3 @@ realMatrixAbelianGroup =
     , addMatrcs = addMatrices Field.realField
     , subtractMatrcs = subtractMatrices Field.realField
     }
-
-
-{-| Calculate the tensor product of two Matricies
--}
-matrixTensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
-matrixTensorProduct field matrixOne matrixTwo =
-    bind
-        matrixOne
-        (\matrixOneElement ->
-            scalarMultiplication field matrixOneElement matrixTwo
-        )
-
-
-{-| Calculate the dot product of two Matricies
--}
-dotProduct : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String a
-dotProduct vectorInnerProductSpace matrixOne matrixTwo =
-    let
-        productMatrix =
-            multiplyMatrices vectorInnerProductSpace matrixOne matrixTwo
-    in
-    case productMatrix of
-        Ok pMatrix ->
-            if isSquareMatrix pMatrix then
-                let
-                    numberOfRows =
-                        mDimension pMatrix
-
-                    indices =
-                        List.Extra.initialize numberOfRows (\index -> ( index, index ))
-
-                    diagonalMaybeEntries =
-                        List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) pMatrix :: acc) [] indices
-                in
-                Maybe.Extra.combine diagonalMaybeEntries
-                    |> Maybe.map (\li -> List.foldl (\elem acc -> vectorInnerProductSpace.vectorSpace.abelianGroup.field.multiply elem acc) vectorInnerProductSpace.vectorSpace.abelianGroup.field.one li)
-                    |> Result.fromMaybe "Index out of range"
-
-            else
-                Err "Must be Square Matrix"
-
-        Err err ->
-            Err err
-
-
-{-| Calculate the norm of a Matrix
--}
-matrixNorm : Vector.InnerProductSpace a -> Matrix a -> Result String a
-matrixNorm innerProductSpace matrix =
-    dotProduct innerProductSpace matrix matrix
-        |> Result.map (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))
-
-
-{-| Calculate the left nullspace of a Matrix
--}
-leftNullSpace : Vector.VectorSpace a -> Matrix a -> Solution a
-leftNullSpace vectorSpace =
-    transpose >> nullSpace vectorSpace

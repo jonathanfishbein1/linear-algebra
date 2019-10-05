@@ -1,7 +1,7 @@
 module Matrix exposing
-    ( Matrix(..)
-    , RowVector(..)
+    ( RowVector(..)
     , ColumnVector(..)
+    , Matrix(..)
     , Solution(..)
     , VectorDimension(..)
     , identityMatrix
@@ -15,8 +15,9 @@ module Matrix exposing
     , determinant
     , matrixNorm
     , leftNullSpace
-    , multiplyVectorMatrix
     , addMatrices
+    , subtractMatrices
+    , multiplyVectorMatrix
     , multiplyMatrices
     , dotProduct
     , matrixTensorProduct
@@ -61,9 +62,9 @@ module Matrix exposing
 
 # Types
 
-@docs Matrix
 @docs RowVector
 @docs ColumnVector
+@docs Matrix
 @docs Solution
 @docs VectorDimension
 
@@ -89,8 +90,9 @@ module Matrix exposing
 
 # Binary Operations
 
-@docs multiplyVectorMatrix
 @docs addMatrices
+@docs subtractMatrices
+@docs multiplyVectorMatrix
 @docs multiplyMatrices
 @docs dotProduct
 @docs matrixTensorProduct
@@ -212,6 +214,20 @@ type alias AbelianGroup a =
     }
 
 
+{-| Create Identity Matrix with n dimension
+-}
+identityMatrix : Field.Field a -> Int -> Matrix a
+identityMatrix field dimension =
+    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal field columnIndex)))
+
+
+{-| Scalar multiplication over a Matrix
+-}
+scalarMultiplication : Field.Field a -> a -> Matrix a -> Matrix a
+scalarMultiplication { multiply } scalar =
+    map (multiply scalar)
+
+
 {-| Add two Matrices together
 -}
 addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
@@ -226,11 +242,76 @@ subtractMatrices { subtract } =
     liftA2 subtract
 
 
-{-| Scalar multiplication over a Matrix
+{-| Multiply a Vector by a Matrix
 -}
-scalarMultiplication : Field.Field a -> a -> Matrix a -> Matrix a
-scalarMultiplication { multiply } scalar =
-    map (multiply scalar)
+multiplyVectorMatrix : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Vector.Vector a
+multiplyVectorMatrix innerProductSpace (Matrix matrix) vector =
+    let
+        listOfVectors =
+            matrix
+                |> List.map (\(RowVector vec) -> vec)
+    in
+    Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
+        |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
+        |> Vector.Vector
+
+
+{-| Matrix Matrix multiplication
+-}
+multiplyMatrices : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String (Matrix a)
+multiplyMatrices innerProductSpace (Matrix matrixOne) matrixTwo =
+    if nDimension (Matrix matrixOne) == mDimension matrixTwo then
+        let
+            (Matrix matrixTranspose) =
+                transpose matrixTwo
+
+            listOfVectors =
+                matrixTranspose
+                    |> List.map (\(RowVector vector) -> vector)
+
+            listOfVectorsOne =
+                matrixOne
+                    |> List.map (\(RowVector vector) -> vector)
+        in
+        Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectorsOne listOfVectors
+            |> List.map RowVector
+            |> Matrix
+            |> Ok
+
+    else
+        Err "first matrix must have same number of columns as the second matrix has rows"
+
+
+{-| Calculate the dot product of two Matricies
+-}
+dotProduct : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String a
+dotProduct vectorInnerProductSpace matrixOne matrixTwo =
+    let
+        productMatrix =
+            multiplyMatrices vectorInnerProductSpace matrixOne matrixTwo
+    in
+    case productMatrix of
+        Ok pMatrix ->
+            if isSquareMatrix pMatrix then
+                let
+                    numberOfRows =
+                        mDimension pMatrix
+
+                    indices =
+                        List.Extra.initialize numberOfRows (\index -> ( index, index ))
+
+                    diagonalMaybeEntries =
+                        List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) pMatrix :: acc) [] indices
+                in
+                Maybe.Extra.combine diagonalMaybeEntries
+                    |> Maybe.map (\li -> List.foldl (\elem acc -> vectorInnerProductSpace.vectorSpace.abelianGroup.field.multiply elem acc) vectorInnerProductSpace.vectorSpace.abelianGroup.field.one li)
+                    |> Result.fromMaybe "Index out of range"
+
+            else
+                Err "Must be Square Matrix"
+
+        Err err ->
+            Err err
 
 
 {-| Monoidally add two Matrices together
@@ -294,53 +375,6 @@ apply (Matrix listOfRowVectorsWithFunctions) (Matrix listOfRowVectors) =
 liftA2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
 liftA2 f a b =
     apply (map f a) b
-
-
-{-| Matrix Matrix multiplication
--}
-multiplyMatrices : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String (Matrix a)
-multiplyMatrices innerProductSpace (Matrix matrixOne) matrixTwo =
-    if nDimension (Matrix matrixOne) == mDimension matrixTwo then
-        let
-            (Matrix matrixTranspose) =
-                transpose matrixTwo
-
-            listOfVectors =
-                matrixTranspose
-                    |> List.map (\(RowVector vector) -> vector)
-
-            listOfVectorsOne =
-                matrixOne
-                    |> List.map (\(RowVector vector) -> vector)
-        in
-        Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectorsOne listOfVectors
-            |> List.map RowVector
-            |> Matrix
-            |> Ok
-
-    else
-        Err "first matrix must have same number of columns as the second matrix has rows"
-
-
-{-| Create Identity Matrix with n dimension
--}
-identityMatrix : Field.Field a -> Int -> Matrix a
-identityMatrix field dimension =
-    Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal field columnIndex)))
-
-
-{-| Multiply a Vector by a Matrix
--}
-multiplyVectorMatrix : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Vector.Vector a
-multiplyVectorMatrix innerProductSpace (Matrix matrix) vector =
-    let
-        listOfVectors =
-            matrix
-                |> List.map (\(RowVector vec) -> vec)
-    in
-    Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
-        |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
-        |> Vector.Vector
 
 
 {-| Predicate to determine if Matrix is symmetric
@@ -937,38 +971,6 @@ matrixTensorProduct field matrixOne matrixTwo =
         (\matrixOneElement ->
             scalarMultiplication field matrixOneElement matrixTwo
         )
-
-
-{-| Calculate the dot product of two Matricies
--}
-dotProduct : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String a
-dotProduct vectorInnerProductSpace matrixOne matrixTwo =
-    let
-        productMatrix =
-            multiplyMatrices vectorInnerProductSpace matrixOne matrixTwo
-    in
-    case productMatrix of
-        Ok pMatrix ->
-            if isSquareMatrix pMatrix then
-                let
-                    numberOfRows =
-                        mDimension pMatrix
-
-                    indices =
-                        List.Extra.initialize numberOfRows (\index -> ( index, index ))
-
-                    diagonalMaybeEntries =
-                        List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) pMatrix :: acc) [] indices
-                in
-                Maybe.Extra.combine diagonalMaybeEntries
-                    |> Maybe.map (\li -> List.foldl (\elem acc -> vectorInnerProductSpace.vectorSpace.abelianGroup.field.multiply elem acc) vectorInnerProductSpace.vectorSpace.abelianGroup.field.one li)
-                    |> Result.fromMaybe "Index out of range"
-
-            else
-                Err "Must be Square Matrix"
-
-        Err err ->
-            Err err
 
 
 {-| Calculate the norm of a Matrix

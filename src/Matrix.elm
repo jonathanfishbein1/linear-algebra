@@ -4,56 +4,56 @@ module Matrix exposing
     , ColumnVector(..)
     , Solution(..)
     , VectorDimension(..)
-    , addMatrices
-    , sumMatrices
-    , map
-    , equal
+    , identityMatrix
+    , scalarMultiplication
     , transpose
     , conjugate
     , adjoint
-    , apply
-    , liftA2
-    , multiplyMatrices
-    , identityMatrix
-    , gaussJordan
-    , gaussianReduce
-    , isHermitian
-    , isSymmetric
-    , jordanReduce
-    , areLinearlyIndependent
-    , multiplyVectorMatrix
+    , invert
+    , subMatrix
     , nullSpace
-    , solve
+    , determinant
+    , matrixNorm
+    , leftNullSpace
+    , multiplyVectorMatrix
+    , addMatrices
+    , multiplyMatrices
+    , dotProduct
+    , matrixTensorProduct
+    , isSquareMatrix
+    , isSymmetric
+    , isHermitian
+    , isInvertable
+    , isUnitary
     , areBasis
-    , basisOfVectorSpace
+    , areLinearlyIndependent
     , doesSetSpanSpace
+    , basisOfVectorSpace
     , mDimension
     , nDimension
-    , solveMatrix
-    , foldl
+    , matrixEmpty
+    , sumMatrices
     , matrixConcatHorizontal
     , matrixConcatVertical
-    , matrixEmpty
+    , map
     , pure
+    , apply
     , bind
-    , determinant
+    , liftA2
+    , foldl
+    , equal
+    , upperTriangle
+    , gaussianReduce
+    , jordanReduce
+    , gaussJordan
+    , solve
+    , solveMatrix
     , getAt
+    , setAt
     , printRealMatrix
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , setAt
-    , upperTriangle
-    , invert
-    , isUnitary
-    , subMatrix
-    , matrixTensorProduct
-    , isSquareMatrix
-    , isInvertable
-    , dotProduct
-    , scalarMultiplication
-    , matrixNorm
-    , leftNullSpace
     )
 
 {-| A module for Matrix
@@ -67,56 +67,95 @@ module Matrix exposing
 @docs Solution
 @docs VectorDimension
 
-@docs addMatrices
-@docs sumMatrices
-@docs map
-@docs equal
+
+# Values
+
+@docs identityMatrix
+
+
+# Unitary Operations
+
+@docs scalarMultiplication
 @docs transpose
 @docs conjugate
 @docs adjoint
-@docs apply
-@docs liftA2
-@docs multiplyMatrices
-@docs identityMatrix
-@docs gaussJordan
-@docs gaussianReduce
-@docs isHermitian
-@docs isSymmetric
-@docs jordanReduce
-@docs areLinearlyIndependent
-@docs multiplyVectorMatrix
+@docs invert
+@docs subMatrix
 @docs nullSpace
-@docs solve
+@docs determinant
+@docs matrixNorm
+@docs leftNullSpace
+
+
+# Binary Operations
+
+@docs multiplyVectorMatrix
+@docs addMatrices
+@docs multiplyMatrices
+@docs dotProduct
+@docs matrixTensorProduct
+
+
+# Matrix Predicates and Properties
+
+@docs isSquareMatrix
+@docs isSymmetric
+@docs isHermitian
+@docs isInvertable
+@docs isUnitary
 @docs areBasis
-@docs basisOfVectorSpace
+@docs areLinearlyIndependent
 @docs doesSetSpanSpace
+@docs basisOfVectorSpace
 @docs mDimension
 @docs nDimension
-@docs solveMatrix
-@docs foldl
+
+
+# Monoid
+
+@docs matrixEmpty
+@docs sumMatrices
 @docs matrixConcatHorizontal
 @docs matrixConcatVertical
-@docs matrixEmpty
+
+
+# Functor, Applicative, Monad, Foldable
+
+@docs map
 @docs pure
+@docs apply
 @docs bind
-@docs determinant
+@docs liftA2
+@docs foldl
+
+
+# Equality
+
+@docs equal
+
+
+# Matrix Forms
+
+@docs upperTriangle
+@docs gaussianReduce
+@docs jordanReduce
+@docs gaussJordan
+
+
+# Solving
+
+@docs solve
+@docs solveMatrix
+
+
+# Manipulation
+
 @docs getAt
+@docs setAt
 @docs printRealMatrix
 @docs printComplexMatrix
 @docs readRealMatrix
 @docs readComplexMatrix
-@docs setAt
-@docs upperTriangle
-@docs invert
-@docs isUnitary
-@docs subMatrix
-@docs matrixTensorProduct
-@docs isSquareMatrix
-@docs isInvertable
-@docs dotProduct
-@docs scalarMultiplication
-@docs matrixNorm
-@docs leftNullSpace
 
 -}
 

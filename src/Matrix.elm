@@ -4,52 +4,56 @@ module Matrix exposing
     , ColumnVector(..)
     , Solution(..)
     , VectorDimension(..)
-    , addMatrices
-    , sumMatrices
-    , map
-    , equal
+    , identityMatrix
+    , scalarMultiplication
     , transpose
     , conjugate
     , adjoint
-    , apply
-    , liftA2
-    , multiplyMatrices
-    , identityMatrix
-    , gaussJordan
-    , gaussianReduce
-    , isHermitian
-    , isSymmetric
-    , jordanReduce
-    , areLinearlyIndependent
-    , multiplyVectorMatrix
+    , invert
+    , subMatrix
     , nullSpace
-    , solve
+    , determinant
+    , matrixNorm
+    , leftNullSpace
+    , multiplyVectorMatrix
+    , addMatrices
+    , multiplyMatrices
+    , dotProduct
+    , matrixTensorProduct
+    , isSquareMatrix
+    , isSymmetric
+    , isHermitian
+    , isInvertable
+    , isUnitary
     , areBasis
-    , basisOfVectorSpace
+    , areLinearlyIndependent
     , doesSetSpanSpace
+    , basisOfVectorSpace
     , mDimension
     , nDimension
-    , solveMatrix
-    , foldl
+    , matrixEmpty
+    , sumMatrices
     , matrixConcatHorizontal
     , matrixConcatVertical
-    , matrixEmpty
+    , map
     , pure
+    , apply
     , bind
-    , determinant
+    , liftA2
+    , foldl
+    , equal
+    , upperTriangle
+    , gaussianReduce
+    , jordanReduce
+    , gaussJordan
+    , solve
+    , solveMatrix
     , getAt
+    , setAt
     , printRealMatrix
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , setAt
-    , upperTriangle
-    , invert
-    , isUnitary
-    , subMatrix
-    , matrixTensorProduct
-    , isSquareMatrix
-    , isInvertable
     )
 
 {-| A module for Matrix
@@ -63,52 +67,95 @@ module Matrix exposing
 @docs Solution
 @docs VectorDimension
 
-@docs addMatrices
-@docs sumMatrices
-@docs map
-@docs equal
+
+# Values
+
+@docs identityMatrix
+
+
+# Unitary Operations
+
+@docs scalarMultiplication
 @docs transpose
 @docs conjugate
 @docs adjoint
-@docs apply
-@docs liftA2
-@docs multiplyMatrices
-@docs identityMatrix
-@docs gaussJordan
-@docs gaussianReduce
-@docs isHermitian
-@docs isSymmetric
-@docs jordanReduce
-@docs areLinearlyIndependent
-@docs multiplyVectorMatrix
+@docs invert
+@docs subMatrix
 @docs nullSpace
-@docs solve
+@docs determinant
+@docs matrixNorm
+@docs leftNullSpace
+
+
+# Binary Operations
+
+@docs multiplyVectorMatrix
+@docs addMatrices
+@docs multiplyMatrices
+@docs dotProduct
+@docs matrixTensorProduct
+
+
+# Matrix Predicates and Properties
+
+@docs isSquareMatrix
+@docs isSymmetric
+@docs isHermitian
+@docs isInvertable
+@docs isUnitary
 @docs areBasis
-@docs basisOfVectorSpace
+@docs areLinearlyIndependent
 @docs doesSetSpanSpace
+@docs basisOfVectorSpace
 @docs mDimension
 @docs nDimension
-@docs solveMatrix
-@docs foldl
+
+
+# Monoid
+
+@docs matrixEmpty
+@docs sumMatrices
 @docs matrixConcatHorizontal
 @docs matrixConcatVertical
-@docs matrixEmpty
+
+
+# Functor, Applicative, Monad, Foldable
+
+@docs map
 @docs pure
+@docs apply
 @docs bind
-@docs determinant
+@docs liftA2
+@docs foldl
+
+
+# Equality
+
+@docs equal
+
+
+# Matrix Forms
+
+@docs upperTriangle
+@docs gaussianReduce
+@docs jordanReduce
+@docs gaussJordan
+
+
+# Solving
+
+@docs solve
+@docs solveMatrix
+
+
+# Manipulation
+
 @docs getAt
+@docs setAt
 @docs printRealMatrix
 @docs printComplexMatrix
 @docs readRealMatrix
 @docs readComplexMatrix
-@docs setAt
-@docs upperTriangle
-@docs invert
-@docs isUnitary
-@docs subMatrix
-@docs matrixTensorProduct
-@docs isSquareMatrix
-@docs isInvertable
 
 -}
 
@@ -507,13 +554,10 @@ doesSetSpanSpace vSpace (VectorDimension vectorDimension) vectors =
             identityRowVectors =
                 identityMatrix vSpace.abelianGroup.field vectorDimension
 
-            floatMatrix =
-                identityRowVectors
-
             listOfRowVectorsRREF =
                 gaussJordan vSpace (Matrix (List.map RowVector vectors))
         in
-        floatMatrix
+        identityRowVectors
             == listOfRowVectorsRREF
             |> Ok
 
@@ -893,3 +937,50 @@ matrixTensorProduct field matrixOne matrixTwo =
         (\matrixOneElement ->
             scalarMultiplication field matrixOneElement matrixTwo
         )
+
+
+{-| Calculate the dot product of two Matricies
+-}
+dotProduct : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String a
+dotProduct vectorInnerProductSpace matrixOne matrixTwo =
+    let
+        productMatrix =
+            multiplyMatrices vectorInnerProductSpace matrixOne matrixTwo
+    in
+    case productMatrix of
+        Ok pMatrix ->
+            if isSquareMatrix pMatrix then
+                let
+                    numberOfRows =
+                        mDimension pMatrix
+
+                    indices =
+                        List.Extra.initialize numberOfRows (\index -> ( index, index ))
+
+                    diagonalMaybeEntries =
+                        List.foldl (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) pMatrix :: acc) [] indices
+                in
+                Maybe.Extra.combine diagonalMaybeEntries
+                    |> Maybe.map (\li -> List.foldl (\elem acc -> vectorInnerProductSpace.vectorSpace.abelianGroup.field.multiply elem acc) vectorInnerProductSpace.vectorSpace.abelianGroup.field.one li)
+                    |> Result.fromMaybe "Index out of range"
+
+            else
+                Err "Must be Square Matrix"
+
+        Err err ->
+            Err err
+
+
+{-| Calculate the norm of a Matrix
+-}
+matrixNorm : Vector.InnerProductSpace a -> Matrix a -> Result String a
+matrixNorm innerProductSpace matrix =
+    dotProduct innerProductSpace matrix matrix
+        |> Result.map (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))
+
+
+{-| Calculate the left nullspace of a Matrix
+-}
+leftNullSpace : Vector.VectorSpace a -> Matrix a -> Solution a
+leftNullSpace vectorSpace =
+    transpose >> nullSpace vectorSpace

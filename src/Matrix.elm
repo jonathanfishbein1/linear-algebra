@@ -5,6 +5,7 @@ module Matrix exposing
     , Solution(..)
     , VectorDimension(..)
     , identityMatrix
+    , zeroSquareMatrix
     , scalarMultiplication
     , transpose
     , conjugate
@@ -72,6 +73,7 @@ module Matrix exposing
 # Values
 
 @docs identityMatrix
+@docs zeroSquareMatrix
 
 
 # Unitary Operations
@@ -219,6 +221,13 @@ type alias AbelianGroup a =
 identityMatrix : Field.Field a -> Int -> Matrix a
 identityMatrix field dimension =
     Matrix (List.Extra.initialize dimension (\columnIndex -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (Internal.Matrix.diagonal field columnIndex)))
+
+
+{-| Create square Matrix with n dimension filled with zeros
+-}
+zeroSquareMatrix : Field.Field a -> Int -> Matrix a
+zeroSquareMatrix field dimension =
+    Matrix (List.Extra.initialize dimension (\_ -> RowVector <| Vector.Vector <| List.Extra.initialize dimension (\_ -> field.zero)))
 
 
 {-| Scalar multiplication over a Matrix

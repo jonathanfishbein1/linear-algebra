@@ -5,43 +5,43 @@ module Vector exposing
     , AbelianGroup
     , VectorSpace
     , InnerProductSpace
-    , addVectors
-    , map
-    , equal
-    , apply
-    , liftA2
-    , foldl
-    , vectorDotProduct
-    , concat
+    , realVectorSpace
+    , realVectorAbelianGroup
+    , realInnerProductSpace
+    , complexVectorSpace
+    , complexVectorAbelianGroup
+    , complexInnerProductSpace
+    , scalarMultiplication
     , vectorLength
+    , normalise
+    , addVectors
+    , subtractVectors
+    , vectorDotProduct
     , cross
     , distance
-    , normalise
-    , subtractVectors
-    , vector3ToVector
+    , vectorTensorProduct
     , dimension
     , vectorSubspace
-    , append
     , concatEmpty
+    , append
+    , concat
+    , map
     , pure
+    , apply
+    , liftA2
     , bind
+    , foldl
+    , equal
     , findIndex
     , getAt
+    , setAt
     , parseVector
     , printRealVector
     , printComplexVector
     , readRealVector
     , readComplexVector
-    , setAt
-    , vectorTensorProduct
-    , scalarMultiplication
-    , realVectorSpace
-    , realVectorAbelianGroup
-    , realInnerProductSpace
+    , vector3ToVector
     , negativeOrPositiveFloat
-    , complexVectorSpace
-    , complexVectorAbelianGroup
-    , complexInnerProductSpace
     )
 
 {-| A module for Vectors
@@ -56,43 +56,74 @@ module Vector exposing
 @docs VectorSpace
 @docs InnerProductSpace
 
-@docs addVectors
-@docs map
-@docs equal
-@docs apply
-@docs liftA2
-@docs foldl
-@docs vectorDotProduct
-@docs concat
+
+# Values
+
+@docs realVectorSpace
+@docs realVectorAbelianGroup
+@docs realInnerProductSpace
+@docs complexVectorSpace
+@docs complexVectorAbelianGroup
+@docs complexInnerProductSpace
+
+
+# Unitary Operations
+
+@docs scalarMultiplication
 @docs vectorLength
+@docs normalise
+
+
+# Binary Operations
+
+@docs addVectors
+@docs subtractVectors
+@docs vectorDotProduct
 @docs cross
 @docs distance
-@docs normalise
-@docs subtractVectors
-@docs vector3ToVector
+@docs vectorTensorProduct
+
+
+# Vector Properties
+
 @docs dimension
 @docs vectorSubspace
-@docs append
+
+
+# Monoid
+
 @docs concatEmpty
+@docs append
+@docs concat
+
+
+# Functor, Applicative, Monad, Foldable
+
+@docs map
 @docs pure
+@docs apply
+@docs liftA2
 @docs bind
+@docs foldl
+
+
+# Equality
+
+@docs equal
+
+
+# Manipulation
+
 @docs findIndex
 @docs getAt
+@docs setAt
 @docs parseVector
 @docs printRealVector
 @docs printComplexVector
 @docs readRealVector
 @docs readComplexVector
-@docs setAt
-@docs vectorTensorProduct
-@docs scalarMultiplication
-@docs realVectorSpace
-@docs realVectorAbelianGroup
-@docs realInnerProductSpace
+@docs vector3ToVector
 @docs negativeOrPositiveFloat
-@docs complexVectorSpace
-@docs complexVectorAbelianGroup
-@docs complexInnerProductSpace
 
 -}
 

@@ -33,6 +33,9 @@ module Matrix exposing
     , basisOfVectorSpace
     , mDimension
     , nDimension
+    , isRightStochastic
+    , isLeftStochastic
+    , isDoublyStochastic
     , matrixEmpty
     , matrixConcatHorizontal
     , matrixConcatVertical
@@ -112,6 +115,9 @@ module Matrix exposing
 @docs basisOfVectorSpace
 @docs mDimension
 @docs nDimension
+@docs isRightStochastic
+@docs isLeftStochastic
+@docs isDoublyStochastic
 
 
 # Monoid
@@ -568,6 +574,41 @@ isInvertable vectorSpace matrix =
 
         Err msg ->
             Err msg
+
+
+isRightStochastic : Matrix Float -> Bool
+isRightStochastic (Matrix listOfRowVectors) =
+    if isSquareMatrix (Matrix listOfRowVectors) then
+        List.all (\(RowVector (Vector.Vector list)) -> List.sum list == 1) listOfRowVectors
+
+    else
+        False
+
+
+isLeftStochastic : Matrix Float -> Bool
+isLeftStochastic matrix =
+    let
+        (Matrix transposedListOfRowVectors) =
+            transpose matrix
+    in
+    if isSquareMatrix (Matrix transposedListOfRowVectors) then
+        List.all (\(RowVector (Vector.Vector list)) -> List.sum list == 1) transposedListOfRowVectors
+
+    else
+        False
+
+
+isDoublyStochastic : Matrix Float -> Bool
+isDoublyStochastic matrix =
+    if isRightStochastic matrix && isLeftStochastic matrix then
+        let
+            (Matrix listOfRowVectors) =
+                matrix
+        in
+        List.all (\(RowVector (Vector.Vector list)) -> List.all ((>) 0) list) listOfRowVectors
+
+    else
+        False
 
 
 {-| Put a matrix into Upper Triangular Form

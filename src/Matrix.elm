@@ -18,7 +18,7 @@ module Matrix exposing
     , leftNullSpace
     , addMatrices
     , subtractMatrices
-    , multiplyVectorMatrix
+    , multiplyMatrixVector
     , multiplyMatrices
     , dotProduct
     , matrixTensorProduct
@@ -93,7 +93,7 @@ module Matrix exposing
 
 @docs addMatrices
 @docs subtractMatrices
-@docs multiplyVectorMatrix
+@docs multiplyMatrixVector
 @docs multiplyMatrices
 @docs dotProduct
 @docs matrixTensorProduct
@@ -378,16 +378,21 @@ subtractMatrices { subtract } =
 
 {-| Multiply a Vector by a Matrix
 -}
-multiplyVectorMatrix : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Vector.Vector a
-multiplyVectorMatrix innerProductSpace (Matrix matrix) vector =
-    let
-        listOfVectors =
-            matrix
-                |> List.map (\(RowVector vec) -> vec)
-    in
-    Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
-        |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
-        |> Vector.Vector
+multiplyMatrixVector : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Result String (Vector.Vector a)
+multiplyMatrixVector innerProductSpace (Matrix matrix) vector =
+    if nDimension (Matrix matrix) == Vector.dimension vector then
+        let
+            listOfVectors =
+                matrix
+                    |> List.map (\(RowVector vec) -> vec)
+        in
+        Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
+            |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
+            |> Vector.Vector
+            |> Ok
+
+    else
+        Err "Matrix has to have the same number of columns as the vector has rows"
 
 
 {-| Matrix Matrix multiplication

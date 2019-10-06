@@ -169,6 +169,7 @@ module Matrix exposing
 
 import ComplexNumbers
 import Field
+import Float.Extra
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
@@ -579,7 +580,7 @@ isInvertable vectorSpace matrix =
 isRightStochastic : Matrix Float -> Bool
 isRightStochastic (Matrix listOfRowVectors) =
     if isSquareMatrix (Matrix listOfRowVectors) then
-        List.all (\(RowVector (Vector.Vector list)) -> List.sum list == 1) listOfRowVectors
+        List.all (\(RowVector (Vector.Vector list)) -> Float.Extra.equalWithin 1.0e-6 (List.sum list) 1) listOfRowVectors
 
     else
         False
@@ -592,7 +593,7 @@ isLeftStochastic matrix =
             transpose matrix
     in
     if isSquareMatrix (Matrix transposedListOfRowVectors) then
-        List.all (\(RowVector (Vector.Vector list)) -> List.sum list == 1) transposedListOfRowVectors
+        List.all (\(RowVector (Vector.Vector list)) -> Float.Extra.equalWithin 1.0e-6 (List.sum list) 1) transposedListOfRowVectors
 
     else
         False
@@ -605,7 +606,7 @@ isDoublyStochastic matrix =
             (Matrix listOfRowVectors) =
                 matrix
         in
-        List.all (\(RowVector (Vector.Vector list)) -> List.all ((>) 0) list) listOfRowVectors
+        List.all (\(RowVector (Vector.Vector list)) -> List.all ((<=) 0) list) listOfRowVectors
 
     else
         False

@@ -1228,4 +1228,46 @@ suite =
                         Matrix.addMatrices Field.realField matrixTensorProductIK matrixTensorProductJK
                 in
                 Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) matrixTensorProductIJK matrixSumTensorProductIKJK)
+        , Test.test "tests right stochastic" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 0, 1 / 6, 5 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
+                            ]
+
+                    isRightStochastic =
+                        Matrix.isRightStochastic matrix
+                in
+                Expect.true "Is Right Stochastic" isRightStochastic
+        , Test.test "tests left stochastic" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 0, 1 / 6, 5 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
+                            ]
+
+                    isLeftStochastic =
+                        Matrix.isLeftStochastic matrix
+                in
+                Expect.true "Is Left Stochastic" isLeftStochastic
+        , Test.test "tests doubly stochastic" <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 0, 1 / 6, 5 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
+                            ]
+
+                    isDoublyStochastic =
+                        Matrix.isDoublyStochastic matrix
+                in
+                Expect.true "Is Doubly Stochastic" isDoublyStochastic
         ]

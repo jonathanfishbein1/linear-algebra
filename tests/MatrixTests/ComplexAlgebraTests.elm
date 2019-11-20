@@ -299,12 +299,12 @@ suite =
                             ]
 
                     mTimesV =
-                        Matrix.multiplyVectorMatrix Vector.realInnerProductSpace m v
+                        Matrix.multiplyMatrixVector Vector.realInnerProductSpace m v
 
                     expected =
                         Vector.Vector [ 14, 32, 50 ]
                 in
-                Expect.equal mTimesV expected
+                Expect.equal mTimesV (Ok expected)
         , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication respects the conjugate" <|
             \one two three ->
                 let

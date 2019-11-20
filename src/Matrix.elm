@@ -18,7 +18,7 @@ module Matrix exposing
     , leftNullSpace
     , addMatrices
     , subtractMatrices
-    , multiplyVectorMatrix
+    , multiplyMatrixVector
     , multiplyMatrices
     , dotProduct
     , matrixTensorProduct
@@ -33,6 +33,9 @@ module Matrix exposing
     , basisOfVectorSpace
     , mDimension
     , nDimension
+    , isRightStochastic
+    , isLeftStochastic
+    , isDoublyStochastic
     , matrixEmpty
     , matrixConcatHorizontal
     , matrixConcatVertical
@@ -93,7 +96,7 @@ module Matrix exposing
 
 @docs addMatrices
 @docs subtractMatrices
-@docs multiplyVectorMatrix
+@docs multiplyMatrixVector
 @docs multiplyMatrices
 @docs dotProduct
 @docs matrixTensorProduct
@@ -112,6 +115,9 @@ module Matrix exposing
 @docs basisOfVectorSpace
 @docs mDimension
 @docs nDimension
+@docs isRightStochastic
+@docs isLeftStochastic
+@docs isDoublyStochastic
 
 
 # Monoid
@@ -163,6 +169,7 @@ module Matrix exposing
 
 import ComplexNumbers
 import Field
+import Float.Extra
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
@@ -378,16 +385,21 @@ subtractMatrices { subtract } =
 
 {-| Multiply a Vector by a Matrix
 -}
-multiplyVectorMatrix : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Vector.Vector a
-multiplyVectorMatrix innerProductSpace (Matrix matrix) vector =
-    let
-        listOfVectors =
-            matrix
-                |> List.map (\(RowVector vec) -> vec)
-    in
-    Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
-        |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
-        |> Vector.Vector
+multiplyMatrixVector : Vector.InnerProductSpace a -> Matrix a -> Vector.Vector a -> Result String (Vector.Vector a)
+multiplyMatrixVector innerProductSpace (Matrix matrix) vector =
+    if nDimension (Matrix matrix) == Vector.dimension vector then
+        let
+            listOfVectors =
+                matrix
+                    |> List.map (\(RowVector vec) -> vec)
+        in
+        Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
+            |> List.foldl (\(Vector.Vector elem) acc -> acc ++ elem) []
+            |> Vector.Vector
+            |> Ok
+
+    else
+        Err "Matrix has to have the same number of columns as the vector has rows"
 
 
 {-| Matrix Matrix multiplication
@@ -563,6 +575,47 @@ isInvertable vectorSpace matrix =
 
         Err msg ->
             Err msg
+
+
+{-| Predicate if matrix is right stochastic
+-}
+isRightStochastic : Matrix Float -> Bool
+isRightStochastic (Matrix listOfRowVectors) =
+    if isSquareMatrix (Matrix listOfRowVectors) then
+        List.all (\(RowVector (Vector.Vector list)) -> Float.Extra.equalWithin 1.0e-6 (List.sum list) 1) listOfRowVectors
+
+    else
+        False
+
+
+{-| Predicate if matrix is left stochastic
+-}
+isLeftStochastic : Matrix Float -> Bool
+isLeftStochastic matrix =
+    let
+        (Matrix transposedListOfRowVectors) =
+            transpose matrix
+    in
+    if isSquareMatrix (Matrix transposedListOfRowVectors) then
+        List.all (\(RowVector (Vector.Vector list)) -> Float.Extra.equalWithin 1.0e-6 (List.sum list) 1) transposedListOfRowVectors
+
+    else
+        False
+
+
+{-| Predicate if matrix is doubly stochastic
+-}
+isDoublyStochastic : Matrix Float -> Bool
+isDoublyStochastic matrix =
+    if isRightStochastic matrix && isLeftStochastic matrix then
+        let
+            (Matrix listOfRowVectors) =
+                matrix
+        in
+        List.all (\(RowVector (Vector.Vector list)) -> List.all ((<=) 0) list) listOfRowVectors
+
+    else
+        False
 
 
 {-| Put a matrix into Upper Triangular Form

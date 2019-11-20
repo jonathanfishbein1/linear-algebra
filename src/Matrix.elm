@@ -577,6 +577,8 @@ isInvertable vectorSpace matrix =
             Err msg
 
 
+{-| Predicate if matrix is right stochastic
+-}
 isRightStochastic : Matrix Float -> Bool
 isRightStochastic (Matrix listOfRowVectors) =
     if isSquareMatrix (Matrix listOfRowVectors) then
@@ -586,6 +588,8 @@ isRightStochastic (Matrix listOfRowVectors) =
         False
 
 
+{-| Predicate if matrix is left stochastic
+-}
 isLeftStochastic : Matrix Float -> Bool
 isLeftStochastic matrix =
     let
@@ -599,6 +603,8 @@ isLeftStochastic matrix =
         False
 
 
+{-| Predicate if matrix is doubly stochastic
+-}
 isDoublyStochastic : Matrix Float -> Bool
 isDoublyStochastic matrix =
     if isRightStochastic matrix && isLeftStochastic matrix then

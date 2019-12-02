@@ -734,13 +734,13 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
             )
 
 
-{-| Solve a system of linear equations using Gauss-Jordan elimination with explict augmented side column vector
+{-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
 -}
 solve : Vector.VectorSpace a -> Matrix a -> ColumnVector a -> Solution a
-solve vectorSpace matrix (ColumnVector (Vector.Vector b)) =
+solve vectorSpace matrix (ColumnVector (Vector.Vector constants)) =
     let
         matrixB =
-            b
+            constants
                 |> List.map (List.singleton >> Vector.Vector >> RowVector)
                 |> Matrix
 

@@ -678,8 +678,8 @@ gaussJordan vectorSpace matrix =
         |> jordanReduce vectorSpace
 
 
-variablePortion : Matrix a -> Matrix a
-variablePortion matrix =
+coefficientMatrix : Matrix a -> Matrix a
+coefficientMatrix matrix =
     subMatrix 0 (mDimension matrix) 0 (nDimension matrix - 1) matrix
 
 
@@ -692,7 +692,7 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
             gaussJordan vectorSpace (Matrix listOfRowVectors)
 
         (Matrix variableSide) =
-            variablePortion (Matrix listOfRowVectorsRREF)
+            coefficientMatrix (Matrix listOfRowVectorsRREF)
 
         notConstrainedEnough =
             variableSide

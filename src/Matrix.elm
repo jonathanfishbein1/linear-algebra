@@ -118,6 +118,7 @@ module Matrix exposing
 @docs isRightStochastic
 @docs isLeftStochastic
 @docs isDoublyStochastic
+@docs areRowEquivalent
 
 
 # Monoid
@@ -1039,3 +1040,17 @@ realMatrixAbelianGroup =
     , addMatrcs = addMatrices Field.realField
     , subtractMatrcs = subtractMatrices Field.realField
     }
+
+
+{-| Predicate to determine if two matricies are row equivalent
+-}
+areRowEquivalent : Vector.VectorSpace a -> Matrix a -> Matrix a -> Bool
+areRowEquivalent vectorSpace matrixOne matrixTwo =
+    let
+        reducedRowEchelonFormOne =
+            gaussJordan vectorSpace matrixOne
+
+        reducedRowEchelonFormTwo =
+            gaussJordan vectorSpace matrixTwo
+    in
+    reducedRowEchelonFormOne == reducedRowEchelonFormTwo

@@ -1057,11 +1057,4 @@ realMatrixAbelianGroup =
 -}
 areRowEquivalent : Vector.VectorSpace a -> Matrix a -> Matrix a -> Bool
 areRowEquivalent vectorSpace matrixOne matrixTwo =
-    let
-        reducedRowEchelonFormOne =
-            gaussJordan vectorSpace matrixOne
-
-        reducedRowEchelonFormTwo =
-            gaussJordan vectorSpace matrixTwo
-    in
-    reducedRowEchelonFormOne == reducedRowEchelonFormTwo
+    gaussJordan vectorSpace matrixOne == gaussJordan vectorSpace matrixTwo

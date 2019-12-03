@@ -36,6 +36,7 @@ module Matrix exposing
     , isRightStochastic
     , isLeftStochastic
     , isDoublyStochastic
+    , areRowEquivalent
     , matrixEmpty
     , matrixConcatHorizontal
     , matrixConcatVertical

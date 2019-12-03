@@ -1270,4 +1270,23 @@ suite =
                         Matrix.isDoublyStochastic matrix
                 in
                 Expect.true "Is Doubly Stochastic" isDoublyStochastic
+        , Test.test "tests areRowEquivalent" <|
+            \_ ->
+                let
+                    matrixOne =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 0, 1 / 6, 5 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
+                            ]
+
+                    matrixTwo =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 0, 1 / 6, 5 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
+                            ]
+                            |> Matrix.scalarMultiplication Field.realField 2
+                in
+                Expect.true "Are row equivalent" (Matrix.areRowEquivalent Vector.realVectorSpace matrixOne matrixTwo)
         ]

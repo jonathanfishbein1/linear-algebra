@@ -3,6 +3,7 @@ module Matrix exposing
     , ColumnVector(..)
     , Matrix(..)
     , Solution(..)
+    , Consistancy(..)
     , VectorDimension(..)
     , identityMatrix
     , zeroSquareMatrix
@@ -70,6 +71,7 @@ module Matrix exposing
 @docs ColumnVector
 @docs Matrix
 @docs Solution
+@docs Consistancy
 @docs VectorDimension
 
 
@@ -202,10 +204,16 @@ type Matrix a
 
 {-| Type to represent result of Gauss-Jordan reduction
 -}
+type Consistancy a
+    = Consistant (Solution a)
+    | Inconsistant String
+
+
+{-| Type to represent result of Gauss-Jordan reduction if system is consistant
+-}
 type Solution a
     = UniqueSolution (ColumnVector a)
     | InfiniteSolutions { nullity : Int, rank : Int }
-    | NoUniqueSolution String
 
 
 {-| Type to represent vector space such as R, R2, R3
@@ -350,7 +358,7 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 
 {-| Calculate the null space of a matrix
 -}
-nullSpace : Vector.VectorSpace a -> Matrix a -> Solution a
+nullSpace : Vector.VectorSpace a -> Matrix a -> Consistancy a
 nullSpace vectorSpace matrix =
     let
         numberOfRows =
@@ -366,7 +374,7 @@ nullSpace vectorSpace matrix =
 
 {-| Calculate the left nullspace of a Matrix
 -}
-leftNullSpace : Vector.VectorSpace a -> Matrix a -> Solution a
+leftNullSpace : Vector.VectorSpace a -> Matrix a -> Consistancy a
 leftNullSpace vectorSpace =
     transpose >> nullSpace vectorSpace
 
@@ -687,7 +695,7 @@ coefficientMatrix matrix =
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination
 -}
-solveMatrix : Vector.VectorSpace a -> Matrix a -> Solution a
+solveMatrix : Vector.VectorSpace a -> Matrix a -> Consistancy a
 solveMatrix vectorSpace (Matrix listOfRowVectors) =
     let
         (Matrix listOfRowVectorsRREF) =
@@ -715,7 +723,7 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
             List.foldl (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row) [] listOfRowVectorsRREF
     in
     if anyAllZeroExceptAugmentedSide then
-        NoUniqueSolution "No Unique Solution"
+        Inconsistant "No Unique Solution"
 
     else if notConstrainedEnough then
         let
@@ -727,6 +735,7 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
                 nDimension (Matrix listOfRowVectorsRREF) - rank
         in
         InfiniteSolutions { nullity = nullity, rank = rank }
+            |> Consistant
 
     else
         UniqueSolution
@@ -734,11 +743,12 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
                 |> Vector.Vector
                 |> ColumnVector
             )
+            |> Consistant
 
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
 -}
-solve : Vector.VectorSpace a -> Matrix a -> ColumnVector a -> Solution a
+solve : Vector.VectorSpace a -> Matrix a -> ColumnVector a -> Consistancy a
 solve vectorSpace matrix (ColumnVector (Vector.Vector constants)) =
     let
         matrixB =
@@ -775,7 +785,7 @@ areLinearlyIndependent vectorSpace listOfVectors =
                 |> ColumnVector
     in
     case matrixNullSpace of
-        UniqueSolution resultVector ->
+        Consistant (UniqueSolution resultVector) ->
             if resultVector == zeroVector then
                 True
 

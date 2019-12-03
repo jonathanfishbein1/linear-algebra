@@ -53,7 +53,7 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.UniqueSolution expected)
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.Consistant (Matrix.UniqueSolution expected))
         , Test.test "tests matrix gaussJordan produces correct answers second example" <|
             \_ ->
                 let
@@ -73,7 +73,7 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ 5, -1.0, -1.0 ]
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.UniqueSolution expected)
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.Consistant (Matrix.UniqueSolution expected))
         , Test.test "tests matrix gaussJordan with no solutions" <|
             \_ ->
                 let
@@ -90,7 +90,7 @@ suite =
                     reducedRowEchelonFormMatrix =
                         Matrix.solve Vector.realVectorSpace matrix b
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.NoUniqueSolution "No Unique Solution")
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.Inconsistant "No Unique Solution")
         , Test.test "tests matrix gaussJordan with infinite solutions" <|
             \_ ->
                 let
@@ -107,7 +107,7 @@ suite =
                     reducedRowEchelonFormMatrix =
                         Matrix.solve Vector.realVectorSpace matrix b
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
         , Test.test "tests matrix null space calculation" <|
             \_ ->
                 let
@@ -123,7 +123,7 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ 0, 0 ]
                 in
-                Expect.equal nullSpace (Matrix.UniqueSolution expected)
+                Expect.equal nullSpace (Matrix.Consistant (Matrix.UniqueSolution expected))
         , Test.test "tests matrix linearlyIndependent" <|
             \_ ->
                 let
@@ -353,7 +353,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
                             ]
                 in
-                Expect.equal (Matrix.solveMatrix Vector.realVectorSpace matrix) (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
+                Expect.equal (Matrix.solveMatrix Vector.realVectorSpace matrix) (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
         , Test.test "tests basisOfVectorSpace returns R2 basis vectors" <|
             \_ ->
                 let

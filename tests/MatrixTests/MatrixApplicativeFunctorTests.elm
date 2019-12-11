@@ -11,7 +11,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Tests Applicative Functor abstraction for Matrix"
-        [ Test.fuzz Fuzz.int "tests first applicative law for Matrix" <|
+        [ Test.fuzz
+            Fuzz.int
+            "tests first applicative law for Matrix"
+          <|
             \one ->
                 let
                     mIdentity =
@@ -24,7 +27,12 @@ suite =
                         Matrix.apply mIdentity m
                 in
                 Expect.equal mApplied m
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests second applicative law for Matrix" <|
+        , Test.fuzz3
+            Fuzz.int
+            Fuzz.int
+            Fuzz.int
+            "tests second applicative law for Matrix"
+          <|
             \one two three ->
                 let
                     f =
@@ -49,7 +57,10 @@ suite =
                         Matrix.apply u (Matrix.apply v w)
                 in
                 Expect.equal leftSide rightSide
-        , Test.fuzz Fuzz.int "tests third applicative law for Matrix" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests third applicative law for Matrix"
+          <|
             \one ->
                 let
                     f =
@@ -65,7 +76,10 @@ suite =
                         Matrix.apply pureF pureOne
                 in
                 Expect.equal mApplied (Matrix.pure <| f one)
-        , Test.fuzz Fuzz.int "tests fourth applicative law for Matrix" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests fourth applicative law for Matrix"
+          <|
             \one ->
                 let
                     pureOne =

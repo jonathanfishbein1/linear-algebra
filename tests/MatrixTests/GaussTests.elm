@@ -11,7 +11,9 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
-        [ Test.test "tests gaussianReduce put matrix into Row Echelon Form" <|
+        [ Test.test
+            "tests gaussianReduce put matrix into Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
@@ -32,7 +34,9 @@ suite =
                             ]
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduce produces correct answers second example" <|
+        , Test.test
+            "tests gaussianReduce produces correct answers second example"
+          <|
             \_ ->
                 let
                     matrix =
@@ -53,7 +57,9 @@ suite =
                             ]
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduce with infinite solutions" <|
+        , Test.test
+            "tests gaussianReduce with infinite solutions"
+          <|
             \_ ->
                 let
                     matrix =
@@ -74,7 +80,9 @@ suite =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduce with infinite solutions two" <|
+        , Test.test
+            "tests gaussianReduce with infinite solutions two"
+          <|
             \_ ->
                 let
                     matrix =
@@ -93,7 +101,9 @@ suite =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduce with no solutions" <|
+        , Test.test
+            "tests gaussianReduce with no solutions"
+          <|
             \_ ->
                 let
                     matrix =
@@ -114,7 +124,9 @@ suite =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduce wikibooks example" <|
+        , Test.test
+            "tests gaussianReduce wikibooks example"
+          <|
             \_ ->
                 let
                     matrix =
@@ -135,7 +147,9 @@ suite =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests matrix gaussianReduce put matrix into Row Echelon Form" <|
+        , Test.test
+            "tests matrix gaussianReduce put matrix into Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
@@ -156,7 +170,9 @@ suite =
                             ]
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduceComplex put complex matrix into Row Echelon Form" <|
+        , Test.test
+            "tests gaussianReduceComplex put complex matrix into Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
@@ -177,7 +193,9 @@ suite =
                             ]
                 in
                 Expect.true "matrics equal" (Matrix.equal ComplexNumbers.equal rowEchelonFormMatrix expected)
-        , Test.test "tests gaussianReduceComplex put complex matrix into Row Echelon Form complex entries with imaginary portion" <|
+        , Test.test
+            "tests gaussianReduceComplex put complex matrix into Row Echelon Form complex entries with imaginary portion"
+          <|
             \_ ->
                 let
                     complexNumberR1C1 =

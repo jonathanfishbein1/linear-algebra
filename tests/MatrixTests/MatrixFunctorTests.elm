@@ -10,7 +10,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Tests Functor abstraction for Matrix"
-        [ Test.fuzz Fuzz.int "tests Matrix mapped with identity is the same" <|
+        [ Test.fuzz
+            Fuzz.int
+            "tests Matrix mapped with identity is the same"
+          <|
             \one ->
                 let
                     m =
@@ -23,7 +26,10 @@ suite =
                         Matrix.map identity m
                 in
                 Expect.equal m mPrime
-        , Test.fuzz Fuzz.int "tests Matrix Functor composition" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests Matrix Functor composition"
+          <|
             \one ->
                 let
                     m =

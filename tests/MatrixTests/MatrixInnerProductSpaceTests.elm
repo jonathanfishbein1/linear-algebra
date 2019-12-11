@@ -13,7 +13,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Inner Product Matrix Space"
-        [ Test.fuzz (Fuzz.map Basics.toFloat Fuzz.int) "tests dot product is nondegenerative" <|
+        [ Test.fuzz
+            (Fuzz.map Basics.toFloat Fuzz.int)
+            "tests dot product is nondegenerative"
+          <|
             \one ->
                 let
                     a =
@@ -29,7 +32,12 @@ suite =
 
                     Err err ->
                         Expect.fail "0 or less"
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests dot product respects addition" <|
+        , Test.fuzz3
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests dot product respects addition"
+          <|
             \one two three ->
                 let
                     a =
@@ -55,7 +63,12 @@ suite =
                 in
                 aPlusBDotc
                     |> Expect.equal aDotBPlusbDotC
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests dot product respects scalar multiplication" <|
+        , Test.fuzz3
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests dot product respects scalar multiplication"
+          <|
             \one two three ->
                 let
                     a =
@@ -72,7 +85,11 @@ suite =
                 in
                 threeTimesADotB
                     |> Expect.equal aDotBTimesThree
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests dot product is symetric" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests dot product is symetric"
+          <|
             \one two ->
                 let
                     a =
@@ -89,7 +106,10 @@ suite =
                 in
                 aDotB
                     |> Expect.equal bDotA
-        , Test.fuzz Fuzz.float "tests matrix norm is nondegenerative" <|
+        , Test.fuzz
+            Fuzz.float
+            "tests matrix norm is nondegenerative"
+          <|
             \one ->
                 let
                     a =
@@ -104,7 +124,11 @@ suite =
 
                     Err err ->
                         Expect.fail err
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix norm satisfies triangle inequality" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests matrix norm satisfies triangle inequality"
+          <|
             \one two ->
                 let
                     a =
@@ -130,7 +154,11 @@ suite =
 
                     Err err ->
                         Expect.fail err
-        , Test.fuzz2 (Fuzz.floatRange -10 10) (Fuzz.floatRange -10 10) "tests matrix norm respects scalar multiplication" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix norm respects scalar multiplication"
+          <|
             \one two ->
                 let
                     a =

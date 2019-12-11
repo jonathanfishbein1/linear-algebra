@@ -13,7 +13,11 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
-        [ Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivot find row with pivot entry" <|
+        [ Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests matrix findPivot find row with pivot entry"
+          <|
             \one two ->
                 let
                     m1 =
@@ -31,7 +35,11 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivot find row with pivot entry two" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests matrix findPivot find row with pivot entry two"
+          <|
             \one two ->
                 let
                     m1 =
@@ -50,7 +58,11 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivotComplex find row with pivot entry" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests matrix findPivotComplex find row with pivot entry"
+          <|
             \one two ->
                 let
                     complexNumberOne =
@@ -86,7 +98,11 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix findPivotComplex find row with pivot entry two" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests matrix findPivotComplex find row with pivot entry two"
+          <|
             \one two ->
                 let
                     complexNumberOne =
@@ -123,7 +139,11 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales first element to one" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests matrix scale scales first element to one"
+          <|
             \one two ->
                 let
                     row =
@@ -141,7 +161,11 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix complex scale scales first element to one" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests matrix complex scale scales first element to one"
+          <|
             \one two ->
                 let
                     complexNumberOne =
@@ -177,7 +201,9 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
-        , Test.test "tests matrix scale scales empty Vector" <|
+        , Test.test
+            "tests matrix scale scales empty Vector"
+          <|
             \_ ->
                 let
                     row =
@@ -187,7 +213,9 @@ suite =
                         Internal.Matrix.scale Vector.realVectorSpace 0 row
                 in
                 Expect.equal (Vector.Vector scaledRow) (Vector.Vector [])
-        , Test.test "tests matrix complex scale scales empty Vector" <|
+        , Test.test
+            "tests matrix complex scale scales empty Vector"
+          <|
             \_ ->
                 let
                     row =
@@ -197,7 +225,9 @@ suite =
                         Internal.Matrix.scale Vector.complexVectorSpace 0 row
                 in
                 Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [])
-        , Test.test "tests matrix complex scale scales Vector" <|
+        , Test.test
+            "tests matrix complex scale scales Vector"
+          <|
             \_ ->
                 let
                     complexNumberOne =
@@ -228,7 +258,11 @@ suite =
                         ComplexNumbers.divide complexNumberTwo complexNumberOne
                 in
                 Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [ ComplexNumbers.one, secondElement ])
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scale scales second element by first" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests matrix scale scales second element by first"
+          <|
             \one two ->
                 let
                     row =
@@ -246,7 +280,11 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix subrow has zero under pivot entry" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests matrix subrow has zero under pivot entry"
+          <|
             \one two ->
                 let
                     currentRow =
@@ -267,7 +305,11 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange 1 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix subtractComplexRow has zero under pivot entry" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests matrix subtractComplexRow has zero under pivot entry"
+          <|
             \one two ->
                 let
                     complexNumberOne =

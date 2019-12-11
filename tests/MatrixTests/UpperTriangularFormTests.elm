@@ -11,7 +11,9 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
-        [ Test.test "tests gaussianReduce put matrix into Row Echelon Form" <|
+        [ Test.test
+            "tests gaussianReduce put matrix into Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
@@ -32,7 +34,9 @@ suite =
                             ]
                 in
                 Expect.equal upperTriangularFormMatrix (Ok expected)
-        , Test.test "tests gaussianReduce put complex matrix into Row Echelon Form" <|
+        , Test.test
+            "tests gaussianReduce put complex matrix into Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
@@ -58,7 +62,9 @@ suite =
 
                     Err error ->
                         Expect.fail error
-        , Test.test "tests upperTriangleComplex puts matrix into upper tirangle form" <|
+        , Test.test
+            "tests upperTriangleComplex puts matrix into upper tirangle form"
+          <|
             \_ ->
                 let
                     complexNumberR1C1 =

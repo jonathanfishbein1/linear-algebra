@@ -59,7 +59,10 @@ suite =
                         Matrix.dotProduct Vector.realInnerProductSpace b c
 
                     aDotBPlusbDotC =
-                        Result.map2 (+) aDotB bDotC
+                        Result.map2
+                            (+)
+                            aDotB
+                            bDotC
                 in
                 aPlusBDotc
                     |> Expect.equal aDotBPlusbDotC
@@ -81,7 +84,10 @@ suite =
                         Matrix.dotProduct Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField three a) b
 
                     aDotBTimesThree =
-                        Result.map2 (*) (Matrix.dotProduct Vector.realInnerProductSpace a b) (Ok three)
+                        Result.map2
+                            (*)
+                            (Matrix.dotProduct Vector.realInnerProductSpace a b)
+                            (Ok three)
                 in
                 threeTimesADotB
                     |> Expect.equal aDotBTimesThree
@@ -141,7 +147,10 @@ suite =
                         Matrix.matrixNorm Vector.realInnerProductSpace <| Matrix.addMatrices Field.realField a b
 
                     lengthAPlusLengthB =
-                        Result.map2 (+) (Matrix.matrixNorm Vector.realInnerProductSpace a) (Matrix.matrixNorm Vector.realInnerProductSpace b)
+                        Result.map2
+                            (+)
+                            (Matrix.matrixNorm Vector.realInnerProductSpace a)
+                            (Matrix.matrixNorm Vector.realInnerProductSpace b)
                 in
                 case aPlusBLength of
                     Ok aBLength ->
@@ -168,7 +177,9 @@ suite =
                         Matrix.matrixNorm Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField two a)
 
                     lengthOfATimesTwo =
-                        Result.map ((*) two >> Basics.abs) (Matrix.matrixNorm Vector.realInnerProductSpace a)
+                        Result.map
+                            ((*) two >> Basics.abs)
+                            (Matrix.matrixNorm Vector.realInnerProductSpace a)
                 in
                 case legnthOfTwoTimesA of
                     Ok twoAL ->

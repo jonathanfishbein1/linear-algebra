@@ -281,7 +281,10 @@ suite =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.addMatrices Field.realField m2 m3) m1
 
                     m2Timesm1Plusm3Timesm1 =
-                        Result.map2 (Matrix.addMatrices Field.realField) (Matrix.multiplyMatrices Vector.realInnerProductSpace m2 m1) (Matrix.multiplyMatrices Vector.realInnerProductSpace m3 m1)
+                        Result.map2
+                            (Matrix.addMatrices Field.realField)
+                            (Matrix.multiplyMatrices Vector.realInnerProductSpace m2 m1)
+                            (Matrix.multiplyMatrices Vector.realInnerProductSpace m3 m1)
                 in
                 Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
         , Test.fuzz3
@@ -392,7 +395,10 @@ suite =
                         Matrix.multiplyMatrices Vector.complexInnerProductSpace (Matrix.conjugate a) (Matrix.conjugate b)
 
                     result =
-                        Result.map2 (Matrix.equal ComplexNumbers.equal) aTimebThenConjugate cTimesm1ThenTimesm2
+                        Result.map2
+                            (Matrix.equal ComplexNumbers.equal)
+                            aTimebThenConjugate
+                            cTimesm1ThenTimesm2
                 in
                 Expect.equal result (Ok True)
         , Test.fuzz3
@@ -433,7 +439,10 @@ suite =
                         Matrix.multiplyMatrices Vector.complexInnerProductSpace (Matrix.adjoint a) (Matrix.adjoint b)
 
                     result =
-                        Result.map2 (Matrix.equal ComplexNumbers.equal) aTimebThenAdjoint bAdjointTimesAAdjoint
+                        Result.map2
+                            (Matrix.equal ComplexNumbers.equal)
+                            aTimebThenAdjoint
+                            bAdjointTimesAAdjoint
                 in
                 Expect.equal result (Ok True)
         ]

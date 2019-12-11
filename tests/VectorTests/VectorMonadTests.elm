@@ -10,7 +10,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Tests Monad abstraction for Vector"
-        [ Test.fuzz Fuzz.int "tests Vector Monad left identity" <|
+        [ Test.fuzz
+            Fuzz.int
+            "tests Vector Monad left identity"
+          <|
             \one ->
                 let
                     f a =
@@ -24,7 +27,10 @@ suite =
                         f one
                 in
                 Expect.equal leftSide rightSide
-        , Test.fuzz Fuzz.int "tests Vector Monad right identity" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests Vector Monad right identity"
+          <|
             \one ->
                 let
                     m =
@@ -34,7 +40,10 @@ suite =
                         Vector.bind m Vector.pure
                 in
                 Expect.equal leftSide m
-        , Test.fuzz Fuzz.int "tests Vector Monad associativity" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests Vector Monad associativity"
+          <|
             \one ->
                 let
                     m =

@@ -13,7 +13,12 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The Vector module"
-        [ Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests cross product is orthagonal to both vectors" <|
+        [ Test.fuzz3
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests cross product is orthagonal to both vectors"
+          <|
             \one two three ->
                 let
                     a =
@@ -31,7 +36,10 @@ suite =
                 in
                 aDotACrossB
                     |> Expect.equal 0
-        , Test.fuzz (Fuzz.map toFloat (Fuzz.intRange 1 10)) "tests unit vector length is 1" <|
+        , Test.fuzz
+            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            "tests unit vector length is 1"
+          <|
             \one ->
                 let
                     a =
@@ -43,7 +51,11 @@ suite =
                 in
                 normalisedALength
                     |> Expect.equal 1
-        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests realVectorSubspace" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            "tests realVectorSubspace"
+          <|
             \one two ->
                 let
                     vectors =
@@ -66,7 +78,11 @@ suite =
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
-        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests realVectorSubspace x > 10 not a subspace" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            "tests realVectorSubspace x > 10 not a subspace"
+          <|
             \one two ->
                 let
                     vectors =
@@ -89,7 +105,11 @@ suite =
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
-        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests complexVectorSubspace" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            "tests complexVectorSubspace"
+          <|
             \one two ->
                 let
                     complexNumber =
@@ -118,7 +138,11 @@ suite =
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
-        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests complexVectorSubspace x > zero not a subspace" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            "tests complexVectorSubspace x > zero not a subspace"
+          <|
             \one two ->
                 let
                     complexNumber =
@@ -156,21 +180,33 @@ suite =
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "getAt index" <|
+        , Test.fuzz3
+            Fuzz.int
+            Fuzz.int
+            Fuzz.int
+            "getAt index"
+          <|
             \one two three ->
                 let
                     vector =
                         Vector.Vector [ one, two, three ]
                 in
                 Expect.equal (Vector.getAt 0 vector) (Just one)
-        , Test.fuzz Fuzz.int "setAt getAt index" <|
+        , Test.fuzz
+            Fuzz.int
+            "setAt getAt index"
+          <|
             \one ->
                 let
                     vector =
                         Vector.setAt 0 one (Vector.Vector [ 0 ])
                 in
                 Expect.equal (Vector.getAt 0 vector) (Just one)
-        , Test.fuzz2 Fuzz.float Fuzz.float "read Vector" <|
+        , Test.fuzz2
+            Fuzz.float
+            Fuzz.float
+            "read Vector"
+          <|
             \one two ->
                 let
                     vector =
@@ -183,7 +219,11 @@ suite =
                         Vector.readRealVector printedVector
                 in
                 Expect.equal readVector (Ok vector)
-        , Test.fuzz2 Fuzz.float Fuzz.float "tests subtractRealVectors" <|
+        , Test.fuzz2
+            Fuzz.float
+            Fuzz.float
+            "tests subtractRealVectors"
+          <|
             \one two ->
                 let
                     vectorOne =
@@ -196,7 +236,9 @@ suite =
                         Vector.subtractVectors Field.realField vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ 0, 0 ])
-        , Test.test "tests vector tensor product" <|
+        , Test.test
+            "tests vector tensor product"
+          <|
             \_ ->
                 let
                     vectorOne =
@@ -209,7 +251,12 @@ suite =
                         Vector.vectorTensorProduct Field.realField vectorOne vectorTwo
                 in
                 Expect.equal vectorTensorProduct (Vector.Vector [ 3, 4, 6, 8 ])
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector tensor product respects addition" <|
+        , Test.fuzz3
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests vector tensor product respects addition"
+          <|
             \one two three ->
                 let
                     vectorI =
@@ -237,7 +284,12 @@ suite =
                         Vector.addVectors Field.realField vectorTensorProductIK vectorTensorProductJK
                 in
                 Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) vectorTensorProductIJK vectorSumTensorProductIKJK)
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests vector tensor product respects scalar multiplication" <|
+        , Test.fuzz3
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            "tests vector tensor product respects scalar multiplication"
+          <|
             \one two three ->
                 let
                     complexNumberOne =

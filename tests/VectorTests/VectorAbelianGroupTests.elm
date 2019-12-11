@@ -12,7 +12,11 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Vector Abelian Group Tests"
-        [ Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Vector add is commutative" <|
+        [ Test.fuzz2
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            "tests Vector add is commutative"
+          <|
             \one two ->
                 let
                     v =
@@ -53,7 +57,12 @@ suite =
                 in
                 Vector.addVectors ComplexNumbers.complexField v w
                     |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
-        , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Vector add is associative" <|
+        , Test.fuzz3
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            "tests Vector add is associative"
+          <|
             \one two three ->
                 let
                     v =
@@ -120,7 +129,11 @@ suite =
                 in
                 Vector.addVectors ComplexNumbers.complexField v w
                     |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
-        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests empty vector is additive identity" <|
+        , Test.fuzz2
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            "tests empty vector is additive identity"
+          <|
             \one two ->
                 let
                     w =
@@ -136,7 +149,11 @@ suite =
                 in
                 Vector.addVectors ComplexNumbers.complexField (Vector.Vector [ ComplexNumbers.zero ]) w
                     |> Expect.equal w
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests vector inverse" <|
+        , Test.fuzz2
+            Fuzz.int
+            Fuzz.int
+            "tests vector inverse"
+          <|
             \one two ->
                 let
                     v =

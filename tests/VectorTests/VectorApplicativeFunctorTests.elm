@@ -10,7 +10,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Tests Applicative Functor abstraction for Vector"
-        [ Test.fuzz Fuzz.int "tests first applicative law for Vector" <|
+        [ Test.fuzz
+            Fuzz.int
+            "tests first applicative law for Vector"
+          <|
             \one ->
                 let
                     vIdentity =
@@ -23,7 +26,10 @@ suite =
                         Vector.apply vIdentity v
                 in
                 Expect.equal vApplied v
-        , Test.fuzz Fuzz.int "tests second applicative law for Vector" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests second applicative law for Vector"
+          <|
             \one ->
                 let
                     f =
@@ -48,7 +54,10 @@ suite =
                         Vector.apply u (Vector.apply v w)
                 in
                 Expect.equal leftSide rightSide
-        , Test.fuzz Fuzz.int "tests third applicative law for Vector" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests third applicative law for Vector"
+          <|
             \one ->
                 let
                     f =
@@ -64,7 +73,10 @@ suite =
                         Vector.apply pureF pureOne
                 in
                 Expect.equal vApplied (Vector.pure <| f one)
-        , Test.fuzz Fuzz.int "tests fourth applicative law for Vector" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests fourth applicative law for Vector"
+          <|
             \one ->
                 let
                     pureOne =

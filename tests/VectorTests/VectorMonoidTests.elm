@@ -10,7 +10,11 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
-        [ Test.fuzz2 Fuzz.float Fuzz.float "tests Vector empty or identity value right" <|
+        [ Test.fuzz2
+            Fuzz.float
+            Fuzz.float
+            "tests Vector empty or identity value right"
+          <|
             \one two ->
                 let
                     v =
@@ -26,7 +30,11 @@ suite =
                 in
                 Vector.concat.semigroup.prepend v Vector.concat.identity
                     |> Expect.equal v
-        , Test.fuzz2 Fuzz.float Fuzz.float "tests Vector empty or identity value left" <|
+        , Test.fuzz2
+            Fuzz.float
+            Fuzz.float
+            "tests Vector empty or identity value left"
+          <|
             \one two ->
                 let
                     v =
@@ -42,17 +50,28 @@ suite =
                 in
                 Vector.concat.semigroup.prepend Vector.concat.identity v
                     |> Expect.equal v
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally concat complex vectors" <|
+        , Test.fuzz3
+            Fuzz.int
+            Fuzz.int
+            Fuzz.int
+            "tests monoidally concat complex vectors"
+          <|
             \one two three ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two)
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real one)
+                            (ComplexNumbers.Imaginary two)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three)
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real two)
+                            (ComplexNumbers.Imaginary three)
 
                     complexNumberThree =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary three)
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real one)
+                            (ComplexNumbers.Imaginary three)
 
                     a =
                         Vector.Vector [ complexNumberOne ]
@@ -64,7 +83,11 @@ suite =
                         Vector.Vector [ complexNumberThree ]
 
                     expected =
-                        Vector.Vector [ complexNumberOne, complexNumberTwo, complexNumberThree ]
+                        Vector.Vector
+                            [ complexNumberOne
+                            , complexNumberTwo
+                            , complexNumberThree
+                            ]
 
                     listOfMonoids =
                         [ c, b, a ]

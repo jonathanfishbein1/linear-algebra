@@ -10,7 +10,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Tests Functor abstraction for Vector"
-        [ Test.fuzz Fuzz.int "tests Vector add is commutative" <|
+        [ Test.fuzz
+            Fuzz.int
+            "tests Vector add is commutative"
+          <|
             \one ->
                 let
                     v =
@@ -20,7 +23,10 @@ suite =
                         Vector.map identity v
                 in
                 Expect.equal v vPrime
-        , Test.fuzz Fuzz.int "tests Vector Functor composition" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests Vector Functor composition"
+          <|
             \one ->
                 let
                     v =

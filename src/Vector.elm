@@ -383,7 +383,9 @@ append (Vector listOne) (Vector listTwo) =
 -}
 concat : Typeclasses.Classes.Monoid.Monoid (Vector a)
 concat =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend append) concatEmpty
+    Typeclasses.Classes.Monoid.semigroupAndIdentity
+        (Typeclasses.Classes.Semigroup.prepend append)
+        concatEmpty
 
 
 {-| Convert a Vector3 type to a Vector type
@@ -402,7 +404,12 @@ dimension (Vector list) =
 
 {-| Determine whether a list of Vectors makes a Subspace
 -}
-vectorSubspace : AbelianGroup a -> Scalar a -> List (Vector a) -> List (a -> Bool) -> Bool
+vectorSubspace :
+    AbelianGroup a
+    -> Scalar a
+    -> List (Vector a)
+    -> List (a -> Bool)
+    -> Bool
 vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
     let
         testZeroVector =
@@ -551,7 +558,9 @@ readRealVector vectorString =
 
 {-| Try to read a string into a Complex Vector
 -}
-readComplexVector : String -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumberCartesian Float))
+readComplexVector :
+    String
+    -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumberCartesian Float))
 readComplexVector vectorString =
     Parser.run (parseVector ComplexNumbers.parseComplexNumber) vectorString
 

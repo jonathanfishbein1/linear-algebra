@@ -13,8 +13,8 @@ suite : Test.Test
 suite =
     Test.describe "Vector Abelian Group Tests"
         [ Test.fuzz2
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            Fuzz.float
+            Fuzz.float
             "tests Vector add is commutative"
           <|
             \one two ->
@@ -58,9 +58,9 @@ suite =
                 Vector.addVectors ComplexNumbers.complexField v w
                     |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
         , Test.fuzz3
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
             "tests Vector add is associative"
           <|
             \one two three ->
@@ -130,8 +130,8 @@ suite =
                 Vector.addVectors ComplexNumbers.complexField v w
                     |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
         , Test.fuzz2
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            Fuzz.float
+            Fuzz.float
             "tests empty vector is additive identity"
           <|
             \one two ->

@@ -13,8 +13,8 @@ suite : Test.Test
 suite =
     Test.describe "Vector Space Tests"
         [ Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests one is product identity"
           <|
             \one two ->
@@ -82,8 +82,8 @@ suite =
                 c2VThenc1
                     |> Expect.equal c1c2ThenV
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests scalar multiplication distributes over addition"
           <|
             \one two ->
@@ -139,8 +139,8 @@ suite =
                 in
                 Expect.true "All elements equal" result
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests scalar multiplication distributes over complex addition"
           <|
             \one two ->

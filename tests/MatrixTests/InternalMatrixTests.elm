@@ -14,8 +14,8 @@ suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
         [ Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange 1 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
             "tests matrix findPivot find row with pivot entry"
           <|
             \one two ->
@@ -36,8 +36,8 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange 1 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
             "tests matrix findPivot find row with pivot entry two"
           <|
             \one two ->
@@ -59,8 +59,8 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange 1 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
             "tests matrix findPivotComplex find row with pivot entry"
           <|
             \one two ->
@@ -99,8 +99,8 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange 1 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
             "tests matrix findPivotComplex find row with pivot entry two"
           <|
             \one two ->
@@ -140,8 +140,8 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange 1 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
             "tests matrix scale scales first element to one"
           <|
             \one two ->
@@ -162,8 +162,8 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange 1 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
             "tests matrix complex scale scales first element to one"
           <|
             \one two ->
@@ -259,8 +259,8 @@ suite =
                 in
                 Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [ ComplexNumbers.one, secondElement ])
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange 1 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
             "tests matrix scale scales second element by first"
           <|
             \one two ->
@@ -281,8 +281,8 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange 1 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
             "tests matrix subrow has zero under pivot entry"
           <|
             \one two ->
@@ -306,8 +306,8 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange 1 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
             "tests matrix subtractComplexRow has zero under pivot entry"
           <|
             \one two ->

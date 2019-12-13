@@ -14,9 +14,9 @@ suite : Test.Test
 suite =
     Test.describe "Matrix Abelian Group Tests"
         [ Test.fuzz3
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
             "tests Matrix add is commutative"
           <|
             \one two three ->

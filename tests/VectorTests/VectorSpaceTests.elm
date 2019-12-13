@@ -32,8 +32,8 @@ suite =
                 in
                 Expect.true "equal" (Vector.equal ComplexNumbers.equal (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
         , Test.fuzz2
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            Fuzz.float
+            Fuzz.float
             "tests scalar multiplication respects complex multiplication"
           <|
             \one two ->

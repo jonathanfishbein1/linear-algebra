@@ -14,9 +14,9 @@ suite : Test.Test
 suite =
     Test.describe "The Vector module"
         [ Test.fuzz3
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests cross product is orthagonal to both vectors"
           <|
             \one two three ->
@@ -35,9 +35,9 @@ suite =
                         Vector.vectorDotProduct Field.realField (Vector.vector3ToVector a) aCrossB
                 in
                 aDotACrossB
-                    |> Expect.equal 0
+                    |> Expect.within (Expect.Absolute 0.000000001) 0
         , Test.fuzz
-            (Fuzz.map toFloat (Fuzz.intRange 1 10))
+            (Fuzz.floatRange 1 10)
             "tests unit vector length is 1"
           <|
             \one ->
@@ -252,9 +252,9 @@ suite =
                 in
                 Expect.equal vectorTensorProduct (Vector.Vector [ 3, 4, 6, 8 ])
         , Test.fuzz3
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests vector tensor product respects addition"
           <|
             \one two three ->
@@ -285,9 +285,9 @@ suite =
                 in
                 Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) vectorTensorProductIJK vectorSumTensorProductIKJK)
         , Test.fuzz3
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests vector tensor product respects scalar multiplication"
           <|
             \one two three ->

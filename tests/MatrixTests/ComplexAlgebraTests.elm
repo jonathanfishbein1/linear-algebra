@@ -13,9 +13,9 @@ suite : Test.Test
 suite =
     Test.describe "Complex Algebra"
         [ Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
             "tests real Matrix multiplication is associative"
           <|
             \one two three ->
@@ -181,9 +181,9 @@ suite =
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
             "tests real Matrix multiplication distributes over addition"
           <|
             \one two three ->
@@ -233,9 +233,9 @@ suite =
                 in
                 Expect.equal m1Timesm2Plus3 m1Timesm2Plusem1Timesm3
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
             "tests real Matrix multiplication distributes over addition second test"
           <|
             \one two three ->
@@ -288,9 +288,9 @@ suite =
                 in
                 Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
             "tests matrix multiplication relates to the transpose"
           <|
             \one two three ->
@@ -343,9 +343,9 @@ suite =
                 in
                 Expect.equal mTimesV (Ok expected)
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
             "tests matrix multiplication respects the conjugate"
           <|
             \one two three ->
@@ -402,9 +402,9 @@ suite =
                 in
                 Expect.equal result (Ok True)
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
             "tests matrix multiplication relates to the adjoint"
           <|
             \one two three ->

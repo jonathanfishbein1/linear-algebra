@@ -164,8 +164,8 @@ suite =
                     Err err ->
                         Expect.fail err
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            Fuzz.float
+            Fuzz.float
             "tests matrix norm respects scalar multiplication"
           <|
             \one two ->

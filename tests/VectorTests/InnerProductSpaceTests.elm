@@ -27,9 +27,9 @@ suite =
                 expected
                     |> Expect.atLeast 0
         , Test.fuzz3
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests dot product respects addition"
           <|
             \one two three ->
@@ -58,12 +58,11 @@ suite =
                     aDotBPlusbDotC =
                         aDotB + bDotC
                 in
-                aPlusBDotc
-                    |> Expect.equal aDotBPlusbDotC
+                Expect.within (Expect.Absolute 0.000000001) aDotBPlusbDotC aPlusBDotc
         , Test.fuzz3
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests dot product respects scalar multiplication"
           <|
             \one two three ->
@@ -83,11 +82,10 @@ suite =
                     aDotBTimesThree =
                         Vector.vectorDotProduct Field.realField a b * three
                 in
-                threeTimesADotB
-                    |> Expect.equal aDotBTimesThree
+                Expect.within (Expect.Absolute 0.000000001) aDotBTimesThree threeTimesADotB
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests dot product is symetric"
           <|
             \one two ->
@@ -104,10 +102,9 @@ suite =
                     bDotA =
                         Vector.vectorDotProduct Field.realField b a
                 in
-                aDotB
-                    |> Expect.equal bDotA
+                Expect.within (Expect.Absolute 0.000000001) bDotA aDotB
         , Test.fuzz
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
             "tests vector length equals square of dot product"
           <|
             \one ->
@@ -122,7 +119,7 @@ suite =
                         Vector.vectorLength Field.realField a
                 in
                 squareRootADotA
-                    |> Expect.equal aLength
+                    |> Expect.within (Expect.Absolute 0.000000001) aLength
         , Test.fuzz
             Fuzz.float
             "tests vector length is nondegenerative"
@@ -138,8 +135,8 @@ suite =
                 expected
                     |> Expect.atLeast 0
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests vector length satisfies triangle inequality"
           <|
             \one two ->
@@ -187,7 +184,7 @@ suite =
                         Basics.abs two * Vector.vectorLength Field.realField a
                 in
                 legnthOfTwoTimesA
-                    |> Expect.within (Expect.Absolute 0.1) lengthOfATimesTwo
+                    |> Expect.within (Expect.Absolute 0.000000001) lengthOfATimesTwo
         , Test.fuzz
             Fuzz.float
             "tests distance is nondegenerative"
@@ -203,9 +200,9 @@ suite =
                 expected
                     |> Expect.atLeast 0
         , Test.fuzz3
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests vector distance satisfies triangle inequality"
           <|
             \one two three ->
@@ -231,8 +228,8 @@ suite =
                 distanceAB
                     |> Expect.atMost (distanceAC + distanceCB)
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests distance is symetric"
           <|
             \one two ->
@@ -256,5 +253,5 @@ suite =
                             a
                 in
                 distanceAB
-                    |> Expect.equal distanceBA
+                    |> Expect.within (Expect.Absolute 0.000000001) distanceBA
         ]

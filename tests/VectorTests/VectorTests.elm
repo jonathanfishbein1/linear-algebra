@@ -52,8 +52,8 @@ suite =
                 normalisedALength
                     |> Expect.equal 1
         , Test.fuzz2
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            Fuzz.float
+            Fuzz.float
             "tests realVectorSubspace"
           <|
             \one two ->
@@ -79,8 +79,8 @@ suite =
                 isSubspace
                     |> Expect.true "is a subspace"
         , Test.fuzz2
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            Fuzz.float
+            Fuzz.float
             "tests realVectorSubspace x > 10 not a subspace"
           <|
             \one two ->
@@ -106,8 +106,8 @@ suite =
                 isSubspace
                     |> Expect.false "is not a subspace"
         , Test.fuzz2
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            Fuzz.float
+            Fuzz.float
             "tests complexVectorSubspace"
           <|
             \one two ->
@@ -139,8 +139,8 @@ suite =
                 isSubspace
                     |> Expect.true "is a subspace"
         , Test.fuzz2
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            Fuzz.float
+            Fuzz.float
             "tests complexVectorSubspace x > zero not a subspace"
           <|
             \one two ->

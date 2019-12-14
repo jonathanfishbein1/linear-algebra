@@ -888,11 +888,7 @@ areLinearlyIndependent vectorSpace listOfVectors =
     in
     case matrixNullSpace of
         Consistant (UniqueSolution resultVector) ->
-            if resultVector == zeroVector then
-                True
-
-            else
-                False
+            resultVector == zeroVector
 
         _ ->
             False
@@ -944,15 +940,9 @@ mDimension (Matrix listOfRowVectors) =
 -}
 areBasis : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> Bool
 areBasis vectorSpace vectorDimension vectors =
-    if
-        doesSetSpanSpace vectorSpace vectorDimension vectors
-            == Ok True
-            && areLinearlyIndependent vectorSpace vectors
-    then
-        True
-
-    else
-        False
+    doesSetSpanSpace vectorSpace vectorDimension vectors
+        == Ok True
+        && areLinearlyIndependent vectorSpace vectors
 
 
 {-| Determine the basis vectors of a vector space

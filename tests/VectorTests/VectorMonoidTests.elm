@@ -24,12 +24,11 @@ suite =
                                     one
                                 )
                                 (ComplexNumbers.Imaginary
-                                    one
+                                    two
                                 )
                             ]
                 in
-                Vector.concat.semigroup.prepend v Vector.concat.identity
-                    |> Expect.equal v
+                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal (Vector.concat.semigroup.prepend v Vector.concat.identity) v)
         , Test.fuzz2
             Fuzz.float
             Fuzz.float
@@ -44,12 +43,11 @@ suite =
                                     one
                                 )
                                 (ComplexNumbers.Imaginary
-                                    one
+                                    two
                                 )
                             ]
                 in
-                Vector.concat.semigroup.prepend Vector.concat.identity v
-                    |> Expect.equal v
+                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal (Vector.concat.semigroup.prepend Vector.concat.identity v) v)
         , Test.fuzz3
             Fuzz.int
             Fuzz.int

@@ -2,9 +2,7 @@ module VectorTests.VectorAbelianGroupTests exposing (suite)
 
 import ComplexNumbers
 import Expect
-import Field
 import Fuzz
-import Parser
 import Test
 import Vector
 

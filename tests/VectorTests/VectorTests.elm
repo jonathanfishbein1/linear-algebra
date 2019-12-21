@@ -5,7 +5,6 @@ import Expect
 import Field
 import Float.Extra
 import Fuzz
-import Parser
 import Test
 import Vector
 
@@ -313,7 +312,7 @@ suite =
                     complexNumberThree =
                         ComplexNumbers.ComplexNumberCartesian
                             (ComplexNumbers.Real
-                                one
+                                three
                             )
                             (ComplexNumbers.Imaginary
                                 two

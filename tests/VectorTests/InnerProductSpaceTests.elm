@@ -1,10 +1,8 @@
 module VectorTests.InnerProductSpaceTests exposing (suite)
 
-import ComplexNumbers
 import Expect
 import Field
 import Fuzz
-import Parser
 import Test
 import Vector
 
@@ -13,7 +11,7 @@ suite : Test.Test
 suite =
     Test.describe "Inner Product Vector Space"
         [ Test.fuzz
-            (Fuzz.map Basics.toFloat Fuzz.int)
+            Fuzz.float
             "tests dot product is nondegenerative"
           <|
             \one ->
@@ -200,9 +198,9 @@ suite =
                 expected
                     |> Expect.atLeast 0
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
             "tests vector distance satisfies triangle inequality"
           <|
             \one two three ->

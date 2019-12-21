@@ -1,6 +1,5 @@
 module VectorTests.VectorFunctorTests exposing (suite)
 
-import ComplexNumbers
 import Expect
 import Fuzz
 import Test

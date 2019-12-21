@@ -275,12 +275,17 @@ subtractVectors { subtract } =
     liftA2 subtract
 
 
+hadamardVectorMultiplication : Field.Field a -> Vector a -> Vector a -> Vector a
+hadamardVectorMultiplication { multiply } =
+    liftA2 multiply
+
+
 {-| Calculate the dot product of two Vectors
 -}
 vectorDotProduct : Field.Field a -> Vector a -> Vector a -> a
-vectorDotProduct { zero, add, multiply } vectorOne vectorTwo =
-    liftA2 multiply vectorOne vectorTwo
-        |> foldl add zero
+vectorDotProduct field vectorOne vectorTwo =
+    hadamardVectorMultiplication field vectorOne vectorTwo
+        |> foldl field.add field.zero
 
 
 {-| Calculate distance between two vectors

@@ -16,6 +16,7 @@ module Vector exposing
     , normalise
     , addVectors
     , subtractVectors
+    , hadamardVectorMultiplication
     , vectorDotProduct
     , cross
     , distance
@@ -78,6 +79,7 @@ module Vector exposing
 
 @docs addVectors
 @docs subtractVectors
+@docs hadamardVectorMultiplication
 @docs vectorDotProduct
 @docs cross
 @docs distance
@@ -275,6 +277,8 @@ subtractVectors { subtract } =
     liftA2 subtract
 
 
+{-| Hadamard Multiplication Vectors
+-}
 hadamardVectorMultiplication : Field.Field a -> Vector a -> Vector a -> Vector a
 hadamardVectorMultiplication { multiply } =
     liftA2 multiply

@@ -26,10 +26,16 @@ suite =
                         Vector.Vector [ two ]
 
                     aHadamardB =
-                        Vector.hadamardVectorMultiplication Field.realField a b
+                        Vector.hadamardVectorMultiplication
+                            Field.realField
+                            a
+                            b
 
                     bhadamardA =
-                        Vector.hadamardVectorMultiplication Field.realField b a
+                        Vector.hadamardVectorMultiplication
+                            Field.realField
+                            b
+                            a
                 in
                 Expect.true "vectors equal" (Vector.equal (==) aHadamardB bhadamardA)
         , Test.fuzz3
@@ -50,12 +56,48 @@ suite =
                         Vector.Vector [ three ]
 
                     aHadamardBHadamardC =
-                        Vector.hadamardVectorMultiplication Field.realField (Vector.hadamardVectorMultiplication Field.realField a b) c
+                        Vector.hadamardVectorMultiplication
+                            Field.realField
+                            (Vector.hadamardVectorMultiplication Field.realField a b)
+                            c
 
                     bHadamardCHadamardA =
-                        Vector.hadamardVectorMultiplication Field.realField a (Vector.hadamardVectorMultiplication Field.realField b c)
+                        Vector.hadamardVectorMultiplication
+                            Field.realField
+                            a
+                            (Vector.hadamardVectorMultiplication Field.realField b c)
                 in
                 Expect.true "vectors equal" (Vector.equal (Float.Extra.equalWithin 0.1) aHadamardBHadamardC bHadamardCHadamardA)
+        , Test.fuzz3
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests hadamard vector multiplication is distributive over addition"
+          <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    c =
+                        Vector.Vector [ three ]
+
+                    aHadamardSumBC =
+                        Vector.hadamardVectorMultiplication
+                            Field.realField
+                            a
+                            (Vector.addVectors Field.realField b c)
+
+                    sumAHadamardBAHadamardC =
+                        Vector.addVectors
+                            Field.realField
+                            (Vector.hadamardVectorMultiplication Field.realField a b)
+                            (Vector.hadamardVectorMultiplication Field.realField a c)
+                in
+                Expect.true "vectors equal" (Vector.equal (Float.Extra.equalWithin 0.1) aHadamardSumBC sumAHadamardBAHadamardC)
         , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)

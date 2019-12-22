@@ -12,7 +12,51 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The Vector module"
-        [ Test.fuzz3
+        [ Test.fuzz2
+            Fuzz.float
+            Fuzz.float
+            "tests hadamard vector multiplication is commutative"
+          <|
+            \one two ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    aHadamardB =
+                        Vector.hadamardVectorMultiplication Field.realField a b
+
+                    bhadamardA =
+                        Vector.hadamardVectorMultiplication Field.realField b a
+                in
+                Expect.true "vectors equal" (Vector.equal (==) aHadamardB bhadamardA)
+        , Test.fuzz3
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests hadamard vector multiplication is associative"
+          <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector [ one ]
+
+                    b =
+                        Vector.Vector [ two ]
+
+                    c =
+                        Vector.Vector [ three ]
+
+                    aHadamardBHadamardC =
+                        Vector.hadamardVectorMultiplication Field.realField (Vector.hadamardVectorMultiplication Field.realField a b) c
+
+                    bHadamardCHadamardA =
+                        Vector.hadamardVectorMultiplication Field.realField a (Vector.hadamardVectorMultiplication Field.realField b c)
+                in
+                Expect.true "vectors equal" (Vector.equal (Float.Extra.equalWithin 0.1) aHadamardBHadamardC bHadamardCHadamardA)
+        , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)

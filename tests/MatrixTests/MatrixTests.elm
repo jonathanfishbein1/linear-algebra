@@ -179,8 +179,8 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.Vector [ 0, 0 ]
-                        , Vector.Vector [ 0, 0 ]
+                        [ Vector.zeroVector Field.realField 2
+                        , Vector.zeroVector Field.realField 2
                         ]
 
                     r2 =
@@ -191,7 +191,7 @@ suite =
                 in
                 Expect.equal result (Ok False)
         , Test.test
-            "tests matrix doesSetSpanSpace with zero vectors 3 dimensions"
+            "tests matrix doesSetSpanSpace with identity matrix 3 dimensions"
           <|
             \_ ->
                 let
@@ -284,8 +284,8 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.Vector [ 0, 0 ]
-                        , Vector.Vector [ 0, 0 ]
+                        [ Vector.zeroVector Field.realField 2
+                        , Vector.zeroVector Field.realField 2
                         ]
 
                     r2 =
@@ -314,7 +314,7 @@ suite =
                 in
                 Expect.false "Vectors are not basis for R3" result
         , Test.test
-            "tests matrix areBasis with zero vectors 3 dimensions"
+            "tests matrix areBasis with identity matrix 3 dimensions"
           <|
             \_ ->
                 let

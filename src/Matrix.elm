@@ -251,14 +251,9 @@ identityMatrix field dimension =
 -}
 zeroSquareMatrix : Field.Field a -> Int -> Matrix a
 zeroSquareMatrix field dimension =
-    Matrix
-        (List.Extra.initialize dimension
-            (\_ ->
-                List.Extra.initialize dimension (Basics.always field.zero)
-                    |> Vector.Vector
-                    |> RowVector
-            )
-        )
+    List.Extra.initialize dimension
+        (Vector.zeroVector field >> RowVector)
+        |> Matrix
 
 
 {-| Scalar multiplication over a Matrix

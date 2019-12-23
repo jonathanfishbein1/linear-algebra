@@ -11,6 +11,7 @@ module Vector exposing
     , complexVectorSpace
     , complexVectorAbelianGroup
     , complexInnerProductSpace
+    , zeroVector
     , scalarMultiplication
     , vectorLength
     , normalise
@@ -66,6 +67,7 @@ module Vector exposing
 @docs complexVectorSpace
 @docs complexVectorAbelianGroup
 @docs complexInnerProductSpace
+@docs zeroVector
 
 
 # Unitary Operations
@@ -235,6 +237,12 @@ complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
     , innerProduct = vectorDotProduct ComplexNumbers.complexField
     }
+
+
+zeroVector : Field.Field a -> Int -> Vector a
+zeroVector { zero } dim =
+    List.Extra.initialize dim (Basics.always zero)
+        |> Vector
 
 
 {-| Scalar multiplication over a Vector

@@ -252,7 +252,10 @@ identityMatrix field dimension =
 zeroSquareMatrix : Field.Field a -> Int -> Matrix a
 zeroSquareMatrix field dimension =
     List.Extra.initialize dimension
-        (Vector.zeroVector field >> RowVector)
+        (\_ ->
+            Vector.zeroVector field dimension
+                |> RowVector
+        )
         |> Matrix
 
 
@@ -875,15 +878,10 @@ areLinearlyIndependent vectorSpace listOfVectors =
 
         numberOfRows =
             List.length listOfRowVectors
-
-        zeroVector =
-            List.repeat numberOfRows vectorSpace.abelianGroup.field.zero
-                |> Vector.Vector
-                |> ColumnVector
     in
     case matrixNullSpace of
         Consistant (UniqueSolution resultVector) ->
-            resultVector == zeroVector
+            resultVector == ColumnVector (Vector.zeroVector vectorSpace.abelianGroup.field numberOfRows)
 
         _ ->
             False

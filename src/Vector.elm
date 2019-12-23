@@ -241,7 +241,7 @@ complexInnerProductSpace =
 
 zeroVector : Field.Field a -> Int -> Vector a
 zeroVector { zero } dim =
-    List.Extra.initialize dim (Basics.always zero)
+    List.repeat dim zero
         |> Vector
 
 

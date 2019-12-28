@@ -337,6 +337,14 @@ map f (Vector vector) =
     Vector <| List.map f vector
 
 
+{-| Map over a vector
+-}
+map2 : (a -> b -> c) -> Vector a -> Vector b -> Vector c
+map2 f (Vector vectorOne) (Vector vectorTwo) =
+    List.map2 f vectorOne vectorTwo
+        |> Vector
+
+
 {-| Place a value in minimal Vector context
 -}
 pure : a -> Vector a
@@ -347,8 +355,8 @@ pure a =
 {-| Apply for Vector
 -}
 apply : Vector (a -> b) -> Vector a -> Vector b
-apply (Vector fVector) (Vector vector) =
-    Vector <| List.map2 (\f x -> f x) fVector vector
+apply fVector vector =
+    map2 (\f x -> f x) fVector vector
 
 
 {-| Lift a binary function to work with Vectors

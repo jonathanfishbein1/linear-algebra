@@ -692,6 +692,13 @@ isDoublyStochastic matrix =
         False
 
 
+{-| Predicate to determine if two matricies are row equivalent
+-}
+areRowEquivalent : Vector.VectorSpace a -> Matrix a -> Matrix a -> Bool
+areRowEquivalent vectorSpace matrixOne matrixTwo =
+    gaussJordan vectorSpace matrixOne == gaussJordan vectorSpace matrixTwo
+
+
 {-| Put a matrix into Upper Triangular Form
 -}
 upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
@@ -1164,10 +1171,3 @@ realMatrixAbelianGroup =
     , addMatrcs = addMatrices Field.realField
     , subtractMatrcs = subtractMatrices Field.realField
     }
-
-
-{-| Predicate to determine if two matricies are row equivalent
--}
-areRowEquivalent : Vector.VectorSpace a -> Matrix a -> Matrix a -> Bool
-areRowEquivalent vectorSpace matrixOne matrixTwo =
-    gaussJordan vectorSpace matrixOne == gaussJordan vectorSpace matrixTwo

@@ -682,13 +682,9 @@ isLeftStochastic matrix =
 isDoublyStochastic : Matrix Float -> Bool
 isDoublyStochastic matrix =
     if isRightStochastic matrix && isLeftStochastic matrix then
-        let
-            (Matrix listOfRowVectors) =
-                matrix
-        in
-        List.all
-            (\(RowVector (Vector.Vector list)) -> List.all ((<=) 0) list)
-            listOfRowVectors
+        all
+            ((<=) 0)
+            matrix
 
     else
         False

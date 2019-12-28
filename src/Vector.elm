@@ -457,15 +457,20 @@ vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
     containsZeroVector && closureUnderScalarMultiplication && closureUnderAddition
 
 
+all : (a -> Bool) -> Vector a -> Bool
+all predicate (Vector list) =
+    List.all predicate list
+
+
 {-| Compare two Vectors for equality
 -}
 equalImplementation : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
 equalImplementation comparator vectorOne vectorTwo =
     let
-        (Vector list) =
+        vector =
             liftA2 comparator vectorOne vectorTwo
     in
-    List.all ((==) True) list
+    all ((==) True) vector
 
 
 {-| `Equal` type for `Vector`.

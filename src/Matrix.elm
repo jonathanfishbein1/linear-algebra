@@ -866,17 +866,15 @@ solve vectorSpace matrix (ColumnVector (Vector.Vector constants)) =
 areLinearlyIndependent : Vector.VectorSpace a -> List (Vector.Vector a) -> Bool
 areLinearlyIndependent vectorSpace listOfVectors =
     let
-        listOfRowVectors =
-            List.map RowVector listOfVectors
-
         matrix =
-            Matrix listOfRowVectors
+            List.map RowVector listOfVectors
+                |> Matrix
 
         matrixNullSpace =
             nullSpace vectorSpace matrix
 
         numberOfRows =
-            List.length listOfRowVectors
+            mDimension matrix
     in
     case matrixNullSpace of
         Consistant (UniqueSolution resultVector) ->

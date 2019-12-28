@@ -397,45 +397,6 @@ suite =
                 in
                 Expect.equal (Matrix.solveMatrix Vector.realVectorSpace matrix) (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
         , Test.test
-            "tests basisOfVectorSpace returns R2 basis vectors"
-          <|
-            \_ ->
-                let
-                    r2BasisVectors =
-                        [ Vector.Vector [ 1, 0 ]
-                        , Vector.Vector [ 0, 1 ]
-                        ]
-
-                    r2 =
-                        Matrix.VectorDimension 2
-
-                    testbasisVectors =
-                        Matrix.basisOfVectorSpace Vector.realVectorSpace r2 r2BasisVectors
-                in
-                Expect.equal r2BasisVectors testbasisVectors
-        , Test.test
-            "tests basisOfVectorSpace returns R2 basis vectors for non basis vectors"
-          <|
-            \_ ->
-                let
-                    r2BasisVectors =
-                        [ Vector.Vector [ 1, 0 ]
-                        , Vector.Vector [ 0, 1 ]
-                        ]
-
-                    testVectors =
-                        [ Vector.Vector [ 1, 0 ]
-                        , Vector.Vector [ 0, 1 ]
-                        ]
-
-                    r2 =
-                        Matrix.VectorDimension 2
-
-                    testbasisVectors =
-                        Matrix.basisOfVectorSpace Vector.realVectorSpace r2 testVectors
-                in
-                Expect.equal r2BasisVectors testbasisVectors
-        , Test.test
             "tests matrix fold"
           <|
             \_ ->

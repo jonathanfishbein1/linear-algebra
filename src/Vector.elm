@@ -356,7 +356,7 @@ pure a =
 -}
 apply : Vector (a -> b) -> Vector a -> Vector b
 apply fVector vector =
-    map2 (\f x -> f x) fVector vector
+    map2 Basics.identity fVector vector
 
 
 {-| Lift a binary function to work with Vectors
@@ -448,7 +448,7 @@ vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
             List.map (scalarMultiplication field scalar) vectorList
 
         closurePassCriteria =
-            List.map (\(Vector vector) -> Vector <| List.map2 (\predicate -> predicate) predicates vector)
+            List.map (\(Vector vector) -> Vector <| List.map2 Basics.identity predicates vector)
                 >> List.all (all ((==) True))
 
         closureUnderScalarMultiplication =
@@ -475,11 +475,8 @@ all predicate (Vector list) =
 -}
 equalImplementation : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
 equalImplementation comparator vectorOne vectorTwo =
-    let
-        vector =
-            liftA2 comparator vectorOne vectorTwo
-    in
-    all ((==) True) vector
+    liftA2 comparator vectorOne vectorTwo
+        |> all ((==) True)
 
 
 {-| `Equal` type for `Vector`.

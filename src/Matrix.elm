@@ -563,7 +563,7 @@ pure a =
 -}
 apply : Matrix (a -> b) -> Matrix a -> Matrix b
 apply fMatrix matrix =
-    map2 (\f x -> f x) fMatrix matrix
+    map2 Basics.identity fMatrix matrix
 
 
 {-| Lift a function to work on Matrix

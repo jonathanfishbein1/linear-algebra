@@ -327,8 +327,7 @@ determinant vectorSpace matrix =
     in
     Result.andThen
         (\squareMatrix ->
-            getDiagonal squareMatrix
-                |> getDiagonalProduct vectorSpace.abelianGroup.field
+            getDiagonalProduct vectorSpace.abelianGroup.field squareMatrix
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularForm
@@ -422,20 +421,18 @@ getDiagonal matrix =
         |> Maybe.Extra.combine
 
 
-getDiagonalProduct : Field.Field a -> Maybe (List a) -> Maybe a
-getDiagonalProduct { multiply, one } maybeList =
-    Maybe.map
-        (\li ->
-            List.foldl
+getDiagonalProduct : Field.Field a -> Matrix a -> Maybe a
+getDiagonalProduct { multiply, one } matrix =
+    getDiagonal matrix
+        |> Maybe.map
+            (List.foldl
                 (\elem acc ->
                     multiply
                         elem
                         acc
                 )
                 one
-                li
-        )
-        maybeList
+            )
 
 
 {-| Add two Matrices together
@@ -521,8 +518,7 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
     case productMatrix of
         Ok pMatrix ->
             if isSquareMatrix pMatrix then
-                getDiagonal pMatrix
-                    |> getDiagonalProduct vectorInnerProductSpace.vectorSpace.abelianGroup.field
+                getDiagonalProduct vectorInnerProductSpace.vectorSpace.abelianGroup.field pMatrix
                     |> Result.fromMaybe "Index out of range"
 
             else

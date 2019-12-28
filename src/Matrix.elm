@@ -546,7 +546,7 @@ map f (Matrix listOfRowVectors) =
 
 map2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
 map2 f (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
-    List.map2 (\rowVectorOne rowVectorTwo -> rowVectorMap2 f rowVectorOne rowVectorTwo)
+    List.map2 (rowVectorMap2 f)
         listOfRowVectorsOne
         listOfRowVectorsTwo
         |> Matrix
@@ -699,6 +699,12 @@ isDoublyStochastic matrix =
 areRowEquivalent : Vector.VectorSpace a -> Matrix a -> Matrix a -> Bool
 areRowEquivalent vectorSpace matrixOne matrixTwo =
     gaussJordan vectorSpace matrixOne == gaussJordan vectorSpace matrixTwo
+
+
+all : (a -> Bool) -> Matrix a -> Bool
+all predicate (Matrix listOfRowVectors) =
+    List.map (rowVectorAll predicate) listOfRowVectors
+        |> List.all ((==) True)
 
 
 {-| Put a matrix into Upper Triangular Form
@@ -956,6 +962,11 @@ rowVectorFoldl foldFunction acc (RowVector vector) =
     Vector.foldl foldFunction acc vector
 
 
+rowVectorAll : (a -> Bool) -> RowVector a -> Bool
+rowVectorAll predicate (RowVector vector) =
+    Vector.all predicate vector
+
+
 {-| Left fold over a Matrix
 -}
 foldl : (a -> b -> b) -> b -> Matrix a -> b
@@ -1033,14 +1044,13 @@ matrixConcatHorizontal =
 {-| Compare two Matrices for equality
 -}
 equalImplementation : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
-equalImplementation comparator (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
-    List.all
-        ((==) True)
-    <|
-        List.map2
-            (\(RowVector vectorOne) (RowVector vectorTwo) -> Vector.equal comparator vectorOne vectorTwo)
-            listOfRowVectorsOne
-            listOfRowVectorsTwo
+equalImplementation comparator matrixOne matrixTwo =
+    map2
+        comparator
+        matrixOne
+        matrixTwo
+        |> all
+            ((==) True)
 
 
 {-| `Equal` type for `Matrix`.

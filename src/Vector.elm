@@ -465,7 +465,7 @@ equalImplementation comparator vectorOne vectorTwo =
         (Vector list) =
             liftA2 comparator vectorOne vectorTwo
     in
-    List.all ((==) True) <| list
+    List.all ((==) True) list
 
 
 {-| `Equal` type for `Vector`.

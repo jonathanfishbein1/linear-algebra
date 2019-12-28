@@ -32,7 +32,6 @@ module Matrix exposing
     , areBasis
     , areLinearlyIndependent
     , doesSetSpanSpace
-    , basisOfVectorSpace
     , mDimension
     , nDimension
     , isRightStochastic
@@ -118,7 +117,6 @@ module Matrix exposing
 @docs areBasis
 @docs areLinearlyIndependent
 @docs doesSetSpanSpace
-@docs basisOfVectorSpace
 @docs mDimension
 @docs nDimension
 @docs isRightStochastic
@@ -933,26 +931,6 @@ areBasis vectorSpace vectorDimension vectors =
     doesSetSpanSpace vectorSpace vectorDimension vectors
         == Ok True
         && areLinearlyIndependent vectorSpace vectors
-
-
-{-| Determine the basis vectors of a vector space
--}
-basisOfVectorSpace :
-    Vector.VectorSpace a
-    -> VectorDimension
-    -> List (Vector.Vector a)
-    -> List (Vector.Vector a)
-basisOfVectorSpace vectorSpace vectorDimension vectors =
-    if areBasis vectorSpace vectorDimension vectors then
-        vectors
-
-    else
-        let
-            (Matrix reducedRowEchelonFormListOfRowVectors) =
-                jordanReduce vectorSpace (Matrix (List.map RowVector vectors))
-        in
-        reducedRowEchelonFormListOfRowVectors
-            |> List.map (\(RowVector vector) -> vector)
 
 
 rowVectorMap : (a -> b) -> RowVector a -> RowVector b

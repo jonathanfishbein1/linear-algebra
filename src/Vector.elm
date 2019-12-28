@@ -44,6 +44,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
+    , all
     )
 
 {-| A module for Vectors

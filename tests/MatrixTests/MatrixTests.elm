@@ -407,9 +407,6 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
                             ]
 
-                    result =
-                        Matrix.VectorDimension 2
-
                     foldResult =
                         Matrix.foldl (+) 0 matrix
                 in

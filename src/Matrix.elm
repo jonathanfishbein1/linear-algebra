@@ -95,6 +95,7 @@ module Matrix exposing
 @docs determinant
 @docs matrixNorm
 @docs leftNullSpace
+@docs getDiagonal
 
 
 # Binary Operations
@@ -326,22 +327,7 @@ determinant vectorSpace matrix =
     in
     Result.andThen
         (\squareMatrix ->
-            let
-                numberOfRows =
-                    mDimension squareMatrix
-
-                indices =
-                    List.Extra.initialize
-                        numberOfRows
-                        (\index -> ( index, index ))
-
-                diagonalMaybeEntries =
-                    List.foldl
-                        (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) squareMatrix :: acc)
-                        []
-                        indices
-            in
-            Maybe.Extra.combine diagonalMaybeEntries
+            getDiagonal squareMatrix
                 |> Maybe.map
                     (\li ->
                         List.foldl
@@ -424,6 +410,24 @@ nullSpace vectorSpace matrix =
 leftNullSpace : Vector.VectorSpace a -> Matrix a -> Consistancy a
 leftNullSpace vectorSpace =
     transpose >> nullSpace vectorSpace
+
+
+getDiagonal : Matrix a -> Maybe (List a)
+getDiagonal matrix =
+    let
+        numberOfRows =
+            mDimension matrix
+
+        indices =
+            List.Extra.initialize
+                numberOfRows
+                (\index -> ( index, index ))
+    in
+    List.foldl
+        (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) matrix :: acc)
+        []
+        indices
+        |> Maybe.Extra.combine
 
 
 {-| Add two Matrices together
@@ -509,22 +513,7 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
     case productMatrix of
         Ok pMatrix ->
             if isSquareMatrix pMatrix then
-                let
-                    numberOfRows =
-                        mDimension pMatrix
-
-                    indices =
-                        List.Extra.initialize
-                            numberOfRows
-                            (\index -> ( index, index ))
-
-                    diagonalMaybeEntries =
-                        List.foldl
-                            (\( indexOne, indexTwo ) acc -> getAt ( indexOne, indexTwo ) pMatrix :: acc)
-                            []
-                            indices
-                in
-                Maybe.Extra.combine diagonalMaybeEntries
+                getDiagonal pMatrix
                     |> Maybe.map
                         (\li ->
                             List.foldl

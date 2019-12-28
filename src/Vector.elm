@@ -448,7 +448,7 @@ vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
             List.map (scalarMultiplication field scalar) vectorList
 
         closurePassCriteria =
-            List.map (\(Vector vector) -> Vector <| List.map2 (\predicate x -> predicate x) predicates vector)
+            List.map (\(Vector vector) -> Vector <| List.map2 (\predicate -> predicate) predicates vector)
                 >> List.all (\vector -> all ((==) True) vector)
 
         closureUnderScalarMultiplication =

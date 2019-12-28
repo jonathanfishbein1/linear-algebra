@@ -544,6 +544,14 @@ map f (Matrix listOfRowVectors) =
     Matrix <| List.map (rowVectorMap f) listOfRowVectors
 
 
+map2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
+map2 f (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
+    List.map2 (\rowVectorOne rowVectorTwo -> rowVectorMap2 f rowVectorOne rowVectorTwo)
+        listOfRowVectorsOne
+        listOfRowVectorsTwo
+        |> Matrix
+
+
 {-| Applicative pure for Matrix
 -}
 pure : a -> Matrix a
@@ -554,12 +562,8 @@ pure a =
 {-| Apply for Matrix
 -}
 apply : Matrix (a -> b) -> Matrix a -> Matrix b
-apply (Matrix listOfRowVectorsWithFunctions) (Matrix listOfRowVectors) =
-    List.map2
-        (\(RowVector fVector) (RowVector xVector) -> RowVector <| Vector.apply fVector xVector)
-        listOfRowVectorsWithFunctions
-        listOfRowVectors
-        |> Matrix
+apply fMatrix matrix =
+    map2 (\f x -> f x) fMatrix matrix
 
 
 {-| Lift a function to work on Matrix
@@ -936,6 +940,12 @@ areBasis vectorSpace vectorDimension vectors =
 rowVectorMap : (a -> b) -> RowVector a -> RowVector b
 rowVectorMap f (RowVector vector) =
     Vector.map f vector
+        |> RowVector
+
+
+rowVectorMap2 : (a -> b -> c) -> RowVector a -> RowVector b -> RowVector c
+rowVectorMap2 f (RowVector vectorOne) (RowVector vectorTwo) =
+    Vector.map2 f vectorOne vectorTwo
         |> RowVector
 
 

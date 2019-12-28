@@ -328,15 +328,7 @@ determinant vectorSpace matrix =
     Result.andThen
         (\squareMatrix ->
             getDiagonal squareMatrix
-                |> Maybe.map
-                    (\li ->
-                        List.foldl
-                            (\elem acc ->
-                                vectorSpace.abelianGroup.field.multiply elem acc
-                            )
-                            vectorSpace.abelianGroup.field.one
-                            li
-                    )
+                |> getDiagonalProduct vectorSpace.abelianGroup.field
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularForm
@@ -430,6 +422,22 @@ getDiagonal matrix =
         |> Maybe.Extra.combine
 
 
+getDiagonalProduct : Field.Field a -> Maybe (List a) -> Maybe a
+getDiagonalProduct { multiply, one } maybeList =
+    Maybe.map
+        (\li ->
+            List.foldl
+                (\elem acc ->
+                    multiply
+                        elem
+                        acc
+                )
+                one
+                li
+        )
+        maybeList
+
+
 {-| Add two Matrices together
 -}
 addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
@@ -514,17 +522,7 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
         Ok pMatrix ->
             if isSquareMatrix pMatrix then
                 getDiagonal pMatrix
-                    |> Maybe.map
-                        (\li ->
-                            List.foldl
-                                (\elem acc ->
-                                    vectorInnerProductSpace.vectorSpace.abelianGroup.field.multiply
-                                        elem
-                                        acc
-                                )
-                                vectorInnerProductSpace.vectorSpace.abelianGroup.field.one
-                                li
-                        )
+                    |> getDiagonalProduct vectorInnerProductSpace.vectorSpace.abelianGroup.field
                     |> Result.fromMaybe "Index out of range"
 
             else

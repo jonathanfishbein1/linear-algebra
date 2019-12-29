@@ -141,26 +141,35 @@ suite =
                                     one
                                 )
                                 (ComplexNumbers.Imaginary
-                                    one
+                                    two
                                 )
                             ]
                 in
                 Vector.addVectors ComplexNumbers.complexField (Vector.Vector [ ComplexNumbers.zero ]) w
                     |> Expect.equal w
         , Test.fuzz2
-            Fuzz.int
-            Fuzz.int
+            Fuzz.float
+            Fuzz.float
             "tests vector inverse"
           <|
             \one two ->
                 let
+                    complexNumber =
+                        ComplexNumbers.ComplexNumberCartesian
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
                     v =
                         Vector.Vector
-                            [ ComplexNumbers.one ]
+                            [ complexNumber ]
 
                     w =
                         Vector.Vector
-                            [ ComplexNumbers.one ]
+                            [ complexNumber ]
 
                     zero =
                         Vector.Vector

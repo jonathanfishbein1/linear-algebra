@@ -117,7 +117,7 @@ suite =
                             |> Vector.vector3ToVector
 
                     aDotACrossB =
-                        Vector.vectorDotProduct Field.realField (Vector.vector3ToVector a) aCrossB
+                        Vector.dotProduct Field.realField (Vector.vector3ToVector a) aCrossB
                 in
                 aDotACrossB
                     |> Expect.within (Expect.Absolute 0.000000001) 0

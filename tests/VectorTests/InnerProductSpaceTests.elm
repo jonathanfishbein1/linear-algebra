@@ -20,7 +20,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.vectorDotProduct Field.realField a a
+                        Vector.dotProduct Field.realField a a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -42,16 +42,16 @@ suite =
                         Vector.Vector [ three ]
 
                     aPlusBDotc =
-                        Vector.vectorDotProduct
+                        Vector.dotProduct
                             Field.realField
                             (Vector.addVectors Field.realField a b)
                             c
 
                     aDotB =
-                        Vector.vectorDotProduct Field.realField a c
+                        Vector.dotProduct Field.realField a c
 
                     bDotC =
-                        Vector.vectorDotProduct Field.realField b c
+                        Vector.dotProduct Field.realField b c
 
                     aDotBPlusbDotC =
                         aDotB + bDotC
@@ -72,13 +72,13 @@ suite =
                         Vector.Vector [ two ]
 
                     threeTimesADotB =
-                        Vector.vectorDotProduct
+                        Vector.dotProduct
                             Field.realField
                             (Vector.scalarMultiplication Field.realField three a)
                             b
 
                     aDotBTimesThree =
-                        Vector.vectorDotProduct Field.realField a b * three
+                        Vector.dotProduct Field.realField a b * three
                 in
                 Expect.within (Expect.Absolute 0.000000001) aDotBTimesThree threeTimesADotB
         , Test.fuzz2
@@ -95,10 +95,10 @@ suite =
                         Vector.Vector [ two ]
 
                     aDotB =
-                        Vector.vectorDotProduct Field.realField a b
+                        Vector.dotProduct Field.realField a b
 
                     bDotA =
-                        Vector.vectorDotProduct Field.realField b a
+                        Vector.dotProduct Field.realField b a
                 in
                 Expect.within (Expect.Absolute 0.000000001) bDotA aDotB
         , Test.fuzz
@@ -111,7 +111,7 @@ suite =
                         Vector.Vector [ one ]
 
                     squareRootADotA =
-                        Basics.sqrt (Vector.vectorDotProduct Field.realField a a)
+                        Basics.sqrt (Vector.dotProduct Field.realField a a)
 
                     aLength =
                         Vector.length Field.realField a
@@ -239,13 +239,13 @@ suite =
                         Vector.Vector [ two ]
 
                     distanceAB =
-                        Vector.vectorDotProduct
+                        Vector.dotProduct
                             Field.realField
                             a
                             b
 
                     distanceBA =
-                        Vector.vectorDotProduct
+                        Vector.dotProduct
                             Field.realField
                             b
                             a

@@ -19,7 +19,7 @@ module Vector exposing
     , addVectors
     , subtractVectors
     , hadamardMultiplication
-    , vectorDotProduct
+    , dotProduct
     , cross
     , distance
     , vectorTensorProduct
@@ -85,7 +85,7 @@ module Vector exposing
 @docs addVectors
 @docs subtractVectors
 @docs hadamardMultiplication
-@docs vectorDotProduct
+@docs dotProduct
 @docs cross
 @docs distance
 @docs vectorTensorProduct
@@ -229,7 +229,7 @@ complexVectorSpace =
 realInnerProductSpace : InnerProductSpace Float
 realInnerProductSpace =
     { vectorSpace = realVectorSpace
-    , innerProduct = vectorDotProduct Field.realField
+    , innerProduct = dotProduct Field.realField
     }
 
 
@@ -238,7 +238,7 @@ realInnerProductSpace =
 complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumberCartesian Float)
 complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
-    , innerProduct = vectorDotProduct ComplexNumbers.complexField
+    , innerProduct = dotProduct ComplexNumbers.complexField
     }
 
 
@@ -259,7 +259,7 @@ scalarMultiplication { multiply } scalar =
 -}
 length : Field.Field a -> Vector a -> a
 length field vector =
-    vectorDotProduct field vector vector
+    dotProduct field vector vector
         |> field.power (1 / 2)
 
 
@@ -297,8 +297,8 @@ hadamardMultiplication { multiply } =
 
 {-| Calculate the dot product of two Vectors
 -}
-vectorDotProduct : Field.Field a -> Vector a -> Vector a -> a
-vectorDotProduct field vectorOne vectorTwo =
+dotProduct : Field.Field a -> Vector a -> Vector a -> a
+dotProduct field vectorOne vectorTwo =
     hadamardMultiplication field vectorOne vectorTwo
         |> sum field
 

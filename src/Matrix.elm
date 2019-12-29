@@ -38,7 +38,7 @@ module Matrix exposing
     , isLeftStochastic
     , isDoublyStochastic
     , areRowEquivalent
-    , matrixEmpty
+    , empty
     , matrixConcatHorizontal
     , matrixConcatVertical
     , map
@@ -127,7 +127,7 @@ module Matrix exposing
 
 # Monoid
 
-@docs matrixEmpty
+@docs empty
 @docs matrixConcatHorizontal
 @docs matrixConcatVertical
 
@@ -975,8 +975,8 @@ foldl foldFunction acc (Matrix listOfRowVectors) =
 
 {-| Monoid empty for Vector
 -}
-matrixEmpty : Matrix a
-matrixEmpty =
+empty : Matrix a
+empty =
     Matrix []
 
 
@@ -995,7 +995,7 @@ matrixConcatVertical : Typeclasses.Classes.Monoid.Monoid (Matrix a)
 matrixConcatVertical =
     Typeclasses.Classes.Monoid.semigroupAndIdentity
         (Typeclasses.Classes.Semigroup.prepend appendVertical)
-        matrixEmpty
+        empty
 
 
 {-| Append Matricies together horizontally
@@ -1034,7 +1034,7 @@ matrixConcatHorizontal : Typeclasses.Classes.Monoid.Monoid (Matrix a)
 matrixConcatHorizontal =
     Typeclasses.Classes.Monoid.semigroupAndIdentity
         (Typeclasses.Classes.Semigroup.prepend appendHorizontal)
-        matrixEmpty
+        empty
 
 
 {-| Compare two Matrices for equality

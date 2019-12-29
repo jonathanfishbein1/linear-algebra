@@ -67,7 +67,7 @@ suite =
                 in
                 Expect.equal m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
         , Test.test
-            "tests identityMatrix is an identity matrix"
+            "tests identity is an identity matrix"
           <|
             \_ ->
                 let
@@ -99,7 +99,7 @@ suite =
                         Matrix.Matrix
                             [ v1, v2, v3 ]
                 in
-                Expect.equal (Matrix.identityMatrix Field.realField 3) m1
+                Expect.equal (Matrix.identity Field.realField 3) m1
         , Test.fuzz3
             Fuzz.float
             Fuzz.float
@@ -137,7 +137,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.identityMatrix Field.realField 3) m1
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.identity Field.realField 3) m1
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3
@@ -177,7 +177,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiplyMatrices Vector.realInnerProductSpace m1 (Matrix.identityMatrix Field.realField 3)
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace m1 (Matrix.identity Field.realField 3)
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3

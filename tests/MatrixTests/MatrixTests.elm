@@ -552,13 +552,13 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
 
-                    identityMatrix =
-                        Matrix.identityMatrix Field.realField (Matrix.mDimension matrix)
+                    identity =
+                        Matrix.identity Field.realField (Matrix.mDimension matrix)
 
                     matrixInverseProduct =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace matrix inverse
                 in
-                Expect.equal matrixInverseProduct (Ok identityMatrix)
+                Expect.equal matrixInverseProduct (Ok identity)
         , Test.test
             "tests inverse times matrix equals identity"
           <|
@@ -578,13 +578,13 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
 
-                    identityMatrix =
-                        Matrix.identityMatrix Field.realField (Matrix.mDimension matrix)
+                    identity =
+                        Matrix.identity Field.realField (Matrix.mDimension matrix)
 
                     inverseMatrixProduct =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace inverse matrix
                 in
-                Expect.equal inverseMatrixProduct (Ok identityMatrix)
+                Expect.equal inverseMatrixProduct (Ok identity)
         , Test.test
             "tests complex matrix determinant 2 x 2"
           <|

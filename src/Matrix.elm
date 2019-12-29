@@ -5,7 +5,7 @@ module Matrix exposing
     , Solution(..)
     , Consistancy(..)
     , VectorDimension(..)
-    , identityMatrix
+    , identity
     , zeroMatrix
     , zeroSquareMatrix
     , scalarMultiplication
@@ -77,7 +77,7 @@ module Matrix exposing
 
 # Values
 
-@docs identityMatrix
+@docs identity
 @docs zeroMatrix
 @docs zeroSquareMatrix
 
@@ -234,8 +234,8 @@ type alias AbelianGroup a =
 
 {-| Create Identity Matrix with n dimension
 -}
-identityMatrix : Field.Field a -> Int -> Matrix a
-identityMatrix field dimension =
+identity : Field.Field a -> Int -> Matrix a
+identity field dimension =
     Matrix
         (List.Extra.initialize dimension
             (\columnIndex ->
@@ -343,7 +343,7 @@ invert vectorSpace matrix =
 
                 augmentedMatrix =
                     appendHorizontal invertableMatrix
-                        (identityMatrix vectorSpace.abelianGroup.field sizeOfMatrix)
+                        (identity vectorSpace.abelianGroup.field sizeOfMatrix)
 
                 reducedRowEchelonForm =
                     gaussJordan vectorSpace augmentedMatrix
@@ -901,7 +901,7 @@ doesSetSpanSpace vSpace (VectorDimension vectorDimension) vectors =
     else
         let
             identityRowVectors =
-                identityMatrix vSpace.abelianGroup.field vectorDimension
+                identity vSpace.abelianGroup.field vectorDimension
 
             listOfRowVectorsRREF =
                 gaussJordan vSpace (Matrix (List.map RowVector vectors))

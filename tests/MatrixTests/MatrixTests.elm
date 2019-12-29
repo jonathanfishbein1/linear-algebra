@@ -1308,19 +1308,19 @@ suite =
                     matrixSumIJ =
                         Matrix.addMatrices Field.realField matrixI matrixJ
 
-                    matrixTensorProductIJK =
-                        Matrix.matrixTensorProduct Field.realField matrixSumIJ matrixK
+                    tensorProductIJK =
+                        Matrix.tensorProduct Field.realField matrixSumIJ matrixK
 
-                    matrixTensorProductIK =
-                        Matrix.matrixTensorProduct Field.realField matrixI matrixK
+                    tensorProductIK =
+                        Matrix.tensorProduct Field.realField matrixI matrixK
 
-                    matrixTensorProductJK =
-                        Matrix.matrixTensorProduct Field.realField matrixJ matrixK
+                    tensorProductJK =
+                        Matrix.tensorProduct Field.realField matrixJ matrixK
 
                     matrixSumTensorProductIKJK =
-                        Matrix.addMatrices Field.realField matrixTensorProductIK matrixTensorProductJK
+                        Matrix.addMatrices Field.realField tensorProductIK tensorProductJK
                 in
-                Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) matrixTensorProductIJK matrixSumTensorProductIKJK)
+                Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK matrixSumTensorProductIKJK)
         , Test.test
             "tests right stochastic"
           <|

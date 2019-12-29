@@ -23,7 +23,7 @@ module Matrix exposing
     , multiplyMatrixVector
     , multiplyMatrices
     , dotProduct
-    , matrixTensorProduct
+    , tensorProduct
     , isSquareMatrix
     , isSymmetric
     , isHermitian
@@ -104,7 +104,7 @@ module Matrix exposing
 @docs multiplyMatrixVector
 @docs multiplyMatrices
 @docs dotProduct
-@docs matrixTensorProduct
+@docs tensorProduct
 
 
 # Matrix Predicates and Properties
@@ -528,8 +528,8 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
 
 {-| Calculate the tensor product of two Matricies
 -}
-matrixTensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
-matrixTensorProduct field matrixOne matrixTwo =
+tensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+tensorProduct field matrixOne matrixTwo =
     bind
         matrixOne
         (\matrixOneElement ->

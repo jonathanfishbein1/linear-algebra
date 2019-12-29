@@ -5,7 +5,6 @@ import Expect
 import Fuzz
 import Internal.Matrix
 import List.Extra
-import Matrix
 import Test
 import Vector
 

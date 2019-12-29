@@ -26,13 +26,13 @@ suite =
                         Vector.Vector [ two ]
 
                     aHadamardB =
-                        Vector.hadamardVectorMultiplication
+                        Vector.hadamardMultiplication
                             Field.realField
                             a
                             b
 
                     bhadamardA =
-                        Vector.hadamardVectorMultiplication
+                        Vector.hadamardMultiplication
                             Field.realField
                             b
                             a
@@ -56,16 +56,16 @@ suite =
                         Vector.Vector [ three ]
 
                     aHadamardBHadamardC =
-                        Vector.hadamardVectorMultiplication
+                        Vector.hadamardMultiplication
                             Field.realField
-                            (Vector.hadamardVectorMultiplication Field.realField a b)
+                            (Vector.hadamardMultiplication Field.realField a b)
                             c
 
                     bHadamardCHadamardA =
-                        Vector.hadamardVectorMultiplication
+                        Vector.hadamardMultiplication
                             Field.realField
                             a
-                            (Vector.hadamardVectorMultiplication Field.realField b c)
+                            (Vector.hadamardMultiplication Field.realField b c)
                 in
                 Expect.true "vectors equal" (Vector.equal (Float.Extra.equalWithin 0.1) aHadamardBHadamardC bHadamardCHadamardA)
         , Test.fuzz3
@@ -86,7 +86,7 @@ suite =
                         Vector.Vector [ three ]
 
                     aHadamardSumBC =
-                        Vector.hadamardVectorMultiplication
+                        Vector.hadamardMultiplication
                             Field.realField
                             a
                             (Vector.addVectors Field.realField b c)
@@ -94,8 +94,8 @@ suite =
                     sumAHadamardBAHadamardC =
                         Vector.addVectors
                             Field.realField
-                            (Vector.hadamardVectorMultiplication Field.realField a b)
-                            (Vector.hadamardVectorMultiplication Field.realField a c)
+                            (Vector.hadamardMultiplication Field.realField a b)
+                            (Vector.hadamardMultiplication Field.realField a c)
                 in
                 Expect.true "vectors equal" (Vector.equal (Float.Extra.equalWithin 0.1) aHadamardSumBC sumAHadamardBAHadamardC)
         , Test.fuzz3

@@ -18,7 +18,7 @@ module Vector exposing
     , sum
     , addVectors
     , subtractVectors
-    , hadamardVectorMultiplication
+    , hadamardMultiplication
     , vectorDotProduct
     , cross
     , distance
@@ -84,7 +84,7 @@ module Vector exposing
 
 @docs addVectors
 @docs subtractVectors
-@docs hadamardVectorMultiplication
+@docs hadamardMultiplication
 @docs vectorDotProduct
 @docs cross
 @docs distance
@@ -290,8 +290,8 @@ subtractVectors { subtract } =
 
 {-| Hadamard Multiplication Vectors
 -}
-hadamardVectorMultiplication : Field.Field a -> Vector a -> Vector a -> Vector a
-hadamardVectorMultiplication { multiply } =
+hadamardMultiplication : Field.Field a -> Vector a -> Vector a -> Vector a
+hadamardMultiplication { multiply } =
     liftA2 multiply
 
 
@@ -299,7 +299,7 @@ hadamardVectorMultiplication { multiply } =
 -}
 vectorDotProduct : Field.Field a -> Vector a -> Vector a -> a
 vectorDotProduct field vectorOne vectorTwo =
-    hadamardVectorMultiplication field vectorOne vectorTwo
+    hadamardMultiplication field vectorOne vectorTwo
         |> sum field
 
 

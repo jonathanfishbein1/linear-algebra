@@ -122,7 +122,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
 
                     expected =
-                        Matrix.matrixNorm Vector.realInnerProductSpace a
+                        Matrix.norm Vector.realInnerProductSpace a
                 in
                 case expected of
                     Ok norm ->
@@ -144,13 +144,13 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
 
                     aPlusBLength =
-                        Matrix.matrixNorm Vector.realInnerProductSpace <| Matrix.addMatrices Field.realField a b
+                        Matrix.norm Vector.realInnerProductSpace <| Matrix.addMatrices Field.realField a b
 
                     lengthAPlusLengthB =
                         Result.map2
                             (+)
-                            (Matrix.matrixNorm Vector.realInnerProductSpace a)
-                            (Matrix.matrixNorm Vector.realInnerProductSpace b)
+                            (Matrix.norm Vector.realInnerProductSpace a)
+                            (Matrix.norm Vector.realInnerProductSpace b)
                 in
                 case aPlusBLength of
                     Ok aBLength ->
@@ -174,12 +174,12 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
 
                     legnthOfTwoTimesA =
-                        Matrix.matrixNorm Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField two a)
+                        Matrix.norm Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField two a)
 
                     lengthOfATimesTwo =
                         Result.map
                             ((*) two >> Basics.abs)
-                            (Matrix.matrixNorm Vector.realInnerProductSpace a)
+                            (Matrix.norm Vector.realInnerProductSpace a)
                 in
                 case legnthOfTwoTimesA of
                     Ok twoAL ->

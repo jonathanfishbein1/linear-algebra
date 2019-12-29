@@ -16,7 +16,7 @@ module Matrix exposing
     , subMatrix
     , nullSpace
     , determinant
-    , matrixNorm
+    , norm
     , leftNullSpace
     , addMatrices
     , subtractMatrices
@@ -92,7 +92,7 @@ module Matrix exposing
 @docs subMatrix
 @docs nullSpace
 @docs determinant
-@docs matrixNorm
+@docs norm
 @docs leftNullSpace
 @docs getDiagonal
 
@@ -308,8 +308,8 @@ adjoint matrix =
 
 {-| Calculate the norm of a Matrix
 -}
-matrixNorm : Vector.InnerProductSpace a -> Matrix a -> Result String a
-matrixNorm innerProductSpace matrix =
+norm : Vector.InnerProductSpace a -> Matrix a -> Result String a
+norm innerProductSpace matrix =
     dotProduct innerProductSpace matrix matrix
         |> Result.map
             (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))

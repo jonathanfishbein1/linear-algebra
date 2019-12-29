@@ -97,7 +97,7 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.matrixConcatHorizontal.semigroup.prepend m Matrix.matrixConcatHorizontal.identity
+                Matrix.concatHorizontal.semigroup.prepend m Matrix.concatHorizontal.identity
                     |> Expect.equal m
         , Test.fuzz
             Fuzz.float
@@ -113,7 +113,7 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.matrixConcatHorizontal.semigroup.prepend Matrix.matrixConcatHorizontal.identity m
+                Matrix.concatHorizontal.semigroup.prepend Matrix.concatHorizontal.identity m
                     |> Expect.equal m
         , Test.fuzz3
             Fuzz.int
@@ -149,7 +149,7 @@ suite =
                     listOfMonoids =
                         [ m1, m2, m3 ]
                 in
-                Matrix.matrixConcatHorizontal.concat listOfMonoids
+                Matrix.concatHorizontal.concat listOfMonoids
                     |> Expect.equal expected
         , Test.fuzz3
             Fuzz.int
@@ -186,6 +186,6 @@ suite =
                     listOfMonoids =
                         [ m1, m2 ]
                 in
-                Matrix.matrixConcatHorizontal.concat listOfMonoids
+                Matrix.concatHorizontal.concat listOfMonoids
                     |> Expect.equal expected
         ]

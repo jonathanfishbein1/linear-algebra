@@ -39,7 +39,7 @@ module Matrix exposing
     , isDoublyStochastic
     , areRowEquivalent
     , empty
-    , matrixConcatHorizontal
+    , concatHorizontal
     , concatVertical
     , map
     , pure
@@ -128,7 +128,7 @@ module Matrix exposing
 # Monoid
 
 @docs empty
-@docs matrixConcatHorizontal
+@docs concatHorizontal
 @docs concatVertical
 
 
@@ -860,7 +860,7 @@ solve vectorSpace matrix (ColumnVector (Vector.Vector constants)) =
                 |> Matrix
 
         augmentedMatrix =
-            matrixConcatHorizontal.semigroup.prepend matrix matrixB
+            concatHorizontal.semigroup.prepend matrix matrixB
     in
     solveMatrix vectorSpace augmentedMatrix
 
@@ -1030,8 +1030,8 @@ appendHorizontal (Matrix listOne) (Matrix listTwo) =
 
 {-| Monoidally append Matricies together horizontally
 -}
-matrixConcatHorizontal : Typeclasses.Classes.Monoid.Monoid (Matrix a)
-matrixConcatHorizontal =
+concatHorizontal : Typeclasses.Classes.Monoid.Monoid (Matrix a)
+concatHorizontal =
     Typeclasses.Classes.Monoid.semigroupAndIdentity
         (Typeclasses.Classes.Semigroup.prepend appendHorizontal)
         empty

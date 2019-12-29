@@ -84,7 +84,7 @@ reduceRowBackwards vectorSpace rowIndex listOfVectors =
     let
         row =
             Maybe.withDefault
-                (Vector.Vector [])
+                Vector.empty
                 (List.Extra.getAt rowIndex listOfVectors)
 
         prevRows =
@@ -144,7 +144,7 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
 
                 currentRow =
                     List.Extra.getAt rowIndex swappedListOfVectors
-                        |> Maybe.withDefault (Vector.Vector [])
+                        |> Maybe.withDefault Vector.empty
 
                 nextRows =
                     List.drop (rowIndex + 1) listOfVectors
@@ -178,7 +178,7 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
 
                     currentRow =
                         List.Extra.getAt rowIndex listOfVectors
-                            |> Maybe.withDefault (Vector.Vector [])
+                            |> Maybe.withDefault Vector.empty
 
                     nextRows =
                         List.drop nextNonZero listOfVectors

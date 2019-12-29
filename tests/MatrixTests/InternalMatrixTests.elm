@@ -212,7 +212,7 @@ suite =
                     (Vector.Vector scaledRow) =
                         Internal.Matrix.scale Vector.realVectorSpace 0 row
                 in
-                Expect.equal (Vector.Vector scaledRow) (Vector.Vector [])
+                Expect.equal (Vector.Vector scaledRow) Vector.empty
         , Test.test
             "tests matrix complex scale scales empty Vector"
           <|
@@ -224,7 +224,7 @@ suite =
                     (Vector.Vector scaledComplexRow) =
                         Internal.Matrix.scale Vector.complexVectorSpace 0 row
                 in
-                Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [])
+                Expect.equal (Vector.Vector scaledComplexRow) Vector.empty
         , Test.test
             "tests matrix complex scale scales Vector"
           <|

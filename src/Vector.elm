@@ -520,10 +520,11 @@ setAt index element (Vector list) =
 {-| Print a Real Vector as a string
 -}
 printRealVector : Vector Float -> String
-printRealVector (Vector list) =
+printRealVector vector =
     let
         values =
-            List.map String.fromFloat list
+            map String.fromFloat vector
+                |> (\(Vector list) -> list)
                 |> String.join ", "
     in
     "Vector [" ++ values ++ "]"
@@ -532,10 +533,11 @@ printRealVector (Vector list) =
 {-| Print a Complex Vector as a string
 -}
 printComplexVector : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> String
-printComplexVector (Vector list) =
+printComplexVector vector =
     let
         values =
-            List.map ComplexNumbers.print list
+            map ComplexNumbers.print vector
+                |> (\(Vector list) -> list)
                 |> String.join ", "
     in
     "Vector [" ++ values ++ "]"

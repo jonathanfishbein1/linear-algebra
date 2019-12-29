@@ -25,7 +25,7 @@ module Vector exposing
     , tensorProduct
     , dimension
     , vectorSubspace
-    , concatEmpty
+    , empty
     , append
     , concat
     , map
@@ -99,7 +99,7 @@ module Vector exposing
 
 # Monoid
 
-@docs concatEmpty
+@docs empty
 @docs append
 @docs concat
 
@@ -400,8 +400,8 @@ foldl foldFunction acc (Vector list) =
 
 {-| Monoid empty for Vector
 -}
-concatEmpty : Vector a
-concatEmpty =
+empty : Vector a
+empty =
     Vector []
 
 
@@ -420,7 +420,7 @@ concat : Typeclasses.Classes.Monoid.Monoid (Vector a)
 concat =
     Typeclasses.Classes.Monoid.semigroupAndIdentity
         (Typeclasses.Classes.Semigroup.prepend append)
-        concatEmpty
+        empty
 
 
 {-| Convert a Vector3 type to a Vector type

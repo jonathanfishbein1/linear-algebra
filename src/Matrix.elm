@@ -6,7 +6,7 @@ module Matrix exposing
     , Consistancy(..)
     , VectorDimension(..)
     , identity
-    , zeroMatrix
+    , zeros
     , zeroSquareMatrix
     , scalarMultiplication
     , transpose
@@ -78,7 +78,7 @@ module Matrix exposing
 # Values
 
 @docs identity
-@docs zeroMatrix
+@docs zeros
 @docs zeroSquareMatrix
 
 
@@ -250,8 +250,8 @@ identity field dimension =
 
 {-| Create Matrix with m x n dimension filled with zeros
 -}
-zeroMatrix : Field.Field a -> Int -> Int -> Matrix a
-zeroMatrix field m n =
+zeros : Field.Field a -> Int -> Int -> Matrix a
+zeros field m n =
     List.Extra.initialize m
         (\_ ->
             Vector.zeros field n
@@ -264,7 +264,7 @@ zeroMatrix field m n =
 -}
 zeroSquareMatrix : Field.Field a -> Int -> Matrix a
 zeroSquareMatrix field dimension =
-    zeroMatrix field dimension dimension
+    zeros field dimension dimension
 
 
 {-| Scalar multiplication over a Matrix

@@ -653,7 +653,7 @@ isRightStochastic : Matrix Float -> Bool
 isRightStochastic (Matrix listOfRowVectors) =
     if isSquareMatrix (Matrix listOfRowVectors) then
         List.all
-            (\(RowVector (Vector.Vector list)) -> Float.Extra.equalWithin 1.0e-6 (List.sum list) 1)
+            (\(RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Field.realField vector) 1)
             listOfRowVectors
 
     else
@@ -670,7 +670,7 @@ isLeftStochastic matrix =
     in
     if isSquareMatrix (Matrix transposedListOfRowVectors) then
         List.all
-            (\(RowVector (Vector.Vector list)) -> Float.Extra.equalWithin 1.0e-6 (List.sum list) 1)
+            (\(RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Field.realField vector) 1)
             transposedListOfRowVectors
 
     else

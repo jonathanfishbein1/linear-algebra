@@ -11,7 +11,7 @@ module Vector exposing
     , complexVectorSpace
     , complexVectorAbelianGroup
     , complexInnerProductSpace
-    , zeroVector
+    , zeros
     , scalarMultiplication
     , vectorLength
     , normalise
@@ -69,7 +69,7 @@ module Vector exposing
 @docs complexVectorSpace
 @docs complexVectorAbelianGroup
 @docs complexInnerProductSpace
-@docs zeroVector
+@docs zeros
 
 
 # Unitary Operations
@@ -242,8 +242,8 @@ complexInnerProductSpace =
     }
 
 
-zeroVector : Field.Field a -> Int -> Vector a
-zeroVector { zero } dim =
+zeros : Field.Field a -> Int -> Vector a
+zeros { zero } dim =
     List.repeat dim zero
         |> Vector
 
@@ -447,11 +447,11 @@ vectorSubspace :
     -> Bool
 vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
     let
-        testZeroVector =
+        testzeros =
             List.map (scalarMultiplication field field.zero) vectorList
 
-        containsZeroVector =
-            closurePassCriteria testZeroVector
+        containszeros =
+            closurePassCriteria testzeros
 
         scaledVectors =
             List.map (scalarMultiplication field scalar) vectorList
@@ -472,7 +472,7 @@ vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
         closureUnderAddition =
             closurePassCriteria additionOfVectors
     in
-    containsZeroVector && closureUnderScalarMultiplication && closureUnderAddition
+    containszeros && closureUnderScalarMultiplication && closureUnderAddition
 
 
 all : (a -> Bool) -> Vector a -> Bool

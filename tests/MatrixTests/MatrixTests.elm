@@ -179,8 +179,8 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.zeroVector Field.realField 2
-                        , Vector.zeroVector Field.realField 2
+                        [ Vector.zeros Field.realField 2
+                        , Vector.zeros Field.realField 2
                         ]
 
                     r2 =
@@ -284,8 +284,8 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.zeroVector Field.realField 2
-                        , Vector.zeroVector Field.realField 2
+                        [ Vector.zeros Field.realField 2
+                        , Vector.zeros Field.realField 2
                         ]
 
                     r2 =

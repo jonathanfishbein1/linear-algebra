@@ -254,7 +254,7 @@ zeroMatrix : Field.Field a -> Int -> Int -> Matrix a
 zeroMatrix field m n =
     List.Extra.initialize m
         (\_ ->
-            Vector.zeroVector field n
+            Vector.zeros field n
                 |> RowVector
         )
         |> Matrix
@@ -882,7 +882,7 @@ areLinearlyIndependent vectorSpace listOfVectors =
     in
     case matrixNullSpace of
         Consistant (UniqueSolution resultVector) ->
-            resultVector == ColumnVector (Vector.zeroVector vectorSpace.abelianGroup.field numberOfRows)
+            resultVector == ColumnVector (Vector.zeros vectorSpace.abelianGroup.field numberOfRows)
 
         _ ->
             False

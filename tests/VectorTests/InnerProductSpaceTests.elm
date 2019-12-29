@@ -133,8 +133,8 @@ suite =
                 expected
                     |> Expect.atLeast 0
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests vector length satisfies triangle inequality"
           <|
             \one two ->

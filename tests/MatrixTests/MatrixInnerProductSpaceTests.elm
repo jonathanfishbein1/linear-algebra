@@ -29,7 +29,7 @@ suite =
                             |> Expect.atLeast 0
 
                     Err err ->
-                        Expect.fail "0 or less"
+                        Expect.fail err
         , Test.fuzz3
             (Fuzz.map toFloat (Fuzz.intRange -10 10))
             (Fuzz.map toFloat (Fuzz.intRange -10 10))

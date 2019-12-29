@@ -47,16 +47,16 @@ suite =
                             (Vector.addVectors Field.realField a b)
                             c
 
-                    aDotB =
+                    aDotC =
                         Vector.dotProduct Field.realField a c
 
                     bDotC =
                         Vector.dotProduct Field.realField b c
 
-                    aDotBPlusbDotC =
-                        aDotB + bDotC
+                    aDotCPlusBDotC =
+                        aDotC + bDotC
                 in
-                Expect.within (Expect.Absolute 0.000000001) aDotBPlusbDotC aPlusBDotc
+                Expect.within (Expect.Absolute 0.000000001) aDotCPlusBDotC aPlusBDotc
         , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)

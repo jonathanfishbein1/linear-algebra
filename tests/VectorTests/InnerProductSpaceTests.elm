@@ -114,7 +114,7 @@ suite =
                         Basics.sqrt (Vector.vectorDotProduct Field.realField a a)
 
                     aLength =
-                        Vector.vectorLength Field.realField a
+                        Vector.length Field.realField a
                 in
                 squareRootADotA
                     |> Expect.within (Expect.Absolute 0.000000001) aLength
@@ -128,7 +128,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.vectorLength Field.realField a
+                        Vector.length Field.realField a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -150,14 +150,14 @@ suite =
                             Field.realField
                             a
                             b
-                            |> Vector.vectorLength
+                            |> Vector.length
                                 Field.realField
 
                     lengthAPlusLengthB =
-                        Vector.vectorLength
+                        Vector.length
                             Field.realField
                             a
-                            + Vector.vectorLength
+                            + Vector.length
                                 Field.realField
                                 b
                 in
@@ -174,12 +174,12 @@ suite =
                         Vector.Vector [ one ]
 
                     legnthOfTwoTimesA =
-                        Vector.vectorLength
+                        Vector.length
                             Field.realField
                             (Vector.scalarMultiplication Field.realField two a)
 
                     lengthOfATimesTwo =
-                        Basics.abs two * Vector.vectorLength Field.realField a
+                        Basics.abs two * Vector.length Field.realField a
                 in
                 legnthOfTwoTimesA
                     |> Expect.within (Expect.Absolute 0.000000001) lengthOfATimesTwo

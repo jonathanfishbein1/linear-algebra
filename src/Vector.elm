@@ -13,7 +13,7 @@ module Vector exposing
     , complexInnerProductSpace
     , zeros
     , scalarMultiplication
-    , vectorLength
+    , length
     , normalise
     , sum
     , addVectors
@@ -75,7 +75,7 @@ module Vector exposing
 # Unitary Operations
 
 @docs scalarMultiplication
-@docs vectorLength
+@docs length
 @docs normalise
 @docs sum
 
@@ -257,8 +257,8 @@ scalarMultiplication { multiply } scalar =
 
 {-| Calculate the length of a Vector
 -}
-vectorLength : Field.Field a -> Vector a -> a
-vectorLength field vector =
+length : Field.Field a -> Vector a -> a
+length field vector =
     vectorDotProduct field vector vector
         |> field.power (1 / 2)
 
@@ -267,11 +267,11 @@ vectorLength field vector =
 -}
 normalise : Field.Field a -> Vector a -> Vector a
 normalise field v =
-    if vectorLength field v == field.zero then
+    if length field v == field.zero then
         v
 
     else
-        map (field.divide (vectorLength field v)) v
+        map (field.divide (length field v)) v
 
 
 {-| Add two Vectors
@@ -315,7 +315,7 @@ sum { add, zero } =
 distance : AbelianGroup a -> Vector a -> Vector a -> a
 distance { subtractVects, field } vectorOne vectorTwo =
     subtractVects vectorOne vectorTwo
-        |> vectorLength field
+        |> length field
 
 
 {-| Take the cross product of two 3D vectors

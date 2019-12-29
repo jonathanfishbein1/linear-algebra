@@ -812,7 +812,7 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
                         List.all
                             ((==) vectorSpace.abelianGroup.field.zero)
                             (List.take (List.length row - 1) row)
-                            && Vector.vectorLength vectorSpace.abelianGroup.field (Vector.Vector row)
+                            && Vector.length vectorSpace.abelianGroup.field (Vector.Vector row)
                             /= vectorSpace.abelianGroup.field.zero
                     )
 
@@ -831,7 +831,7 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
                 listOfRowVectorsRREF
                     |> List.Extra.count
                         (\(RowVector vector) ->
-                            Vector.vectorLength vectorSpace.abelianGroup.field vector /= vectorSpace.abelianGroup.field.zero
+                            Vector.length vectorSpace.abelianGroup.field vector /= vectorSpace.abelianGroup.field.zero
                         )
 
             nullity =

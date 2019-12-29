@@ -15,6 +15,7 @@ module Vector exposing
     , scalarMultiplication
     , vectorLength
     , normalise
+    , sum
     , addVectors
     , subtractVectors
     , hadamardVectorMultiplication
@@ -76,6 +77,7 @@ module Vector exposing
 @docs scalarMultiplication
 @docs vectorLength
 @docs normalise
+@docs sum
 
 
 # Binary Operations
@@ -298,7 +300,14 @@ hadamardVectorMultiplication { multiply } =
 vectorDotProduct : Field.Field a -> Vector a -> Vector a -> a
 vectorDotProduct field vectorOne vectorTwo =
     hadamardVectorMultiplication field vectorOne vectorTwo
-        |> foldl field.add field.zero
+        |> sum field
+
+
+{-| Calculate the sum of a Vector
+-}
+sum : Field.Field a -> Vector a -> a
+sum { add, zero } =
+    foldl add zero
 
 
 {-| Calculate distance between two vectors

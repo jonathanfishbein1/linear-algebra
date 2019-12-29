@@ -56,9 +56,9 @@ suite =
                 Vector.addVectors ComplexNumbers.complexField v w
                     |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
         , Test.fuzz3
-            Fuzz.float
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests Vector add is associative"
           <|
             \one two three ->
@@ -125,8 +125,7 @@ suite =
                         Vector.addVectors ComplexNumbers.complexField w x
                             |> Vector.addVectors ComplexNumbers.complexField v
                 in
-                Vector.addVectors ComplexNumbers.complexField v w
-                    |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
+                Expect.true "vectors sums equal" (Vector.equal ComplexNumbers.equal vPlusWPlusX wPlusXPlusV)
         , Test.fuzz2
             Fuzz.float
             Fuzz.float

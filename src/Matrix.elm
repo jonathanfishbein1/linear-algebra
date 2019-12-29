@@ -1089,28 +1089,24 @@ setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
 -}
 printRealMatrix : Matrix Float -> String
 printRealMatrix (Matrix listOfRowVectors) =
-    let
-        values =
-            List.foldl
-                (\(RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc)
-                ""
-                listOfRowVectors
-    in
-    "Matrix [ " ++ values ++ " ]"
+    "Matrix [ "
+        ++ List.foldl
+            (\(RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc)
+            ""
+            listOfRowVectors
+        ++ " ]"
 
 
 {-| Print a Complex matrix to a string
 -}
 printComplexMatrix : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> String
 printComplexMatrix (Matrix listOfRowVectors) =
-    let
-        values =
-            List.foldl
-                (\(RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc)
-                ""
-                listOfRowVectors
-    in
-    "Matrix [ " ++ values ++ " ]"
+    "Matrix [ "
+        ++ List.foldl
+            (\(RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc)
+            ""
+            listOfRowVectors
+        ++ " ]"
 
 
 {-| Try to read a string into a Matrix

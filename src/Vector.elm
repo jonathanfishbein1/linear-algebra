@@ -521,26 +521,24 @@ setAt index element (Vector list) =
 -}
 printRealVector : Vector Float -> String
 printRealVector vector =
-    let
-        values =
-            map String.fromFloat vector
+    "Vector ["
+        ++ (map String.fromFloat vector
                 |> (\(Vector list) -> list)
                 |> String.join ", "
-    in
-    "Vector [" ++ values ++ "]"
+           )
+        ++ "]"
 
 
 {-| Print a Complex Vector as a string
 -}
 printComplexVector : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> String
 printComplexVector vector =
-    let
-        values =
-            map ComplexNumbers.print vector
+    "Vector ["
+        ++ (map ComplexNumbers.print vector
                 |> (\(Vector list) -> list)
                 |> String.join ", "
-    in
-    "Vector [" ++ values ++ "]"
+           )
+        ++ "]"
 
 
 float : Parser.Parser Float

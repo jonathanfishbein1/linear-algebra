@@ -24,7 +24,7 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.matrixConcatVertical.semigroup.prepend m Matrix.matrixConcatVertical.identity
+                Matrix.concatVertical.semigroup.prepend m Matrix.concatVertical.identity
                     |> Expect.equal m
         , Test.fuzz
             Fuzz.float
@@ -40,7 +40,7 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.matrixConcatVertical.semigroup.prepend Matrix.matrixConcatVertical.identity m
+                Matrix.concatVertical.semigroup.prepend Matrix.concatVertical.identity m
                     |> Expect.equal m
         , Test.fuzz3
             Fuzz.int
@@ -81,7 +81,7 @@ suite =
                         , m3
                         ]
                 in
-                Matrix.matrixConcatVertical.concat listOfMonoids
+                Matrix.concatVertical.concat listOfMonoids
                     |> Expect.equal expected
         , Test.fuzz
             Fuzz.float

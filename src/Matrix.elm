@@ -40,7 +40,7 @@ module Matrix exposing
     , areRowEquivalent
     , empty
     , matrixConcatHorizontal
-    , matrixConcatVertical
+    , concatVertical
     , map
     , pure
     , apply
@@ -129,7 +129,7 @@ module Matrix exposing
 
 @docs empty
 @docs matrixConcatHorizontal
-@docs matrixConcatVertical
+@docs concatVertical
 
 
 # Functor, Applicative, Monad, Foldable
@@ -991,8 +991,8 @@ appendVertical (Matrix listOne) (Matrix listTwo) =
 
 {-| Monoidally append Matricies together vertically
 -}
-matrixConcatVertical : Typeclasses.Classes.Monoid.Monoid (Matrix a)
-matrixConcatVertical =
+concatVertical : Typeclasses.Classes.Monoid.Monoid (Matrix a)
+concatVertical =
     Typeclasses.Classes.Monoid.semigroupAndIdentity
         (Typeclasses.Classes.Semigroup.prepend appendVertical)
         empty

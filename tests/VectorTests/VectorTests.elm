@@ -332,10 +332,10 @@ suite =
                     vectorTwo =
                         Vector.Vector [ 3, 4 ]
 
-                    vectorTensorProduct =
-                        Vector.vectorTensorProduct Field.realField vectorOne vectorTwo
+                    tensorProduct =
+                        Vector.tensorProduct Field.realField vectorOne vectorTwo
                 in
-                Expect.equal vectorTensorProduct (Vector.Vector [ 3, 4, 6, 8 ])
+                Expect.equal tensorProduct (Vector.Vector [ 3, 4, 6, 8 ])
         , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)
@@ -356,19 +356,19 @@ suite =
                     vectorSumIJ =
                         Vector.addVectors Field.realField vectorI vectorJ
 
-                    vectorTensorProductIJK =
-                        Vector.vectorTensorProduct Field.realField vectorSumIJ vectorK
+                    tensorProductIJK =
+                        Vector.tensorProduct Field.realField vectorSumIJ vectorK
 
-                    vectorTensorProductIK =
-                        Vector.vectorTensorProduct Field.realField vectorI vectorK
+                    tensorProductIK =
+                        Vector.tensorProduct Field.realField vectorI vectorK
 
-                    vectorTensorProductJK =
-                        Vector.vectorTensorProduct Field.realField vectorJ vectorK
+                    tensorProductJK =
+                        Vector.tensorProduct Field.realField vectorJ vectorK
 
                     vectorSumTensorProductIKJK =
-                        Vector.addVectors Field.realField vectorTensorProductIK vectorTensorProductJK
+                        Vector.addVectors Field.realField tensorProductIK tensorProductJK
                 in
-                Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) vectorTensorProductIJK vectorSumTensorProductIKJK)
+                Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK vectorSumTensorProductIKJK)
         , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)
@@ -410,17 +410,17 @@ suite =
                     vectorK =
                         Vector.Vector [ complexNumberThree, complexNumberTwo ]
 
-                    vectorTensorProductJK =
-                        Vector.vectorTensorProduct ComplexNumbers.complexField vectorJ vectorK
+                    tensorProductJK =
+                        Vector.tensorProduct ComplexNumbers.complexField vectorJ vectorK
 
-                    cScalarMultiplicationVectorTensorProductJK =
-                        Vector.scalarMultiplication ComplexNumbers.complexField complexNumberOne vectorTensorProductJK
+                    cScalarMultiplicationtensorProductJK =
+                        Vector.scalarMultiplication ComplexNumbers.complexField complexNumberOne tensorProductJK
 
                     cScalarMultiplicationVectorJ =
                         Vector.scalarMultiplication ComplexNumbers.complexField complexNumberOne vectorJ
 
                     cScalarMultiplicationVectorJTensorProductVectorK =
-                        Vector.vectorTensorProduct ComplexNumbers.complexField cScalarMultiplicationVectorJ vectorK
+                        Vector.tensorProduct ComplexNumbers.complexField cScalarMultiplicationVectorJ vectorK
                 in
-                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal cScalarMultiplicationVectorTensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
+                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal cScalarMultiplicationtensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
         ]

@@ -22,7 +22,7 @@ module Vector exposing
     , dotProduct
     , cross
     , distance
-    , vectorTensorProduct
+    , tensorProduct
     , dimension
     , vectorSubspace
     , concatEmpty
@@ -88,7 +88,7 @@ module Vector exposing
 @docs dotProduct
 @docs cross
 @docs distance
-@docs vectorTensorProduct
+@docs tensorProduct
 
 
 # Vector Properties
@@ -330,8 +330,8 @@ cross { subtract, multiply } (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
 
 {-| Calculate the tensor product of two vectors
 -}
-vectorTensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
-vectorTensorProduct field vectorOne vectorTwo =
+tensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
+tensorProduct field vectorOne vectorTwo =
     bind
         vectorOne
         (\vectorOneElement ->

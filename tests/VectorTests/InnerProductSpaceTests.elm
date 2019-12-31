@@ -135,6 +135,37 @@ suite =
         , Test.fuzz2
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)
+            "tests vector dot product satisfies Cauchy-Shwartz inequality"
+          <|
+            \one two ->
+                let
+                    x =
+                        Vector.Vector [ one ]
+
+                    y =
+                        Vector.Vector [ two ]
+
+                    absXDotY =
+                        Vector.dotProduct
+                            Field.realField
+                            x
+                            y
+                            |> Basics.abs
+
+                    lengthOfX =
+                        Vector.length Field.realField x
+
+                    lengthOfY =
+                        Vector.length Field.realField y
+
+                    lengthOfXTimesLengthOfY =
+                        lengthOfX * lengthOfY
+                in
+                absXDotY
+                    |> Expect.atMost lengthOfXTimesLengthOfY
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
             "tests vector length satisfies triangle inequality"
           <|
             \one two ->

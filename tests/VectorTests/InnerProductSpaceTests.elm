@@ -103,7 +103,7 @@ suite =
                 Expect.within (Expect.Absolute 0.000000001) bDotA aDotB
         , Test.fuzz
             (Fuzz.floatRange -10 10)
-            "tests vector length equals square of dot product"
+            "tests vector length equals square root of dot product"
           <|
             \one ->
                 let

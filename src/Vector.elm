@@ -20,6 +20,7 @@ module Vector exposing
     , subtractVectors
     , hadamardMultiplication
     , dotProduct
+    , angleBetween
     , cross
     , distance
     , tensorProduct
@@ -45,7 +46,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , all, angleBetween, map2
+    , all, map2
     )
 
 {-| A module for Vectors
@@ -86,6 +87,7 @@ module Vector exposing
 @docs subtractVectors
 @docs hadamardMultiplication
 @docs dotProduct
+@docs angleBetween
 @docs cross
 @docs distance
 @docs tensorProduct
@@ -301,6 +303,23 @@ dotProduct : Field.Field a -> Vector a -> Vector a -> a
 dotProduct field vectorOne vectorTwo =
     hadamardMultiplication field vectorOne vectorTwo
         |> sum field
+
+
+{-| Calculate the angle between two vectors
+-}
+angleBetween : Vector Float -> Vector Float -> Float
+angleBetween vectorOne vectorTwo =
+    let
+        dotP =
+            dotProduct Field.realField vectorOne vectorTwo
+
+        lengthVectorOne =
+            length Field.realField vectorOne
+
+        lengthVectorTwo =
+            length Field.realField vectorTwo
+    in
+    Basics.acos (dotP / (lengthVectorOne * lengthVectorTwo))
 
 
 {-| Calculate the sum of a Vector
@@ -607,18 +626,3 @@ readComplexVector vectorString =
 findIndex : (a -> Bool) -> Vector a -> Maybe Int
 findIndex predicate (Vector list) =
     List.Extra.findIndex predicate list
-
-
-angleBetween : Vector Float -> Vector Float -> Float
-angleBetween vectorOne vectorTwo =
-    let
-        dotP =
-            dotProduct Field.realField vectorOne vectorTwo
-
-        lengthVectorOne =
-            length Field.realField vectorOne
-
-        lengthVectorTwo =
-            length Field.realField vectorTwo
-    in
-    Basics.acos (dotP / (lengthVectorOne * lengthVectorTwo))

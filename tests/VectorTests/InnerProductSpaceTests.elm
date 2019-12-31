@@ -315,4 +315,20 @@ suite =
                 in
                 angle
                     |> Expect.within (Expect.Absolute 0.000000001) 0
+        , Test.test
+            "tests angle between colinear but opposite vectors"
+          <|
+            \_ ->
+                let
+                    a =
+                        Vector.Vector [ 1, 0 ]
+
+                    b =
+                        Vector.Vector [ -1, 0 ]
+
+                    angle =
+                        Vector.angleBetween a b
+                in
+                angle
+                    |> Expect.within (Expect.Absolute 0.000000001) Basics.pi
         ]

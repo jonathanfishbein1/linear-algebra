@@ -126,6 +126,43 @@ suite =
                         Float.Extra.equalWithin 0.000000001 0 aDotACrossB && Float.Extra.equalWithin 0.000000001 0 bDotACrossB
                 in
                 Expect.true "a X b is orthagonal to both a and b" result
+        , Test.fuzz3
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests length of cross product is the length of the two vectors times the sin of the angle between them"
+          <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector3 one two three
+
+                    b =
+                        Vector.Vector3 two three one
+
+                    aCrossB =
+                        Vector.cross Field.realField a b
+                            |> Vector.vector3ToVector
+
+                    aVector =
+                        Vector.vector3ToVector a
+
+                    bVector =
+                        Vector.vector3ToVector b
+
+                    aLength =
+                        Vector.length Field.realField aVector
+
+                    bLength =
+                        Vector.length Field.realField bVector
+
+                    aCrossBLength =
+                        Vector.length Field.realField aCrossB
+
+                    angle =
+                        Vector.angleBetween aVector bVector
+                in
+                Expect.within (Expect.Absolute 0.000000001) aCrossBLength (aLength * bLength * Basics.sin angle)
         , Test.fuzz
             (Fuzz.floatRange 1 10)
             "tests unit vector length is 1"

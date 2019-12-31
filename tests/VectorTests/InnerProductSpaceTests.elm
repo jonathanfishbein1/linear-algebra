@@ -283,4 +283,36 @@ suite =
                 in
                 distanceAB
                     |> Expect.within (Expect.Absolute 0.000000001) distanceBA
+        , Test.test
+            "tests angle between orthagonal vectors"
+          <|
+            \_ ->
+                let
+                    a =
+                        Vector.Vector [ 1, 0 ]
+
+                    b =
+                        Vector.Vector [ 0, 1 ]
+
+                    angle =
+                        Vector.angleBetween a b
+                in
+                angle
+                    |> Expect.within (Expect.Absolute 0.000000001) (Basics.pi / 2)
+        , Test.test
+            "tests angle between colinear vectors"
+          <|
+            \_ ->
+                let
+                    a =
+                        Vector.Vector [ 1, 0 ]
+
+                    b =
+                        Vector.Vector [ 1, 0 ]
+
+                    angle =
+                        Vector.angleBetween a b
+                in
+                angle
+                    |> Expect.within (Expect.Absolute 0.000000001) 0
         ]

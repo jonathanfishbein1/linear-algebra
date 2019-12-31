@@ -45,7 +45,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , all, map2
+    , all, angleBetween, map2
     )
 
 {-| A module for Vectors
@@ -607,3 +607,18 @@ readComplexVector vectorString =
 findIndex : (a -> Bool) -> Vector a -> Maybe Int
 findIndex predicate (Vector list) =
     List.Extra.findIndex predicate list
+
+
+angleBetween : Vector Float -> Vector Float -> Float
+angleBetween vectorOne vectorTwo =
+    let
+        dotP =
+            dotProduct Field.realField vectorOne vectorTwo
+
+        lengthVectorOne =
+            length Field.realField vectorOne
+
+        lengthVectorTwo =
+            length Field.realField vectorTwo
+    in
+    Basics.acos (dotP / (lengthVectorOne * lengthVectorTwo))

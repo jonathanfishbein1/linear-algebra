@@ -118,9 +118,14 @@ suite =
 
                     aDotACrossB =
                         Vector.dotProduct Field.realField (Vector.vector3ToVector a) aCrossB
+
+                    bDotACrossB =
+                        Vector.dotProduct Field.realField (Vector.vector3ToVector b) aCrossB
+
+                    result =
+                        Float.Extra.equalWithin 0.000000001 0 aDotACrossB && Float.Extra.equalWithin 0.000000001 0 bDotACrossB
                 in
-                aDotACrossB
-                    |> Expect.within (Expect.Absolute 0.000000001) 0
+                Expect.true "a X b is orthagonal to both a and b" result
         , Test.fuzz
             (Fuzz.floatRange 1 10)
             "tests unit vector length is 1"

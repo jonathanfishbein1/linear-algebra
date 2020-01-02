@@ -382,8 +382,8 @@ pure a =
 
 {-| Apply for Vector
 -}
-andMap : Vector (a -> b) -> Vector a -> Vector b
-andMap fVector vector =
+andMap : Vector a -> Vector (a -> b) -> Vector b
+andMap vector fVector =
     map2 Basics.identity fVector vector
 
 

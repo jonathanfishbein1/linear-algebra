@@ -24,7 +24,7 @@ suite =
                         Matrix.pure one
 
                     mApplied =
-                        Matrix.apply mIdentity m
+                        Matrix.andMap mIdentity m
                 in
                 Expect.equal mApplied m
         , Test.fuzz3
@@ -51,10 +51,10 @@ suite =
                         Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ 0 ] ]
 
                     leftSide =
-                        Matrix.apply (Matrix.apply (Matrix.apply fPure u) v) w
+                        Matrix.andMap (Matrix.andMap (Matrix.andMap fPure u) v) w
 
                     rightSide =
-                        Matrix.apply u (Matrix.apply v w)
+                        Matrix.andMap u (Matrix.andMap v w)
                 in
                 Expect.equal leftSide rightSide
         , Test.fuzz
@@ -73,7 +73,7 @@ suite =
                         Matrix.pure one
 
                     mApplied =
-                        Matrix.apply pureF pureOne
+                        Matrix.andMap pureF pureOne
                 in
                 Expect.equal mApplied (Matrix.pure <| f one)
         , Test.fuzz
@@ -89,10 +89,10 @@ suite =
                         Matrix.pure one
 
                     leftSide =
-                        Matrix.apply pureOne pureTwo
+                        Matrix.andMap pureOne pureTwo
 
                     rightSide =
-                        Matrix.apply (Matrix.pure <| Basics.always one) pureOne
+                        Matrix.andMap (Matrix.pure <| Basics.always one) pureOne
                 in
                 Expect.equal leftSide rightSide
         ]

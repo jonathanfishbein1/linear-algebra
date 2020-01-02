@@ -43,7 +43,7 @@ module Matrix exposing
     , concatVertical
     , map
     , pure
-    , apply
+    , andMap
     , andThen
     , map2
     , foldl
@@ -136,7 +136,7 @@ module Matrix exposing
 
 @docs map
 @docs pure
-@docs apply
+@docs andMap
 @docs andThen
 @docs map2
 @docs foldl
@@ -563,8 +563,8 @@ pure a =
 
 {-| Apply for Matrix
 -}
-apply : Matrix (a -> b) -> Matrix a -> Matrix b
-apply fMatrix matrix =
+andMap : Matrix (a -> b) -> Matrix a -> Matrix b
+andMap fMatrix matrix =
     map2 Basics.identity fMatrix matrix
 
 

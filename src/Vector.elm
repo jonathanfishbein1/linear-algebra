@@ -31,7 +31,7 @@ module Vector exposing
     , concat
     , map
     , pure
-    , apply
+    , andMap
     , map2
     , andThen
     , foldl
@@ -110,7 +110,7 @@ module Vector exposing
 
 @docs map
 @docs pure
-@docs apply
+@docs andMap
 @docs map2
 @docs andThen
 @docs foldl
@@ -382,8 +382,8 @@ pure a =
 
 {-| Apply for Vector
 -}
-apply : Vector (a -> b) -> Vector a -> Vector b
-apply fVector vector =
+andMap : Vector (a -> b) -> Vector a -> Vector b
+andMap fVector vector =
     map2 Basics.identity fVector vector
 
 

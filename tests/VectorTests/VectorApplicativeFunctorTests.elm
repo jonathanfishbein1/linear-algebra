@@ -22,7 +22,7 @@ suite =
                         Vector.pure one
 
                     vApplied =
-                        Vector.apply vIdentity v
+                        Vector.andMap vIdentity v
                 in
                 Expect.equal vApplied v
         , Test.fuzz
@@ -47,10 +47,10 @@ suite =
                         Vector.Vector [ one ]
 
                     leftSide =
-                        Vector.apply (Vector.apply (Vector.apply fPure u) v) w
+                        Vector.andMap (Vector.andMap (Vector.andMap fPure u) v) w
 
                     rightSide =
-                        Vector.apply u (Vector.apply v w)
+                        Vector.andMap u (Vector.andMap v w)
                 in
                 Expect.equal leftSide rightSide
         , Test.fuzz
@@ -69,7 +69,7 @@ suite =
                         Vector.pure one
 
                     vApplied =
-                        Vector.apply pureF pureOne
+                        Vector.andMap pureF pureOne
                 in
                 Expect.equal vApplied (Vector.pure <| f one)
         , Test.fuzz
@@ -85,10 +85,10 @@ suite =
                         Vector.pure one
 
                     leftSide =
-                        Vector.apply pureOne pureTwo
+                        Vector.andMap pureOne pureTwo
 
                     rightSide =
-                        Vector.apply (Vector.pure <| Basics.always one) pureOne
+                        Vector.andMap (Vector.pure <| Basics.always one) pureOne
                 in
                 Expect.equal leftSide rightSide
         ]

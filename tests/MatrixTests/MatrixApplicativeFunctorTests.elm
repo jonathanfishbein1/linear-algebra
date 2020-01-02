@@ -24,16 +24,14 @@ suite =
                         Matrix.pure one
 
                     mApplied =
-                        Matrix.andMap mIdentity m
+                        Matrix.andMap m mIdentity
                 in
                 Expect.equal mApplied m
-        , Test.fuzz3
-            Fuzz.int
-            Fuzz.int
+        , Test.fuzz
             Fuzz.int
             "tests second applicative law for Matrix"
           <|
-            \one two three ->
+            \one ->
                 let
                     f =
                         (<<)
@@ -48,13 +46,13 @@ suite =
                         Matrix.pure identity
 
                     w =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ 0 ] ]
+                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ one ] ]
 
                     leftSide =
-                        Matrix.andMap (Matrix.andMap (Matrix.andMap fPure u) v) w
+                        Matrix.andMap w (Matrix.andMap v (Matrix.andMap u fPure))
 
                     rightSide =
-                        Matrix.andMap u (Matrix.andMap v w)
+                        Matrix.andMap (Matrix.andMap w v) u
                 in
                 Expect.equal leftSide rightSide
         , Test.fuzz
@@ -73,7 +71,7 @@ suite =
                         Matrix.pure one
 
                     mApplied =
-                        Matrix.andMap pureF pureOne
+                        Matrix.andMap pureOne pureF
                 in
                 Expect.equal mApplied (Matrix.pure <| f one)
         , Test.fuzz
@@ -89,10 +87,10 @@ suite =
                         Matrix.pure one
 
                     leftSide =
-                        Matrix.andMap pureOne pureTwo
+                        Matrix.andMap pureTwo pureOne
 
                     rightSide =
-                        Matrix.andMap (Matrix.pure <| Basics.always one) pureOne
+                        Matrix.andMap pureOne (Matrix.pure <| Basics.always one)
                 in
                 Expect.equal leftSide rightSide
         ]

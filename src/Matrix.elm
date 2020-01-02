@@ -563,9 +563,9 @@ pure a =
 
 {-| Apply for Matrix
 -}
-andMap : Matrix (a -> b) -> Matrix a -> Matrix b
+andMap : Matrix a -> Matrix (a -> b) -> Matrix b
 andMap fMatrix matrix =
-    map2 Basics.identity fMatrix matrix
+    map2 Basics.identity matrix fMatrix
 
 
 {-| Monad bind for Matrix

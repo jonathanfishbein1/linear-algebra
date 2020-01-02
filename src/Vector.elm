@@ -32,7 +32,7 @@ module Vector exposing
     , map
     , pure
     , apply
-    , liftA2
+    , map2
     , andThen
     , foldl
     , equal
@@ -46,7 +46,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , all, map2
+    , all
     )
 
 {-| A module for Vectors
@@ -111,7 +111,7 @@ module Vector exposing
 @docs map
 @docs pure
 @docs apply
-@docs liftA2
+@docs map2
 @docs andThen
 @docs foldl
 
@@ -280,21 +280,21 @@ normalise field v =
 -}
 addVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 addVectors { add } =
-    liftA2 add
+    map2 add
 
 
 {-| Subtract Vectors
 -}
 subtractVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 subtractVectors { subtract } =
-    liftA2 subtract
+    map2 subtract
 
 
 {-| Hadamard Multiplication Vectors
 -}
 hadamardMultiplication : Field.Field a -> Vector a -> Vector a -> Vector a
 hadamardMultiplication { multiply } =
-    liftA2 multiply
+    map2 multiply
 
 
 {-| Calculate the dot product of two Vectors
@@ -365,7 +365,7 @@ map f (Vector vector) =
     Vector <| List.map f vector
 
 
-{-| Map over a vector
+{-| Lift a binary function to work with Vectors
 -}
 map2 : (a -> b -> c) -> Vector a -> Vector b -> Vector c
 map2 f (Vector vectorOne) (Vector vectorTwo) =
@@ -385,13 +385,6 @@ pure a =
 apply : Vector (a -> b) -> Vector a -> Vector b
 apply fVector vector =
     map2 Basics.identity fVector vector
-
-
-{-| Lift a binary function to work with Vectors
--}
-liftA2 : (a -> b -> c) -> Vector a -> Vector b -> Vector c
-liftA2 f a b =
-    apply (map f a) b
 
 
 {-| andThen for Vector
@@ -503,7 +496,7 @@ all predicate (Vector list) =
 -}
 equalImplementation : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
 equalImplementation comparator vectorOne vectorTwo =
-    liftA2 comparator vectorOne vectorTwo
+    map2 comparator vectorOne vectorTwo
         |> all ((==) True)
 
 

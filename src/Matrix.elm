@@ -531,10 +531,10 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
 tensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
 tensorProduct field matrixOne matrixTwo =
     andThen
-        matrixOne
         (\matrixOneElement ->
             scalarMultiplication field matrixOneElement matrixTwo
         )
+        matrixOne
 
 
 {-| Map over a Matrix
@@ -570,8 +570,8 @@ andMap fMatrix matrix =
 
 {-| Monad bind for Matrix
 -}
-andThen : Matrix a -> (a -> Matrix b) -> Matrix b
-andThen (Matrix listOfRowVectors) fMatrix =
+andThen : (a -> Matrix b) -> Matrix a -> Matrix b
+andThen fMatrix (Matrix listOfRowVectors) =
     List.concatMap
         (\(RowVector (Vector.Vector listOfElements)) ->
             let

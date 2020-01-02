@@ -43,9 +43,9 @@ module Matrix exposing
     , concatVertical
     , map
     , pure
-    , apply
+    , andMap
     , andThen
-    , liftA2
+    , map2
     , foldl
     , equal
     , upperTriangle
@@ -136,9 +136,9 @@ module Matrix exposing
 
 @docs map
 @docs pure
-@docs apply
+@docs andMap
 @docs andThen
-@docs liftA2
+@docs map2
 @docs foldl
 
 
@@ -437,14 +437,14 @@ getDiagonalProduct { multiply, one } matrix =
 -}
 addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
 addMatrices { add } =
-    liftA2 add
+    map2 add
 
 
 {-| Subtract two Matrices
 -}
 subtractMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
 subtractMatrices { subtract } =
-    liftA2 subtract
+    map2 subtract
 
 
 {-| Multiply a Vector by a Matrix
@@ -531,10 +531,10 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
 tensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
 tensorProduct field matrixOne matrixTwo =
     andThen
-        matrixOne
         (\matrixOneElement ->
             scalarMultiplication field matrixOneElement matrixTwo
         )
+        matrixOne
 
 
 {-| Map over a Matrix
@@ -544,6 +544,8 @@ map f (Matrix listOfRowVectors) =
     Matrix <| List.map (rowVectorMap f) listOfRowVectors
 
 
+{-| Lift a binary function to work on Matrix
+-}
 map2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
 map2 f (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
     List.map2 (rowVectorMap2 f)
@@ -561,22 +563,15 @@ pure a =
 
 {-| Apply for Matrix
 -}
-apply : Matrix (a -> b) -> Matrix a -> Matrix b
-apply fMatrix matrix =
-    map2 Basics.identity fMatrix matrix
-
-
-{-| Lift a function to work on Matrix
--}
-liftA2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
-liftA2 f a b =
-    apply (map f a) b
+andMap : Matrix a -> Matrix (a -> b) -> Matrix b
+andMap fMatrix matrix =
+    map2 Basics.identity matrix fMatrix
 
 
 {-| Monad bind for Matrix
 -}
-andThen : Matrix a -> (a -> Matrix b) -> Matrix b
-andThen (Matrix listOfRowVectors) fMatrix =
+andThen : (a -> Matrix b) -> Matrix a -> Matrix b
+andThen fMatrix (Matrix listOfRowVectors) =
     List.concatMap
         (\(RowVector (Vector.Vector listOfElements)) ->
             let

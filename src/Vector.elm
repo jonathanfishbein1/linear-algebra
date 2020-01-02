@@ -352,10 +352,10 @@ cross { subtract, multiply } (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
 tensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
 tensorProduct field vectorOne vectorTwo =
     andThen
-        vectorOne
         (\vectorOneElement ->
             scalarMultiplication field vectorOneElement vectorTwo
         )
+        vectorOne
 
 
 {-| Map over a vector
@@ -389,8 +389,8 @@ andMap vector fVector =
 
 {-| andThen for Vector
 -}
-andThen : Vector a -> (a -> Vector b) -> Vector b
-andThen (Vector list) fVector =
+andThen : (a -> Vector b) -> Vector a -> Vector b
+andThen fVector (Vector list) =
     List.concatMap
         (\x ->
             let

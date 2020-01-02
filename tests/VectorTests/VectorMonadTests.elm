@@ -20,7 +20,7 @@ suite =
                             |> Vector.Vector
 
                     leftSide =
-                        Vector.bind (Vector.pure one) f
+                        Vector.andThen (Vector.pure one) f
 
                     rightSide =
                         f one
@@ -36,7 +36,7 @@ suite =
                         Vector.pure one
 
                     leftSide =
-                        Vector.bind m Vector.pure
+                        Vector.andThen m Vector.pure
                 in
                 Expect.equal leftSide m
         , Test.fuzz
@@ -57,10 +57,10 @@ suite =
                             |> Vector.Vector
 
                     leftSide =
-                        Vector.bind (Vector.bind m f) g
+                        Vector.andThen (Vector.andThen m f) g
 
                     rightSide =
-                        Vector.bind m (\x -> Vector.bind (f x) g)
+                        Vector.andThen m (\x -> Vector.andThen (f x) g)
                 in
                 Expect.equal leftSide rightSide
         ]

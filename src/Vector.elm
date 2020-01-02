@@ -33,7 +33,7 @@ module Vector exposing
     , pure
     , apply
     , liftA2
-    , bind
+    , andThen
     , foldl
     , equal
     , findIndex
@@ -112,7 +112,7 @@ module Vector exposing
 @docs pure
 @docs apply
 @docs liftA2
-@docs bind
+@docs andThen
 @docs foldl
 
 
@@ -351,7 +351,7 @@ cross { subtract, multiply } (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
 -}
 tensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
 tensorProduct field vectorOne vectorTwo =
-    bind
+    andThen
         vectorOne
         (\vectorOneElement ->
             scalarMultiplication field vectorOneElement vectorTwo
@@ -394,10 +394,10 @@ liftA2 f a b =
     apply (map f a) b
 
 
-{-| bind for Vector
+{-| andThen for Vector
 -}
-bind : Vector a -> (a -> Vector b) -> Vector b
-bind (Vector list) fVector =
+andThen : Vector a -> (a -> Vector b) -> Vector b
+andThen (Vector list) fVector =
     List.concatMap
         (\x ->
             let

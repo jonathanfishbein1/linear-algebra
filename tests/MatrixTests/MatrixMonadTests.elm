@@ -25,7 +25,7 @@ suite =
                             |> Matrix.Matrix
 
                     leftSide =
-                        Matrix.bind (Matrix.pure one) f
+                        Matrix.andThen (Matrix.pure one) f
 
                     rightSide =
                         f one
@@ -41,7 +41,7 @@ suite =
                         Matrix.pure one
 
                     leftSide =
-                        Matrix.bind m Matrix.pure
+                        Matrix.andThen m Matrix.pure
                 in
                 Expect.equal leftSide m
         , Test.fuzz
@@ -68,10 +68,10 @@ suite =
                             |> Matrix.Matrix
 
                     leftSide =
-                        Matrix.bind (Matrix.bind m f) g
+                        Matrix.andThen (Matrix.andThen m f) g
 
                     rightSide =
-                        Matrix.bind m (\x -> Matrix.bind (f x) g)
+                        Matrix.andThen m (\x -> Matrix.andThen (f x) g)
                 in
                 Expect.equal leftSide rightSide
         ]

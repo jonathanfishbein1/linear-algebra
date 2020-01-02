@@ -44,7 +44,7 @@ module Matrix exposing
     , map
     , pure
     , apply
-    , bind
+    , andThen
     , liftA2
     , foldl
     , equal
@@ -137,7 +137,7 @@ module Matrix exposing
 @docs map
 @docs pure
 @docs apply
-@docs bind
+@docs andThen
 @docs liftA2
 @docs foldl
 
@@ -530,7 +530,7 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
 -}
 tensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
 tensorProduct field matrixOne matrixTwo =
-    bind
+    andThen
         matrixOne
         (\matrixOneElement ->
             scalarMultiplication field matrixOneElement matrixTwo
@@ -575,8 +575,8 @@ liftA2 f a b =
 
 {-| Monad bind for Matrix
 -}
-bind : Matrix a -> (a -> Matrix b) -> Matrix b
-bind (Matrix listOfRowVectors) fMatrix =
+andThen : Matrix a -> (a -> Matrix b) -> Matrix b
+andThen (Matrix listOfRowVectors) fMatrix =
     List.concatMap
         (\(RowVector (Vector.Vector listOfElements)) ->
             let

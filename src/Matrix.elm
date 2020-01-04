@@ -18,6 +18,8 @@ module Matrix exposing
     , determinant
     , norm
     , leftNullSpace
+    , getDiagonal
+    , getDiagonalProduct
     , addMatrices
     , subtractMatrices
     , multiplyMatrixVector
@@ -95,6 +97,7 @@ module Matrix exposing
 @docs norm
 @docs leftNullSpace
 @docs getDiagonal
+@docs getDiagonalProduct
 
 
 # Binary Operations
@@ -401,6 +404,8 @@ leftNullSpace vectorSpace =
     transpose >> nullSpace vectorSpace
 
 
+{-| Get the diagonal of a Matrix
+-}
 getDiagonal : Matrix a -> Maybe (List a)
 getDiagonal matrix =
     let
@@ -419,6 +424,8 @@ getDiagonal matrix =
         |> Maybe.Extra.combine
 
 
+{-| Get the Product of the diagonal of a Matrix
+-}
 getDiagonalProduct : Field.Field a -> Matrix a -> Maybe a
 getDiagonalProduct { multiply, one } matrix =
     getDiagonal matrix

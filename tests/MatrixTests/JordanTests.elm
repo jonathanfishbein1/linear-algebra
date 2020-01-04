@@ -11,7 +11,9 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
-        [ Test.test "tests jordanReduce put matrix into Reduced Row Echelon Form" <|
+        [ Test.test
+            "tests jordanReduce put matrix into Reduced Row Echelon Form"
+          <|
             \_ ->
                 let
                     rowEchelonFormMatrix =
@@ -32,7 +34,9 @@ suite =
                             ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
-        , Test.test "tests jordanReduce produces correct answers second example" <|
+        , Test.test
+            "tests jordanReduce produces correct answers second example"
+          <|
             \_ ->
                 let
                     rowEchelonFormMatrix =
@@ -53,11 +57,13 @@ suite =
                             ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
-        , Test.test "tests jordanReduceComplex put complex matrix into Reduced Row Echelon Form complex entries with imaginary portion" <|
+        , Test.test
+            "tests jordanReduceComplex put complex matrix into Reduced Row Echelon Form complex entries with imaginary portion"
+          <|
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -66,7 +72,7 @@ suite =
                             )
 
                     complexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -75,7 +81,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 0
                             )
@@ -84,7 +90,7 @@ suite =
                             )
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )

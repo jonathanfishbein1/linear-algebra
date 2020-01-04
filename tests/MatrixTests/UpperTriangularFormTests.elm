@@ -11,7 +11,9 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
-        [ Test.test "tests gaussianReduce put matrix into Row Echelon Form" <|
+        [ Test.test
+            "tests gaussianReduce put matrix into Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
@@ -32,14 +34,16 @@ suite =
                             ]
                 in
                 Expect.equal upperTriangularFormMatrix (Ok expected)
-        , Test.test "tests gaussianReduce put complex matrix into Row Echelon Form" <|
+        , Test.test
+            "tests gaussianReduce put complex matrix into Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 2) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
-                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 6) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
-                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0) ]
+                            [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 2) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 6) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0) ]
                             ]
 
                     upperTriangularFormMatrix =
@@ -47,9 +51,9 @@ suite =
 
                     expected =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 3.0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 2.0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
-                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 3.3333333333333335) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real -1) (ComplexNumbers.Imaginary 0) ]
-                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0) ]
+                            [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 3.0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 2.0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 3.3333333333333335) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real -1) (ComplexNumbers.Imaginary 0) ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0) ]
                             ]
                 in
                 case upperTriangularFormMatrix of
@@ -58,11 +62,13 @@ suite =
 
                     Err error ->
                         Expect.fail error
-        , Test.test "tests upperTriangleComplex puts matrix into upper tirangle form" <|
+        , Test.test
+            "tests upperTriangleComplex puts matrix into upper tirangle form"
+          <|
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -71,7 +77,7 @@ suite =
                             )
 
                     complexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 2
                             )
@@ -80,7 +86,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 3
                             )
@@ -89,7 +95,7 @@ suite =
                             )
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 4
                             )
@@ -107,7 +113,7 @@ suite =
                         Matrix.upperTriangle Vector.complexVectorSpace matrix
 
                     complexNumberExpectedR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )

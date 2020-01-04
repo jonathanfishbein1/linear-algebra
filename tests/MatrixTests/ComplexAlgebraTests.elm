@@ -12,7 +12,12 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Complex Algebra"
-        [ Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication is associative" <|
+        [ Test.fuzz3
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
+            "tests real Matrix multiplication is associative"
+          <|
             \one two three ->
                 let
                     v1 =
@@ -61,7 +66,9 @@ suite =
                             (Matrix.multiplyMatrices Vector.realInnerProductSpace m2 m3)
                 in
                 Expect.equal m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
-        , Test.test "tests identityMatrix is an identity matrix" <|
+        , Test.test
+            "tests identity is an identity matrix"
+          <|
             \_ ->
                 let
                     v1 =
@@ -92,8 +99,13 @@ suite =
                         Matrix.Matrix
                             [ v1, v2, v3 ]
                 in
-                Expect.equal (Matrix.identityMatrix Field.realField 3) m1
-        , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests In*A = A" <|
+                Expect.equal (Matrix.identity Field.realField 3) m1
+        , Test.fuzz3
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
+            "tests In*A = A"
+          <|
             \one two three ->
                 let
                     v1 =
@@ -125,10 +137,15 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.identityMatrix Field.realField 3) m1
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.identity Field.realField 3) m1
                 in
                 Expect.equal m1TimeI (Ok m1)
-        , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests A*In = a" <|
+        , Test.fuzz3
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
+            "tests A*In = a"
+          <|
             \one two three ->
                 let
                     v1 =
@@ -160,10 +177,15 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiplyMatrices Vector.realInnerProductSpace m1 (Matrix.identityMatrix Field.realField 3)
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace m1 (Matrix.identity Field.realField 3)
                 in
                 Expect.equal m1TimeI (Ok m1)
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition" <|
+        , Test.fuzz3
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
+            "tests real Matrix multiplication distributes over addition"
+          <|
             \one two three ->
                 let
                     v1 =
@@ -210,7 +232,12 @@ suite =
                         Result.map2 (Matrix.addMatrices Field.realField) (Matrix.multiplyMatrices Vector.realInnerProductSpace m1 m2) (Matrix.multiplyMatrices Vector.realInnerProductSpace m1 m3)
                 in
                 Expect.equal m1Timesm2Plus3 m1Timesm2Plusem1Timesm3
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication distributes over addition second test" <|
+        , Test.fuzz3
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
+            "tests real Matrix multiplication distributes over addition second test"
+          <|
             \one two three ->
                 let
                     v1 =
@@ -254,10 +281,18 @@ suite =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.addMatrices Field.realField m2 m3) m1
 
                     m2Timesm1Plusm3Timesm1 =
-                        Result.map2 (Matrix.addMatrices Field.realField) (Matrix.multiplyMatrices Vector.realInnerProductSpace m2 m1) (Matrix.multiplyMatrices Vector.realInnerProductSpace m3 m1)
+                        Result.map2
+                            (Matrix.addMatrices Field.realField)
+                            (Matrix.multiplyMatrices Vector.realInnerProductSpace m2 m1)
+                            (Matrix.multiplyMatrices Vector.realInnerProductSpace m3 m1)
                 in
                 Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication relates to the transpose" <|
+        , Test.fuzz3
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
+            "tests matrix multiplication relates to the transpose"
+          <|
             \one two three ->
                 let
                     v1 =
@@ -284,7 +319,9 @@ suite =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.transpose b) (Matrix.transpose a)
                 in
                 Expect.equal aTimebThenTranspose cTimesm1ThenTimesm2
-        , Test.test "tests matrix vector multiplication" <|
+        , Test.test
+            "tests matrix vector multiplication"
+          <|
             \_ ->
                 let
                     v =
@@ -305,17 +342,28 @@ suite =
                         Vector.Vector [ 14, 32, 50 ]
                 in
                 Expect.equal mTimesV (Ok expected)
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication respects the conjugate" <|
+        , Test.fuzz3
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
+            "tests matrix multiplication respects the conjugate"
+          <|
             \one two three ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two)
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real one)
+                            (ComplexNumbers.Imaginary two)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real three) (ComplexNumbers.Imaginary two)
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real three)
+                            (ComplexNumbers.Imaginary two)
 
                     complexNumberThree =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real two) (ComplexNumbers.Imaginary three)
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real two)
+                            (ComplexNumbers.Imaginary three)
 
                     v1 =
                         Matrix.RowVector <|
@@ -347,17 +395,25 @@ suite =
                         Matrix.multiplyMatrices Vector.complexInnerProductSpace (Matrix.conjugate a) (Matrix.conjugate b)
 
                     result =
-                        Result.map2 (Matrix.equal ComplexNumbers.equal) aTimebThenConjugate cTimesm1ThenTimesm2
+                        Result.map2
+                            (Matrix.equal ComplexNumbers.equal)
+                            aTimebThenConjugate
+                            cTimesm1ThenTimesm2
                 in
                 Expect.equal result (Ok True)
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix multiplication relates to the adjoint" <|
+        , Test.fuzz3
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
+            "tests matrix multiplication relates to the adjoint"
+          <|
             \one two three ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two)
+                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real three) (ComplexNumbers.Imaginary two)
+                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real three) (ComplexNumbers.Imaginary two)
 
                     v1 =
                         Matrix.RowVector <|
@@ -383,7 +439,10 @@ suite =
                         Matrix.multiplyMatrices Vector.complexInnerProductSpace (Matrix.adjoint a) (Matrix.adjoint b)
 
                     result =
-                        Result.map2 (Matrix.equal ComplexNumbers.equal) aTimebThenAdjoint bAdjointTimesAAdjoint
+                        Result.map2
+                            (Matrix.equal ComplexNumbers.equal)
+                            aTimebThenAdjoint
+                            bAdjointTimesAAdjoint
                 in
                 Expect.equal result (Ok True)
         ]

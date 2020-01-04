@@ -11,7 +11,9 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
-        [ Test.test "tests gaussianReduce put matrix into Row Echelon Form" <|
+        [ Test.test
+            "tests gaussianReduce put matrix into Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
@@ -32,7 +34,9 @@ suite =
                             ]
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduce produces correct answers second example" <|
+        , Test.test
+            "tests gaussianReduce produces correct answers second example"
+          <|
             \_ ->
                 let
                     matrix =
@@ -53,7 +57,9 @@ suite =
                             ]
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduce with infinite solutions" <|
+        , Test.test
+            "tests gaussianReduce with infinite solutions"
+          <|
             \_ ->
                 let
                     matrix =
@@ -74,7 +80,9 @@ suite =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduce with infinite solutions two" <|
+        , Test.test
+            "tests gaussianReduce with infinite solutions two"
+          <|
             \_ ->
                 let
                     matrix =
@@ -93,7 +101,9 @@ suite =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduce with no solutions" <|
+        , Test.test
+            "tests gaussianReduce with no solutions"
+          <|
             \_ ->
                 let
                     matrix =
@@ -114,7 +124,9 @@ suite =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduce wikibooks example" <|
+        , Test.test
+            "tests gaussianReduce wikibooks example"
+          <|
             \_ ->
                 let
                     matrix =
@@ -135,7 +147,9 @@ suite =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests matrix gaussianReduce put matrix into Row Echelon Form" <|
+        , Test.test
+            "tests matrix gaussianReduce put matrix into Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
@@ -156,14 +170,16 @@ suite =
                             ]
                 in
                 Expect.equal rowEchelonFormMatrix expected
-        , Test.test "tests gaussianReduceComplex put complex matrix into Row Echelon Form" <|
+        , Test.test
+            "tests gaussianReduceComplex put complex matrix into Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 2) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
-                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 6) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
-                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0) ]
+                            [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 2) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 6) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0) ]
                             ]
 
                     rowEchelonFormMatrix =
@@ -171,17 +187,19 @@ suite =
 
                     expected =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 1.0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real <| 2.0 / 3) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0) ]
-                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real <| -1 / 3.3333333333333335) (ComplexNumbers.Imaginary 0) ]
-                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0) ]
+                            [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 1.0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real <| 2.0 / 3) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0) ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real <| -1 / 3.3333333333333335) (ComplexNumbers.Imaginary 0) ]
+                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 0) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0) ]
                             ]
                 in
                 Expect.true "matrics equal" (Matrix.equal ComplexNumbers.equal rowEchelonFormMatrix expected)
-        , Test.test "tests gaussianReduceComplex put complex matrix into Row Echelon Form complex entries with imaginary portion" <|
+        , Test.test
+            "tests gaussianReduceComplex put complex matrix into Row Echelon Form complex entries with imaginary portion"
+          <|
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -190,7 +208,7 @@ suite =
                             )
 
                     complexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 2
                             )
@@ -199,7 +217,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 3
                             )
@@ -208,7 +226,7 @@ suite =
                             )
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 4
                             )
@@ -226,7 +244,7 @@ suite =
                         Matrix.gaussianReduce Vector.complexVectorSpace matrix
 
                     complexNumberExpectedR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -235,7 +253,7 @@ suite =
                             )
 
                     complexNumberExpectedR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -244,7 +262,7 @@ suite =
                             )
 
                     complexNumberExpectedR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )

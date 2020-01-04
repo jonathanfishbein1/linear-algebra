@@ -11,25 +11,30 @@ module Vector exposing
     , complexVectorSpace
     , complexVectorAbelianGroup
     , complexInnerProductSpace
+    , zeros
     , scalarMultiplication
-    , vectorLength
+    , length
     , normalise
+    , sum
     , addVectors
     , subtractVectors
-    , vectorDotProduct
+    , hadamardMultiplication
+    , dotProduct
+    , angleBetween
     , cross
     , distance
-    , vectorTensorProduct
+    , tensorProduct
     , dimension
     , vectorSubspace
-    , concatEmpty
+    , all
+    , empty
     , append
     , concat
     , map
     , pure
-    , apply
-    , liftA2
-    , bind
+    , andMap
+    , map2
+    , andThen
     , foldl
     , equal
     , findIndex
@@ -65,34 +70,39 @@ module Vector exposing
 @docs complexVectorSpace
 @docs complexVectorAbelianGroup
 @docs complexInnerProductSpace
+@docs zeros
 
 
 # Unitary Operations
 
 @docs scalarMultiplication
-@docs vectorLength
+@docs length
 @docs normalise
+@docs sum
 
 
 # Binary Operations
 
 @docs addVectors
 @docs subtractVectors
-@docs vectorDotProduct
+@docs hadamardMultiplication
+@docs dotProduct
+@docs angleBetween
 @docs cross
 @docs distance
-@docs vectorTensorProduct
+@docs tensorProduct
 
 
 # Vector Properties
 
 @docs dimension
 @docs vectorSubspace
+@docs all
 
 
 # Monoid
 
-@docs concatEmpty
+@docs empty
 @docs append
 @docs concat
 
@@ -101,9 +111,9 @@ module Vector exposing
 
 @docs map
 @docs pure
-@docs apply
-@docs liftA2
-@docs bind
+@docs andMap
+@docs map2
+@docs andThen
 @docs foldl
 
 
@@ -191,7 +201,7 @@ realVectorAbelianGroup =
 
 {-| Complex Numbered Abelian Group
 -}
-complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumberCartesian Float)
+complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumber Float)
 complexVectorAbelianGroup =
     { field = ComplexNumbers.complexField
     , addVects = addVectors ComplexNumbers.complexField
@@ -210,7 +220,7 @@ realVectorSpace =
 
 {-| Complex Numbered Vector Space
 -}
-complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
+complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumber Float)
 complexVectorSpace =
     { abelianGroup = complexVectorAbelianGroup
     , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
@@ -222,17 +232,25 @@ complexVectorSpace =
 realInnerProductSpace : InnerProductSpace Float
 realInnerProductSpace =
     { vectorSpace = realVectorSpace
-    , innerProduct = vectorDotProduct Field.realField
+    , innerProduct = dotProduct Field.realField
     }
 
 
 {-| Complex Numbered Inner Product Space
 -}
-complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumberCartesian Float)
+complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumber Float)
 complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
-    , innerProduct = vectorDotProduct ComplexNumbers.complexField
+    , innerProduct = dotProduct ComplexNumbers.complexField
     }
+
+
+{-| Zero vector given a Field and dimension
+-}
+zeros : Field.Field a -> Int -> Vector a
+zeros { zero } dim =
+    List.repeat dim zero
+        |> Vector
 
 
 {-| Scalar multiplication over a Vector
@@ -244,9 +262,9 @@ scalarMultiplication { multiply } scalar =
 
 {-| Calculate the length of a Vector
 -}
-vectorLength : Field.Field a -> Vector a -> a
-vectorLength field vector =
-    vectorDotProduct field vector vector
+length : Field.Field a -> Vector a -> a
+length field vector =
+    dotProduct field vector vector
         |> field.power (1 / 2)
 
 
@@ -254,33 +272,64 @@ vectorLength field vector =
 -}
 normalise : Field.Field a -> Vector a -> Vector a
 normalise field v =
-    if vectorLength field v == field.zero then
+    if length field v == field.zero then
         v
 
     else
-        map (field.divide (vectorLength field v)) v
+        map (field.divide (length field v)) v
 
 
 {-| Add two Vectors
 -}
 addVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 addVectors { add } =
-    liftA2 add
+    map2 add
 
 
 {-| Subtract Vectors
 -}
 subtractVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 subtractVectors { subtract } =
-    liftA2 subtract
+    map2 subtract
+
+
+{-| Hadamard Multiplication Vectors
+-}
+hadamardMultiplication : Field.Field a -> Vector a -> Vector a -> Vector a
+hadamardMultiplication { multiply } =
+    map2 multiply
 
 
 {-| Calculate the dot product of two Vectors
 -}
-vectorDotProduct : Field.Field a -> Vector a -> Vector a -> a
-vectorDotProduct { zero, add, multiply } vectorOne vectorTwo =
-    liftA2 multiply vectorOne vectorTwo
-        |> foldl add zero
+dotProduct : Field.Field a -> Vector a -> Vector a -> a
+dotProduct field vectorOne vectorTwo =
+    hadamardMultiplication field vectorOne vectorTwo
+        |> sum field
+
+
+{-| Calculate the angle between two vectors
+-}
+angleBetween : Vector Float -> Vector Float -> Float
+angleBetween vectorOne vectorTwo =
+    let
+        dotP =
+            dotProduct Field.realField vectorOne vectorTwo
+
+        lengthVectorOne =
+            length Field.realField vectorOne
+
+        lengthVectorTwo =
+            length Field.realField vectorTwo
+    in
+    Basics.acos (dotP / (lengthVectorOne * lengthVectorTwo))
+
+
+{-| Calculate the sum of a Vector
+-}
+sum : Field.Field a -> Vector a -> a
+sum { add, zero } =
+    foldl add zero
 
 
 {-| Calculate distance between two vectors
@@ -288,7 +337,7 @@ vectorDotProduct { zero, add, multiply } vectorOne vectorTwo =
 distance : AbelianGroup a -> Vector a -> Vector a -> a
 distance { subtractVects, field } vectorOne vectorTwo =
     subtractVects vectorOne vectorTwo
-        |> vectorLength field
+        |> length field
 
 
 {-| Take the cross product of two 3D vectors
@@ -303,13 +352,13 @@ cross { subtract, multiply } (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
 
 {-| Calculate the tensor product of two vectors
 -}
-vectorTensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
-vectorTensorProduct field vectorOne vectorTwo =
-    bind
-        vectorOne
+tensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
+tensorProduct field vectorOne vectorTwo =
+    andThen
         (\vectorOneElement ->
             scalarMultiplication field vectorOneElement vectorTwo
         )
+        vectorOne
 
 
 {-| Map over a vector
@@ -317,6 +366,14 @@ vectorTensorProduct field vectorOne vectorTwo =
 map : (a -> b) -> Vector a -> Vector b
 map f (Vector vector) =
     Vector <| List.map f vector
+
+
+{-| Lift a binary function to work with Vectors
+-}
+map2 : (a -> b -> c) -> Vector a -> Vector b -> Vector c
+map2 f (Vector vectorOne) (Vector vectorTwo) =
+    List.map2 f vectorOne vectorTwo
+        |> Vector
 
 
 {-| Place a value in minimal Vector context
@@ -328,22 +385,15 @@ pure a =
 
 {-| Apply for Vector
 -}
-apply : Vector (a -> b) -> Vector a -> Vector b
-apply (Vector fVector) (Vector vector) =
-    Vector <| List.map2 (\f x -> f x) fVector vector
+andMap : Vector a -> Vector (a -> b) -> Vector b
+andMap vector fVector =
+    map2 Basics.identity fVector vector
 
 
-{-| Lift a binary function to work with Vectors
+{-| andThen for Vector
 -}
-liftA2 : (a -> b -> c) -> Vector a -> Vector b -> Vector c
-liftA2 f a b =
-    apply (map f a) b
-
-
-{-| bind for Vector
--}
-bind : Vector a -> (a -> Vector b) -> Vector b
-bind (Vector list) fVector =
+andThen : (a -> Vector b) -> Vector a -> Vector b
+andThen fVector (Vector list) =
     List.concatMap
         (\x ->
             let
@@ -365,8 +415,8 @@ foldl foldFunction acc (Vector list) =
 
 {-| Monoid empty for Vector
 -}
-concatEmpty : Vector a
-concatEmpty =
+empty : Vector a
+empty =
     Vector []
 
 
@@ -383,7 +433,9 @@ append (Vector listOne) (Vector listTwo) =
 -}
 concat : Typeclasses.Classes.Monoid.Monoid (Vector a)
 concat =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity (Typeclasses.Classes.Semigroup.prepend append) concatEmpty
+    Typeclasses.Classes.Monoid.semigroupAndIdentity
+        (Typeclasses.Classes.Semigroup.prepend append)
+        empty
 
 
 {-| Convert a Vector3 type to a Vector type
@@ -402,21 +454,26 @@ dimension (Vector list) =
 
 {-| Determine whether a list of Vectors makes a Subspace
 -}
-vectorSubspace : AbelianGroup a -> Scalar a -> List (Vector a) -> List (a -> Bool) -> Bool
+vectorSubspace :
+    AbelianGroup a
+    -> Scalar a
+    -> List (Vector a)
+    -> List (a -> Bool)
+    -> Bool
 vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
     let
-        testZeroVector =
+        testzeros =
             List.map (scalarMultiplication field field.zero) vectorList
 
-        containsZeroVector =
-            closurePassCriteria testZeroVector
+        containszeros =
+            closurePassCriteria testzeros
 
         scaledVectors =
             List.map (scalarMultiplication field scalar) vectorList
 
         closurePassCriteria =
-            List.map (\(Vector vector) -> Vector <| List.map2 (\predicate x -> predicate x) predicates vector)
-                >> List.all (\(Vector vector) -> List.all ((==) True) vector)
+            List.map (\(Vector vector) -> Vector <| List.map2 Basics.identity predicates vector)
+                >> List.all (all ((==) True))
 
         closureUnderScalarMultiplication =
             closurePassCriteria scaledVectors
@@ -430,18 +487,22 @@ vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
         closureUnderAddition =
             closurePassCriteria additionOfVectors
     in
-    containsZeroVector && closureUnderScalarMultiplication && closureUnderAddition
+    containszeros && closureUnderScalarMultiplication && closureUnderAddition
+
+
+{-| Determine if all elements in a vector satisfy some test
+-}
+all : (a -> Bool) -> Vector a -> Bool
+all predicate (Vector list) =
+    List.all predicate list
 
 
 {-| Compare two Vectors for equality
 -}
 equalImplementation : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
 equalImplementation comparator vectorOne vectorTwo =
-    let
-        (Vector list) =
-            liftA2 comparator vectorOne vectorTwo
-    in
-    List.all ((==) True) <| list
+    map2 comparator vectorOne vectorTwo
+        |> all ((==) True)
 
 
 {-| `Equal` type for `Vector`.
@@ -476,25 +537,25 @@ setAt index element (Vector list) =
 {-| Print a Real Vector as a string
 -}
 printRealVector : Vector Float -> String
-printRealVector (Vector list) =
-    let
-        values =
-            List.map String.fromFloat list
+printRealVector vector =
+    "Vector ["
+        ++ (map String.fromFloat vector
+                |> (\(Vector list) -> list)
                 |> String.join ", "
-    in
-    "Vector [" ++ values ++ "]"
+           )
+        ++ "]"
 
 
 {-| Print a Complex Vector as a string
 -}
-printComplexVector : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> String
-printComplexVector (Vector list) =
-    let
-        values =
-            List.map ComplexNumbers.print list
+printComplexVector : Vector (ComplexNumbers.ComplexNumber Float) -> String
+printComplexVector vector =
+    "Vector ["
+        ++ (map ComplexNumbers.print vector
+                |> (\(Vector list) -> list)
                 |> String.join ", "
-    in
-    "Vector [" ++ values ++ "]"
+           )
+        ++ "]"
 
 
 float : Parser.Parser Float
@@ -551,7 +612,9 @@ readRealVector vectorString =
 
 {-| Try to read a string into a Complex Vector
 -}
-readComplexVector : String -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumberCartesian Float))
+readComplexVector :
+    String
+    -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumber Float))
 readComplexVector vectorString =
     Parser.run (parseVector ComplexNumbers.parseComplexNumber) vectorString
 

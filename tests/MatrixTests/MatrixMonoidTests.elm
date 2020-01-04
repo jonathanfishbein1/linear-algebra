@@ -10,7 +10,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
-        [ Test.fuzz Fuzz.float "tests Matrix empty or identity value for vertical append right" <|
+        [ Test.fuzz
+            Fuzz.float
+            "tests Matrix empty or identity value for vertical append right"
+          <|
             \one ->
                 let
                     m =
@@ -21,9 +24,12 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.matrixConcatVertical.semigroup.prepend m Matrix.matrixConcatVertical.identity
+                Matrix.concatVertical.semigroup.prepend m Matrix.concatVertical.identity
                     |> Expect.equal m
-        , Test.fuzz Fuzz.float "tests Matrix empty or identity value for vertical append left" <|
+        , Test.fuzz
+            Fuzz.float
+            "tests Matrix empty or identity value for vertical append left"
+          <|
             \one ->
                 let
                     m =
@@ -34,9 +40,14 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.matrixConcatVertical.semigroup.prepend Matrix.matrixConcatVertical.identity m
+                Matrix.concatVertical.semigroup.prepend Matrix.concatVertical.identity m
                     |> Expect.equal m
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally concat matricies vertically" <|
+        , Test.fuzz3
+            Fuzz.int
+            Fuzz.int
+            Fuzz.int
+            "tests monoidally concat matricies vertically"
+          <|
             \one two three ->
                 let
                     a =
@@ -70,9 +81,12 @@ suite =
                         , m3
                         ]
                 in
-                Matrix.matrixConcatVertical.concat listOfMonoids
+                Matrix.concatVertical.concat listOfMonoids
                     |> Expect.equal expected
-        , Test.fuzz Fuzz.float "tests Matrix empty or identity value for horizontal append right" <|
+        , Test.fuzz
+            Fuzz.float
+            "tests Matrix empty or identity value for horizontal append right"
+          <|
             \one ->
                 let
                     m =
@@ -83,9 +97,12 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.matrixConcatHorizontal.semigroup.prepend m Matrix.matrixConcatHorizontal.identity
+                Matrix.concatHorizontal.semigroup.prepend m Matrix.concatHorizontal.identity
                     |> Expect.equal m
-        , Test.fuzz Fuzz.float "tests Matrix empty or identity value for horizontal append left" <|
+        , Test.fuzz
+            Fuzz.float
+            "tests Matrix empty or identity value for horizontal append left"
+          <|
             \one ->
                 let
                     m =
@@ -96,9 +113,14 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.matrixConcatHorizontal.semigroup.prepend Matrix.matrixConcatHorizontal.identity m
+                Matrix.concatHorizontal.semigroup.prepend Matrix.concatHorizontal.identity m
                     |> Expect.equal m
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally concat matricies horizontally" <|
+        , Test.fuzz3
+            Fuzz.int
+            Fuzz.int
+            Fuzz.int
+            "tests monoidally concat matricies horizontally"
+          <|
             \one two three ->
                 let
                     a =
@@ -127,9 +149,14 @@ suite =
                     listOfMonoids =
                         [ m1, m2, m3 ]
                 in
-                Matrix.matrixConcatHorizontal.concat listOfMonoids
+                Matrix.concatHorizontal.concat listOfMonoids
                     |> Expect.equal expected
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "tests monoidally concat matricies horizontally with scenerio that might break map2" <|
+        , Test.fuzz3
+            Fuzz.int
+            Fuzz.int
+            Fuzz.int
+            "tests monoidally concat matricies horizontally with scenerio that might break map2"
+          <|
             \one two three ->
                 let
                     a =
@@ -159,6 +186,6 @@ suite =
                     listOfMonoids =
                         [ m1, m2 ]
                 in
-                Matrix.matrixConcatHorizontal.concat listOfMonoids
+                Matrix.concatHorizontal.concat listOfMonoids
                     |> Expect.equal expected
         ]

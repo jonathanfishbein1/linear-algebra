@@ -13,7 +13,9 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "The Matrix module"
-        [ Test.test "tests matrix jordanReduce put matrix into Reduced Row Echelon Form" <|
+        [ Test.test
+            "tests matrix jordanReduce put matrix into Reduced Row Echelon Form"
+          <|
             \_ ->
                 let
                     matrix =
@@ -34,7 +36,9 @@ suite =
                             ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
-        , Test.test "tests matrix gaussJordan produces correct answers" <|
+        , Test.test
+            "tests matrix gaussJordan produces correct answers"
+          <|
             \_ ->
                 let
                     matrix =
@@ -53,8 +57,10 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.UniqueSolution expected)
-        , Test.test "tests matrix gaussJordan produces correct answers second example" <|
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.Consistant (Matrix.UniqueSolution expected))
+        , Test.test
+            "tests matrix gaussJordan produces correct answers second example"
+          <|
             \_ ->
                 let
                     matrix =
@@ -73,8 +79,10 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ 5, -1.0, -1.0 ]
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.UniqueSolution expected)
-        , Test.test "tests matrix gaussJordan with no solutions" <|
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.Consistant (Matrix.UniqueSolution expected))
+        , Test.test
+            "tests matrix gaussJordan with no solutions"
+          <|
             \_ ->
                 let
                     matrix =
@@ -90,8 +98,10 @@ suite =
                     reducedRowEchelonFormMatrix =
                         Matrix.solve Vector.realVectorSpace matrix b
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.NoUniqueSolution "No Unique Solution")
-        , Test.test "tests matrix gaussJordan with infinite solutions" <|
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.Inconsistant "No Unique Solution")
+        , Test.test
+            "tests matrix gaussJordan with infinite solutions"
+          <|
             \_ ->
                 let
                     matrix =
@@ -107,8 +117,10 @@ suite =
                     reducedRowEchelonFormMatrix =
                         Matrix.solve Vector.realVectorSpace matrix b
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
-        , Test.test "tests matrix null space calculation" <|
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
+        , Test.test
+            "tests matrix null space calculation"
+          <|
             \_ ->
                 let
                     matrix =
@@ -123,8 +135,10 @@ suite =
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ 0, 0 ]
                 in
-                Expect.equal nullSpace (Matrix.UniqueSolution expected)
-        , Test.test "tests matrix linearlyIndependent" <|
+                Expect.equal nullSpace (Matrix.Consistant (Matrix.UniqueSolution expected))
+        , Test.test
+            "tests matrix linearlyIndependent"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -133,7 +147,9 @@ suite =
                         ]
                 in
                 Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent Vector.realVectorSpace listOfVectors)
-        , Test.test "tests matrix linearlyIndependent with two colinear vectors" <|
+        , Test.test
+            "tests matrix linearlyIndependent with two colinear vectors"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -157,12 +173,14 @@ suite =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Ok True)
-        , Test.test "tests matrix doesSetSpanSpace with zero vectors" <|
+        , Test.test
+            "tests matrix doesSetSpanSpace with zero vectors"
+          <|
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.Vector [ 0, 0 ]
-                        , Vector.Vector [ 0, 0 ]
+                        [ Vector.zeros Field.realField 2
+                        , Vector.zeros Field.realField 2
                         ]
 
                     r2 =
@@ -172,7 +190,9 @@ suite =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Ok False)
-        , Test.test "tests matrix doesSetSpanSpace with zero vectors 3 dimensions" <|
+        , Test.test
+            "tests matrix doesSetSpanSpace with identity matrix 3 dimensions"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -188,7 +208,9 @@ suite =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.equal result (Ok True)
-        , Test.test "tests matrix doesSetSpanSpace with three vectors" <|
+        , Test.test
+            "tests matrix doesSetSpanSpace with three vectors"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -204,7 +226,9 @@ suite =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.equal result (Ok False)
-        , Test.test "tests matrix doesSetSpanSpace with three vectors testing r2" <|
+        , Test.test
+            "tests matrix doesSetSpanSpace with three vectors testing r2"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -220,7 +244,9 @@ suite =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Err "Please input same number of vectors as vector space")
-        , Test.test "tests matrix doesSetSpanSpace with three dimensional vector against R2" <|
+        , Test.test
+            "tests matrix doesSetSpanSpace with three dimensional vector against R2"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -235,7 +261,9 @@ suite =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Err "Please input vectors of equal length as vector space")
-        , Test.test "tests matrix areBasis with standard basis vectors" <|
+        , Test.test
+            "tests matrix areBasis with standard basis vectors"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -250,12 +278,14 @@ suite =
                         Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.true "Vectors are basis for R2" result
-        , Test.test "tests matrix areBasis with zero vectors" <|
+        , Test.test
+            "tests matrix areBasis with zero vectors"
+          <|
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.Vector [ 0, 0 ]
-                        , Vector.Vector [ 0, 0 ]
+                        [ Vector.zeros Field.realField 2
+                        , Vector.zeros Field.realField 2
                         ]
 
                     r2 =
@@ -265,7 +295,9 @@ suite =
                         Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R2" result
-        , Test.test "tests matrix areBasis with standard basis vectors 3 dimensions" <|
+        , Test.test
+            "tests matrix areBasis with standard basis vectors 3 dimensions"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -281,7 +313,9 @@ suite =
                         Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R3" result
-        , Test.test "tests matrix areBasis with zero vectors 3 dimensions" <|
+        , Test.test
+            "tests matrix areBasis with identity matrix 3 dimensions"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -297,7 +331,9 @@ suite =
                         Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.true "Vectors are basis fro R3" result
-        , Test.test "tests matrix areBasis with three vectors" <|
+        , Test.test
+            "tests matrix areBasis with three vectors"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -313,7 +349,9 @@ suite =
                         Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
                 in
                 Expect.false "Vectors are not basis R3" result
-        , Test.test "tests matrix areBasis with three vectors testing r2" <|
+        , Test.test
+            "tests matrix areBasis with three vectors testing r2"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -329,7 +367,9 @@ suite =
                         Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R2" result
-        , Test.test "tests matrix areBasis with three dimensional vector against R2" <|
+        , Test.test
+            "tests matrix areBasis with three dimensional vector against R2"
+          <|
             \_ ->
                 let
                     listOfVectors =
@@ -344,7 +384,9 @@ suite =
                         Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.false "Vectos are not basis for R2" result
-        , Test.test "tests matrix nullity with infinite solutions" <|
+        , Test.test
+            "tests matrix nullity with infinite solutions"
+          <|
             \_ ->
                 let
                     matrix =
@@ -353,43 +395,10 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
                             ]
                 in
-                Expect.equal (Matrix.solveMatrix Vector.realVectorSpace matrix) (Matrix.InfiniteSolutions { nullity = 3, rank = 2 })
-        , Test.test "tests basisOfVectorSpace returns R2 basis vectors" <|
-            \_ ->
-                let
-                    r2BasisVectors =
-                        [ Vector.Vector [ 1, 0 ]
-                        , Vector.Vector [ 0, 1 ]
-                        ]
-
-                    r2 =
-                        Matrix.VectorDimension 2
-
-                    testbasisVectors =
-                        Matrix.basisOfVectorSpace Vector.realVectorSpace r2 r2BasisVectors
-                in
-                Expect.equal r2BasisVectors testbasisVectors
-        , Test.test "tests basisOfVectorSpace returns R2 basis vectors for non basis vectors" <|
-            \_ ->
-                let
-                    r2BasisVectors =
-                        [ Vector.Vector [ 1, 0 ]
-                        , Vector.Vector [ 0, 1 ]
-                        ]
-
-                    testVectors =
-                        [ Vector.Vector [ 1, 0 ]
-                        , Vector.Vector [ 0, 1 ]
-                        ]
-
-                    r2 =
-                        Matrix.VectorDimension 2
-
-                    testbasisVectors =
-                        Matrix.basisOfVectorSpace Vector.realVectorSpace r2 testVectors
-                in
-                Expect.equal r2BasisVectors testbasisVectors
-        , Test.test "tests matrix fold" <|
+                Expect.equal (Matrix.solveMatrix Vector.realVectorSpace matrix) (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
+        , Test.test
+            "tests matrix fold"
+          <|
             \_ ->
                 let
                     matrix =
@@ -398,28 +407,35 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
                             ]
 
-                    result =
-                        Matrix.VectorDimension 2
-
                     foldResult =
                         Matrix.foldl (+) 0 matrix
                 in
                 Expect.equal foldResult 2
-        , Test.fuzz3 Fuzz.int Fuzz.int Fuzz.int "getAt index" <|
+        , Test.fuzz3
+            Fuzz.int
+            Fuzz.int
+            Fuzz.int
+            "getAt index"
+          <|
             \one two three ->
                 let
                     matrix =
                         Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ one, two, three ] ]
                 in
                 Expect.equal (Matrix.getAt ( 0, 0 ) matrix) (Just one)
-        , Test.fuzz Fuzz.int "setAt getAt index" <|
+        , Test.fuzz
+            Fuzz.int
+            "setAt getAt index"
+          <|
             \one ->
                 let
                     matrix =
                         Matrix.setAt ( 0, 0 ) one (Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ 0 ] ])
                 in
                 Expect.equal (Matrix.getAt ( 0, 0 ) matrix) (Just one)
-        , Test.test "print Matrix" <|
+        , Test.test
+            "print Matrix"
+          <|
             \_ ->
                 let
                     matrix =
@@ -429,7 +445,11 @@ suite =
                         Matrix.printRealMatrix matrix
                 in
                 Expect.equal printedMatrix "Matrix [ RowVector Vector [0, 1] ] ]"
-        , Test.fuzz2 Fuzz.float Fuzz.float "read Matrix" <|
+        , Test.fuzz2
+            Fuzz.float
+            Fuzz.float
+            "read Matrix"
+          <|
             \one two ->
                 let
                     matrix =
@@ -442,7 +462,9 @@ suite =
                         Matrix.readRealMatrix printedMatrix
                 in
                 Expect.equal readMatrix (Ok matrix)
-        , Test.test "tests matrix determinant 2 x 2" <|
+        , Test.test
+            "tests matrix determinant 2 x 2"
+          <|
             \_ ->
                 let
                     matrix =
@@ -455,7 +477,9 @@ suite =
                         Matrix.determinant Vector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok -2)
-        , Test.test "tests matrix determinant 3 x 3" <|
+        , Test.test
+            "tests matrix determinant 3 x 3"
+          <|
             \_ ->
                 let
                     matrix =
@@ -469,7 +493,9 @@ suite =
                         Matrix.determinant Vector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok 35)
-        , Test.test "tests matrix determinant 4 x 4" <|
+        , Test.test
+            "tests matrix determinant 4 x 4"
+          <|
             \_ ->
                 let
                     matrix =
@@ -484,7 +510,9 @@ suite =
                         Matrix.determinant Vector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok 7)
-        , Test.test "tests matrix invert" <|
+        , Test.test
+            "tests matrix invert"
+          <|
             \_ ->
                 let
                     matrix =
@@ -505,7 +533,9 @@ suite =
                         Matrix.invert Vector.realVectorSpace matrix
                 in
                 Expect.equal inverse (Ok expectedInverse)
-        , Test.test "tests matrix times inverse equals identity" <|
+        , Test.test
+            "tests matrix times inverse equals identity"
+          <|
             \_ ->
                 let
                     matrix =
@@ -522,14 +552,16 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
 
-                    identityMatrix =
-                        Matrix.identityMatrix Field.realField (Matrix.mDimension matrix)
+                    identity =
+                        Matrix.identity Field.realField (Matrix.mDimension matrix)
 
                     matrixInverseProduct =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace matrix inverse
                 in
-                Expect.equal matrixInverseProduct (Ok identityMatrix)
-        , Test.test "tests inverse times matrix equals identity" <|
+                Expect.equal matrixInverseProduct (Ok identity)
+        , Test.test
+            "tests inverse times matrix equals identity"
+          <|
             \_ ->
                 let
                     matrix =
@@ -546,18 +578,20 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
 
-                    identityMatrix =
-                        Matrix.identityMatrix Field.realField (Matrix.mDimension matrix)
+                    identity =
+                        Matrix.identity Field.realField (Matrix.mDimension matrix)
 
                     inverseMatrixProduct =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace inverse matrix
                 in
-                Expect.equal inverseMatrixProduct (Ok identityMatrix)
-        , Test.test "tests complex matrix determinant 2 x 2" <|
+                Expect.equal inverseMatrixProduct (Ok identity)
+        , Test.test
+            "tests complex matrix determinant 2 x 2"
+          <|
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -566,7 +600,7 @@ suite =
                             )
 
                     complexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 2
                             )
@@ -575,7 +609,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 3
                             )
@@ -584,7 +618,7 @@ suite =
                             )
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 4
                             )
@@ -602,7 +636,7 @@ suite =
                         Matrix.determinant Vector.complexVectorSpace matrix
 
                     expectedDeterminant =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 -2
                             )
@@ -611,11 +645,13 @@ suite =
                             )
                 in
                 Expect.equal determinantComplex (Ok expectedDeterminant)
-        , Test.test "tests complex matrix inverse 2 x 2" <|
+        , Test.test
+            "tests complex matrix inverse 2 x 2"
+          <|
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -624,7 +660,7 @@ suite =
                             )
 
                     complexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 2
                             )
@@ -633,7 +669,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 3
                             )
@@ -642,7 +678,7 @@ suite =
                             )
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 4
                             )
@@ -660,7 +696,7 @@ suite =
                         Matrix.invert Vector.complexVectorSpace matrix
 
                     expectedComplexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 -(2 / 5)
                             )
@@ -669,7 +705,7 @@ suite =
                             )
 
                     expectedComplexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (1 / 5)
                             )
@@ -678,7 +714,7 @@ suite =
                             )
 
                     expectedComplexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (3 / 10)
                             )
@@ -687,7 +723,7 @@ suite =
                             )
 
                     expectedComplexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (1 / 10)
                             )
@@ -707,11 +743,13 @@ suite =
 
                     Err error ->
                         Expect.fail error
-        , Test.test "tests complex matrix inverse 3 x 3 is unitary" <|
+        , Test.test
+            "tests complex matrix inverse 3 x 3 is unitary"
+          <|
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (1 / 2)
                             )
@@ -720,7 +758,7 @@ suite =
                             )
 
                     complexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 0
                             )
@@ -729,7 +767,7 @@ suite =
                             )
 
                     complexNumberR1C3 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (3 / (2 * Basics.sqrt 15))
                             )
@@ -738,7 +776,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (-1 / 2)
                             )
@@ -747,7 +785,7 @@ suite =
                             )
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (1 / Basics.sqrt 3)
                             )
@@ -756,7 +794,7 @@ suite =
                             )
 
                     complexNumberR2C3 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (4 / (2 * Basics.sqrt 15))
                             )
@@ -765,7 +803,7 @@ suite =
                             )
 
                     complexNumberR3C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (1 / 2)
                             )
@@ -774,7 +812,7 @@ suite =
                             )
 
                     complexNumberR3C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 0
                             )
@@ -783,7 +821,7 @@ suite =
                             )
 
                     complexNumberR3C3 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 0
                             )
@@ -802,7 +840,9 @@ suite =
                         Matrix.isUnitary matrix
                 in
                 Expect.true "is Unitary" isUnitary
-        , Test.test "tests invertability" <|
+        , Test.test
+            "tests invertability"
+          <|
             \_ ->
                 let
                     matrix =
@@ -815,7 +855,9 @@ suite =
                         Matrix.isInvertable Vector.realVectorSpace matrix
                 in
                 Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
-        , Test.test "tests sumMatrix" <|
+        , Test.test
+            "tests sumMatrix"
+          <|
             \_ ->
                 let
                     matrix =
@@ -835,7 +877,9 @@ suite =
                             ]
                 in
                 Expect.equal subMatrix expected
-        , Test.test "tests invertabilityComplex" <|
+        , Test.test
+            "tests invertabilityComplex"
+          <|
             \_ ->
                 let
                     matrix =
@@ -848,7 +892,10 @@ suite =
                         Matrix.isInvertable Vector.complexVectorSpace matrix
                 in
                 Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
-        , Test.fuzz Fuzz.int "test if matrix is square" <|
+        , Test.fuzz
+            Fuzz.int
+            "test if matrix is square"
+          <|
             \one ->
                 let
                     matrix =
@@ -858,14 +905,18 @@ suite =
                             ]
                 in
                 Expect.true "matrix is square" (Matrix.isSquareMatrix matrix)
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose transpose is idempotent" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix transpose transpose is idempotent"
+          <|
             \one two ->
                 let
                     m =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -880,14 +931,18 @@ suite =
                             |> Matrix.transpose
                 in
                 Expect.equal m mTransposeTranspose
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose respects addition" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix transpose respects addition"
+          <|
             \one two ->
                 let
                     m1 =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -901,7 +956,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             two
                                         )
@@ -920,11 +975,15 @@ suite =
                             |> Matrix.addMatrices ComplexNumbers.complexField (Matrix.transpose m2)
                 in
                 Expect.equal m1Plusm2Transpose m1TransposePlusm2Transpose
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix transpose respects scalar multiplication" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix transpose respects scalar multiplication"
+          <|
             \one two ->
                 let
                     c =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -936,7 +995,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -955,14 +1014,18 @@ suite =
                             |> Matrix.scalarMultiplication ComplexNumbers.complexField c
                 in
                 Expect.equal cAThenTranspose cTransposeOfA
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix conjugate conjugate is idempotent" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix conjugate conjugate is idempotent"
+          <|
             \one two ->
                 let
                     m =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -977,14 +1040,18 @@ suite =
                             |> Matrix.conjugate
                 in
                 Expect.equal m mConjugateConjugate
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix conjugate respects addition" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix conjugate respects addition"
+          <|
             \one two ->
                 let
                     m1 =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -998,7 +1065,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             two
                                         )
@@ -1017,11 +1084,15 @@ suite =
                             |> Matrix.addMatrices ComplexNumbers.complexField (Matrix.conjugate m2)
                 in
                 Expect.equal m1Plusm2Conjugate m1ConjugatePlusm2Conjugate
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix conjugate respects scalar multiplication" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix conjugate respects scalar multiplication"
+          <|
             \one two ->
                 let
                     c =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -1036,7 +1107,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -1055,14 +1126,18 @@ suite =
                             |> Matrix.scalarMultiplication ComplexNumbers.complexField cConjugate
                 in
                 Expect.equal cAThenConjugate cConjugateOfA
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix adjoint is idempotent" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix adjoint is idempotent"
+          <|
             \one two ->
                 let
                     m =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -1077,14 +1152,18 @@ suite =
                             |> Matrix.adjoint
                 in
                 Expect.equal m mAdjoint
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix adjoint respects addition" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix adjoint respects addition"
+          <|
             \one two ->
                 let
                     m1 =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -1098,7 +1177,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             two
                                         )
@@ -1117,11 +1196,15 @@ suite =
                             |> Matrix.addMatrices ComplexNumbers.complexField (Matrix.conjugate m2)
                 in
                 Expect.equal m1Plusm2Adjoint m1ConjugatePlusm2Adjoint
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix adjoint respects scalar multiplication" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix adjoint respects scalar multiplication"
+          <|
             \one two ->
                 let
                     c =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -1136,7 +1219,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -1155,7 +1238,12 @@ suite =
                             |> Matrix.scalarMultiplication ComplexNumbers.complexField cConjugate
                 in
                 Expect.equal cAThenAdjoint cAdjointOfA
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests real Matrix multiplication respects scalar multiplication" <|
+        , Test.fuzz3
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests real Matrix multiplication respects scalar multiplication"
+          <|
             \one two three ->
                 let
                     v1 =
@@ -1191,7 +1279,12 @@ suite =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField one m1) m2
                 in
                 Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
-        , Test.fuzz3 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix tensor product respects addition" <|
+        , Test.fuzz3
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix tensor product respects addition"
+          <|
             \one two three ->
                 let
                     matrixI =
@@ -1215,20 +1308,22 @@ suite =
                     matrixSumIJ =
                         Matrix.addMatrices Field.realField matrixI matrixJ
 
-                    matrixTensorProductIJK =
-                        Matrix.matrixTensorProduct Field.realField matrixSumIJ matrixK
+                    tensorProductIJK =
+                        Matrix.tensorProduct Field.realField matrixSumIJ matrixK
 
-                    matrixTensorProductIK =
-                        Matrix.matrixTensorProduct Field.realField matrixI matrixK
+                    tensorProductIK =
+                        Matrix.tensorProduct Field.realField matrixI matrixK
 
-                    matrixTensorProductJK =
-                        Matrix.matrixTensorProduct Field.realField matrixJ matrixK
+                    tensorProductJK =
+                        Matrix.tensorProduct Field.realField matrixJ matrixK
 
                     matrixSumTensorProductIKJK =
-                        Matrix.addMatrices Field.realField matrixTensorProductIK matrixTensorProductJK
+                        Matrix.addMatrices Field.realField tensorProductIK tensorProductJK
                 in
-                Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) matrixTensorProductIJK matrixSumTensorProductIKJK)
-        , Test.test "tests right stochastic" <|
+                Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK matrixSumTensorProductIKJK)
+        , Test.test
+            "tests right stochastic"
+          <|
             \_ ->
                 let
                     matrix =
@@ -1242,7 +1337,9 @@ suite =
                         Matrix.isRightStochastic matrix
                 in
                 Expect.true "Is Right Stochastic" isRightStochastic
-        , Test.test "tests left stochastic" <|
+        , Test.test
+            "tests left stochastic"
+          <|
             \_ ->
                 let
                     matrix =
@@ -1256,7 +1353,9 @@ suite =
                         Matrix.isLeftStochastic matrix
                 in
                 Expect.true "Is Left Stochastic" isLeftStochastic
-        , Test.test "tests doubly stochastic" <|
+        , Test.test
+            "tests doubly stochastic"
+          <|
             \_ ->
                 let
                     matrix =
@@ -1270,4 +1369,25 @@ suite =
                         Matrix.isDoublyStochastic matrix
                 in
                 Expect.true "Is Doubly Stochastic" isDoublyStochastic
+        , Test.test
+            "tests areRowEquivalent"
+          <|
+            \_ ->
+                let
+                    matrixOne =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 0, 1 / 6, 5 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
+                            ]
+
+                    matrixTwo =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 0, 1 / 6, 5 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
+                            , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
+                            ]
+                            |> Matrix.scalarMultiplication Field.realField 2
+                in
+                Expect.true "Are row equivalent" (Matrix.areRowEquivalent Vector.realVectorSpace matrixOne matrixTwo)
         ]

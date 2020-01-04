@@ -1,6 +1,5 @@
 module VectorTests.VectorApplicativeFunctorTests exposing (suite)
 
-import ComplexNumbers
 import Expect
 import Fuzz
 import Test
@@ -10,7 +9,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Tests Applicative Functor abstraction for Vector"
-        [ Test.fuzz Fuzz.int "tests first applicative law for Vector" <|
+        [ Test.fuzz
+            Fuzz.int
+            "tests first applicative law for Vector"
+          <|
             \one ->
                 let
                     vIdentity =
@@ -20,10 +22,13 @@ suite =
                         Vector.pure one
 
                     vApplied =
-                        Vector.apply vIdentity v
+                        Vector.andMap v vIdentity
                 in
                 Expect.equal vApplied v
-        , Test.fuzz Fuzz.int "tests second applicative law for Vector" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests second applicative law for Vector"
+          <|
             \one ->
                 let
                     f =
@@ -42,13 +47,16 @@ suite =
                         Vector.Vector [ one ]
 
                     leftSide =
-                        Vector.apply (Vector.apply (Vector.apply fPure u) v) w
+                        Vector.andMap w (Vector.andMap v (Vector.andMap u fPure))
 
                     rightSide =
-                        Vector.apply u (Vector.apply v w)
+                        Vector.andMap (Vector.andMap w v) u
                 in
                 Expect.equal leftSide rightSide
-        , Test.fuzz Fuzz.int "tests third applicative law for Vector" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests third applicative law for Vector"
+          <|
             \one ->
                 let
                     f =
@@ -61,10 +69,13 @@ suite =
                         Vector.pure one
 
                     vApplied =
-                        Vector.apply pureF pureOne
+                        Vector.andMap pureOne pureF
                 in
                 Expect.equal vApplied (Vector.pure <| f one)
-        , Test.fuzz Fuzz.int "tests fourth applicative law for Vector" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests fourth applicative law for Vector"
+          <|
             \one ->
                 let
                     pureOne =
@@ -74,10 +85,10 @@ suite =
                         Vector.pure one
 
                     leftSide =
-                        Vector.apply pureOne pureTwo
+                        Vector.andMap pureTwo pureOne
 
                     rightSide =
-                        Vector.apply (Vector.pure <| Basics.always one) pureOne
+                        Vector.andMap pureOne (Vector.pure <| Basics.always one)
                 in
                 Expect.equal leftSide rightSide
         ]

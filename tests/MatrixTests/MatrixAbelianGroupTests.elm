@@ -13,20 +13,25 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Matrix Abelian Group Tests"
-        [ Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Matrix add is commutative" <|
+        [ Test.fuzz3
+            Fuzz.float
+            Fuzz.float
+            Fuzz.float
+            "tests Matrix add is commutative"
+          <|
             \one two three ->
                 let
                     v =
                         Matrix.RowVector <|
                             Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
+                                [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         three
                                     )
                                     (ComplexNumbers.Imaginary
                                         one
                                     )
-                                , ComplexNumbers.ComplexNumberCartesian
+                                , ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         three
                                     )
@@ -38,14 +43,14 @@ suite =
                     w =
                         Matrix.RowVector <|
                             Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
+                                [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         two
                                     )
                                     (ComplexNumbers.Imaginary
                                         two
                                     )
-                                , ComplexNumbers.ComplexNumberCartesian
+                                , ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         one
                                     )
@@ -62,20 +67,25 @@ suite =
                 in
                 Matrix.addMatrices ComplexNumbers.complexField m1 m2
                     |> Expect.equal (Matrix.addMatrices ComplexNumbers.complexField m2 m1)
-        , Test.fuzz3 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests Matrix add is associative" <|
+        , Test.fuzz3
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map toFloat Fuzz.int)
+            "tests Matrix add is associative"
+          <|
             \one two three ->
                 let
                     v =
                         Matrix.RowVector <|
                             Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
+                                [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         three
                                     )
                                     (ComplexNumbers.Imaginary
                                         one
                                     )
-                                , ComplexNumbers.ComplexNumberCartesian
+                                , ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         three
                                     )
@@ -87,14 +97,14 @@ suite =
                     w =
                         Matrix.RowVector <|
                             Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
+                                [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         two
                                     )
                                     (ComplexNumbers.Imaginary
                                         two
                                     )
-                                , ComplexNumbers.ComplexNumberCartesian
+                                , ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         one
                                     )
@@ -106,14 +116,14 @@ suite =
                     x =
                         Matrix.RowVector <|
                             Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
+                                [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         one
                                     )
                                     (ComplexNumbers.Imaginary
                                         two
                                     )
-                                , ComplexNumbers.ComplexNumberCartesian
+                                , ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         three
                                     )
@@ -141,11 +151,15 @@ suite =
                 in
                 m1Plusm2AndThenPlusm3
                     |> Expect.equal m2Plusm3AndThenm1
-        , Test.fuzz2 Fuzz.int Fuzz.int "tests matrix inverse" <|
+        , Test.fuzz2
+            Fuzz.int
+            Fuzz.int
+            "tests matrix inverse"
+          <|
             \one two ->
                 let
                     complexOneNegative =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real <|
                                 Basics.negate
                                     1

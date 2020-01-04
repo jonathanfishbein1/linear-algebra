@@ -11,7 +11,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Tests Monad abstraction for Matrix"
-        [ Test.fuzz Fuzz.int "tests Matrix Monad left identity" <|
+        [ Test.fuzz
+            Fuzz.int
+            "tests Matrix Monad left identity"
+          <|
             \one ->
                 let
                     f a =
@@ -22,23 +25,29 @@ suite =
                             |> Matrix.Matrix
 
                     leftSide =
-                        Matrix.bind (Matrix.pure one) f
+                        Matrix.andThen f (Matrix.pure one)
 
                     rightSide =
                         f one
                 in
                 Expect.equal leftSide rightSide
-        , Test.fuzz Fuzz.int "tests Matrix Monad right identity" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests Matrix Monad right identity"
+          <|
             \one ->
                 let
                     m =
                         Matrix.pure one
 
                     leftSide =
-                        Matrix.bind m Matrix.pure
+                        Matrix.andThen Matrix.pure m
                 in
                 Expect.equal leftSide m
-        , Test.fuzz Fuzz.int "tests Matrix Monad associativity" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests Matrix Monad associativity"
+          <|
             \one ->
                 let
                     m =
@@ -59,10 +68,10 @@ suite =
                             |> Matrix.Matrix
 
                     leftSide =
-                        Matrix.bind (Matrix.bind m f) g
+                        Matrix.andThen g (Matrix.andThen f m)
 
                     rightSide =
-                        Matrix.bind m (\x -> Matrix.bind (f x) g)
+                        Matrix.andThen (\x -> Matrix.andThen g (f x)) m
                 in
                 Expect.equal leftSide rightSide
         ]

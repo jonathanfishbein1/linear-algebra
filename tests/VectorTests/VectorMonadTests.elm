@@ -1,6 +1,5 @@
 module VectorTests.VectorMonadTests exposing (suite)
 
-import ComplexNumbers
 import Expect
 import Fuzz
 import Test
@@ -10,7 +9,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Tests Monad abstraction for Vector"
-        [ Test.fuzz Fuzz.int "tests Vector Monad left identity" <|
+        [ Test.fuzz
+            Fuzz.int
+            "tests Vector Monad left identity"
+          <|
             \one ->
                 let
                     f a =
@@ -18,23 +20,29 @@ suite =
                             |> Vector.Vector
 
                     leftSide =
-                        Vector.bind (Vector.pure one) f
+                        Vector.andThen f (Vector.pure one)
 
                     rightSide =
                         f one
                 in
                 Expect.equal leftSide rightSide
-        , Test.fuzz Fuzz.int "tests Vector Monad right identity" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests Vector Monad right identity"
+          <|
             \one ->
                 let
                     m =
                         Vector.pure one
 
                     leftSide =
-                        Vector.bind m Vector.pure
+                        Vector.andThen Vector.pure m
                 in
                 Expect.equal leftSide m
-        , Test.fuzz Fuzz.int "tests Vector Monad associativity" <|
+        , Test.fuzz
+            Fuzz.int
+            "tests Vector Monad associativity"
+          <|
             \one ->
                 let
                     m =
@@ -49,10 +57,10 @@ suite =
                             |> Vector.Vector
 
                     leftSide =
-                        Vector.bind (Vector.bind m f) g
+                        Vector.andThen g (Vector.andThen f m)
 
                     rightSide =
-                        Vector.bind m (\x -> Vector.bind (f x) g)
+                        Vector.andThen (\x -> Vector.andThen g (f x)) m
                 in
                 Expect.equal leftSide rightSide
         ]

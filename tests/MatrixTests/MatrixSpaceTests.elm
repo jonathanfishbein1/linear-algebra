@@ -12,12 +12,16 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Matrix Space Tests"
-        [ Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests one is product identity" <|
+        [ Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests one is product identity"
+          <|
             \one two ->
                 let
                     v =
                         Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
+                            [ ComplexNumbers.ComplexNumber
                                 (ComplexNumbers.Real
                                     one
                                 )
@@ -27,11 +31,15 @@ suite =
                             ]
                 in
                 Expect.true "equal" (Vector.equal ComplexNumbers.equal (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
-        , Test.fuzz2 (Fuzz.map toFloat Fuzz.int) (Fuzz.map toFloat Fuzz.int) "tests scalar multiplication respects complex multiplication" <|
+        , Test.fuzz2
+            Fuzz.float
+            Fuzz.float
+            "tests scalar multiplication respects complex multiplication"
+          <|
             \one two ->
                 let
                     c1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -40,7 +48,7 @@ suite =
                             )
 
                     c2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 two
                             )
@@ -52,7 +60,7 @@ suite =
                         Matrix.Matrix <|
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -76,11 +84,15 @@ suite =
                 in
                 c2VThenc1
                     |> Expect.equal c1c2ThenV
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests matrix scalar multiplication distributes over addition" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix scalar multiplication distributes over addition"
+          <|
             \one two ->
                 let
                     c =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -92,7 +104,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             two
                                         )
@@ -106,7 +118,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -135,11 +147,15 @@ suite =
                         Matrix.equal ComplexNumbers.equal cvPlusW cVPluscW
                 in
                 Expect.true "All elements equal" result
-        , Test.fuzz2 (Fuzz.map toFloat (Fuzz.intRange -10 10)) (Fuzz.map toFloat (Fuzz.intRange -10 10)) "tests scalar multiplication distributes over addition" <|
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests scalar multiplication distributes over addition"
+          <|
             \one two ->
                 let
                     c =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -151,7 +167,7 @@ suite =
                         Matrix.Matrix <|
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             two
                                         )
@@ -165,7 +181,7 @@ suite =
                         Matrix.Matrix <|
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )

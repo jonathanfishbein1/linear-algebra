@@ -26,6 +26,7 @@ module Vector exposing
     , tensorProduct
     , dimension
     , vectorSubspace
+    , all
     , empty
     , append
     , concat
@@ -46,7 +47,6 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , all
     )
 
 {-| A module for Vectors
@@ -97,6 +97,7 @@ module Vector exposing
 
 @docs dimension
 @docs vectorSubspace
+@docs all
 
 
 # Monoid
@@ -244,6 +245,8 @@ complexInnerProductSpace =
     }
 
 
+{-| Zero vector given a Field and dimension
+-}
 zeros : Field.Field a -> Int -> Vector a
 zeros { zero } dim =
     List.repeat dim zero
@@ -487,6 +490,8 @@ vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
     containszeros && closureUnderScalarMultiplication && closureUnderAddition
 
 
+{-| Determine if all elements in a vector satisfy some test
+-}
 all : (a -> Bool) -> Vector a -> Bool
 all predicate (Vector list) =
     List.all predicate list

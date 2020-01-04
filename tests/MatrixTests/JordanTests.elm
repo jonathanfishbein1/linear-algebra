@@ -63,7 +63,7 @@ suite =
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -72,7 +72,7 @@ suite =
                             )
 
                     complexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -81,7 +81,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 0
                             )
@@ -90,7 +90,7 @@ suite =
                             )
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )

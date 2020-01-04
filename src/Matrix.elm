@@ -291,8 +291,8 @@ transpose (Matrix listOfRowVectors) =
 {-| Take the complex conjugate of a Complex Numbered Matrix
 -}
 conjugate :
-    Matrix (ComplexNumbers.ComplexNumberCartesian number)
-    -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+    Matrix (ComplexNumbers.ComplexNumber number)
+    -> Matrix (ComplexNumbers.ComplexNumber number)
 conjugate matrix =
     matrix
         |> map ComplexNumbers.conjugate
@@ -301,8 +301,8 @@ conjugate matrix =
 {-| Perform the adjoint operation on a Complex Numbered Matrix
 -}
 adjoint :
-    Matrix (ComplexNumbers.ComplexNumberCartesian number)
-    -> Matrix (ComplexNumbers.ComplexNumberCartesian number)
+    Matrix (ComplexNumbers.ComplexNumber number)
+    -> Matrix (ComplexNumbers.ComplexNumber number)
 adjoint matrix =
     matrix
         |> map ComplexNumbers.conjugate
@@ -616,14 +616,14 @@ isSymmetric matrix =
 
 {-| Predicate to determine if Matrix is Hermitian
 -}
-isHermitian : Matrix (ComplexNumbers.ComplexNumberCartesian number) -> Bool
+isHermitian : Matrix (ComplexNumbers.ComplexNumber number) -> Bool
 isHermitian matrix =
     adjoint matrix == matrix
 
 
 {-| Determine whether a matirx is unitary
 -}
-isUnitary : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> Bool
+isUnitary : Matrix (ComplexNumbers.ComplexNumber Float) -> Bool
 isUnitary matrix =
     case invert Vector.complexVectorSpace matrix of
         Ok inverse ->
@@ -1101,7 +1101,7 @@ printRealMatrix (Matrix listOfRowVectors) =
 
 {-| Print a Complex matrix to a string
 -}
-printComplexMatrix : Matrix (ComplexNumbers.ComplexNumberCartesian Float) -> String
+printComplexMatrix : Matrix (ComplexNumbers.ComplexNumber Float) -> String
 printComplexMatrix (Matrix listOfRowVectors) =
     "Matrix [ "
         ++ List.foldl
@@ -1120,7 +1120,7 @@ readRealMatrix matrixString =
 
 {-| Try to read a string into a Matrix
 -}
-readComplexMatrix : String -> Result (List Parser.DeadEnd) (Matrix (ComplexNumbers.ComplexNumberCartesian Float))
+readComplexMatrix : String -> Result (List Parser.DeadEnd) (Matrix (ComplexNumbers.ComplexNumber Float))
 readComplexMatrix matrixString =
     Parser.run (parseMatrix ComplexNumbers.parseComplexNumber) matrixString
 

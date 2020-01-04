@@ -21,7 +21,7 @@ suite =
                 let
                     v =
                         Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
+                            [ ComplexNumbers.ComplexNumber
                                 (ComplexNumbers.Real
                                     one
                                 )
@@ -39,7 +39,7 @@ suite =
             \one two ->
                 let
                     c1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -48,7 +48,7 @@ suite =
                             )
 
                     c2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 two
                             )
@@ -60,7 +60,7 @@ suite =
                         Matrix.Matrix <|
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -92,7 +92,7 @@ suite =
             \one two ->
                 let
                     c =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -104,7 +104,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             two
                                         )
@@ -118,7 +118,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -155,7 +155,7 @@ suite =
             \one two ->
                 let
                     c =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -167,7 +167,7 @@ suite =
                         Matrix.Matrix <|
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             two
                                         )
@@ -181,7 +181,7 @@ suite =
                         Matrix.Matrix <|
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )

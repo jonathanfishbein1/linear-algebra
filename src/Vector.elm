@@ -201,7 +201,7 @@ realVectorAbelianGroup =
 
 {-| Complex Numbered Abelian Group
 -}
-complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumberCartesian Float)
+complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumber Float)
 complexVectorAbelianGroup =
     { field = ComplexNumbers.complexField
     , addVects = addVectors ComplexNumbers.complexField
@@ -220,7 +220,7 @@ realVectorSpace =
 
 {-| Complex Numbered Vector Space
 -}
-complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumberCartesian Float)
+complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumber Float)
 complexVectorSpace =
     { abelianGroup = complexVectorAbelianGroup
     , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
@@ -238,7 +238,7 @@ realInnerProductSpace =
 
 {-| Complex Numbered Inner Product Space
 -}
-complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumberCartesian Float)
+complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumber Float)
 complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
     , innerProduct = dotProduct ComplexNumbers.complexField
@@ -548,7 +548,7 @@ printRealVector vector =
 
 {-| Print a Complex Vector as a string
 -}
-printComplexVector : Vector (ComplexNumbers.ComplexNumberCartesian Float) -> String
+printComplexVector : Vector (ComplexNumbers.ComplexNumber Float) -> String
 printComplexVector vector =
     "Vector ["
         ++ (map ComplexNumbers.print vector
@@ -614,7 +614,7 @@ readRealVector vectorString =
 -}
 readComplexVector :
     String
-    -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumberCartesian Float))
+    -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumber Float))
 readComplexVector vectorString =
     Parser.run (parseVector ComplexNumbers.parseComplexNumber) vectorString
 

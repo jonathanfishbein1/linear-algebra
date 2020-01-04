@@ -19,7 +19,7 @@ suite =
                 let
                     v =
                         Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
+                            [ ComplexNumbers.ComplexNumber
                                 (ComplexNumbers.Real
                                     one
                                 )
@@ -38,7 +38,7 @@ suite =
                 let
                     v =
                         Vector.Vector
-                            [ ComplexNumbers.ComplexNumberCartesian
+                            [ ComplexNumbers.ComplexNumber
                                 (ComplexNumbers.Real
                                     one
                                 )
@@ -57,17 +57,17 @@ suite =
             \one two three ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real one)
                             (ComplexNumbers.Imaginary two)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real two)
                             (ComplexNumbers.Imaginary three)
 
                     complexNumberThree =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real one)
                             (ComplexNumbers.Imaginary three)
 

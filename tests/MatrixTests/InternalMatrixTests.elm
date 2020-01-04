@@ -65,7 +65,7 @@ suite =
             \one two ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -74,7 +74,7 @@ suite =
                             )
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -105,7 +105,7 @@ suite =
             \one two ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -114,7 +114,7 @@ suite =
                             )
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -168,7 +168,7 @@ suite =
             \one two ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -177,7 +177,7 @@ suite =
                             )
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -230,7 +230,7 @@ suite =
             \_ ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 0.000001
                             )
@@ -239,7 +239,7 @@ suite =
                             )
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 0.000001
                             )
@@ -312,7 +312,7 @@ suite =
             \one two ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -321,7 +321,7 @@ suite =
                             )
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )

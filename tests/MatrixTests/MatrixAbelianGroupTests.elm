@@ -24,14 +24,14 @@ suite =
                     v =
                         Matrix.RowVector <|
                             Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
+                                [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         three
                                     )
                                     (ComplexNumbers.Imaginary
                                         one
                                     )
-                                , ComplexNumbers.ComplexNumberCartesian
+                                , ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         three
                                     )
@@ -43,14 +43,14 @@ suite =
                     w =
                         Matrix.RowVector <|
                             Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
+                                [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         two
                                     )
                                     (ComplexNumbers.Imaginary
                                         two
                                     )
-                                , ComplexNumbers.ComplexNumberCartesian
+                                , ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         one
                                     )
@@ -78,14 +78,14 @@ suite =
                     v =
                         Matrix.RowVector <|
                             Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
+                                [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         three
                                     )
                                     (ComplexNumbers.Imaginary
                                         one
                                     )
-                                , ComplexNumbers.ComplexNumberCartesian
+                                , ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         three
                                     )
@@ -97,14 +97,14 @@ suite =
                     w =
                         Matrix.RowVector <|
                             Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
+                                [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         two
                                     )
                                     (ComplexNumbers.Imaginary
                                         two
                                     )
-                                , ComplexNumbers.ComplexNumberCartesian
+                                , ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         one
                                     )
@@ -116,14 +116,14 @@ suite =
                     x =
                         Matrix.RowVector <|
                             Vector.Vector
-                                [ ComplexNumbers.ComplexNumberCartesian
+                                [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         one
                                     )
                                     (ComplexNumbers.Imaginary
                                         two
                                     )
-                                , ComplexNumbers.ComplexNumberCartesian
+                                , ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
                                         three
                                     )
@@ -159,7 +159,7 @@ suite =
             \one two ->
                 let
                     complexOneNegative =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real <|
                                 Basics.negate
                                     1

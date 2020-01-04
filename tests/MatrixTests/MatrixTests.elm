@@ -591,7 +591,7 @@ suite =
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -600,7 +600,7 @@ suite =
                             )
 
                     complexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 2
                             )
@@ -609,7 +609,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 3
                             )
@@ -618,7 +618,7 @@ suite =
                             )
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 4
                             )
@@ -636,7 +636,7 @@ suite =
                         Matrix.determinant Vector.complexVectorSpace matrix
 
                     expectedDeterminant =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 -2
                             )
@@ -651,7 +651,7 @@ suite =
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 1
                             )
@@ -660,7 +660,7 @@ suite =
                             )
 
                     complexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 2
                             )
@@ -669,7 +669,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 3
                             )
@@ -678,7 +678,7 @@ suite =
                             )
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 4
                             )
@@ -696,7 +696,7 @@ suite =
                         Matrix.invert Vector.complexVectorSpace matrix
 
                     expectedComplexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 -(2 / 5)
                             )
@@ -705,7 +705,7 @@ suite =
                             )
 
                     expectedComplexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (1 / 5)
                             )
@@ -714,7 +714,7 @@ suite =
                             )
 
                     expectedComplexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (3 / 10)
                             )
@@ -723,7 +723,7 @@ suite =
                             )
 
                     expectedComplexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (1 / 10)
                             )
@@ -749,7 +749,7 @@ suite =
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (1 / 2)
                             )
@@ -758,7 +758,7 @@ suite =
                             )
 
                     complexNumberR1C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 0
                             )
@@ -767,7 +767,7 @@ suite =
                             )
 
                     complexNumberR1C3 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (3 / (2 * Basics.sqrt 15))
                             )
@@ -776,7 +776,7 @@ suite =
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (-1 / 2)
                             )
@@ -785,7 +785,7 @@ suite =
                             )
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (1 / Basics.sqrt 3)
                             )
@@ -794,7 +794,7 @@ suite =
                             )
 
                     complexNumberR2C3 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (4 / (2 * Basics.sqrt 15))
                             )
@@ -803,7 +803,7 @@ suite =
                             )
 
                     complexNumberR3C1 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 (1 / 2)
                             )
@@ -812,7 +812,7 @@ suite =
                             )
 
                     complexNumberR3C2 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 0
                             )
@@ -821,7 +821,7 @@ suite =
                             )
 
                     complexNumberR3C3 =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 0
                             )
@@ -916,7 +916,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -942,7 +942,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -956,7 +956,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             two
                                         )
@@ -983,7 +983,7 @@ suite =
             \one two ->
                 let
                     c =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -995,7 +995,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -1025,7 +1025,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -1051,7 +1051,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -1065,7 +1065,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             two
                                         )
@@ -1092,7 +1092,7 @@ suite =
             \one two ->
                 let
                     c =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -1107,7 +1107,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -1137,7 +1137,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -1163,7 +1163,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )
@@ -1177,7 +1177,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             two
                                         )
@@ -1204,7 +1204,7 @@ suite =
             \one two ->
                 let
                     c =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real
                                 one
                             )
@@ -1219,7 +1219,7 @@ suite =
                         Matrix.Matrix
                             [ Matrix.RowVector <|
                                 Vector.Vector
-                                    [ ComplexNumbers.ComplexNumberCartesian
+                                    [ ComplexNumbers.ComplexNumber
                                         (ComplexNumbers.Real
                                             one
                                         )

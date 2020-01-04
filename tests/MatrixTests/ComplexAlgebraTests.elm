@@ -351,17 +351,17 @@ suite =
             \one two three ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real one)
                             (ComplexNumbers.Imaginary two)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real three)
                             (ComplexNumbers.Imaginary two)
 
                     complexNumberThree =
-                        ComplexNumbers.ComplexNumberCartesian
+                        ComplexNumbers.ComplexNumber
                             (ComplexNumbers.Real two)
                             (ComplexNumbers.Imaginary three)
 
@@ -410,10 +410,10 @@ suite =
             \one two three ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two)
+                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumberCartesian (ComplexNumbers.Real three) (ComplexNumbers.Imaginary two)
+                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real three) (ComplexNumbers.Imaginary two)
 
                     v1 =
                         Matrix.RowVector <|

@@ -1390,20 +1390,37 @@ suite =
                             |> Matrix.scalarMultiplication Field.realField 2
                 in
                 Expect.true "Are row equivalent" (Matrix.areRowEquivalent Vector.realVectorSpace matrixOne matrixTwo)
-        , Test.test
+        , Test.fuzz3
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange 1 10)
             "tests matrix rank"
           <|
-            \_ ->
+            \one two three ->
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0, 1, 0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0, 1, 0 ]
+                            [ Matrix.RowVector <| Vector.Vector [ one, 0, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, two, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 0, three ]
                             ]
 
                     rank =
-                        Matrix.rank Field.realField matrix
+                        Matrix.rank Vector.realVectorSpace matrix
                 in
                 Expect.equal rank 3
+        , Test.fuzz2
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange 1 10)
+            "tests matrix rank with two colinear vectors"
+          <|
+            \one two ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ one, two ]
+                            , Matrix.RowVector <| Vector.Vector [ one * 2, two * 2 ]
+                            ]
+                in
+                Expect.equal (Matrix.rank Vector.realVectorSpace matrix) 1
         ]

@@ -319,12 +319,16 @@ norm innerProductSpace matrix =
             (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))
 
 
-rank : Field.Field a -> Matrix a -> Int
-rank field (Matrix listOfRowVectorsRREF) =
-    listOfRowVectorsRREF
+rank : Vector.VectorSpace a -> Matrix a -> Int
+rank vectorSpace matrix =
+    let
+        (Matrix listOfRowVectorsREF) =
+            gaussianReduce vectorSpace matrix
+    in
+    listOfRowVectorsREF
         |> List.Extra.count
             (\(RowVector vector) ->
-                Vector.length field vector /= field.zero
+                Vector.length vectorSpace.abelianGroup.field vector /= vectorSpace.abelianGroup.field.zero
             )
 
 
@@ -840,7 +844,7 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
     else if notConstrainedEnough then
         let
             rnk =
-                rank vectorSpace.abelianGroup.field (Matrix listOfRowVectorsRREF)
+                rank vectorSpace (Matrix listOfRowVectorsRREF)
 
             nullity =
                 nDimension (Matrix listOfRowVectorsRREF) - rnk
@@ -881,19 +885,8 @@ areLinearlyIndependent vectorSpace listOfVectors =
         matrix =
             List.map RowVector listOfVectors
                 |> Matrix
-
-        matrixNullSpace =
-            nullSpace vectorSpace matrix
-
-        numberOfRows =
-            mDimension matrix
     in
-    case matrixNullSpace of
-        Consistant (UniqueSolution resultVector) ->
-            resultVector == ColumnVector (Vector.zeros vectorSpace.abelianGroup.field numberOfRows)
-
-        _ ->
-            False
+    rank vectorSpace matrix == nDimension matrix
 
 
 {-| Determine whether list of vectors spans a space

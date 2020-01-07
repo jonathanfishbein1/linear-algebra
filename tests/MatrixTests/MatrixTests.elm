@@ -1390,4 +1390,20 @@ suite =
                             |> Matrix.scalarMultiplication Field.realField 2
                 in
                 Expect.true "Are row equivalent" (Matrix.areRowEquivalent Vector.realVectorSpace matrixOne matrixTwo)
+        , Test.test
+            "tests matrix rank"
+          <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 0, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 1, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 1, 0 ]
+                            ]
+
+                    rank =
+                        Matrix.rank Field.realField matrix
+                in
+                Expect.equal rank 3
         ]

@@ -62,6 +62,7 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
+    , rank
     )
 
 {-| A module for Matrix
@@ -316,6 +317,15 @@ norm innerProductSpace matrix =
     dotProduct innerProductSpace matrix matrix
         |> Result.map
             (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))
+
+
+rank : Field.Field a -> Matrix a -> Int
+rank field (Matrix listOfRowVectorsRREF) =
+    listOfRowVectorsRREF
+        |> List.Extra.count
+            (\(RowVector vector) ->
+                Vector.length field vector /= field.zero
+            )
 
 
 {-| Try to calculate the determinant
@@ -829,17 +839,13 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
 
     else if notConstrainedEnough then
         let
-            rank =
-                listOfRowVectorsRREF
-                    |> List.Extra.count
-                        (\(RowVector vector) ->
-                            Vector.length vectorSpace.abelianGroup.field vector /= vectorSpace.abelianGroup.field.zero
-                        )
+            rnk =
+                rank vectorSpace.abelianGroup.field (Matrix listOfRowVectorsRREF)
 
             nullity =
-                nDimension (Matrix listOfRowVectorsRREF) - rank
+                nDimension (Matrix listOfRowVectorsRREF) - rnk
         in
-        InfiniteSolutions { nullity = nullity, rank = rank }
+        InfiniteSolutions { nullity = nullity, rank = rnk }
             |> Consistant
 
     else

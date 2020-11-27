@@ -13,19 +13,14 @@ module Vector exposing
     , complexInnerProductSpace
     , zeros
     , scalarMultiplication
-    , length
-    , normalise
     , sum
     , addVectors
     , subtractVectors
     , hadamardMultiplication
     , dotProduct
-    , angleBetween
     , cross
-    , distance
     , tensorProduct
     , dimension
-    , vectorSubspace
     , all
     , empty
     , append
@@ -47,6 +42,11 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
+    -- , vectorSubspace
+    -- , distance
+    -- , angleBetween
+    -- , length
+    -- , normalise
     )
 
 {-| A module for Vectors
@@ -137,13 +137,17 @@ module Vector exposing
 
 -}
 
+import AbelianGroup
+import CommutativeMonoid
+import CommutativeRing
+import CommutativeSemigroup
 import ComplexNumbers
 import Field
 import List.Extra
+import Monoid
 import Parser exposing ((|.), (|=))
+import Semigroup
 import Typeclasses.Classes.Equality
-import Typeclasses.Classes.Monoid
-import Typeclasses.Classes.Semigroup
 
 
 {-| Type to represent a scalar value
@@ -193,9 +197,9 @@ type alias InnerProductSpace a =
 -}
 realVectorAbelianGroup : AbelianGroup Float
 realVectorAbelianGroup =
-    { field = Field.realField
-    , addVects = addVectors Field.realField
-    , subtractVects = subtractVectors Field.realField
+    { field = Field.numberField
+    , addVects = addVectors Field.numberField
+    , subtractVects = subtractVectors Field.numberField
     }
 
 
@@ -214,7 +218,7 @@ complexVectorAbelianGroup =
 realVectorSpace : VectorSpace Float
 realVectorSpace =
     { abelianGroup = realVectorAbelianGroup
-    , vectorScalarMultiplication = scalarMultiplication Field.realField
+    , vectorScalarMultiplication = scalarMultiplication Field.numberField
     }
 
 
@@ -232,7 +236,7 @@ complexVectorSpace =
 realInnerProductSpace : InnerProductSpace Float
 realInnerProductSpace =
     { vectorSpace = realVectorSpace
-    , innerProduct = dotProduct Field.realField
+    , innerProduct = dotProduct Field.numberField
     }
 
 
@@ -247,107 +251,180 @@ complexInnerProductSpace =
 
 {-| Zero vector given a Field and dimension
 -}
-zeros : Field.Field a -> Int -> Vector a
-zeros { zero } dim =
-    List.repeat dim zero
+zeros : Monoid.Monoid a -> Int -> Vector a
+zeros { identity } dim =
+    List.repeat dim identity
         |> Vector
 
 
 {-| Scalar multiplication over a Vector
 -}
 scalarMultiplication : Field.Field a -> a -> Vector a -> Vector a
-scalarMultiplication { multiply } scalar =
-    map (multiply scalar)
+scalarMultiplication (Field.Field field) scalar =
+    let
+        (CommutativeRing.CommutativeRing ring) =
+            field
+
+        (CommutativeMonoid.CommutativeMonoid monoid) =
+            ring.multiplication
+
+        (CommutativeSemigroup.CommutativeSemigroup semigroup) =
+            monoid.semigroup
+    in
+    map (semigroup scalar)
 
 
-{-| Calculate the length of a Vector
--}
-length : Field.Field a -> Vector a -> a
-length field vector =
-    dotProduct field vector vector
-        |> field.power (1 / 2)
 
-
-{-| Adjust a vector so that its length is exactly one
--}
-normalise : Field.Field a -> Vector a -> Vector a
-normalise field v =
-    if length field v == field.zero then
-        v
-
-    else
-        map (field.divide (length field v)) v
+-- {-| Calculate the length of a Vector
+-- -}
+-- length : Field.Field a -> Vector a -> a
+-- length (Field.Field field) vector =
+--     let
+--         (CommutativeRing.CommutativeRing ring) =
+--             field
+--         (CommutativeMonoid.CommutativeMonoid monoid) =
+--             ring.multiplication
+--         (CommutativeSemigroup.CommutativeSemigroup semigroup) =
+--             monoid.semigroup
+--     in
+--     dotProduct (Field.Field field) vector vector
+--         |> field.power (1 / 2)
+-- {-| Adjust a vector so that its length is exactly one
+-- -}
+-- normalise : Field.Field a -> Vector a -> Vector a
+-- normalise field v =
+--     if length field v == field.zero then
+--         v
+--     else
+--         map (field.divide (length field v)) v
 
 
 {-| Add two Vectors
 -}
 addVectors : Field.Field a -> Vector a -> Vector a -> Vector a
-addVectors { add } =
-    map2 add
+addVectors (Field.Field field) =
+    let
+        (CommutativeRing.CommutativeRing ring) =
+            field
+
+        (AbelianGroup.AbelianGroup group) =
+            ring.addition
+
+        (CommutativeMonoid.CommutativeMonoid monoid) =
+            group.monoid
+
+        (CommutativeSemigroup.CommutativeSemigroup semigroup) =
+            monoid.semigroup
+    in
+    map2 semigroup
 
 
 {-| Subtract Vectors
 -}
 subtractVectors : Field.Field a -> Vector a -> Vector a -> Vector a
-subtractVectors { subtract } =
-    map2 subtract
+subtractVectors (Field.Field field) vectorOne vectorTwo =
+    let
+        (CommutativeRing.CommutativeRing ring) =
+            field
+
+        (AbelianGroup.AbelianGroup group) =
+            ring.addition
+    in
+    addVectors (Field.Field field) vectorOne (map group.inverse vectorTwo)
 
 
 {-| Hadamard Multiplication Vectors
 -}
 hadamardMultiplication : Field.Field a -> Vector a -> Vector a -> Vector a
-hadamardMultiplication { multiply } =
-    map2 multiply
+hadamardMultiplication (Field.Field field) =
+    let
+        (CommutativeRing.CommutativeRing ring) =
+            field
+
+        (CommutativeMonoid.CommutativeMonoid monoid) =
+            ring.multiplication
+
+        (CommutativeSemigroup.CommutativeSemigroup semigroup) =
+            monoid.semigroup
+    in
+    map2 semigroup
 
 
 {-| Calculate the dot product of two Vectors
 -}
 dotProduct : Field.Field a -> Vector a -> Vector a -> a
-dotProduct field vectorOne vectorTwo =
-    hadamardMultiplication field vectorOne vectorTwo
-        |> sum field
-
-
-{-| Calculate the angle between two vectors
--}
-angleBetween : Vector Float -> Vector Float -> Float
-angleBetween vectorOne vectorTwo =
+dotProduct (Field.Field field) vectorOne vectorTwo =
     let
-        dotP =
-            dotProduct Field.realField vectorOne vectorTwo
+        (CommutativeRing.CommutativeRing ring) =
+            field
 
-        lengthVectorOne =
-            length Field.realField vectorOne
-
-        lengthVectorTwo =
-            length Field.realField vectorTwo
+        (AbelianGroup.AbelianGroup group) =
+            ring.addition
     in
-    Basics.acos (dotP / (lengthVectorOne * lengthVectorTwo))
+    hadamardMultiplication (Field.Field field) vectorOne vectorTwo
+        |> sum group.monoid
+
+
+
+-- {-| Calculate the angle between two vectors
+-- -}
+-- angleBetween : Vector Float -> Vector Float -> Float
+-- angleBetween vectorOne vectorTwo =
+--     let
+--         dotP =
+--             dotProduct Field.numberField vectorOne vectorTwo
+--         lengthVectorOne =
+--             length Field.numberField vectorOne
+--         lengthVectorTwo =
+--             length Field.numberField vectorTwo
+--     in
+--     Basics.acos (dotP / (lengthVectorOne * lengthVectorTwo))
 
 
 {-| Calculate the sum of a Vector
 -}
-sum : Field.Field a -> Vector a -> a
-sum { add, zero } =
-    foldl add zero
+sum : CommutativeMonoid.CommutativeMonoid a -> Vector a -> a
+sum (CommutativeMonoid.CommutativeMonoid monoid) =
+    let
+        (CommutativeSemigroup.CommutativeSemigroup semigroup) =
+            monoid.semigroup
+    in
+    foldl semigroup monoid.identity
 
 
-{-| Calculate distance between two vectors
--}
-distance : AbelianGroup a -> Vector a -> Vector a -> a
-distance { subtractVects, field } vectorOne vectorTwo =
-    subtractVects vectorOne vectorTwo
-        |> length field
+
+-- {-| Calculate distance between two vectors
+-- -}
+-- distance : AbelianGroup a -> Vector a -> Vector a -> a
+-- distance { subtractVects, field } vectorOne vectorTwo =
+--     subtractVects vectorOne vectorTwo
+--         |> length field
 
 
 {-| Take the cross product of two 3D vectors
 -}
-cross : Field.Field a -> Vector3 a -> Vector3 a -> Vector3 a
-cross { subtract, multiply } (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
+cross : CommutativeRing.CommutativeRing a -> Vector3 a -> Vector3 a -> Vector3 a
+cross (CommutativeRing.CommutativeRing ring) (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
+    let
+        (AbelianGroup.AbelianGroup group) =
+            ring.addition
+
+        (CommutativeMonoid.CommutativeMonoid monoid) =
+            group.monoid
+
+        (CommutativeSemigroup.CommutativeSemigroup additionSemigroup) =
+            monoid.semigroup
+
+        (CommutativeMonoid.CommutativeMonoid multiplicationMonoid) =
+            ring.multiplication
+
+        (CommutativeSemigroup.CommutativeSemigroup multiplicationSemigroup) =
+            multiplicationMonoid.semigroup
+    in
     Vector3
-        (subtract (multiply y1 z2) (multiply y2 z1))
-        (subtract (multiply z1 x2) (multiply z2 x1))
-        (subtract (multiply x1 y2) (multiply x2 y1))
+        ((\x y -> additionSemigroup x (group.inverse y)) (multiplicationSemigroup y1 z2) (multiplicationSemigroup y2 z1))
+        ((\x y -> additionSemigroup x (group.inverse y)) (multiplicationSemigroup z1 x2) (multiplicationSemigroup z2 x1))
+        ((\x y -> additionSemigroup x (group.inverse y)) (multiplicationSemigroup x1 y2) (multiplicationSemigroup x2 y1))
 
 
 {-| Calculate the tensor product of two vectors
@@ -431,10 +508,10 @@ append (Vector listOne) (Vector listTwo) =
 
 {-| Monoidally append Vectors together
 -}
-concat : Typeclasses.Classes.Monoid.Monoid (Vector a)
+concat : Monoid.Monoid (Vector a)
 concat =
-    Typeclasses.Classes.Monoid.semigroupAndIdentity
-        (Typeclasses.Classes.Semigroup.prepend append)
+    Monoid.semigroupAndIdentity
+        (Semigroup.prepend append)
         empty
 
 
@@ -452,42 +529,36 @@ dimension (Vector list) =
     List.length list
 
 
-{-| Determine whether a list of Vectors makes a Subspace
--}
-vectorSubspace :
-    AbelianGroup a
-    -> Scalar a
-    -> List (Vector a)
-    -> List (a -> Bool)
-    -> Bool
-vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
-    let
-        testzeros =
-            List.map (scalarMultiplication field field.zero) vectorList
 
-        containszeros =
-            closurePassCriteria testzeros
-
-        scaledVectors =
-            List.map (scalarMultiplication field scalar) vectorList
-
-        closurePassCriteria =
-            List.map (\(Vector vector) -> Vector <| List.map2 Basics.identity predicates vector)
-                >> List.all (all ((==) True))
-
-        closureUnderScalarMultiplication =
-            closurePassCriteria scaledVectors
-
-        cartesianAddVectors =
-            List.Extra.lift2 addVects
-
-        additionOfVectors =
-            cartesianAddVectors vectorList vectorList
-
-        closureUnderAddition =
-            closurePassCriteria additionOfVectors
-    in
-    containszeros && closureUnderScalarMultiplication && closureUnderAddition
+-- {-| Determine whether a list of Vectors makes a Subspace
+-- -}
+-- vectorSubspace :
+--     AbelianGroup a
+--     -> Scalar a
+--     -> List (Vector a)
+--     -> List (a -> Bool)
+--     -> Bool
+-- vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
+--     let
+--         testzeros =
+--             List.map (scalarMultiplication field field.zero) vectorList
+--         containszeros =
+--             closurePassCriteria testzeros
+--         scaledVectors =
+--             List.map (scalarMultiplication field scalar) vectorList
+--         closurePassCriteria =
+--             List.map (\(Vector vector) -> Vector <| List.map2 Basics.identity predicates vector)
+--                 >> List.all (all ((==) True))
+--         closureUnderScalarMultiplication =
+--             closurePassCriteria scaledVectors
+--         cartesianAddVectors =
+--             List.Extra.lift2 addVects
+--         additionOfVectors =
+--             cartesianAddVectors vectorList vectorList
+--         closureUnderAddition =
+--             closurePassCriteria additionOfVectors
+--     in
+--     containszeros && closureUnderScalarMultiplication && closureUnderAddition
 
 
 {-| Determine if all elements in a vector satisfy some test

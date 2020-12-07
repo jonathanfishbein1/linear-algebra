@@ -138,11 +138,13 @@ module Vector exposing
 -}
 
 import AbelianGroup
+import CommutativeDivisionRing
 import CommutativeMonoid
 import CommutativeRing
 import CommutativeSemigroup
 import ComplexNumbers
 import Field
+import Group
 import List.Extra
 import Monoid
 import Parser exposing ((|.), (|=))
@@ -257,19 +259,19 @@ zeros { identity } dim =
         |> Vector
 
 
-{-| Scalar multiplication over a Vector
+{-| Scalar multiplication over a Vector s
 -}
 scalarMultiplication : Field.Field a -> a -> Vector a -> Vector a
 scalarMultiplication (Field.Field field) scalar =
     let
-        (CommutativeRing.CommutativeRing ring) =
+        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
             field
 
-        (CommutativeMonoid.CommutativeMonoid monoid) =
-            ring.multiplication
+        group =
+            commutativeDivisionRing.multiplication
 
-        (CommutativeSemigroup.CommutativeSemigroup semigroup) =
-            monoid.semigroup
+        semigroup =
+            group.monoid.semigroup
     in
     map (semigroup scalar)
 
@@ -304,17 +306,17 @@ scalarMultiplication (Field.Field field) scalar =
 addVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 addVectors (Field.Field field) =
     let
-        (CommutativeRing.CommutativeRing ring) =
+        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
             field
 
         (AbelianGroup.AbelianGroup group) =
-            ring.addition
+            commutativeDivisionRing.addition
 
-        (CommutativeMonoid.CommutativeMonoid monoid) =
+        monoid =
             group.monoid
 
-        (CommutativeSemigroup.CommutativeSemigroup semigroup) =
-            monoid.semigroup
+        semigroup =
+            group.monoid.semigroup
     in
     map2 semigroup
 
@@ -324,11 +326,11 @@ addVectors (Field.Field field) =
 subtractVectors : Field.Field a -> Vector a -> Vector a -> Vector a
 subtractVectors (Field.Field field) vectorOne vectorTwo =
     let
-        (CommutativeRing.CommutativeRing ring) =
+        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
             field
 
         (AbelianGroup.AbelianGroup group) =
-            ring.addition
+            commutativeDivisionRing.addition
     in
     addVectors (Field.Field field) vectorOne (map group.inverse vectorTwo)
 
@@ -338,14 +340,14 @@ subtractVectors (Field.Field field) vectorOne vectorTwo =
 hadamardMultiplication : Field.Field a -> Vector a -> Vector a -> Vector a
 hadamardMultiplication (Field.Field field) =
     let
-        (CommutativeRing.CommutativeRing ring) =
+        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
             field
 
-        (CommutativeMonoid.CommutativeMonoid monoid) =
-            ring.multiplication
+        group =
+            commutativeDivisionRing.multiplication
 
-        (CommutativeSemigroup.CommutativeSemigroup semigroup) =
-            monoid.semigroup
+        semigroup =
+            group.monoid.semigroup
     in
     map2 semigroup
 
@@ -355,11 +357,11 @@ hadamardMultiplication (Field.Field field) =
 dotProduct : Field.Field a -> Vector a -> Vector a -> a
 dotProduct (Field.Field field) vectorOne vectorTwo =
     let
-        (CommutativeRing.CommutativeRing ring) =
+        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
             field
 
         (AbelianGroup.AbelianGroup group) =
-            ring.addition
+            commutativeDivisionRing.addition
     in
     hadamardMultiplication (Field.Field field) vectorOne vectorTwo
         |> sum group.monoid
@@ -383,13 +385,9 @@ dotProduct (Field.Field field) vectorOne vectorTwo =
 
 {-| Calculate the sum of a Vector
 -}
-sum : CommutativeMonoid.CommutativeMonoid a -> Vector a -> a
-sum (CommutativeMonoid.CommutativeMonoid monoid) =
-    let
-        (CommutativeSemigroup.CommutativeSemigroup semigroup) =
-            monoid.semigroup
-    in
-    foldl semigroup monoid.identity
+sum : Monoid.Monoid a -> Vector a -> a
+sum monoid =
+    foldl monoid.semigroup monoid.identity
 
 
 
@@ -403,23 +401,23 @@ sum (CommutativeMonoid.CommutativeMonoid monoid) =
 
 {-| Take the cross product of two 3D vectors
 -}
-cross : CommutativeRing.CommutativeRing a -> Vector3 a -> Vector3 a -> Vector3 a
-cross (CommutativeRing.CommutativeRing ring) (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
+cross : CommutativeDivisionRing.CommutativeDivisionRing a -> Vector3 a -> Vector3 a -> Vector3 a
+cross (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
     let
         (AbelianGroup.AbelianGroup group) =
-            ring.addition
+            commutativeDivisionRing.addition
 
-        (CommutativeMonoid.CommutativeMonoid monoid) =
+        additionMonoid =
             group.monoid
 
-        (CommutativeSemigroup.CommutativeSemigroup additionSemigroup) =
-            monoid.semigroup
+        additionSemigroup =
+            additionMonoid.semigroup
 
-        (CommutativeMonoid.CommutativeMonoid multiplicationMonoid) =
-            ring.multiplication
+        multiplicationGroup =
+            commutativeDivisionRing.multiplication
 
-        (CommutativeSemigroup.CommutativeSemigroup multiplicationSemigroup) =
-            multiplicationMonoid.semigroup
+        multiplicationSemigroup =
+            multiplicationGroup.monoid.semigroup
     in
     Vector3
         ((\x y -> additionSemigroup x (group.inverse y)) (multiplicationSemigroup y1 z2) (multiplicationSemigroup y2 z1))
@@ -511,7 +509,7 @@ append (Vector listOne) (Vector listTwo) =
 concat : Monoid.Monoid (Vector a)
 concat =
     Monoid.semigroupAndIdentity
-        (Semigroup.prepend append)
+        append
         empty
 
 

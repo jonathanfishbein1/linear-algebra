@@ -21,6 +21,7 @@ module Vector exposing
     , cross
     , tensorProduct
     , dimension
+    , vectorSubspace
     , all
     , empty
     , append
@@ -42,7 +43,6 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    -- , vectorSubspace
     -- , distance
     -- , angleBetween
     -- , length

@@ -98,30 +98,38 @@ suite =
                             (Vector.hadamardMultiplication Field.numberField a c)
                 in
                 Expect.true "vectors equal" (Vector.equal (Float.Extra.equalWithin 0.1) aHadamardSumBC sumAHadamardBAHadamardC)
+        , Test.fuzz3
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests cross product is orthagonal to both vectors"
+          <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector3 one two three
 
-        -- , Test.fuzz3
-        --     (Fuzz.floatRange -10 10)
-        --     (Fuzz.floatRange -10 10)
-        --     (Fuzz.floatRange -10 10)
-        --     "tests cross product is orthagonal to both vectors"
-        --   <|
-        --     \one two three ->
-        --         let
-        --             a =
-        --                 Vector.Vector3 one two three
-        --             b =
-        --                 Vector.Vector3 two three one
-        --             aCrossB =
-        --                 Vector.cross Field.numberField a b
-        --                     |> Vector.vector3ToVector
-        --             aDotACrossB =
-        --                 Vector.dotProduct Field.numberField (Vector.vector3ToVector a) aCrossB
-        --             bDotACrossB =
-        --                 Vector.dotProduct Field.numberField (Vector.vector3ToVector b) aCrossB
-        --             result =
-        --                 Float.Extra.equalWithin 0.000000001 0 aDotACrossB && Float.Extra.equalWithin 0.000000001 0 bDotACrossB
-        --         in
-        --         Expect.true "a X b is orthagonal to both a and b" result
+                    b =
+                        Vector.Vector3 two three one
+
+                    (Field.Field commutativeDivisionRing) =
+                        Field.numberField
+
+                    aCrossB =
+                        Vector.cross commutativeDivisionRing a b
+                            |> Vector.vector3ToVector
+
+                    aDotACrossB =
+                        Vector.dotProduct Field.numberField (Vector.vector3ToVector a) aCrossB
+
+                    bDotACrossB =
+                        Vector.dotProduct Field.numberField (Vector.vector3ToVector b) aCrossB
+
+                    result =
+                        Float.Extra.equalWithin 0.000000001 0 aDotACrossB && Float.Extra.equalWithin 0.000000001 0 bDotACrossB
+                in
+                Expect.true "a X b is orthagonal to both a and b" result
+
         -- , Test.fuzz3
         --     (Fuzz.floatRange -10 10)
         --     (Fuzz.floatRange -10 10)

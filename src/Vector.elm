@@ -404,11 +404,11 @@ sum monoid =
 cross : CommutativeDivisionRing.CommutativeDivisionRing a -> Vector3 a -> Vector3 a -> Vector3 a
 cross (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
     let
-        (AbelianGroup.AbelianGroup group) =
+        (AbelianGroup.AbelianGroup groupAddition) =
             commutativeDivisionRing.addition
 
         additionMonoid =
-            group.monoid
+            groupAddition.monoid
 
         additionSemigroup =
             additionMonoid.semigroup
@@ -420,9 +420,9 @@ cross (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) 
             multiplicationGroup.monoid.semigroup
     in
     Vector3
-        ((\x y -> additionSemigroup x (group.inverse y)) (multiplicationSemigroup y1 z2) (multiplicationSemigroup y2 z1))
-        ((\x y -> additionSemigroup x (group.inverse y)) (multiplicationSemigroup z1 x2) (multiplicationSemigroup z2 x1))
-        ((\x y -> additionSemigroup x (group.inverse y)) (multiplicationSemigroup x1 y2) (multiplicationSemigroup x2 y1))
+        ((\x y -> additionSemigroup x (groupAddition.inverse y)) (multiplicationSemigroup y1 z2) (multiplicationSemigroup y2 z1))
+        ((\x y -> additionSemigroup x (groupAddition.inverse y)) (multiplicationSemigroup z1 x2) (multiplicationSemigroup z2 x1))
+        ((\x y -> additionSemigroup x (groupAddition.inverse y)) (multiplicationSemigroup x1 y2) (multiplicationSemigroup x2 y1))
 
 
 {-| Calculate the tensor product of two vectors
@@ -527,36 +527,54 @@ dimension (Vector list) =
     List.length list
 
 
+{-| Determine whether a list of Vectors makes a Subspace
+-}
+vectorSubspace :
+    AbelianGroup a
+    -> Scalar a
+    -> List (Vector a)
+    -> List (a -> Bool)
+    -> Bool
+vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
+    let
+        (Field.Field innerField) =
+            field
 
--- {-| Determine whether a list of Vectors makes a Subspace
--- -}
--- vectorSubspace :
---     AbelianGroup a
---     -> Scalar a
---     -> List (Vector a)
---     -> List (a -> Bool)
---     -> Bool
--- vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
---     let
---         testzeros =
---             List.map (scalarMultiplication field field.zero) vectorList
---         containszeros =
---             closurePassCriteria testzeros
---         scaledVectors =
---             List.map (scalarMultiplication field scalar) vectorList
---         closurePassCriteria =
---             List.map (\(Vector vector) -> Vector <| List.map2 Basics.identity predicates vector)
---                 >> List.all (all ((==) True))
---         closureUnderScalarMultiplication =
---             closurePassCriteria scaledVectors
---         cartesianAddVectors =
---             List.Extra.lift2 addVects
---         additionOfVectors =
---             cartesianAddVectors vectorList vectorList
---         closureUnderAddition =
---             closurePassCriteria additionOfVectors
---     in
---     containszeros && closureUnderScalarMultiplication && closureUnderAddition
+        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
+            innerField
+
+        multiplicationGroup =
+            commutativeDivisionRing.multiplication
+
+        multiplicationSemigroup =
+            multiplicationGroup.monoid.semigroup
+
+        testzeros =
+            List.map (scalarMultiplication field multiplicationGroup.monoid.identity) vectorList
+
+        containszeros =
+            closurePassCriteria testzeros
+
+        scaledVectors =
+            List.map (scalarMultiplication field scalar) vectorList
+
+        closurePassCriteria =
+            List.map (\(Vector vector) -> Vector <| List.map2 Basics.identity predicates vector)
+                >> List.all (all ((==) True))
+
+        closureUnderScalarMultiplication =
+            closurePassCriteria scaledVectors
+
+        cartesianAddVectors =
+            List.Extra.lift2 addVects
+
+        additionOfVectors =
+            cartesianAddVectors vectorList vectorList
+
+        closureUnderAddition =
+            closurePassCriteria additionOfVectors
+    in
+    containszeros && closureUnderScalarMultiplication && closureUnderAddition
 
 
 {-| Determine if all elements in a vector satisfy some test

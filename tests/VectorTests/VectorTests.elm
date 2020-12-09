@@ -1,5 +1,6 @@
 module VectorTests.VectorTests exposing (suite)
 
+import CommutativeDivisionRing exposing (CommutativeDivisionRing)
 import ComplexNumbers
 import Expect
 import Field
@@ -129,36 +130,44 @@ suite =
                         Float.Extra.equalWithin 0.000000001 0 aDotACrossB && Float.Extra.equalWithin 0.000000001 0 bDotACrossB
                 in
                 Expect.true "a X b is orthagonal to both a and b" result
+        , Test.fuzz3
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests length of cross product is the length of the two vectors times the sin of the angle between them"
+          <|
+            \one two three ->
+                let
+                    a =
+                        Vector.Vector3 one two three
 
-        -- , Test.fuzz3
-        --     (Fuzz.floatRange -10 10)
-        --     (Fuzz.floatRange -10 10)
-        --     (Fuzz.floatRange -10 10)
-        --     "tests length of cross product is the length of the two vectors times the sin of the angle between them"
-        --   <|
-        --     \one two three ->
-        --         let
-        --             a =
-        --                 Vector.Vector3 one two three
-        --             b =
-        --                 Vector.Vector3 two three one
-        --             aCrossB =
-        --                 Vector.cross Field.numberField a b
-        --                     |> Vector.vector3ToVector
-        --             aVector =
-        --                 Vector.vector3ToVector a
-        --             bVector =
-        --                 Vector.vector3ToVector b
-        --             aLength =
-        --                 Vector.length Field.numberField aVector
-        --             bLength =
-        --                 Vector.length Field.numberField bVector
-        --             aCrossBLength =
-        --                 Vector.length Field.numberField aCrossB
-        --             angle =
-        --                 Vector.angleBetween aVector bVector
-        --         in
-        --         Expect.within (Expect.Absolute 0.000000001) aCrossBLength (aLength * bLength * Basics.sin angle)
+                    b =
+                        Vector.Vector3 two three one
+
+                    aCrossB =
+                        Vector.cross CommutativeDivisionRing.floatCommutativeDivisionRing a b
+                            |> Vector.vector3ToVector
+
+                    aVector =
+                        Vector.vector3ToVector a
+
+                    bVector =
+                        Vector.vector3ToVector b
+
+                    aLength =
+                        Vector.lengthReal aVector
+
+                    bLength =
+                        Vector.lengthReal bVector
+
+                    aCrossBLength =
+                        Vector.lengthReal aCrossB
+
+                    angle =
+                        Vector.angleBetween aVector bVector
+                in
+                Expect.within (Expect.Absolute 0.00000001) aCrossBLength (aLength * bLength * Basics.sin angle)
+
         -- , Test.fuzz
         --     (Fuzz.floatRange 1 10)
         --     "tests unit vector length is 1"

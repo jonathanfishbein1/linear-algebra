@@ -18,6 +18,7 @@ module Vector exposing
     , subtractVectors
     , hadamardMultiplication
     , dotProduct
+    , angleBetween
     , cross
     , tensorProduct
     , dimension
@@ -43,10 +44,10 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    -- , distance
-    -- , angleBetween
-    -- , length
-    -- , normalise
+    ,  lengthReal
+       -- , normalise
+       -- , distance
+
     )
 
 {-| A module for Vectors
@@ -137,7 +138,7 @@ module Vector exposing
 
 -}
 
-import AbelianGroup
+import AbelianGroup exposing (AbelianGroup)
 import CommutativeDivisionRing
 import CommutativeMonoid
 import CommutativeRing
@@ -192,6 +193,7 @@ type alias VectorSpace a =
 type alias InnerProductSpace a =
     { vectorSpace : VectorSpace a
     , innerProduct : Vector a -> Vector a -> a
+    , length : Vector a -> Float
     }
 
 
@@ -239,6 +241,7 @@ realInnerProductSpace : InnerProductSpace Float
 realInnerProductSpace =
     { vectorSpace = realVectorSpace
     , innerProduct = dotProduct Field.numberField
+    , length = lengthReal
     }
 
 
@@ -248,6 +251,7 @@ complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumber Float
 complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
     , innerProduct = dotProduct ComplexNumbers.complexField
+    , length = lengthComplex
     }
 
 
@@ -276,29 +280,32 @@ scalarMultiplication (Field.Field field) scalar =
     map (semigroup scalar)
 
 
+{-| Calculate the length of a Vector
+-}
+lengthReal : Vector Float -> Float
+lengthReal vector =
+    dotProduct Field.numberField vector vector
+        |> Basics.sqrt
 
--- {-| Calculate the length of a Vector
--- -}
--- length : Field.Field a -> Vector a -> a
--- length (Field.Field field) vector =
---     let
---         (CommutativeRing.CommutativeRing ring) =
---             field
---         (CommutativeMonoid.CommutativeMonoid monoid) =
---             ring.multiplication
---         (CommutativeSemigroup.CommutativeSemigroup semigroup) =
---             monoid.semigroup
---     in
---     dotProduct (Field.Field field) vector vector
---         |> field.power (1 / 2)
--- {-| Adjust a vector so that its length is exactly one
--- -}
--- normalise : Field.Field a -> Vector a -> Vector a
--- normalise field v =
---     if length field v == field.zero then
---         v
---     else
---         map (field.divide (length field v)) v
+
+{-| Calculate the length of a Vector
+-}
+lengthComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Float
+lengthComplex vector =
+    dotProduct ComplexNumbers.complexField vector vector
+        |> ComplexNumbers.modulus
+        |> Basics.sqrt
+
+
+{-| Adjust a vector so that its length is exactly one
+-}
+normaliseReal : Vector Float -> Vector Float
+normaliseReal v =
+    if lengthReal v == 0 then
+        v
+
+    else
+        map ((*) (1 / lengthReal v)) v
 
 
 {-| Add two Vectors
@@ -367,20 +374,21 @@ dotProduct (Field.Field field) vectorOne vectorTwo =
         |> sum group.monoid
 
 
+{-| Calculate the angle between two vectors
+-}
+angleBetween : Vector Float -> Vector Float -> Float
+angleBetween vectorOne vectorTwo =
+    let
+        dotP =
+            dotProduct Field.numberField vectorOne vectorTwo
 
--- {-| Calculate the angle between two vectors
--- -}
--- angleBetween : Vector Float -> Vector Float -> Float
--- angleBetween vectorOne vectorTwo =
---     let
---         dotP =
---             dotProduct Field.numberField vectorOne vectorTwo
---         lengthVectorOne =
---             length Field.numberField vectorOne
---         lengthVectorTwo =
---             length Field.numberField vectorTwo
---     in
---     Basics.acos (dotP / (lengthVectorOne * lengthVectorTwo))
+        lengthVectorOne =
+            lengthReal vectorOne
+
+        lengthVectorTwo =
+            lengthReal vectorTwo
+    in
+    Basics.acos (dotP / (lengthVectorOne * lengthVectorTwo))
 
 
 {-| Calculate the sum of a Vector

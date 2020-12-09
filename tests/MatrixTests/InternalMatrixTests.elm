@@ -224,76 +224,87 @@ suite =
                         Internal.Matrix.scale Vector.complexVectorSpace 0 row
                 in
                 Expect.equal (Vector.Vector scaledComplexRow) Vector.empty
+        , Test.test
+            "tests matrix complex scale scales Vector"
+          <|
+            \_ ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real
+                                0.000001
+                            )
+                            (ComplexNumbers.Imaginary
+                                0.000001
+                            )
 
-        -- , Test.test
-        --     "tests matrix complex scale scales Vector"
-        --   <|
-        --     \_ ->
-        --         let
-        --             complexNumberOne =
-        --                 ComplexNumbers.ComplexNumber
-        --                     (ComplexNumbers.Real
-        --                         0.000001
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         0.000001
-        --                     )
-        --             complexNumberTwo =
-        --                 ComplexNumbers.ComplexNumber
-        --                     (ComplexNumbers.Real
-        --                         0.000001
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         0.000001
-        --                     )
-        --             row =
-        --                 Vector.Vector [ complexNumberOne, complexNumberTwo ]
-        --             (Vector.Vector scaledComplexRow) =
-        --                 Internal.Matrix.scale Vector.complexVectorSpace 0 row
-        --             secondElement =
-        --                 ComplexNumbers.divide complexNumberTwo complexNumberOne
-        --         in
-        --         Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [ ComplexNumbers.one, secondElement ])
-        -- , Test.fuzz2
-        --     (Fuzz.floatRange 1 10)
-        --     (Fuzz.floatRange -10 10)
-        --     "tests matrix scale scales second element by first"
-        --   <|
-        --     \one two ->
-        --         let
-        --             row =
-        --                 Vector.Vector [ one, two ]
-        --             (Vector.Vector scaledRow) =
-        --                 Internal.Matrix.scale Vector.realVectorSpace 0 row
-        --             secondElement =
-        --                 List.Extra.getAt 1 scaledRow
-        --         in
-        --         case secondElement of
-        --             Just element ->
-        --                 Expect.within (Expect.Absolute 0.000000001) element (two / one)
-        --             Nothing ->
-        --                 Expect.fail "error"
-        -- , Test.fuzz2
-        --     (Fuzz.floatRange 1 10)
-        --     (Fuzz.floatRange -10 10)
-        --     "tests matrix subrow has zero under pivot entry"
-        --   <|
-        --     \one two ->
-        --         let
-        --             currentRow =
-        --                 Vector.Vector [ one, two ]
-        --             nextRow =
-        --                 Vector.Vector [ two, two ]
-        --             (Vector.Vector subRow) =
-        --                 Internal.Matrix.subtractRow Vector.realVectorSpace 0 (Internal.Matrix.scale Vector.realVectorSpace 0 currentRow) nextRow
-        --             firstElementSecondRow =
-        --                 List.Extra.getAt 0 subRow
-        --         in
-        --         case firstElementSecondRow of
-        --             Just element ->
-        --                 Expect.within (Expect.Absolute 0.000000001) element 0
-        --             Nothing ->
-        --                 Expect.fail "error"
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real
+                                0.000001
+                            )
+                            (ComplexNumbers.Imaginary
+                                0.000001
+                            )
+
+                    row =
+                        Vector.Vector [ complexNumberOne, complexNumberTwo ]
+
+                    (Vector.Vector scaledComplexRow) =
+                        Internal.Matrix.scale Vector.complexVectorSpace 0 row
+
+                    secondElement =
+                        ComplexNumbers.divide complexNumberTwo complexNumberOne
+                in
+                Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [ ComplexNumbers.one, secondElement ])
+        , Test.fuzz2
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix scale scales second element by first"
+          <|
+            \one two ->
+                let
+                    row =
+                        Vector.Vector [ one, two ]
+
+                    (Vector.Vector scaledRow) =
+                        Internal.Matrix.scale Vector.realVectorSpace 0 row
+
+                    secondElement =
+                        List.Extra.getAt 1 scaledRow
+                in
+                case secondElement of
+                    Just element ->
+                        Expect.within (Expect.Absolute 0.000000001) element (two / one)
+
+                    Nothing ->
+                        Expect.fail "error"
+        , Test.fuzz2
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix subrow has zero under pivot entry"
+          <|
+            \one two ->
+                let
+                    currentRow =
+                        Vector.Vector [ one, two ]
+
+                    nextRow =
+                        Vector.Vector [ two, two ]
+
+                    (Vector.Vector subRow) =
+                        Internal.Matrix.subtractRow Vector.realVectorSpace 0 (Internal.Matrix.scale Vector.realVectorSpace 0 currentRow) nextRow
+
+                    firstElementSecondRow =
+                        List.Extra.getAt 0 subRow
+                in
+                case firstElementSecondRow of
+                    Just element ->
+                        Expect.within (Expect.Absolute 0.1) element 0
+
+                    Nothing ->
+                        Expect.fail "error"
+
         -- , Test.fuzz2
         --     (Fuzz.floatRange 1 10)
         --     (Fuzz.floatRange -10 10)

@@ -53,23 +53,11 @@ subtractRow :
     -> Vector.Vector a
 subtractRow { abelianGroup } r currentRow nextRow =
     let
-        (Field.Field field) =
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             abelianGroup.field
 
-        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
-            field
-
-        (AbelianGroup.AbelianGroup group) =
+        (AbelianGroup.AbelianGroup groupAddition) =
             commutativeDivisionRing.addition
-
-        monoid =
-            group.monoid
-
-        multiplicationMonoid =
-            commutativeDivisionRing.multiplication
-
-        multiplicationSemigroup =
-            multiplicationMonoid.monoid.semigroup
     in
     Vector.getAt r nextRow
         |> Maybe.andThen
@@ -77,13 +65,13 @@ subtractRow { abelianGroup } r currentRow nextRow =
                 Vector.getAt r currentRow
                     |> Maybe.map
                         (\currentElement ->
-                            (if currentElement == monoid.identity then
+                            (if currentElement == groupAddition.monoid.identity then
                                 currentRow
 
                              else
                                 Vector.scalarMultiplication
                                     abelianGroup.field
-                                    (multiplicationSemigroup (group.inverse nElement) currentElement)
+                                    (commutativeDivisionRing.multiplication.monoid.semigroup nElement (commutativeDivisionRing.multiplication.inverse currentElement))
                                     currentRow
                             )
                                 |> abelianGroup.subtractVects nextRow

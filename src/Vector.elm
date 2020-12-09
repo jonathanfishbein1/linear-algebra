@@ -20,6 +20,7 @@ module Vector exposing
     , dotProduct
     , angleBetween
     , cross
+    , distance
     , tensorProduct
     , dimension
     , vectorSubspace
@@ -44,10 +45,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    ,  lengthReal
-       -- , normalise
-       -- , distance
-
+    , lengthReal, normaliseReal
     )
 
 {-| A module for Vectors
@@ -398,13 +396,16 @@ sum monoid =
     foldl monoid.semigroup monoid.identity
 
 
-
--- {-| Calculate distance between two vectors
--- -}
--- distance : AbelianGroup a -> Vector a -> Vector a -> a
--- distance { subtractVects, field } vectorOne vectorTwo =
---     subtractVects vectorOne vectorTwo
---         |> length field
+{-| Calculate distance between two vectors
+-}
+distance : InnerProductSpace a -> Vector a -> Vector a -> Float
+distance { vectorSpace, length } vectorOne vectorTwo =
+    let
+        group =
+            vectorSpace.abelianGroup
+    in
+    vectorSpace.abelianGroup.subtractVects vectorOne vectorTwo
+        |> length
 
 
 {-| Take the cross product of two 3D vectors

@@ -167,21 +167,22 @@ suite =
                         Vector.angleBetween aVector bVector
                 in
                 Expect.within (Expect.Absolute 0.00000001) aCrossBLength (aLength * bLength * Basics.sin angle)
+        , Test.fuzz
+            (Fuzz.floatRange 1 10)
+            "tests unit vector length is 1"
+          <|
+            \one ->
+                let
+                    a =
+                        Vector.Vector [ one ]
 
-        -- , Test.fuzz
-        --     (Fuzz.floatRange 1 10)
-        --     "tests unit vector length is 1"
-        --   <|
-        --     \one ->
-        --         let
-        --             a =
-        --                 Vector.Vector [ one ]
-        --             normalisedALength =
-        --                 Vector.normalise Field.numberField a
-        --                     |> Vector.length Field.numberField
-        --         in
-        --         normalisedALength
-        --             |> Expect.equal 1
+                    normalisedALength =
+                        Vector.normaliseReal a
+                            |> Vector.lengthReal
+                in
+                Expect.within (Expect.Absolute 0.00000001)
+                    normalisedALength
+                    1
         , Test.fuzz2
             Fuzz.float
             Fuzz.float

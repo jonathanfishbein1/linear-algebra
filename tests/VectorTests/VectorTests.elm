@@ -166,7 +166,7 @@ suite =
                     angle =
                         Vector.angleBetween aVector bVector
                 in
-                Expect.within (Expect.Absolute 0.00000001) aCrossBLength (aLength * bLength * Basics.sin angle)
+                Expect.within (Expect.Absolute 0.0001) aCrossBLength (aLength * bLength * Basics.sin angle)
         , Test.fuzz
             (Fuzz.floatRange 1 10)
             "tests unit vector length is 1"

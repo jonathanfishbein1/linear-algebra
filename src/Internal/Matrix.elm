@@ -103,28 +103,19 @@ scale { abelianGroup } rowIndex rowVector =
         (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
             field
 
-        (AbelianGroup.AbelianGroup group) =
+        (AbelianGroup.AbelianGroup additionGroup) =
             commutativeDivisionRing.addition
-
-        monoid =
-            group.monoid
-
-        multiplicationGroup =
-            commutativeDivisionRing.multiplication
-
-        multiplicationSemigroup =
-            multiplicationGroup.monoid.semigroup
     in
     Vector.getAt rowIndex rowVector
         |> Maybe.map
             (\elementAtRowIndex ->
                 Vector.map
                     (\rowElement ->
-                        if elementAtRowIndex == monoid.identity then
+                        if elementAtRowIndex == additionGroup.monoid.identity then
                             rowElement
 
                         else
-                            multiplicationSemigroup (multiplicationGroup.inverse rowElement) elementAtRowIndex
+                            commutativeDivisionRing.multiplication.monoid.semigroup rowElement (commutativeDivisionRing.multiplication.inverse elementAtRowIndex)
                     )
                     rowVector
             )

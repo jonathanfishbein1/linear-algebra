@@ -5,6 +5,7 @@ module Matrix exposing
     , Solution(..)
     , Consistancy(..)
     , VectorDimension(..)
+    , identity
     , scalarMultiplication
     , transpose
     , conjugate
@@ -49,13 +50,12 @@ module Matrix exposing
     , readComplexMatrix
     ,  rank
        -- , norm
+       -- , getDiagonalProduct
+       -- , subtractMatrices
+       -- , tensorProduct
+       -- , zeros
+       -- , zeroSquareMatrix
 
-    -- , getDiagonalProduct
-    -- , subtractMatrices
-    -- , tensorProduct
-    -- , zeros
-    -- , zeroSquareMatrix
-    -- , identity
     --  , invert
     -- , isInvertable
     -- , isUnitary

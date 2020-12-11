@@ -11,6 +11,7 @@ module Matrix exposing
     , subMatrix
     , nullSpace
     , determinant
+    , leftNullSpace
     , getDiagonal
     , multiplyMatrixVector
     , multiplyMatrices
@@ -49,21 +50,20 @@ module Matrix exposing
        -- , scalarMultiplication
        -- , identity
        --  , invert
-       --, leftNullSpace
-       -- , isInvertable
-       -- , isUnitary
-       -- , areBasis
-       -- , areLinearlyIndependent
-       -- , doesSetSpanSpace
-       -- , isRightStochastic
-       -- , isLeftStochastic
-       -- , isDoublyStochastic
-       -- , areRowEquivalent
-       -- , upperTriangle
-       -- , gaussianReduce
-       -- , jordanReduce
-       -- , gaussJordan
 
+    -- , isInvertable
+    -- , isUnitary
+    -- , areBasis
+    -- , areLinearlyIndependent
+    -- , doesSetSpanSpace
+    -- , isRightStochastic
+    -- , isLeftStochastic
+    -- , isDoublyStochastic
+    -- , areRowEquivalent
+    -- , upperTriangle
+    -- , gaussianReduce
+    -- , jordanReduce
+    -- , gaussJordan
     )
 
 {-| A module for Matrix
@@ -426,12 +426,11 @@ nullSpace innerProductSpace matrix =
     solve innerProductSpace matrix b
 
 
-
--- {-| Calculate the left nullspace of a Matrix
--- -}
--- leftNullSpace : Vector.VectorSpace a -> Matrix a -> Consistancy a
--- leftNullSpace vectorSpace =
---     transpose >> nullSpace vectorSpace
+{-| Calculate the left nullspace of a Matrix
+-}
+leftNullSpace : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+leftNullSpace innerProductSpace =
+    transpose >> nullSpace innerProductSpace
 
 
 {-| Get the diagonal of a Matrix

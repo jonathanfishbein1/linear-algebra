@@ -261,117 +261,129 @@ suite =
                         Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
                 in
                 Expect.equal result (Err "Please input vectors of equal length as vector space")
+        , Test.test
+            "tests matrix areBasis with standard basis vectors"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 0, 1 ]
+                        ]
 
-        -- , Test.test
-        --     "tests matrix areBasis with standard basis vectors"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 0, 1 ]
-        --                 ]
-        --             r2 =
-        --                 Matrix.VectorDimension 2
-        --             result =
-        --                 Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
-        --         in
-        --         Expect.true "Vectors are basis for R2" result
-        -- , Test.test
-        --     "tests matrix areBasis with zero vectors"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.zeros Field.realField 2
-        --                 , Vector.zeros Field.realField 2
-        --                 ]
-        --             r2 =
-        --                 Matrix.VectorDimension 2
-        --             result =
-        --                 Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
-        --         in
-        --         Expect.false "Vectors are not basis for R2" result
-        -- , Test.test
-        --     "tests matrix areBasis with standard basis vectors 3 dimensions"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 1, 0 ]
-        --                 ]
-        --             r3 =
-        --                 Matrix.VectorDimension 3
-        --             result =
-        --                 Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
-        --         in
-        --         Expect.false "Vectors are not basis for R3" result
-        -- , Test.test
-        --     "tests matrix areBasis with identity matrix 3 dimensions"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0, 0 ]
-        --                 , Vector.Vector [ 0, 1, 0 ]
-        --                 , Vector.Vector [ 0, 0, 1 ]
-        --                 ]
-        --             r3 =
-        --                 Matrix.VectorDimension 3
-        --             result =
-        --                 Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
-        --         in
-        --         Expect.true "Vectors are basis fro R3" result
-        -- , Test.test
-        --     "tests matrix areBasis with three vectors"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 1, 0 ]
-        --                 ]
-        --             r3 =
-        --                 Matrix.VectorDimension 3
-        --             result =
-        --                 Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
-        --         in
-        --         Expect.false "Vectors are not basis R3" result
-        -- , Test.test
-        --     "tests matrix areBasis with three vectors testing r2"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 1, 0 ]
-        --                 ]
-        --             r2 =
-        --                 Matrix.VectorDimension 2
-        --             result =
-        --                 Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
-        --         in
-        --         Expect.false "Vectors are not basis for R2" result
-        -- , Test.test
-        --     "tests matrix areBasis with three dimensional vector against R2"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 2, 0 ]
-        --                 ]
-        --             r2 =
-        --                 Matrix.VectorDimension 2
-        --             result =
-        --                 Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
-        --         in
-        --         Expect.false "Vectos are not basis for R2" result
-        --
+                    r2 =
+                        Matrix.VectorDimension 2
+
+                    result =
+                        Matrix.areBasis Vector.realInnerProductSpace r2 listOfVectors
+                in
+                Expect.true "Vectors are basis for R2" result
+        , Test.test
+            "tests matrix areBasis with zero vectors"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.zeros Monoid.numberSum 2
+                        , Vector.zeros Monoid.numberSum 2
+                        ]
+
+                    r2 =
+                        Matrix.VectorDimension 2
+
+                    result =
+                        Matrix.areBasis Vector.realInnerProductSpace r2 listOfVectors
+                in
+                Expect.false "Vectors are not basis for R2" result
+        , Test.test
+            "tests matrix areBasis with standard basis vectors 3 dimensions"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorDimension 3
+
+                    result =
+                        Matrix.areBasis Vector.realInnerProductSpace r3 listOfVectors
+                in
+                Expect.false "Vectors are not basis for R3" result
+        , Test.test
+            "tests matrix areBasis with identity matrix 3 dimensions"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0, 0 ]
+                        , Vector.Vector [ 0, 1, 0 ]
+                        , Vector.Vector [ 0, 0, 1 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorDimension 3
+
+                    result =
+                        Matrix.areBasis Vector.realInnerProductSpace r3 listOfVectors
+                in
+                Expect.true "Vectors are basis fro R3" result
+        , Test.test
+            "tests matrix areBasis with three vectors"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorDimension 3
+
+                    result =
+                        Matrix.areBasis Vector.realInnerProductSpace r3 listOfVectors
+                in
+                Expect.false "Vectors are not basis R3" result
+        , Test.test
+            "tests matrix areBasis with three vectors testing r2"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorDimension 2
+
+                    result =
+                        Matrix.areBasis Vector.realInnerProductSpace r2 listOfVectors
+                in
+                Expect.false "Vectors are not basis for R2" result
+        , Test.test
+            "tests matrix areBasis with three dimensional vector against R2"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 2, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorDimension 2
+
+                    result =
+                        Matrix.areBasis Vector.realInnerProductSpace r2 listOfVectors
+                in
+                Expect.false "Vectos are not basis for R2" result
         , Test.test
             "tests matrix nullity with infinite solutions"
           <|

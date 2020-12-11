@@ -18,6 +18,7 @@ module Matrix exposing
     , isSquareMatrix
     , isSymmetric
     , isHermitian
+    , areBasis
     , areLinearlyIndependent
     , doesSetSpanSpace
     , mDimension
@@ -54,7 +55,6 @@ module Matrix exposing
        --  , invert
        -- , isInvertable
        -- , isUnitary
-       -- , areBasis
 
     -- , isRightStochastic
     -- , isLeftStochastic
@@ -967,14 +967,13 @@ mDimension (Matrix listOfRowVectors) =
     List.length listOfRowVectors
 
 
-
--- {-| Determine whether list of vectors are a basis for a space
--- -}
--- areBasis : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> Bool
--- areBasis vectorSpace vectorDimension vectors =
---     doesSetSpanSpace vectorSpace vectorDimension vectors
---         == Ok True
---         && areLinearlyIndependent vectorSpace vectors
+{-| Determine whether list of vectors are a basis for a space
+-}
+areBasis : Vector.InnerProductSpace a -> VectorDimension -> List (Vector.Vector a) -> Bool
+areBasis innerProductSpace vectorDimension vectors =
+    doesSetSpanSpace innerProductSpace.vectorSpace vectorDimension vectors
+        == Ok True
+        && areLinearlyIndependent innerProductSpace vectors
 
 
 rowVectorMap : (a -> b) -> RowVector a -> RowVector b

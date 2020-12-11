@@ -9,6 +9,7 @@ module Matrix exposing
     , conjugate
     , adjoint
     , subMatrix
+    , nullSpace
     , determinant
     , getDiagonal
     , multiplyMatrixVector
@@ -63,7 +64,6 @@ module Matrix exposing
        -- , jordanReduce
        -- , gaussJordan
 
-    --  , nullSpace
     )
 
 {-| A module for Matrix
@@ -404,20 +404,29 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
         |> Matrix
 
 
+{-| Calculate the null space of a matrix
+-}
+nullSpace : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+nullSpace innerProductSpace matrix =
+    let
+        numberOfRows =
+            mDimension matrix
 
--- {-| Calculate the null space of a matrix
--- -}
--- nullSpace : Vector.VectorSpace a -> Matrix a -> Consistancy a
--- nullSpace vectorSpace matrix =
---     let
---         numberOfRows =
---             mDimension matrix
---         b =
---             List.repeat numberOfRows vectorSpace.abelianGroup.field.zero
---                 |> Vector.Vector
---                 |> ColumnVector
---     in
---     solve vectorSpace matrix b
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+            innerProductSpace.vectorSpace.abelianGroup.field
+
+        (AbelianGroup.AbelianGroup additionGroup) =
+            commutativeDivisionRing.addition
+
+        b =
+            List.repeat numberOfRows additionGroup.monoid.identity
+                |> Vector.Vector
+                |> ColumnVector
+    in
+    solve innerProductSpace matrix b
+
+
+
 -- {-| Calculate the left nullspace of a Matrix
 -- -}
 -- leftNullSpace : Vector.VectorSpace a -> Matrix a -> Consistancy a

@@ -117,23 +117,25 @@ suite =
                 in
                 Expect.equal reducedRowEchelonFormMatrix
                     (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
+        , Test.test
+            "tests matrix null space calculation"
+          <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 2 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, -3 ]
+                            ]
 
-        -- , Test.test
-        --     "tests matrix null space calculation"
-        --   <|
-        --     \_ ->
-        --         let
-        --             matrix =
-        --                 Matrix.Matrix
-        --                     [ Matrix.RowVector <| Vector.Vector [ 1, 2 ]
-        --                     , Matrix.RowVector <| Vector.Vector [ 0, -3 ]
-        --                     ]
-        --             nullSpace =
-        --                 Matrix.nullSpace Vector.realVectorSpace matrix
-        --             expected =
-        --                 Matrix.ColumnVector <| Vector.Vector [ 0, 0 ]
-        --         in
-        --         Expect.equal nullSpace (Matrix.Consistant (Matrix.UniqueSolution expected))
+                    nullSpace =
+                        Matrix.nullSpace Vector.realInnerProductSpace matrix
+
+                    expected =
+                        Matrix.ColumnVector <| Vector.Vector [ 0, 0 ]
+                in
+                Expect.equal nullSpace (Matrix.Consistant (Matrix.UniqueSolution expected))
+
         -- , Test.test
         --     "tests matrix linearlyIndependent"
         --   <|

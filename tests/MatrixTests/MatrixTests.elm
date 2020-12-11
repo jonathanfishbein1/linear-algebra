@@ -344,46 +344,49 @@ suite =
           --                 Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
           --         in
           --         Expect.false "Vectos are not basis for R2" result
-          -- , Test.test
-          --     "tests matrix nullity with infinite solutions"
-          --   <|
-          --     \_ ->
-          --         let
-          --             matrix =
-          --                 Matrix.Matrix
-          --                     [ Matrix.RowVector <| Vector.Vector [ 1, 1, 2, 3, 2 ]
-          --                     , Matrix.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
-          --                     ]
-          --         in
-          --         Expect.equal (Matrix.solveMatrix Vector.realVectorSpace matrix) (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
-          -- , Test.test
-          --     "tests matrix fold"
-          --   <|
-          --     \_ ->
-          --         let
-          --             matrix =
-          --                 Matrix.Matrix
-          --                     [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
-          --                     , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
-          --                     ]
-          --             foldResult =
-          --                 Matrix.foldl (+) 0 matrix
-          --         in
-          --         Expect.equal foldResult 2
-          -- , Test.fuzz3
-          --     Fuzz.int
-          --     Fuzz.int
-          --     Fuzz.int
-          --     "getAt index"
-          --   <|
-          --     \one two three ->
-          --         let
-          --             matrix =
-          --                 Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ one, two, three ] ]
-          --         in
-          --         Expect.equal (Matrix.getAt ( 0, 0 ) matrix) (Just one)
-          --,
-          Test.fuzz
+          --
+          Test.test
+            "tests matrix nullity with infinite solutions"
+          <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ 1, 1, 2, 3, 2 ]
+                            , Matrix.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
+                            ]
+                in
+                Expect.equal (Matrix.solveMatrix Vector.realInnerProductSpace matrix)
+                    (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
+
+        -- , Test.test
+        --     "tests matrix fold"
+        --   <|
+        --     \_ ->
+        --         let
+        --             matrix =
+        --                 Matrix.Matrix
+        --                     [ Matrix.RowVector <| Vector.Vector [ 1, 0 ]
+        --                     , Matrix.RowVector <| Vector.Vector [ 0, 1 ]
+        --                     ]
+        --             foldResult =
+        --                 Matrix.foldl (+) 0 matrix
+        --         in
+        --         Expect.equal foldResult 2
+        -- , Test.fuzz3
+        --     Fuzz.int
+        --     Fuzz.int
+        --     Fuzz.int
+        --     "getAt index"
+        --   <|
+        --     \one two three ->
+        --         let
+        --             matrix =
+        --                 Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ one, two, three ] ]
+        --         in
+        --         Expect.equal (Matrix.getAt ( 0, 0 ) matrix) (Just one)
+        --
+        , Test.fuzz
             Fuzz.int
             "setAt getAt index"
           <|

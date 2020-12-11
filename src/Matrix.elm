@@ -28,6 +28,7 @@ module Matrix exposing
     , map2
     , foldl
     , equal
+    , solveMatrix
     , getAt
     , setAt
     , printRealMatrix
@@ -61,9 +62,8 @@ module Matrix exposing
        -- , jordanReduce
        -- , gaussJordan
        -- , solve
-       -- , solveMatrix
-       --  , nullSpace
 
+    --  , nullSpace
     )
 
 {-| A module for Matrix
@@ -190,7 +190,7 @@ import Parser exposing ((|.), (|=))
 import Typeclasses.Classes.Equality
 import Typeclasses.Classes.Monoid
 import Typeclasses.Classes.Semigroup
-import Vector
+import Vector exposing (InnerProductSpace)
 
 
 {-| Row Vector
@@ -821,60 +821,75 @@ coefficientMatrix matrix =
     subMatrix 0 (mDimension matrix) 0 (nDimension matrix - 1) matrix
 
 
+{-| Solve a system of linear equations using Gauss-Jordan elimination
+-}
+solveMatrix : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+solveMatrix innerProductSpace (Matrix listOfRowVectors) =
+    let
+        (Matrix listOfRowVectorsRREF) =
+            gaussJordan innerProductSpace.vectorSpace (Matrix listOfRowVectors)
 
--- {-| Solve a system of linear equations using Gauss-Jordan elimination
--- -}
--- solveMatrix : Vector.VectorSpace a -> Matrix a -> Consistancy a
--- solveMatrix vectorSpace (Matrix listOfRowVectors) =
---     let
---         (Matrix listOfRowVectorsRREF) =
---             gaussJordan vectorSpace (Matrix listOfRowVectors)
---         (Matrix variableSide) =
---             coefficientMatrix (Matrix listOfRowVectorsRREF)
---         notConstrainedEnough =
---             variableSide
---                 |> List.any
---                     (\(RowVector (Vector.Vector row)) ->
---                         let
---                             countOfOnes =
---                                 List.Extra.count ((/=) vectorSpace.abelianGroup.field.zero) row
---                         in
---                         countOfOnes > 1
---                     )
---         anyAllZeroExceptAugmentedSide =
---             listOfRowVectorsRREF
---                 |> List.any
---                     (\(RowVector (Vector.Vector row)) ->
---                         List.all
---                             ((==) vectorSpace.abelianGroup.field.zero)
---                             (List.take (List.length row - 1) row)
---                             && Vector.lengthReal vectorSpace.abelianGroup.field (Vector.Vector row)
---                             /= vectorSpace.abelianGroup.field.zero
---                     )
---         solution =
---             List.foldl
---                 (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
---                 []
---                 listOfRowVectorsRREF
---     in
---     if anyAllZeroExceptAugmentedSide then
---         Inconsistant "No Unique Solution"
---     else if notConstrainedEnough then
---         let
---             rnk =
---                 rank vectorSpace (Matrix listOfRowVectorsRREF)
---             nullity =
---                 nDimension (Matrix listOfRowVectorsRREF) - rnk
---         in
---         InfiniteSolutions { nullity = nullity, rank = rnk }
---             |> Consistant
---     else
---         UniqueSolution
---             (solution
---                 |> Vector.Vector
---                 |> ColumnVector
---             )
---             |> Consistant
+        (Matrix variableSide) =
+            coefficientMatrix (Matrix listOfRowVectorsRREF)
+
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+            innerProductSpace.vectorSpace.abelianGroup.field
+
+        (AbelianGroup.AbelianGroup additionGroup) =
+            commutativeDivisionRing.addition
+
+        notConstrainedEnough =
+            variableSide
+                |> List.any
+                    (\(RowVector (Vector.Vector row)) ->
+                        let
+                            countOfOnes =
+                                List.Extra.count ((/=) additionGroup.monoid.identity) row
+                        in
+                        countOfOnes > 1
+                    )
+
+        anyAllZeroExceptAugmentedSide =
+            listOfRowVectorsRREF
+                |> List.any
+                    (\(RowVector (Vector.Vector row)) ->
+                        List.all
+                            ((==) additionGroup.monoid.identity)
+                            (List.take (List.length row - 1) row)
+                            && innerProductSpace.length (Vector.Vector row)
+                            /= 0
+                    )
+
+        solution =
+            List.foldl
+                (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
+                []
+                listOfRowVectorsRREF
+    in
+    if anyAllZeroExceptAugmentedSide then
+        Inconsistant "No Unique Solution"
+
+    else if notConstrainedEnough then
+        let
+            rnk =
+                rank innerProductSpace (Matrix listOfRowVectorsRREF)
+
+            nullity =
+                nDimension (Matrix listOfRowVectorsRREF) - rnk
+        in
+        InfiniteSolutions { nullity = nullity, rank = rnk }
+            |> Consistant
+
+    else
+        UniqueSolution
+            (solution
+                |> Vector.Vector
+                |> ColumnVector
+            )
+            |> Consistant
+
+
+
 -- {-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
 -- -}
 -- solve : Vector.VectorSpace a -> Matrix a -> ColumnVector a -> Consistancy a

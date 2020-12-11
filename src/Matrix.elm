@@ -19,6 +19,7 @@ module Matrix exposing
     , isSymmetric
     , isHermitian
     , areLinearlyIndependent
+    , doesSetSpanSpace
     , mDimension
     , nDimension
     , empty
@@ -55,7 +56,6 @@ module Matrix exposing
        -- , isUnitary
        -- , areBasis
 
-    -- , doesSetSpanSpace
     -- , isRightStochastic
     -- , isLeftStochastic
     -- , isDoublyStochastic

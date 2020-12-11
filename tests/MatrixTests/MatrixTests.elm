@@ -6,6 +6,7 @@ import Field
 import Float.Extra
 import Fuzz
 import Matrix
+import Monoid exposing (Monoid)
 import Test
 import Vector
 
@@ -157,98 +158,110 @@ suite =
                         ]
                 in
                 Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent Vector.realInnerProductSpace listOfVectors)
+        , Test.test "tests matrix doesSetSpanSpace with standard basis vectors" <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 0, 1 ]
+                        ]
 
-        -- , Test.test "tests matrix doesSetSpanSpace with standard basis vectors" <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 0, 1 ]
-        --                 ]
-        --             r2 =
-        --                 Matrix.VectorDimension 2
-        --             result =
-        --                 Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
-        --         in
-        --         Expect.equal result (Ok True)
-        -- , Test.test
-        --     "tests matrix doesSetSpanSpace with zero vectors"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.zeros Field.realField 2
-        --                 , Vector.zeros Field.realField 2
-        --                 ]
-        --             r2 =
-        --                 Matrix.VectorDimension 2
-        --             result =
-        --                 Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
-        --         in
-        --         Expect.equal result (Ok False)
-        -- , Test.test
-        --     "tests matrix doesSetSpanSpace with identity matrix 3 dimensions"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0, 0 ]
-        --                 , Vector.Vector [ 0, 1, 0 ]
-        --                 , Vector.Vector [ 0, 0, 1 ]
-        --                 ]
-        --             r3 =
-        --                 Matrix.VectorDimension 3
-        --             result =
-        --                 Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
-        --         in
-        --         Expect.equal result (Ok True)
-        -- , Test.test
-        --     "tests matrix doesSetSpanSpace with three vectors"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0, 0 ]
-        --                 , Vector.Vector [ 1, 0, 0 ]
-        --                 , Vector.Vector [ 1, 0, 0 ]
-        --                 ]
-        --             r3 =
-        --                 Matrix.VectorDimension 3
-        --             result =
-        --                 Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
-        --         in
-        --         Expect.equal result (Ok False)
-        -- , Test.test
-        --     "tests matrix doesSetSpanSpace with three vectors testing r2"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 1, 0 ]
-        --                 , Vector.Vector [ 1, 0 ]
-        --                 ]
-        --             r2 =
-        --                 Matrix.VectorDimension 2
-        --             result =
-        --                 Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
-        --         in
-        --         Expect.equal result (Err "Please input same number of vectors as vector space")
-        -- , Test.test
-        --     "tests matrix doesSetSpanSpace with three dimensional vector against R2"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 0, 0 ]
-        --                 , Vector.Vector [ 2, 0, 0 ]
-        --                 ]
-        --             r2 =
-        --                 Matrix.VectorDimension 2
-        --             result =
-        --                 Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
-        --         in
-        --         Expect.equal result (Err "Please input vectors of equal length as vector space")
+                    r2 =
+                        Matrix.VectorDimension 2
+
+                    result =
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
+                in
+                Expect.equal result (Ok True)
+        , Test.test
+            "tests matrix doesSetSpanSpace with zero vectors"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.zeros Monoid.numberSum 2
+                        , Vector.zeros Monoid.numberSum 2
+                        ]
+
+                    r2 =
+                        Matrix.VectorDimension 2
+
+                    result =
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
+                in
+                Expect.equal result (Ok False)
+        , Test.test
+            "tests matrix doesSetSpanSpace with identity matrix 3 dimensions"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0, 0 ]
+                        , Vector.Vector [ 0, 1, 0 ]
+                        , Vector.Vector [ 0, 0, 1 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorDimension 3
+
+                    result =
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
+                in
+                Expect.equal result (Ok True)
+        , Test.test
+            "tests matrix doesSetSpanSpace with three vectors"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0, 0 ]
+                        , Vector.Vector [ 1, 0, 0 ]
+                        , Vector.Vector [ 1, 0, 0 ]
+                        ]
+
+                    r3 =
+                        Matrix.VectorDimension 3
+
+                    result =
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r3 listOfVectors
+                in
+                Expect.equal result (Ok False)
+        , Test.test
+            "tests matrix doesSetSpanSpace with three vectors testing r2"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        , Vector.Vector [ 1, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorDimension 2
+
+                    result =
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
+                in
+                Expect.equal result (Err "Please input same number of vectors as vector space")
+        , Test.test
+            "tests matrix doesSetSpanSpace with three dimensional vector against R2"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 0, 0 ]
+                        , Vector.Vector [ 2, 0, 0 ]
+                        ]
+
+                    r2 =
+                        Matrix.VectorDimension 2
+
+                    result =
+                        Matrix.doesSetSpanSpace Vector.realVectorSpace r2 listOfVectors
+                in
+                Expect.equal result (Err "Please input vectors of equal length as vector space")
+
         -- , Test.test
         --     "tests matrix areBasis with standard basis vectors"
         --   <|

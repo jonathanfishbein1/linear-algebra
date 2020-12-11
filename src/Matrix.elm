@@ -61,8 +61,9 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , rank
-    --, norm
+    ,  rank
+       --, norm
+
     )
 
 {-| A module for Matrix
@@ -189,7 +190,7 @@ import Parser exposing ((|.), (|=))
 import Typeclasses.Classes.Equality
 import Typeclasses.Classes.Monoid
 import Typeclasses.Classes.Semigroup
-import Vector exposing (InnerProductSpace)
+import Vector
 
 
 {-| Row Vector
@@ -236,6 +237,23 @@ type alias AbelianGroup a =
     { field : Field.Field a
     , addMatrcs : Matrix a -> Matrix a -> Matrix a
     , subtractMatrcs : Matrix a -> Matrix a -> Matrix a
+    }
+
+
+{-| Type to represent a Vector Space
+-}
+type alias MatrixSpace a =
+    { abelianGroup : AbelianGroup a
+    , vectorScalarMultiplication : a -> Matrix a -> Matrix a
+    }
+
+
+{-| Type to represent an Inner Product Space
+-}
+type alias InnerProductSpace a =
+    { matrixSpace : MatrixSpace a
+    , innerProduct : Matrix a -> Matrix a -> Result String Float
+    , norm : Matrix a -> Result String Float
     }
 
 
@@ -317,14 +335,22 @@ adjoint matrix =
         |> transpose
 
 
+{-| Calculate the norm of a Matrix
+-}
+normReal : Matrix Float -> Result String Float
+normReal matrix =
+    dotProduct Vector.realInnerProductSpace matrix matrix
+        |> Result.map
+            Basics.sqrt
 
--- {-| Calculate the norm of a Matrix
--- -}
--- norm : Vector.InnerProductSpace a -> Matrix a -> Result String a
--- norm innerProductSpace matrix =
---     dotProduct innerProductSpace matrix matrix
---         |> Result.map
---             (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))
+
+{-| Calculate the norm of a Matrix
+-}
+normComplex : Matrix (ComplexNumbers.ComplexNumber Float) -> Result String Float
+normComplex matrix =
+    dotProduct Vector.complexInnerProductSpace matrix matrix
+        |> Result.map
+            (ComplexNumbers.real >> Basics.sqrt)
 
 
 rank : Vector.InnerProductSpace a -> Matrix a -> Int
@@ -1194,4 +1220,21 @@ realMatrixAbelianGroup =
     { field = Field.numberField
     , addMatrcs = addMatrices Field.numberField
     , subtractMatrcs = subtractMatrices Field.numberField
+    }
+
+
+{-| Real Numbered Vector Space
+-}
+realMatrixSpace : MatrixSpace Float
+realMatrixSpace =
+    { abelianGroup = realMatrixAbelianGroup
+    , vectorScalarMultiplication = scalarMultiplication Field.numberField
+    }
+
+
+realMatrixInnerProductSpace : InnerProductSpace Float
+realMatrixInnerProductSpace =
+    { matrixSpace = realMatrixSpace
+    , innerProduct = dotProduct Vector.realInnerProductSpace
+    , norm = normReal
     }

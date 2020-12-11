@@ -328,22 +328,16 @@ adjoint matrix =
 --             (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))
 
 
-rank : Vector.VectorSpace Float -> Matrix Float -> Int
-rank vectorSpace matrix =
+rank : Vector.InnerProductSpace a -> Matrix a -> Int
+rank innerProductSpace matrix =
     let
         (Matrix listOfRowVectorsREF) =
-            gaussianReduce vectorSpace matrix
-
-        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
-            vectorSpace.abelianGroup.field
-
-        (AbelianGroup.AbelianGroup additionGroup) =
-            commutativeDivisionRing.addition
+            gaussianReduce innerProductSpace.vectorSpace matrix
     in
     listOfRowVectorsREF
         |> List.Extra.count
             (\(RowVector vector) ->
-                Vector.lengthReal vector /= additionGroup.monoid.identity
+                innerProductSpace.length vector /= 0
             )
 
 

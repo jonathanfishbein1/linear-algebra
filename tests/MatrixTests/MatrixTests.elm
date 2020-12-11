@@ -1289,7 +1289,7 @@ suite =
                             ]
 
                     rank =
-                        Matrix.rank Vector.realVectorSpace matrix
+                        Matrix.rank Vector.realInnerProductSpace matrix
                 in
                 Expect.equal rank 3
 

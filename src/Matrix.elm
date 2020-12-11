@@ -6,27 +6,39 @@ module Matrix exposing
     , Consistancy(..)
     , VectorDimension(..)
     , identity
+    , zeros
+    , zeroSquareMatrix
     , scalarMultiplication
     , transpose
     , conjugate
     , adjoint
+    , invert
     , subMatrix
     , nullSpace
     , determinant
     , leftNullSpace
     , getDiagonal
+    , getDiagonalProduct
     , addMatrices
+    , subtractMatrices
     , multiplyMatrixVector
     , multiplyMatrices
     , dotProduct
+    , tensorProduct
     , isSquareMatrix
     , isSymmetric
     , isHermitian
+    , isInvertable
+    , isUnitary
     , areBasis
     , areLinearlyIndependent
     , doesSetSpanSpace
     , mDimension
     , nDimension
+    , isRightStochastic
+    , isLeftStochastic
+    , isDoublyStochastic
+    , areRowEquivalent
     , empty
     , concatHorizontal
     , concatVertical
@@ -40,6 +52,7 @@ module Matrix exposing
     , upperTriangle
     , gaussianReduce
     , jordanReduce
+    , gaussJordan
     , solve
     , solveMatrix
     , getAt
@@ -48,22 +61,8 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    ,  rank
-       -- , norm
-       -- , getDiagonalProduct
-       -- , subtractMatrices
-       -- , tensorProduct
-       -- , zeros
-       -- , zeroSquareMatrix
-
-    --  , invert
-    -- , isInvertable
-    -- , isUnitary
-    -- , isRightStochastic
-    -- , isLeftStochastic
-    -- , isDoublyStochastic
-    -- , areRowEquivalent
-    -- , gaussJordan
+    , rank
+    --, norm
     )
 
 {-| A module for Matrix

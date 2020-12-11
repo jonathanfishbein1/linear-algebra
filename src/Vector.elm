@@ -174,7 +174,7 @@ type Vector3 a
 type alias AbelianGroup a =
     { field : Field.Field a
     , addVects : Vector a -> Vector a -> Vector a
-    , subtractVects : Vector a -> Vector a -> Vector a
+    , inverse : Vector a -> Vector a
     }
 
 
@@ -201,7 +201,7 @@ realVectorAbelianGroup : AbelianGroup Float
 realVectorAbelianGroup =
     { field = Field.numberField
     , addVects = addVectors Field.numberField
-    , subtractVects = subtractVectors Field.numberField
+    , inverse = map Group.numberSum.inverse
     }
 
 
@@ -211,7 +211,7 @@ complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumber Float)
 complexVectorAbelianGroup =
     { field = ComplexNumbers.complexField
     , addVects = addVectors ComplexNumbers.complexField
-    , subtractVects = subtractVectors ComplexNumbers.complexField
+    , inverse = map ComplexNumbers.complexSumGroup.inverse
     }
 
 
@@ -404,7 +404,7 @@ distance { vectorSpace, length } vectorOne vectorTwo =
         group =
             vectorSpace.abelianGroup
     in
-    vectorSpace.abelianGroup.subtractVects vectorOne vectorTwo
+    vectorSpace.abelianGroup.addVects vectorOne (vectorSpace.abelianGroup.inverse vectorTwo)
         |> length
 
 

@@ -65,16 +65,17 @@ subtractRow { abelianGroup } r currentRow nextRow =
                 Vector.getAt r currentRow
                     |> Maybe.map
                         (\currentElement ->
-                            (if currentElement == groupAddition.monoid.identity then
-                                currentRow
-
-                             else
-                                Vector.scalarMultiplication
-                                    abelianGroup.field
-                                    (commutativeDivisionRing.multiplication.monoid.semigroup nElement (commutativeDivisionRing.multiplication.inverse currentElement))
+                            abelianGroup.inverse
+                                (if currentElement == groupAddition.monoid.identity then
                                     currentRow
-                            )
-                                |> abelianGroup.subtractVects nextRow
+
+                                 else
+                                    Vector.scalarMultiplication
+                                        abelianGroup.field
+                                        (commutativeDivisionRing.multiplication.monoid.semigroup nElement (commutativeDivisionRing.multiplication.inverse currentElement))
+                                        currentRow
+                                )
+                                |> abelianGroup.addVects nextRow
                         )
             )
         |> Maybe.withDefault nextRow

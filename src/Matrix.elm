@@ -34,6 +34,7 @@ module Matrix exposing
     , foldl
     , equal
     , upperTriangle
+    , gaussianReduce
     , solve
     , solveMatrix
     , getAt
@@ -61,7 +62,6 @@ module Matrix exposing
        -- , isDoublyStochastic
        -- , areRowEquivalent
 
-    -- , gaussianReduce
     -- , jordanReduce
     -- , gaussJordan
     )

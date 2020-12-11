@@ -33,6 +33,7 @@ module Matrix exposing
     , map2
     , foldl
     , equal
+    , upperTriangle
     , solve
     , solveMatrix
     , getAt
@@ -55,12 +56,11 @@ module Matrix exposing
        --  , invert
        -- , isInvertable
        -- , isUnitary
+       -- , isRightStochastic
+       -- , isLeftStochastic
+       -- , isDoublyStochastic
+       -- , areRowEquivalent
 
-    -- , isRightStochastic
-    -- , isLeftStochastic
-    -- , isDoublyStochastic
-    -- , areRowEquivalent
-    -- , upperTriangle
     -- , gaussianReduce
     -- , jordanReduce
     -- , gaussJordan

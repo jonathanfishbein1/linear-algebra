@@ -13,6 +13,7 @@ module Matrix exposing
     , determinant
     , leftNullSpace
     , getDiagonal
+    , addMatrices
     , multiplyMatrixVector
     , multiplyMatrices
     , isSquareMatrix
@@ -48,21 +49,20 @@ module Matrix exposing
        -- , norm
        -- , dotProduct
        -- , getDiagonalProduct
-       -- , addMatrices
-       -- , subtractMatrices
-       -- , tensorProduct
-       -- , zeros
-       -- , zeroSquareMatrix
-       -- , scalarMultiplication
-       -- , identity
-       --  , invert
-       -- , isInvertable
-       -- , isUnitary
-       -- , isRightStochastic
-       -- , isLeftStochastic
-       -- , isDoublyStochastic
-       -- , areRowEquivalent
 
+    -- , subtractMatrices
+    -- , tensorProduct
+    -- , zeros
+    -- , zeroSquareMatrix
+    -- , scalarMultiplication
+    -- , identity
+    --  , invert
+    -- , isInvertable
+    -- , isUnitary
+    -- , isRightStochastic
+    -- , isLeftStochastic
+    -- , isDoublyStochastic
+    -- , areRowEquivalent
     -- , gaussJordan
     )
 

@@ -1273,24 +1273,26 @@ suite =
         --                     |> Matrix.scalarMultiplication Field.realField 2
         --         in
         --         Expect.true "Are row equivalent" (Matrix.areRowEquivalent Vector.realVectorSpace matrixOne matrixTwo)
-        -- , Test.fuzz3
-        --     (Fuzz.floatRange 1 10)
-        --     (Fuzz.floatRange 1 10)
-        --     (Fuzz.floatRange 1 10)
-        --     "tests matrix rank"
-        --   <|
-        --     \one two three ->
-        --         let
-        --             matrix =
-        --                 Matrix.Matrix
-        --                     [ Matrix.RowVector <| Vector.Vector [ one, 0, 0 ]
-        --                     , Matrix.RowVector <| Vector.Vector [ 0, two, 0 ]
-        --                     , Matrix.RowVector <| Vector.Vector [ 0, 0, three ]
-        --                     ]
-        --             rank =
-        --                 Matrix.rank Vector.realVectorSpace matrix
-        --         in
-        --         Expect.equal rank 3
+        , Test.fuzz3
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange 1 10)
+            "tests matrix rank"
+          <|
+            \one two three ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ one, 0, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, two, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 0, three ]
+                            ]
+
+                    rank =
+                        Matrix.rank Vector.realVectorSpace matrix
+                in
+                Expect.equal rank 3
+
         -- , Test.fuzz2
         --     (Fuzz.floatRange 1 10)
         --     (Fuzz.floatRange 1 10)

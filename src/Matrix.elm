@@ -34,35 +34,36 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    -- , norm
-    -- , dotProduct
-    -- , getDiagonalProduct
-    -- , addMatrices
-    -- , subtractMatrices
-    -- , tensorProduct
-    -- , zeros
-    -- , zeroSquareMatrix
-    -- , scalarMultiplication
-    -- , identity
-    --  , invert
-    --, leftNullSpace
-    -- ,  rank
-    -- , isInvertable
-    -- , isUnitary
-    -- , areBasis
-    -- , areLinearlyIndependent
-    -- , doesSetSpanSpace
-    -- , isRightStochastic
-    -- , isLeftStochastic
-    -- , isDoublyStochastic
-    -- , areRowEquivalent
-    -- , upperTriangle
-    -- , gaussianReduce
-    -- , jordanReduce
-    -- , gaussJordan
-    -- , solve
-    -- , solveMatrix
-    --  , nullSpace
+    ,  rank
+       -- , norm
+       -- , dotProduct
+       -- , getDiagonalProduct
+       -- , addMatrices
+       -- , subtractMatrices
+       -- , tensorProduct
+       -- , zeros
+       -- , zeroSquareMatrix
+       -- , scalarMultiplication
+       -- , identity
+       --  , invert
+       --, leftNullSpace
+       -- , isInvertable
+       -- , isUnitary
+       -- , areBasis
+       -- , areLinearlyIndependent
+       -- , doesSetSpanSpace
+       -- , isRightStochastic
+       -- , isLeftStochastic
+       -- , isDoublyStochastic
+       -- , areRowEquivalent
+       -- , upperTriangle
+       -- , gaussianReduce
+       -- , jordanReduce
+       -- , gaussJordan
+       -- , solve
+       -- , solveMatrix
+       --  , nullSpace
+
     )
 
 {-| A module for Matrix
@@ -325,17 +326,25 @@ adjoint matrix =
 --     dotProduct innerProductSpace matrix matrix
 --         |> Result.map
 --             (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))
--- rank : Vector.VectorSpace a -> Matrix a -> Int
--- rank vectorSpace matrix =
---     let
---         (Matrix listOfRowVectorsREF) =
---             gaussianReduce vectorSpace matrix
---     in
---     listOfRowVectorsREF
---         |> List.Extra.count
---             (\(RowVector vector) ->
---                 Vector.lengthReal vectorSpace.abelianGroup.field vector /= vectorSpace.abelianGroup.field.zero
---             )
+
+
+rank : Vector.VectorSpace Float -> Matrix Float -> Int
+rank vectorSpace matrix =
+    let
+        (Matrix listOfRowVectorsREF) =
+            gaussianReduce vectorSpace matrix
+
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+            vectorSpace.abelianGroup.field
+
+        (AbelianGroup.AbelianGroup additionGroup) =
+            commutativeDivisionRing.addition
+    in
+    listOfRowVectorsREF
+        |> List.Extra.count
+            (\(RowVector vector) ->
+                Vector.lengthReal vector /= additionGroup.monoid.identity
+            )
 
 
 {-| Try to calculate the determinant

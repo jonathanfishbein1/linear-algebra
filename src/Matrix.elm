@@ -28,6 +28,7 @@ module Matrix exposing
     , map2
     , foldl
     , equal
+    , solve
     , solveMatrix
     , getAt
     , setAt
@@ -61,7 +62,6 @@ module Matrix exposing
        -- , gaussianReduce
        -- , jordanReduce
        -- , gaussJordan
-       -- , solve
 
     --  , nullSpace
     )
@@ -889,20 +889,23 @@ solveMatrix innerProductSpace (Matrix listOfRowVectors) =
             |> Consistant
 
 
+{-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
+-}
+solve : Vector.InnerProductSpace a -> Matrix a -> ColumnVector a -> Consistancy a
+solve innerProductSpace matrix (ColumnVector (Vector.Vector constants)) =
+    let
+        matrixB =
+            constants
+                |> List.map (List.singleton >> Vector.Vector >> RowVector)
+                |> Matrix
 
--- {-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
--- -}
--- solve : Vector.VectorSpace a -> Matrix a -> ColumnVector a -> Consistancy a
--- solve vectorSpace matrix (ColumnVector (Vector.Vector constants)) =
---     let
---         matrixB =
---             constants
---                 |> List.map (List.singleton >> Vector.Vector >> RowVector)
---                 |> Matrix
---         augmentedMatrix =
---             concatHorizontal.semigroup.prepend matrix matrixB
---     in
---     solveMatrix vectorSpace augmentedMatrix
+        augmentedMatrix =
+            concatHorizontal.semigroup.prepend matrix matrixB
+    in
+    solveMatrix innerProductSpace augmentedMatrix
+
+
+
 -- {-| Predicate to determine if a list of Vectors are linearly independent
 -- -}
 -- areLinearlyIndependent : Vector.VectorSpace a -> List (Vector.Vector a) -> Bool

@@ -304,42 +304,47 @@ suite =
 
                     Nothing ->
                         Expect.fail "error"
+        , Test.fuzz2
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange -10 10)
+            "tests matrix subtractComplexRow has zero under pivot entry"
+          <|
+            \one two ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
 
-        -- , Test.fuzz2
-        --     (Fuzz.floatRange 1 10)
-        --     (Fuzz.floatRange -10 10)
-        --     "tests matrix subtractComplexRow has zero under pivot entry"
-        --   <|
-        --     \one two ->
-        --         let
-        --             complexNumberOne =
-        --                 ComplexNumbers.ComplexNumber
-        --                     (ComplexNumbers.Real
-        --                         one
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         two
-        --                     )
-        --             complexNumberTwo =
-        --                 ComplexNumbers.ComplexNumber
-        --                     (ComplexNumbers.Real
-        --                         one
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         two
-        --                     )
-        --             currentRow =
-        --                 Vector.Vector [ complexNumberOne, complexNumberTwo ]
-        --             nextRow =
-        --                 Vector.Vector [ complexNumberTwo, complexNumberTwo ]
-        --             (Vector.Vector subRow) =
-        --                 Internal.Matrix.subtractRow Vector.complexVectorSpace 0 (Internal.Matrix.scale Vector.complexVectorSpace 0 currentRow) nextRow
-        --             firstElementSecondRow =
-        --                 List.Extra.getAt 0 subRow
-        --         in
-        --         case firstElementSecondRow of
-        --             Just element ->
-        --                 Expect.true "equal" (ComplexNumbers.equal element ComplexNumbers.zero)
-        --             Nothing ->
-        --                 Expect.fail "error"
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                two
+                            )
+
+                    currentRow =
+                        Vector.Vector [ complexNumberOne, complexNumberTwo ]
+
+                    nextRow =
+                        Vector.Vector [ complexNumberTwo, complexNumberTwo ]
+
+                    (Vector.Vector subRow) =
+                        Internal.Matrix.subtractRow Vector.complexVectorSpace 0 (Internal.Matrix.scale Vector.complexVectorSpace 0 currentRow) nextRow
+
+                    firstElementSecondRow =
+                        List.Extra.getAt 0 subRow
+                in
+                case firstElementSecondRow of
+                    Just element ->
+                        Expect.true "equal" (ComplexNumbers.equal element ComplexNumbers.zero)
+
+                    Nothing ->
+                        Expect.fail "error"
         ]

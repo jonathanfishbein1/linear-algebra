@@ -135,29 +135,29 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ 0, 0 ]
                 in
                 Expect.equal nullSpace (Matrix.Consistant (Matrix.UniqueSolution expected))
+        , Test.test
+            "tests matrix linearlyIndependent"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 2 ]
+                        , Vector.Vector [ 0, -3 ]
+                        ]
+                in
+                Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent Vector.realInnerProductSpace listOfVectors)
+        , Test.test
+            "tests matrix linearlyIndependent with two colinear vectors"
+          <|
+            \_ ->
+                let
+                    listOfVectors =
+                        [ Vector.Vector [ 1, 2 ]
+                        , Vector.Vector [ 2, 4 ]
+                        ]
+                in
+                Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent Vector.realInnerProductSpace listOfVectors)
 
-        -- , Test.test
-        --     "tests matrix linearlyIndependent"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 2 ]
-        --                 , Vector.Vector [ 0, -3 ]
-        --                 ]
-        --         in
-        --         Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent Vector.realVectorSpace listOfVectors)
-        -- , Test.test
-        --     "tests matrix linearlyIndependent with two colinear vectors"
-        --   <|
-        --     \_ ->
-        --         let
-        --             listOfVectors =
-        --                 [ Vector.Vector [ 1, 2 ]
-        --                 , Vector.Vector [ 2, 4 ]
-        --                 ]
-        --         in
-        --         Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent Vector.realVectorSpace listOfVectors)
         -- , Test.test "tests matrix doesSetSpanSpace with standard basis vectors" <|
         --     \_ ->
         --         let

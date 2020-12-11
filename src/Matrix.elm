@@ -18,6 +18,7 @@ module Matrix exposing
     , isSquareMatrix
     , isSymmetric
     , isHermitian
+    , areLinearlyIndependent
     , mDimension
     , nDimension
     , empty
@@ -50,11 +51,10 @@ module Matrix exposing
        -- , scalarMultiplication
        -- , identity
        --  , invert
+       -- , isInvertable
+       -- , isUnitary
+       -- , areBasis
 
-    -- , isInvertable
-    -- , isUnitary
-    -- , areBasis
-    -- , areLinearlyIndependent
     -- , doesSetSpanSpace
     -- , isRightStochastic
     -- , isLeftStochastic
@@ -913,17 +913,16 @@ solve innerProductSpace matrix (ColumnVector (Vector.Vector constants)) =
     solveMatrix innerProductSpace augmentedMatrix
 
 
-
--- {-| Predicate to determine if a list of Vectors are linearly independent
--- -}
--- areLinearlyIndependent : Vector.VectorSpace a -> List (Vector.Vector a) -> Bool
--- areLinearlyIndependent vectorSpace listOfVectors =
---     let
---         matrix =
---             List.map RowVector listOfVectors
---                 |> Matrix
---     in
---     rank vectorSpace matrix == nDimension matrix
+{-| Predicate to determine if a list of Vectors are linearly independent
+-}
+areLinearlyIndependent : Vector.InnerProductSpace a -> List (Vector.Vector a) -> Bool
+areLinearlyIndependent innerProductSpace listOfVectors =
+    let
+        matrix =
+            List.map RowVector listOfVectors
+                |> Matrix
+    in
+    rank innerProductSpace matrix == nDimension matrix
 
 
 {-| Determine whether list of vectors spans a space

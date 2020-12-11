@@ -17,6 +17,7 @@ module Matrix exposing
     , addMatrices
     , multiplyMatrixVector
     , multiplyMatrices
+    , dotProduct
     , isSquareMatrix
     , isSymmetric
     , isHermitian
@@ -48,13 +49,12 @@ module Matrix exposing
     , readComplexMatrix
     ,  rank
        -- , norm
-       -- , dotProduct
-       -- , getDiagonalProduct
-       -- , subtractMatrices
-       -- , tensorProduct
-       -- , zeros
-       -- , zeroSquareMatrix
 
+    -- , getDiagonalProduct
+    -- , subtractMatrices
+    -- , tensorProduct
+    -- , zeros
+    -- , zeroSquareMatrix
     -- , identity
     --  , invert
     -- , isInvertable

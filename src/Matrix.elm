@@ -5,6 +5,7 @@ module Matrix exposing
     , Solution(..)
     , Consistancy(..)
     , VectorDimension(..)
+    , scalarMultiplication
     , transpose
     , conjugate
     , adjoint
@@ -49,12 +50,11 @@ module Matrix exposing
        -- , norm
        -- , dotProduct
        -- , getDiagonalProduct
+       -- , subtractMatrices
+       -- , tensorProduct
+       -- , zeros
+       -- , zeroSquareMatrix
 
-    -- , subtractMatrices
-    -- , tensorProduct
-    -- , zeros
-    -- , zeroSquareMatrix
-    -- , scalarMultiplication
     -- , identity
     --  , invert
     -- , isInvertable

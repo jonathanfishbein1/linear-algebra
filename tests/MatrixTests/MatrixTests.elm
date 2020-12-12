@@ -588,61 +588,71 @@ suite =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace inverse matrix
                 in
                 Expect.equal inverseMatrixProduct (Ok identity)
+        , Test.test
+            "tests complex matrix determinant 2 x 2"
+          <|
+            \_ ->
+                let
+                    complexNumberR1C1 =
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real
+                                1
+                            )
+                            (ComplexNumbers.Imaginary
+                                1
+                            )
 
-        -- , Test.test
-        --     "tests complex matrix determinant 2 x 2"
-        --   <|
-        --     \_ ->
-        --         let
-        --             complexNumberR1C1 =
-        --                 ComplexNumbers.ComplexNumber
-        --                     (ComplexNumbers.Real
-        --                         1
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         1
-        --                     )
-        --             complexNumberR1C2 =
-        --                 ComplexNumbers.ComplexNumber
-        --                     (ComplexNumbers.Real
-        --                         2
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         0
-        --                     )
-        --             complexNumberR2C1 =
-        --                 ComplexNumbers.ComplexNumber
-        --                     (ComplexNumbers.Real
-        --                         3
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         0
-        --                     )
-        --             complexNumberR2C2 =
-        --                 ComplexNumbers.ComplexNumber
-        --                     (ComplexNumbers.Real
-        --                         4
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         0
-        --                     )
-        --             matrix =
-        --                 Matrix.Matrix
-        --                     [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
-        --                     , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
-        --                     ]
-        --             determinantComplex =
-        --                 Matrix.determinant Vector.complexVectorSpace matrix
-        --             expectedDeterminant =
-        --                 ComplexNumbers.ComplexNumber
-        --                     (ComplexNumbers.Real
-        --                         -2
-        --                     )
-        --                     (ComplexNumbers.Imaginary
-        --                         4
-        --                     )
-        --         in
-        --         Expect.equal determinantComplex (Ok expectedDeterminant)
+                    complexNumberR1C2 =
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real
+                                2
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C1 =
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real
+                                3
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    complexNumberR2C2 =
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real
+                                4
+                            )
+                            (ComplexNumbers.Imaginary
+                                0
+                            )
+
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
+                            ]
+
+                    determinantComplex =
+                        Matrix.determinant Vector.complexVectorSpace matrix
+
+                    expectedDeterminant =
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real
+                                -2
+                            )
+                            (ComplexNumbers.Imaginary
+                                4
+                            )
+                in
+                case determinantComplex of
+                    Ok dComplex ->
+                        Expect.true "determinants are equal" (ComplexNumbers.equal dComplex expectedDeterminant)
+
+                    _ ->
+                        Expect.fail "determinants not equal"
         , Test.test
             "tests complex matrix inverse 2 x 2"
           <|

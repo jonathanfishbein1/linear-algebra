@@ -220,7 +220,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.distance Vector.realInnerProductSpace a a
+                        Vector.distanceReal a a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -242,13 +242,13 @@ suite =
                         Vector.Vector [ three ]
 
                     distanceAB =
-                        Vector.distance Vector.realInnerProductSpace a b
+                        Vector.distanceReal a b
 
                     distanceAC =
-                        Vector.distance Vector.realInnerProductSpace a c
+                        Vector.distanceReal a c
 
                     distanceCB =
-                        Vector.distance Vector.realInnerProductSpace c b
+                        Vector.distanceReal c b
                 in
                 distanceAB
                     |> Expect.atMost (distanceAC + distanceCB)

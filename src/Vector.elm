@@ -20,7 +20,6 @@ module Vector exposing
     , dotProduct
     , angleBetween
     , cross
-    , distance
     , tensorProduct
     , dimension
     , vectorSubspace
@@ -45,7 +44,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , lengthReal, normaliseReal
+    , distanceComplex, distanceReal, lengthReal, normaliseReal
     )
 
 {-| A module for Vectors
@@ -192,6 +191,7 @@ type alias InnerProductSpace a =
     { vectorSpace : VectorSpace a
     , innerProduct : Vector a -> Vector a -> a
     , length : Vector a -> Float
+    , distance : Vector a -> Vector a -> Float
     }
 
 
@@ -240,6 +240,7 @@ realInnerProductSpace =
     { vectorSpace = realVectorSpace
     , innerProduct = dotProduct Field.numberField
     , length = lengthReal
+    , distance = distanceReal
     }
 
 
@@ -250,6 +251,7 @@ complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
     , innerProduct = dotProduct ComplexNumbers.complexField
     , length = lengthComplex
+    , distance = distanceComplex
     }
 
 
@@ -398,14 +400,18 @@ sum monoid =
 
 {-| Calculate distance between two vectors
 -}
-distance : InnerProductSpace a -> Vector a -> Vector a -> Float
-distance { vectorSpace, length } vectorOne vectorTwo =
-    let
-        group =
-            vectorSpace.abelianGroup
-    in
-    vectorSpace.abelianGroup.addVects vectorOne (vectorSpace.abelianGroup.inverse vectorTwo)
-        |> length
+distanceReal : Vector Float -> Vector Float -> Float
+distanceReal vectorOne vectorTwo =
+    realVectorSpace.abelianGroup.addVects vectorOne (realVectorSpace.abelianGroup.inverse vectorTwo)
+        |> lengthReal
+
+
+{-| Calculate distance between two vectors
+-}
+distanceComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Vector (ComplexNumbers.ComplexNumber Float) -> Float
+distanceComplex vectorOne vectorTwo =
+    complexVectorSpace.abelianGroup.addVects vectorOne (complexVectorSpace.abelianGroup.inverse vectorTwo)
+        |> lengthComplex
 
 
 {-| Take the cross product of two 3D vectors

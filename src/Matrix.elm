@@ -182,6 +182,7 @@ import CommutativeDivisionRing exposing (CommutativeDivisionRing)
 import ComplexNumbers
 import Field
 import Float.Extra
+import Group
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
@@ -236,7 +237,7 @@ type VectorDimension
 type alias AbelianGroup a =
     { field : Field.Field a
     , addMatrcs : Matrix a -> Matrix a -> Matrix a
-    , subtractMatrcs : Matrix a -> Matrix a -> Matrix a
+    , inverse : Matrix a -> Matrix a
     }
 
 
@@ -244,7 +245,7 @@ type alias AbelianGroup a =
 -}
 type alias MatrixSpace a =
     { abelianGroup : AbelianGroup a
-    , vectorScalarMultiplication : a -> Matrix a -> Matrix a
+    , matrixScalarMultiplication : a -> Matrix a -> Matrix a
     }
 
 
@@ -254,7 +255,16 @@ type alias InnerProductSpace a =
     { matrixSpace : MatrixSpace a
     , innerProduct : Matrix a -> Matrix a -> Result String Float
     , norm : Matrix a -> Result String Float
+    , distance : Matrix a -> Matrix a -> Result String Float
     }
+
+
+{-| Calculate distance between two vectors
+-}
+distanceReal : Matrix Float -> Matrix Float -> Result String Float
+distanceReal matrixOne matrixTwo =
+    realMatrixSpace.abelianGroup.addMatrcs matrixOne (realMatrixSpace.abelianGroup.inverse matrixTwo)
+        |> normReal
 
 
 {-| Create Identity Matrix with n dimension
@@ -1219,7 +1229,7 @@ realMatrixAbelianGroup : AbelianGroup Float
 realMatrixAbelianGroup =
     { field = Field.numberField
     , addMatrcs = addMatrices Field.numberField
-    , subtractMatrcs = subtractMatrices Field.numberField
+    , inverse = map Group.numberSum.inverse
     }
 
 
@@ -1228,7 +1238,7 @@ realMatrixAbelianGroup =
 realMatrixSpace : MatrixSpace Float
 realMatrixSpace =
     { abelianGroup = realMatrixAbelianGroup
-    , vectorScalarMultiplication = scalarMultiplication Field.numberField
+    , matrixScalarMultiplication = scalarMultiplication Field.numberField
     }
 
 
@@ -1237,4 +1247,5 @@ realMatrixInnerProductSpace =
     { matrixSpace = realMatrixSpace
     , innerProduct = dotProduct Vector.realInnerProductSpace
     , norm = normReal
+    , distance = distanceReal
     }

@@ -251,15 +251,15 @@ complexVectorAdditionCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid complexvectorAdditionMonoid
 
 
-vectorAdditionGroup : Group.Group (Vector Float)
-vectorAdditionGroup =
+realVectorAdditionGroup : Group.Group (Vector Float)
+realVectorAdditionGroup =
     { monoid = realvectorAdditionMonoid
     , inverse = scalarMultiplication Field.numberField -1
     }
 
 
-vectorAdditionAbelianGroup : AbelianGroup.AbelianGroup (Vector Float)
-vectorAdditionAbelianGroup =
+realVectorAdditionAbelianGroup : AbelianGroup.AbelianGroup (Vector Float)
+realVectorAdditionAbelianGroup =
     AbelianGroup.AbelianGroup
         { monoid = realvectorAdditionMonoid
         , inverse = scalarMultiplication Field.numberField -1

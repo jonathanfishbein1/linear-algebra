@@ -644,14 +644,14 @@ vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
         (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
             innerField
 
-        multiplicationGroup =
-            commutativeDivisionRing.multiplication
+        (AbelianGroup.AbelianGroup additionGroup) =
+            commutativeDivisionRing.addition
 
-        multiplicationSemigroup =
-            multiplicationGroup.monoid.semigroup
+        additionSemigroup =
+            additionGroup.monoid.semigroup
 
         testzeros =
-            List.map (scalarMultiplication field multiplicationGroup.monoid.identity) vectorList
+            List.map (scalarMultiplication field additionGroup.monoid.identity) vectorList
 
         containszeros =
             closurePassCriteria testzeros

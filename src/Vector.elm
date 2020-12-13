@@ -197,35 +197,35 @@ type alias InnerProductSpace a =
 
 {-| Instance for Vector under the addition operation.
 -}
-vectorAdditionSemigroup : Semigroup.Semigroup (Vector Float)
-vectorAdditionSemigroup =
+realVectorAdditionSemigroup : Semigroup.Semigroup (Vector Float)
+realVectorAdditionSemigroup =
     addVectors Field.numberField
 
 
 {-| Instance for Vector under the addition operation.
 -}
-vectorAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector Float)
-vectorAdditionCommutativeSemigroup =
-    CommutativeSemigroup.CommutativeSemigroup vectorAdditionSemigroup
+realVectorAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector Float)
+realVectorAdditionCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup realVectorAdditionSemigroup
 
 
 {-| Instance for Vector under the addition operation.
 -}
-vectorAdditionMonoid : Monoid.Monoid (Vector Float)
-vectorAdditionMonoid =
-    Monoid.semigroupAndIdentity vectorAdditionSemigroup (Vector [])
+realvectorAdditionMonoid : Monoid.Monoid (Vector Float)
+realvectorAdditionMonoid =
+    Monoid.semigroupAndIdentity realVectorAdditionSemigroup (Vector [])
 
 
 {-| Instance for Vector under the addition operation.
 -}
-vectorAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector Float)
-vectorAdditionCommutativeMonoid =
-    CommutativeMonoid.CommutativeMonoid vectorAdditionMonoid
+realVectorAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector Float)
+realVectorAdditionCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid realvectorAdditionMonoid
 
 
 vectorAdditionGroup : Group.Group (Vector Float)
 vectorAdditionGroup =
-    { monoid = vectorAdditionMonoid
+    { monoid = realvectorAdditionMonoid
     , inverse = scalarMultiplication Field.numberField -1
     }
 
@@ -233,7 +233,7 @@ vectorAdditionGroup =
 vectorAdditionAbelianGroup : AbelianGroup.AbelianGroup (Vector Float)
 vectorAdditionAbelianGroup =
     AbelianGroup.AbelianGroup
-        { monoid = vectorAdditionMonoid
+        { monoid = realvectorAdditionMonoid
         , inverse = scalarMultiplication Field.numberField -1
         }
 

@@ -1417,19 +1417,18 @@ suite =
                         Matrix.rank Vector.realInnerProductSpace matrix
                 in
                 Expect.equal rank 3
-
-        -- , Test.fuzz2
-        --     (Fuzz.floatRange 1 10)
-        --     (Fuzz.floatRange 1 10)
-        --     "tests matrix rank with two colinear vectors"
-        --   <|
-        --     \one two ->
-        --         let
-        --             matrix =
-        --                 Matrix.Matrix
-        --                     [ Matrix.RowVector <| Vector.Vector [ one, two ]
-        --                     , Matrix.RowVector <| Vector.Vector [ one * 2, two * 2 ]
-        --                     ]
-        --         in
-        --         Expect.equal (Matrix.rank Vector.realVectorSpace matrix) 1
+        , Test.fuzz2
+            (Fuzz.map Basics.toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map Basics.toFloat (Fuzz.intRange 1 10))
+            "tests matrix rank with two colinear vectors"
+          <|
+            \one two ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ one, two ]
+                            , Matrix.RowVector <| Vector.Vector [ one * 2, two * 2 ]
+                            ]
+                in
+                Expect.equal (Matrix.rank Vector.realInnerProductSpace matrix) 1
         ]

@@ -209,6 +209,20 @@ vectorAdditionCommutativeSemigroup =
     CommutativeSemigroup.CommutativeSemigroup vectorAdditionSemigroup
 
 
+{-| Instance for Vector under the addition operation.
+-}
+vectorAdditionMonoid : Monoid.Monoid (Vector Float)
+vectorAdditionMonoid =
+    Monoid.semigroupAndIdentity vectorAdditionSemigroup (Vector [])
+
+
+{-| Instance for Vector under the addition operation.
+-}
+vectorAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector Float)
+vectorAdditionCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid vectorAdditionMonoid
+
+
 {-| Real Numbered Abelian Group
 -}
 realVectorAbelianGroup : AbelianGroup Float

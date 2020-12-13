@@ -223,6 +223,21 @@ vectorAdditionCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid vectorAdditionMonoid
 
 
+vectorAdditionGroup : Group.Group (Vector Float)
+vectorAdditionGroup =
+    { monoid = vectorAdditionMonoid
+    , inverse = scalarMultiplication Field.numberField -1
+    }
+
+
+vectorAdditionAbelianGroup : AbelianGroup.AbelianGroup (Vector Float)
+vectorAdditionAbelianGroup =
+    AbelianGroup.AbelianGroup
+        { monoid = vectorAdditionMonoid
+        , inverse = scalarMultiplication Field.numberField -1
+        }
+
+
 {-| Real Numbered Abelian Group
 -}
 realVectorAbelianGroup : AbelianGroup Float

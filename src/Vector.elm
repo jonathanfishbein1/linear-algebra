@@ -195,6 +195,20 @@ type alias InnerProductSpace a =
     }
 
 
+{-| Instance for Vector under the addition operation.
+-}
+vectorAdditionSemigroup : Semigroup.Semigroup (Vector Float)
+vectorAdditionSemigroup =
+    addVectors Field.numberField
+
+
+{-| Instance for Vector under the addition operation.
+-}
+vectorAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector Float)
+vectorAdditionCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup vectorAdditionSemigroup
+
+
 {-| Real Numbered Abelian Group
 -}
 realVectorAbelianGroup : AbelianGroup Float

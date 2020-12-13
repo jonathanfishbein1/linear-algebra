@@ -204,9 +204,23 @@ realVectorAdditionSemigroup =
 
 {-| Instance for Vector under the addition operation.
 -}
+complexVectorAdditionSemigroup : Semigroup.Semigroup (Vector (ComplexNumbers.ComplexNumber Float))
+complexVectorAdditionSemigroup =
+    addVectors ComplexNumbers.complexField
+
+
+{-| Instance for Vector under the addition operation.
+-}
 realVectorAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector Float)
 realVectorAdditionCommutativeSemigroup =
     CommutativeSemigroup.CommutativeSemigroup realVectorAdditionSemigroup
+
+
+{-| Instance for Vector under the addition operation.
+-}
+complexVectorAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector (ComplexNumbers.ComplexNumber Float))
+complexVectorAdditionCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup complexVectorAdditionSemigroup
 
 
 {-| Instance for Vector under the addition operation.
@@ -218,9 +232,23 @@ realvectorAdditionMonoid =
 
 {-| Instance for Vector under the addition operation.
 -}
+complexvectorAdditionMonoid : Monoid.Monoid (Vector (ComplexNumbers.ComplexNumber Float))
+complexvectorAdditionMonoid =
+    Monoid.semigroupAndIdentity complexVectorAdditionSemigroup (Vector [])
+
+
+{-| Instance for Vector under the addition operation.
+-}
 realVectorAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector Float)
 realVectorAdditionCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid realvectorAdditionMonoid
+
+
+{-| Instance for Vector under the addition operation.
+-}
+complexVectorAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector (ComplexNumbers.ComplexNumber Float))
+complexVectorAdditionCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid complexvectorAdditionMonoid
 
 
 vectorAdditionGroup : Group.Group (Vector Float)

@@ -5,8 +5,10 @@ module Vector exposing
     , VectorSpace
     , InnerProductSpace
     , realVectorSpace
+    , realVectorAbelianGroup
     , realInnerProductSpace
     , complexVectorSpace
+    , complexVectorAbelianGroup
     , complexInnerProductSpace
     , zeros
     , scalarMultiplication
@@ -41,7 +43,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , complexVectorAdditionAbelianGroup, distanceComplex, distanceReal, lengthReal, normaliseReal, realVectorAdditionAbelianGroup
+    , distanceComplex, distanceReal, lengthReal, normaliseReal
     )
 
 {-| A module for Vectors
@@ -186,87 +188,87 @@ type alias InnerProductSpace a =
 
 {-| Instance for Vector under the addition operation.
 -}
-realVectorAdditionSemigroup : Semigroup.Semigroup (Vector Float)
-realVectorAdditionSemigroup =
+realVectorSemigroup : Semigroup.Semigroup (Vector Float)
+realVectorSemigroup =
     addVectors Field.numberField
 
 
 {-| Instance for Vector under the addition operation.
 -}
-complexVectorAdditionSemigroup : Semigroup.Semigroup (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorAdditionSemigroup =
+complexVectorSemigroup : Semigroup.Semigroup (Vector (ComplexNumbers.ComplexNumber Float))
+complexVectorSemigroup =
     addVectors ComplexNumbers.complexField
 
 
 {-| Instance for Vector under the addition operation.
 -}
-realVectorAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector Float)
-realVectorAdditionCommutativeSemigroup =
-    CommutativeSemigroup.CommutativeSemigroup realVectorAdditionSemigroup
+realVectorCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector Float)
+realVectorCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup realVectorSemigroup
 
 
 {-| Instance for Vector under the addition operation.
 -}
-complexVectorAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorAdditionCommutativeSemigroup =
-    CommutativeSemigroup.CommutativeSemigroup complexVectorAdditionSemigroup
+complexVectorCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector (ComplexNumbers.ComplexNumber Float))
+complexVectorCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup complexVectorSemigroup
 
 
 {-| Instance for Vector under the addition operation.
 -}
-realvectorAdditionMonoid : Monoid.Monoid (Vector Float)
-realvectorAdditionMonoid =
-    Monoid.semigroupAndIdentity realVectorAdditionSemigroup (Vector [])
+realVectorMonoid : Monoid.Monoid (Vector Float)
+realVectorMonoid =
+    Monoid.semigroupAndIdentity realVectorSemigroup (Vector [])
 
 
 {-| Instance for Vector under the addition operation.
 -}
-complexvectorAdditionMonoid : Monoid.Monoid (Vector (ComplexNumbers.ComplexNumber Float))
-complexvectorAdditionMonoid =
-    Monoid.semigroupAndIdentity complexVectorAdditionSemigroup (Vector [])
+complexVectorMonoid : Monoid.Monoid (Vector (ComplexNumbers.ComplexNumber Float))
+complexVectorMonoid =
+    Monoid.semigroupAndIdentity complexVectorSemigroup (Vector [])
 
 
 {-| Instance for Vector under the addition operation.
 -}
-realVectorAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector Float)
-realVectorAdditionCommutativeMonoid =
-    CommutativeMonoid.CommutativeMonoid realvectorAdditionMonoid
+realVectorCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector Float)
+realVectorCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid realVectorMonoid
 
 
 {-| Instance for Vector under the addition operation.
 -}
-complexVectorAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorAdditionCommutativeMonoid =
-    CommutativeMonoid.CommutativeMonoid complexvectorAdditionMonoid
+complexVectorCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector (ComplexNumbers.ComplexNumber Float))
+complexVectorCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid complexVectorMonoid
 
 
-realVectorAdditionGroup : Group.Group (Vector Float)
-realVectorAdditionGroup =
-    { monoid = realvectorAdditionMonoid
+realVectorGroup : Group.Group (Vector Float)
+realVectorGroup =
+    { monoid = realVectorMonoid
     , inverse = map Group.numberSum.inverse
     }
 
 
-complexVectorAdditionGroup : Group.Group (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorAdditionGroup =
-    { monoid = complexvectorAdditionMonoid
+complexVectorGroup : Group.Group (Vector (ComplexNumbers.ComplexNumber Float))
+complexVectorGroup =
+    { monoid = complexVectorMonoid
     , inverse = map ComplexNumbers.complexSumGroup.inverse
     }
 
 
-realVectorAdditionAbelianGroup : AbelianGroup.AbelianGroup (Vector Float)
-realVectorAdditionAbelianGroup =
+realVectorAbelianGroup : AbelianGroup.AbelianGroup (Vector Float)
+realVectorAbelianGroup =
     AbelianGroup.AbelianGroup
-        { monoid = realvectorAdditionMonoid
-        , inverse = realVectorAdditionGroup.inverse
+        { monoid = realVectorMonoid
+        , inverse = realVectorGroup.inverse
         }
 
 
-complexVectorAdditionAbelianGroup : AbelianGroup.AbelianGroup (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorAdditionAbelianGroup =
+complexVectorAbelianGroup : AbelianGroup.AbelianGroup (Vector (ComplexNumbers.ComplexNumber Float))
+complexVectorAbelianGroup =
     AbelianGroup.AbelianGroup
-        { monoid = complexvectorAdditionMonoid
-        , inverse = complexVectorAdditionGroup.inverse
+        { monoid = complexVectorMonoid
+        , inverse = complexVectorGroup.inverse
         }
 
 
@@ -274,7 +276,7 @@ complexVectorAdditionAbelianGroup =
 -}
 realVectorSpace : VectorSpace Float
 realVectorSpace =
-    { abelianGroup = realVectorAdditionAbelianGroup
+    { abelianGroup = realVectorAbelianGroup
     , vectorScalarMultiplication = scalarMultiplication Field.numberField
     , field = Field.numberField
     }
@@ -284,7 +286,7 @@ realVectorSpace =
 -}
 complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumber Float)
 complexVectorSpace =
-    { abelianGroup = complexVectorAdditionAbelianGroup
+    { abelianGroup = complexVectorAbelianGroup
     , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
     , field = ComplexNumbers.complexField
     }
@@ -459,7 +461,7 @@ sum monoid =
 -}
 distanceReal : Vector Float -> Vector Float -> Float
 distanceReal vectorOne vectorTwo =
-    realVectorAdditionGroup.monoid.semigroup vectorOne (realVectorAdditionGroup.inverse vectorTwo)
+    realVectorGroup.monoid.semigroup vectorOne (realVectorGroup.inverse vectorTwo)
         |> lengthReal
 
 
@@ -467,7 +469,7 @@ distanceReal vectorOne vectorTwo =
 -}
 distanceComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Vector (ComplexNumbers.ComplexNumber Float) -> Float
 distanceComplex vectorOne vectorTwo =
-    complexVectorAdditionGroup.monoid.semigroup vectorOne (complexVectorAdditionGroup.inverse vectorTwo)
+    complexVectorGroup.monoid.semigroup vectorOne (complexVectorGroup.inverse vectorTwo)
         |> lengthComplex
 
 

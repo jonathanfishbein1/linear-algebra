@@ -480,23 +480,11 @@ cross (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) 
     let
         (AbelianGroup.AbelianGroup groupAddition) =
             commutativeDivisionRing.addition
-
-        additionMonoid =
-            groupAddition.monoid
-
-        additionSemigroup =
-            additionMonoid.semigroup
-
-        multiplicationGroup =
-            commutativeDivisionRing.multiplication
-
-        multiplicationSemigroup =
-            multiplicationGroup.monoid.semigroup
     in
     Vector3
-        ((\x y -> additionSemigroup x (groupAddition.inverse y)) (multiplicationSemigroup y1 z2) (multiplicationSemigroup y2 z1))
-        ((\x y -> additionSemigroup x (groupAddition.inverse y)) (multiplicationSemigroup z1 x2) (multiplicationSemigroup z2 x1))
-        ((\x y -> additionSemigroup x (groupAddition.inverse y)) (multiplicationSemigroup x1 y2) (multiplicationSemigroup x2 y1))
+        ((\x y -> groupAddition.monoid.semigroup x (groupAddition.inverse y)) (commutativeDivisionRing.multiplication.monoid.semigroup y1 z2) (commutativeDivisionRing.multiplication.monoid.semigroup y2 z1))
+        ((\x y -> groupAddition.monoid.semigroup x (groupAddition.inverse y)) (commutativeDivisionRing.multiplication.monoid.semigroup z1 x2) (commutativeDivisionRing.multiplication.monoid.semigroup z2 x1))
+        ((\x y -> groupAddition.monoid.semigroup x (groupAddition.inverse y)) (commutativeDivisionRing.multiplication.monoid.semigroup x1 y2) (commutativeDivisionRing.multiplication.monoid.semigroup x2 y1))
 
 
 {-| Calculate the tensor product of two vectors

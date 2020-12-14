@@ -2,14 +2,11 @@ module Vector exposing
     ( Vector(..)
     , Vector3(..)
     , Scalar(..)
-    , AbelianGroup
     , VectorSpace
     , InnerProductSpace
     , realVectorSpace
-    , realVectorAbelianGroup
     , realInnerProductSpace
     , complexVectorSpace
-    , complexVectorAbelianGroup
     , complexInnerProductSpace
     , zeros
     , scalarMultiplication
@@ -168,20 +165,12 @@ type Vector3 a
     = Vector3 a a a
 
 
-{-| Type to represent a Abelian Group
--}
-type alias AbelianGroup a =
-    { field : Field.Field a
-    , addVects : Vector a -> Vector a -> Vector a
-    , inverse : Vector a -> Vector a
-    }
-
-
 {-| Type to represent a Vector Space
 -}
 type alias VectorSpace a =
-    { abelianGroup : AbelianGroup a
+    { abelianGroup : AbelianGroup.AbelianGroup (Vector a)
     , vectorScalarMultiplication : a -> Vector a -> Vector a
+    , field : Field.Field a
     }
 
 
@@ -281,32 +270,13 @@ complexVectorAdditionAbelianGroup =
         }
 
 
-{-| Real Numbered Abelian Group
--}
-realVectorAbelianGroup : AbelianGroup Float
-realVectorAbelianGroup =
-    { field = Field.numberField
-    , addVects = addVectors Field.numberField
-    , inverse = map Group.numberSum.inverse
-    }
-
-
-{-| Complex Numbered Abelian Group
--}
-complexVectorAbelianGroup : AbelianGroup (ComplexNumbers.ComplexNumber Float)
-complexVectorAbelianGroup =
-    { field = ComplexNumbers.complexField
-    , addVects = addVectors ComplexNumbers.complexField
-    , inverse = map ComplexNumbers.complexSumGroup.inverse
-    }
-
-
 {-| Real Numbered Vector Space
 -}
 realVectorSpace : VectorSpace Float
 realVectorSpace =
-    { abelianGroup = realVectorAbelianGroup
+    { abelianGroup = realVectorAdditionAbelianGroup
     , vectorScalarMultiplication = scalarMultiplication Field.numberField
+    , field = Field.numberField
     }
 
 
@@ -314,8 +284,9 @@ realVectorSpace =
 -}
 complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumber Float)
 complexVectorSpace =
-    { abelianGroup = complexVectorAbelianGroup
+    { abelianGroup = complexVectorAdditionAbelianGroup
     , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
+    , field = ComplexNumbers.complexField
     }
 
 
@@ -488,7 +459,7 @@ sum monoid =
 -}
 distanceReal : Vector Float -> Vector Float -> Float
 distanceReal vectorOne vectorTwo =
-    realVectorSpace.abelianGroup.addVects vectorOne (realVectorSpace.abelianGroup.inverse vectorTwo)
+    realVectorAdditionGroup.monoid.semigroup vectorOne (realVectorAdditionGroup.inverse vectorTwo)
         |> lengthReal
 
 
@@ -496,7 +467,7 @@ distanceReal vectorOne vectorTwo =
 -}
 distanceComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Vector (ComplexNumbers.ComplexNumber Float) -> Float
 distanceComplex vectorOne vectorTwo =
-    complexVectorSpace.abelianGroup.addVects vectorOne (complexVectorSpace.abelianGroup.inverse vectorTwo)
+    complexVectorAdditionGroup.monoid.semigroup vectorOne (complexVectorAdditionGroup.inverse vectorTwo)
         |> lengthComplex
 
 

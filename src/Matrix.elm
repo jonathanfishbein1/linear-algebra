@@ -386,7 +386,7 @@ determinant vectorSpace matrix =
     in
     Result.andThen
         (\squareMatrix ->
-            getDiagonalProduct vectorSpace.abelianGroup.field squareMatrix
+            getDiagonalProduct vectorSpace.field squareMatrix
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularForm
@@ -404,7 +404,7 @@ invert vectorSpace matrix =
 
                 augmentedMatrix =
                     appendHorizontal invertableMatrix
-                        (identity vectorSpace.abelianGroup.field sizeOfMatrix)
+                        (identity vectorSpace.field sizeOfMatrix)
 
                 reducedRowEchelonForm =
                     gaussJordan vectorSpace augmentedMatrix
@@ -448,7 +448,7 @@ nullSpace innerProductSpace matrix =
             mDimension matrix
 
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
-            innerProductSpace.vectorSpace.abelianGroup.field
+            innerProductSpace.vectorSpace.field
 
         (AbelianGroup.AbelianGroup additionGroup) =
             commutativeDivisionRing.addition
@@ -595,7 +595,7 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
     case productMatrix of
         Ok pMatrix ->
             if isSquareMatrix pMatrix then
-                getDiagonalProduct vectorInnerProductSpace.vectorSpace.abelianGroup.field pMatrix
+                getDiagonalProduct vectorInnerProductSpace.vectorSpace.field pMatrix
                     |> Result.fromMaybe "Index out of range"
 
             else
@@ -711,7 +711,7 @@ isInvertable : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
 isInvertable vectorSpace matrix =
     let
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
-            vectorSpace.abelianGroup.field
+            vectorSpace.field
 
         (AbelianGroup.AbelianGroup groupAddition) =
             commutativeDivisionRing.addition
@@ -876,7 +876,7 @@ solveMatrix innerProductSpace (Matrix listOfRowVectors) =
             coefficientMatrix (Matrix listOfRowVectorsRREF)
 
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
-            innerProductSpace.vectorSpace.abelianGroup.field
+            innerProductSpace.vectorSpace.field
 
         (AbelianGroup.AbelianGroup additionGroup) =
             commutativeDivisionRing.addition
@@ -973,7 +973,7 @@ doesSetSpanSpace vSpace (VectorDimension vectorDimension) vectors =
     else
         let
             identityRowVectors =
-                identity vSpace.abelianGroup.field vectorDimension
+                identity vSpace.field vectorDimension
 
             listOfRowVectorsRREF =
                 gaussJordan vSpace (Matrix (List.map RowVector vectors))

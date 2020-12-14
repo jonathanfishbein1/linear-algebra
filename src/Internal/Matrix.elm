@@ -8,7 +8,7 @@ module Internal.Matrix exposing
     , subtractRow
     )
 
-import AbelianGroup
+import AbelianGroup exposing (AbelianGroup)
 import CommutativeDivisionRing
 import CommutativeMonoid
 import CommutativeRing
@@ -21,12 +21,9 @@ import Vector
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
 findPivot : Vector.VectorSpace a -> List (Vector.Vector a) -> Int -> Maybe Int
-findPivot { abelianGroup } listOfRowVectors initialRowIndex =
+findPivot { abelianGroup, field } listOfRowVectors initialRowIndex =
     let
-        (Field.Field field) =
-            abelianGroup.field
-
-        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             field
 
         (AbelianGroup.AbelianGroup group) =
@@ -51,13 +48,16 @@ subtractRow :
     -> Vector.Vector a
     -> Vector.Vector a
     -> Vector.Vector a
-subtractRow { abelianGroup } r currentRow nextRow =
+subtractRow { abelianGroup, field } r currentRow nextRow =
     let
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
-            abelianGroup.field
+            field
 
         (AbelianGroup.AbelianGroup groupAddition) =
             commutativeDivisionRing.addition
+
+        (AbelianGroup.AbelianGroup vectorGroup) =
+            abelianGroup
     in
     Vector.getAt r nextRow
         |> Maybe.andThen
@@ -65,17 +65,17 @@ subtractRow { abelianGroup } r currentRow nextRow =
                 Vector.getAt r currentRow
                     |> Maybe.map
                         (\currentElement ->
-                            abelianGroup.inverse
+                            vectorGroup.inverse
                                 (if currentElement == groupAddition.monoid.identity then
                                     currentRow
 
                                  else
                                     Vector.scalarMultiplication
-                                        abelianGroup.field
+                                        field
                                         (commutativeDivisionRing.multiplication.monoid.semigroup nElement (commutativeDivisionRing.multiplication.inverse currentElement))
                                         currentRow
                                 )
-                                |> abelianGroup.addVects nextRow
+                                |> vectorGroup.monoid.semigroup nextRow
                         )
             )
         |> Maybe.withDefault nextRow
@@ -84,23 +84,23 @@ subtractRow { abelianGroup } r currentRow nextRow =
 {-| Internal function for scalling rows by pivot entry
 -}
 scale : Vector.VectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a
-scale { abelianGroup } rowIndex rowVector =
+scale { abelianGroup, field } rowIndex rowVector =
     let
-        (Field.Field field) =
-            abelianGroup.field
-
-        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             field
 
-        (AbelianGroup.AbelianGroup additionGroup) =
+        (AbelianGroup.AbelianGroup groupAddition) =
             commutativeDivisionRing.addition
+
+        (AbelianGroup.AbelianGroup vectorGroup) =
+            abelianGroup
     in
     Vector.getAt rowIndex rowVector
         |> Maybe.map
             (\elementAtRowIndex ->
                 Vector.map
                     (\rowElement ->
-                        if elementAtRowIndex == additionGroup.monoid.identity then
+                        if elementAtRowIndex == groupAddition.monoid.identity then
                             rowElement
 
                         else
@@ -183,7 +183,7 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
             findPivot vectorSpace listOfVectors rowIndex
 
         (Field.Field field) =
-            vectorSpace.abelianGroup.field
+            vectorSpace.field
 
         (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
             field

@@ -218,14 +218,14 @@ complexVectorCommutativeSemigroup =
 -}
 realVectorMonoid : Monoid.Monoid (Vector Float)
 realVectorMonoid =
-    Monoid.semigroupAndIdentity realVectorSemigroup (Vector [])
+    Monoid.semigroupAndIdentity realVectorSemigroup empty
 
 
 {-| Instance for Vector under the addition operation.
 -}
 complexVectorMonoid : Monoid.Monoid (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorMonoid =
-    Monoid.semigroupAndIdentity complexVectorSemigroup (Vector [])
+    Monoid.semigroupAndIdentity complexVectorSemigroup empty
 
 
 {-| Instance for Vector under the addition operation.
@@ -325,18 +325,8 @@ zeros { identity } dim =
 {-| Scalar multiplication over a Vector s
 -}
 scalarMultiplication : Field.Field a -> a -> Vector a -> Vector a
-scalarMultiplication (Field.Field field) scalar =
-    let
-        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
-            field
-
-        group =
-            commutativeDivisionRing.multiplication
-
-        semigroup =
-            group.monoid.semigroup
-    in
-    map (semigroup scalar)
+scalarMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) scalar =
+    map (commutativeDivisionRing.multiplication.monoid.semigroup scalar)
 
 
 {-| Calculate the length of a Vector
@@ -370,66 +360,41 @@ normaliseReal v =
 {-| Add two Vectors
 -}
 addVectors : Field.Field a -> Vector a -> Vector a -> Vector a
-addVectors (Field.Field field) =
+addVectors (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
     let
-        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
-            field
-
         (AbelianGroup.AbelianGroup group) =
             commutativeDivisionRing.addition
-
-        monoid =
-            group.monoid
-
-        semigroup =
-            group.monoid.semigroup
     in
-    map2 semigroup
+    map2 group.monoid.semigroup
 
 
 {-| Subtract Vectors
 -}
 subtractVectors : Field.Field a -> Vector a -> Vector a -> Vector a
-subtractVectors (Field.Field field) vectorOne vectorTwo =
+subtractVectors (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) vectorOne vectorTwo =
     let
-        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
-            field
-
         (AbelianGroup.AbelianGroup group) =
             commutativeDivisionRing.addition
     in
-    addVectors (Field.Field field) vectorOne (map group.inverse vectorTwo)
+    addVectors (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) vectorOne (map group.inverse vectorTwo)
 
 
 {-| Hadamard Multiplication Vectors
 -}
 hadamardMultiplication : Field.Field a -> Vector a -> Vector a -> Vector a
-hadamardMultiplication (Field.Field field) =
-    let
-        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
-            field
-
-        group =
-            commutativeDivisionRing.multiplication
-
-        semigroup =
-            group.monoid.semigroup
-    in
-    map2 semigroup
+hadamardMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+    map2 commutativeDivisionRing.multiplication.monoid.semigroup
 
 
 {-| Calculate the dot product of two Vectors
 -}
 dotProduct : Field.Field a -> Vector a -> Vector a -> a
-dotProduct (Field.Field field) vectorOne vectorTwo =
+dotProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) vectorOne vectorTwo =
     let
-        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
-            field
-
         (AbelianGroup.AbelianGroup group) =
             commutativeDivisionRing.addition
     in
-    hadamardMultiplication (Field.Field field) vectorOne vectorTwo
+    hadamardMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) vectorOne vectorTwo
         |> sum group.monoid
 
 
@@ -598,22 +563,19 @@ vectorSubspace :
     -> List (Vector a)
     -> List (a -> Bool)
     -> Bool
-vectorSubspace (Field.Field field) (AbelianGroup.AbelianGroup vectorGroup) (Scalar scalar) vectorList predicates =
+vectorSubspace (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) (AbelianGroup.AbelianGroup vectorGroup) (Scalar scalar) vectorList predicates =
     let
-        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
-            field
-
         (AbelianGroup.AbelianGroup additionGroup) =
             commutativeDivisionRing.addition
 
         testzeros =
-            List.map (scalarMultiplication (Field.Field field) additionGroup.monoid.identity) vectorList
+            List.map (scalarMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) additionGroup.monoid.identity) vectorList
 
         containszeros =
             closurePassCriteria testzeros
 
         scaledVectors =
-            List.map (scalarMultiplication (Field.Field field) scalar) vectorList
+            List.map (scalarMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) scalar) vectorList
 
         closurePassCriteria =
             List.map (\(Vector vector) -> Vector <| List.map2 Basics.identity predicates vector)

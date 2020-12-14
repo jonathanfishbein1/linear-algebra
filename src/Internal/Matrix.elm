@@ -182,11 +182,8 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
         firstPivot =
             findPivot vectorSpace listOfVectors rowIndex
 
-        (Field.Field field) =
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             vectorSpace.field
-
-        (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
-            field
 
         (AbelianGroup.AbelianGroup group) =
             commutativeDivisionRing.addition

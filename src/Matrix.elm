@@ -179,6 +179,8 @@ module Matrix exposing
 
 import AbelianGroup exposing (AbelianGroup)
 import CommutativeDivisionRing exposing (CommutativeDivisionRing)
+import CommutativeMonoid
+import CommutativeSemigroup
 import ComplexNumbers
 import Field
 import Float.Extra
@@ -188,6 +190,7 @@ import List.Extra
 import Maybe.Extra
 import Monoid
 import Parser exposing ((|.), (|=))
+import Semigroup
 import Typeclasses.Classes.Equality
 import Typeclasses.Classes.Monoid
 import Typeclasses.Classes.Semigroup
@@ -257,6 +260,92 @@ type alias InnerProductSpace a =
     , norm : Matrix a -> Result String Float
     , distance : Matrix a -> Matrix a -> Result String Float
     }
+
+
+{-| Instance for Vector under the addition operation.
+-}
+realMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix Float)
+realMatrixAdditionSemigroup =
+    addMatrices Field.numberField
+
+
+{-| Instance for Vector under the addition operation.
+-}
+complexMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionSemigroup =
+    addMatrices ComplexNumbers.complexField
+
+
+{-| Instance for Vector under the addition operation.
+-}
+realMatrixAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix Float)
+realMatrixAdditionCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup realMatrixAdditionSemigroup
+
+
+{-| Instance for Vector under the addition operation.
+-}
+complexMatrixAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup complexMatrixAdditionSemigroup
+
+
+{-| Instance for Vector under the addition operation.
+-}
+realMatrixAdditionMonoid : Monoid.Monoid (Matrix Float)
+realMatrixAdditionMonoid =
+    Monoid.semigroupAndIdentity realMatrixAdditionSemigroup empty
+
+
+{-| Instance for Vector under the addition operation.
+-}
+complexMatrixAdditionMonoid : Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionMonoid =
+    Monoid.semigroupAndIdentity complexMatrixAdditionSemigroup empty
+
+
+{-| Instance for Vector under the addition operation.
+-}
+realMatrixAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix Float)
+realMatrixAdditionCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid realMatrixAdditionMonoid
+
+
+{-| Instance for Vector under the addition operation.
+-}
+complexMatrixAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid complexMatrixAdditionMonoid
+
+
+realMatrixAdditionGroup : Group.Group (Matrix Float)
+realMatrixAdditionGroup =
+    { monoid = realMatrixAdditionMonoid
+    , inverse = map Group.numberSum.inverse
+    }
+
+
+complexMatrixAdditionGroup : Group.Group (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionGroup =
+    { monoid = complexMatrixAdditionMonoid
+    , inverse = map ComplexNumbers.complexSumGroup.inverse
+    }
+
+
+realMatrixAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix Float)
+realMatrixAdditionAbelianGroup =
+    AbelianGroup.AbelianGroup
+        { monoid = realMatrixAdditionMonoid
+        , inverse = realMatrixAdditionGroup.inverse
+        }
+
+
+complexMatrixAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionAbelianGroup =
+    AbelianGroup.AbelianGroup
+        { monoid = complexMatrixAdditionMonoid
+        , inverse = complexMatrixAdditionGroup.inverse
+        }
 
 
 {-| Calculate distance between two vectors

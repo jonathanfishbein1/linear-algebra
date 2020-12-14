@@ -61,9 +61,7 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    ,  rank
-       --, norm
-
+    , normReal, rank
     )
 
 {-| A module for Matrix

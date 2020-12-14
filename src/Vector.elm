@@ -647,9 +647,6 @@ vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
         (AbelianGroup.AbelianGroup additionGroup) =
             commutativeDivisionRing.addition
 
-        additionSemigroup =
-            additionGroup.monoid.semigroup
-
         testzeros =
             List.map (scalarMultiplication field additionGroup.monoid.identity) vectorList
 

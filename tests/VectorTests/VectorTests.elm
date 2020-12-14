@@ -1,9 +1,9 @@
 module VectorTests.VectorTests exposing (suite)
 
-import CommutativeDivisionRing exposing (CommutativeDivisionRing)
+import CommutativeDivisionRing
 import ComplexNumbers
 import Expect
-import Field exposing (Field)
+import Field
 import Float.Extra
 import Fuzz
 import Test

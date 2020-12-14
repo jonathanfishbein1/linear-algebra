@@ -235,19 +235,10 @@ type VectorDimension
     = VectorDimension Int
 
 
-{-| Type to represent a Abelian Group for Matrix
--}
-type alias AbelianGroup a =
-    { field : Field.Field a
-    , addMatrcs : Matrix a -> Matrix a -> Matrix a
-    , inverse : Matrix a -> Matrix a
-    }
-
-
 {-| Type to represent a Vector Space
 -}
 type alias MatrixSpace a =
-    { abelianGroup : AbelianGroup a
+    { abelianGroup : AbelianGroup.AbelianGroup (Matrix a)
     , matrixScalarMultiplication : a -> Matrix a -> Matrix a
     }
 
@@ -352,7 +343,7 @@ complexMatrixAdditionAbelianGroup =
 -}
 distanceReal : Matrix Float -> Matrix Float -> Result String Float
 distanceReal matrixOne matrixTwo =
-    realMatrixSpace.abelianGroup.addMatrcs matrixOne (realMatrixSpace.abelianGroup.inverse matrixTwo)
+    realMatrixAdditionSemigroup matrixOne (realMatrixAdditionGroup.inverse matrixTwo)
         |> normReal
 
 
@@ -1312,21 +1303,11 @@ parseMatrix matrixElementParser =
         |= listOfRowVectorParser (parseRowVector matrixElementParser)
 
 
-{-| Real numbered Abelian Group for Matrix
--}
-realMatrixAbelianGroup : AbelianGroup Float
-realMatrixAbelianGroup =
-    { field = Field.numberField
-    , addMatrcs = addMatrices Field.numberField
-    , inverse = map Group.numberSum.inverse
-    }
-
-
 {-| Real Numbered Vector Space
 -}
 realMatrixSpace : MatrixSpace Float
 realMatrixSpace =
-    { abelianGroup = realMatrixAbelianGroup
+    { abelianGroup = realMatrixAdditionAbelianGroup
     , matrixScalarMultiplication = scalarMultiplication Field.numberField
     }
 

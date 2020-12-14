@@ -134,7 +134,7 @@ module Vector exposing
 
 -}
 
-import AbelianGroup exposing (AbelianGroup)
+import AbelianGroup
 import CommutativeDivisionRing
 import CommutativeMonoid
 import CommutativeRing

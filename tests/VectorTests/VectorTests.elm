@@ -3,7 +3,7 @@ module VectorTests.VectorTests exposing (suite)
 import CommutativeDivisionRing exposing (CommutativeDivisionRing)
 import ComplexNumbers
 import Expect
-import Field
+import Field exposing (Field)
 import Float.Extra
 import Fuzz
 import Test
@@ -206,7 +206,7 @@ suite =
                         Vector.Scalar one
 
                     isSubspace =
-                        Vector.vectorSubspace Vector.realVectorAbelianGroup scalar vectors predicates
+                        Vector.vectorSubspace Field.numberField Vector.realVectorAdditionAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
@@ -233,7 +233,7 @@ suite =
                         Vector.Scalar one
 
                     isSubspace =
-                        Vector.vectorSubspace Vector.realVectorAbelianGroup scalar vectors predicates
+                        Vector.vectorSubspace Field.numberField Vector.realVectorAdditionAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
@@ -266,7 +266,7 @@ suite =
                         Vector.Scalar complexNumber
 
                     isSubspace =
-                        Vector.vectorSubspace Vector.complexVectorAbelianGroup scalar vectors predicates
+                        Vector.vectorSubspace ComplexNumbers.complexField Vector.complexVectorAdditionAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
@@ -308,7 +308,7 @@ suite =
                         Vector.Scalar complexNumber
 
                     isSubspace =
-                        Vector.vectorSubspace Vector.complexVectorAbelianGroup scalar vectors predicates
+                        Vector.vectorSubspace ComplexNumbers.complexField Vector.complexVectorAdditionAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"

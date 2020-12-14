@@ -44,7 +44,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , distanceComplex, distanceReal, lengthReal, normaliseReal
+    , complexVectorAdditionAbelianGroup, distanceComplex, distanceReal, lengthReal, normaliseReal, realVectorAdditionAbelianGroup
     )
 
 {-| A module for Vectors
@@ -631,30 +631,28 @@ dimension (Vector list) =
 {-| Determine whether a list of Vectors makes a Subspace
 -}
 vectorSubspace :
-    AbelianGroup a
+    Field.Field a
+    -> AbelianGroup.AbelianGroup (Vector a)
     -> Scalar a
     -> List (Vector a)
     -> List (a -> Bool)
     -> Bool
-vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
+vectorSubspace (Field.Field field) (AbelianGroup.AbelianGroup vectorGroup) (Scalar scalar) vectorList predicates =
     let
-        (Field.Field innerField) =
-            field
-
         (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) =
-            innerField
+            field
 
         (AbelianGroup.AbelianGroup additionGroup) =
             commutativeDivisionRing.addition
 
         testzeros =
-            List.map (scalarMultiplication field additionGroup.monoid.identity) vectorList
+            List.map (scalarMultiplication (Field.Field field) additionGroup.monoid.identity) vectorList
 
         containszeros =
             closurePassCriteria testzeros
 
         scaledVectors =
-            List.map (scalarMultiplication field scalar) vectorList
+            List.map (scalarMultiplication (Field.Field field) scalar) vectorList
 
         closurePassCriteria =
             List.map (\(Vector vector) -> Vector <| List.map2 Basics.identity predicates vector)
@@ -664,7 +662,7 @@ vectorSubspace { field, addVects } (Scalar scalar) vectorList predicates =
             closurePassCriteria scaledVectors
 
         cartesianAddVectors =
-            List.Extra.lift2 addVects
+            List.Extra.lift2 vectorGroup.monoid.semigroup
 
         additionOfVectors =
             cartesianAddVectors vectorList vectorList

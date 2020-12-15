@@ -16,9 +16,11 @@ module Matrix exposing
     , subMatrix
     , nullSpace
     , determinant
+    , normReal
     , leftNullSpace
     , getDiagonal
     , getDiagonalProduct
+    , rank
     , addMatrices
     , subtractMatrices
     , multiplyMatrixVector
@@ -61,7 +63,6 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , normReal, rank
     )
 
 {-| A module for Matrix
@@ -94,10 +95,11 @@ module Matrix exposing
 @docs subMatrix
 @docs nullSpace
 @docs determinant
-@docs norm
+@docs normReal
 @docs leftNullSpace
 @docs getDiagonal
 @docs getDiagonalProduct
+@docs rank
 
 
 # Binary Operations
@@ -441,6 +443,8 @@ normComplex matrix =
             (ComplexNumbers.real >> Basics.sqrt)
 
 
+{-| Calculate the rank of a Matrix
+-}
 rank : Vector.InnerProductSpace a -> Matrix a -> Int
 rank innerProductSpace matrix =
     let

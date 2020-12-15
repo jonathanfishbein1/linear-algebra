@@ -12,7 +12,10 @@ module Vector exposing
     , complexInnerProductSpace
     , zeros
     , scalarMultiplication
+    , lengthReal
+    , lengthComplex
     , sum
+    , normaliseReal
     , addVectors
     , subtractVectors
     , hadamardMultiplication
@@ -20,6 +23,8 @@ module Vector exposing
     , angleBetween
     , cross
     , tensorProduct
+    , distanceComplex
+    , distanceReal
     , dimension
     , vectorSubspace
     , all
@@ -43,7 +48,6 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , distanceComplex, distanceReal, lengthReal, normaliseReal
     )
 
 {-| A module for Vectors
@@ -54,7 +58,6 @@ module Vector exposing
 @docs Vector
 @docs Vector3
 @docs Scalar
-@docs AbelianGroup
 @docs VectorSpace
 @docs InnerProductSpace
 
@@ -73,9 +76,10 @@ module Vector exposing
 # Unitary Operations
 
 @docs scalarMultiplication
-@docs length
-@docs normalise
+@docs lengthReal
+@docs lengthComplex
 @docs sum
+@docs normaliseReal
 
 
 # Binary Operations
@@ -86,8 +90,9 @@ module Vector exposing
 @docs dotProduct
 @docs angleBetween
 @docs cross
-@docs distance
 @docs tensorProduct
+@docs distanceComplex
+@docs distanceReal
 
 
 # Vector Properties
@@ -186,62 +191,64 @@ type alias InnerProductSpace a =
     }
 
 
-{-| Instance for Vector under the addition operation.
+{-| Semigroup instance for a real valued Vector.
 -}
 realVectorSemigroup : Semigroup.Semigroup (Vector Float)
 realVectorSemigroup =
     addVectors Field.numberField
 
 
-{-| Instance for Vector under the addition operation.
+{-| Semigroup instance for a complex valued Vector.
 -}
 complexVectorSemigroup : Semigroup.Semigroup (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorSemigroup =
     addVectors ComplexNumbers.complexField
 
 
-{-| Instance for Vector under the addition operation.
+{-| Commutative Semigroup instance for a real valued Vector.
 -}
 realVectorCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector Float)
 realVectorCommutativeSemigroup =
     CommutativeSemigroup.CommutativeSemigroup realVectorSemigroup
 
 
-{-| Instance for Vector under the addition operation.
+{-| Commutative Semigroup instance for a complex valued Vector.
 -}
 complexVectorCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorCommutativeSemigroup =
     CommutativeSemigroup.CommutativeSemigroup complexVectorSemigroup
 
 
-{-| Instance for Vector under the addition operation.
+{-| Monoid instance for a real valued Vector.
 -}
 realVectorMonoid : Monoid.Monoid (Vector Float)
 realVectorMonoid =
     Monoid.semigroupAndIdentity realVectorSemigroup empty
 
 
-{-| Instance for Vector under the addition operation.
+{-| Monoid instance for a complex valued Vector.
 -}
 complexVectorMonoid : Monoid.Monoid (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorMonoid =
     Monoid.semigroupAndIdentity complexVectorSemigroup empty
 
 
-{-| Instance for Vector under the addition operation.
+{-| Commutative Monoid instance for a real valued Vector.
 -}
 realVectorCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector Float)
 realVectorCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid realVectorMonoid
 
 
-{-| Instance for Vector under the addition operation.
+{-| Commutative Monoid instance for a complex valued Vector.
 -}
 complexVectorCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid complexVectorMonoid
 
 
+{-| Group instance for a real valued Vector.
+-}
 realVectorGroup : Group.Group (Vector Float)
 realVectorGroup =
     { monoid = realVectorMonoid
@@ -249,6 +256,8 @@ realVectorGroup =
     }
 
 
+{-| Group instance for a complex valued Vector.
+-}
 complexVectorGroup : Group.Group (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorGroup =
     { monoid = complexVectorMonoid
@@ -256,6 +265,8 @@ complexVectorGroup =
     }
 
 
+{-| Abelian Group instance for a real valued Vector.
+-}
 realVectorAbelianGroup : AbelianGroup.AbelianGroup (Vector Float)
 realVectorAbelianGroup =
     AbelianGroup.AbelianGroup
@@ -264,6 +275,8 @@ realVectorAbelianGroup =
         }
 
 
+{-| Group instance for a complex valued Vector.
+-}
 complexVectorAbelianGroup : AbelianGroup.AbelianGroup (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorAbelianGroup =
     AbelianGroup.AbelianGroup
@@ -329,7 +342,7 @@ scalarMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRi
     map (commutativeDivisionRing.multiplication.monoid.semigroup scalar)
 
 
-{-| Calculate the length of a Vector
+{-| Calculate the length of a Real valued Vector
 -}
 lengthReal : Vector Float -> Float
 lengthReal vector =
@@ -337,7 +350,7 @@ lengthReal vector =
         |> Basics.sqrt
 
 
-{-| Calculate the length of a Vector
+{-| Calculate the length of a Complex valued Vector
 -}
 lengthComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Float
 lengthComplex vector =
@@ -346,7 +359,7 @@ lengthComplex vector =
         |> Basics.sqrt
 
 
-{-| Adjust a vector so that its length is exactly one
+{-| Adjust a real valued vector so that its length is exactly one
 -}
 normaliseReal : Vector Float -> Vector Float
 normaliseReal v =

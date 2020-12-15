@@ -17,6 +17,7 @@ module Matrix exposing
     , nullSpace
     , determinant
     , normReal
+    , normComplex
     , leftNullSpace
     , getDiagonal
     , getDiagonalProduct
@@ -44,6 +45,10 @@ module Matrix exposing
     , empty
     , concatHorizontal
     , concatVertical
+    , realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
+    , realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
+    , realMatrixInnerProductSpace
+    , complexMatrixAdditionAbelianGroup
     , map
     , pure
     , andMap
@@ -63,7 +68,6 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , complexMatrixAdditionAbelianGroup, complexMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeSemigroup, normComplex, realMatrixAdditionCommutativeMonoid, realMatrixAdditionCommutativeSemigroup, realMatrixInnerProductSpace
     )
 
 {-| A module for Matrix
@@ -97,6 +101,7 @@ module Matrix exposing
 @docs nullSpace
 @docs determinant
 @docs normReal
+@docs normComplex
 @docs leftNullSpace
 @docs getDiagonal
 @docs getDiagonalProduct
@@ -131,11 +136,15 @@ module Matrix exposing
 @docs areRowEquivalent
 
 
-# Monoid
+# Semigroup, Monoid, Group, Ring, Field, VectorSpace, InnerProductSpace
 
 @docs empty
 @docs concatHorizontal
 @docs concatVertical
+@docs realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
+@docs realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
+@docs realMatrixInnerProductSpace
+@docs complexMatrixAdditionAbelianGroup
 
 
 # Functor, Applicative, Monad, Foldable
@@ -254,62 +263,64 @@ type alias InnerProductSpace a =
     }
 
 
-{-| Instance for Vector under the addition operation.
+{-| Semigroup instance for Matrix under the addition operation with real values.
 -}
 realMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix Float)
 realMatrixAdditionSemigroup =
     addMatrices Field.numberField
 
 
-{-| Instance for Vector under the addition operation.
+{-| Semigroup instance for Matrix under the addition operation with complex values.
 -}
 complexMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionSemigroup =
     addMatrices ComplexNumbers.complexField
 
 
-{-| Instance for Vector under the addition operation.
+{-| Commutative Semigroup instance for Matrix under the addition operation with real values.
 -}
 realMatrixAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix Float)
 realMatrixAdditionCommutativeSemigroup =
     CommutativeSemigroup.CommutativeSemigroup realMatrixAdditionSemigroup
 
 
-{-| Instance for Vector under the addition operation.
+{-| Commutative Semigroup instance for Matrix under the addition operation with complex values.
 -}
 complexMatrixAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionCommutativeSemigroup =
     CommutativeSemigroup.CommutativeSemigroup complexMatrixAdditionSemigroup
 
 
-{-| Instance for Vector under the addition operation.
+{-| Monoid instance for Matrix under the addition operation with real values.
 -}
 realMatrixAdditionMonoid : Monoid.Monoid (Matrix Float)
 realMatrixAdditionMonoid =
     Monoid.semigroupAndIdentity realMatrixAdditionSemigroup empty
 
 
-{-| Instance for Vector under the addition operation.
+{-| Monoid instance for Matrix under the addition operation with complex values.
 -}
 complexMatrixAdditionMonoid : Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionMonoid =
     Monoid.semigroupAndIdentity complexMatrixAdditionSemigroup empty
 
 
-{-| Instance for Vector under the addition operation.
+{-| Commutative Monoid instance for Matrix under the addition operation with real values.
 -}
 realMatrixAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix Float)
 realMatrixAdditionCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid realMatrixAdditionMonoid
 
 
-{-| Instance for Vector under the addition operation.
+{-| Commutative Monoid instance for Matrix under the addition operation with complex values.
 -}
 complexMatrixAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid complexMatrixAdditionMonoid
 
 
+{-| Group instance for Matrix under the addition operation with real values.
+-}
 realMatrixAdditionGroup : Group.Group (Matrix Float)
 realMatrixAdditionGroup =
     { monoid = realMatrixAdditionMonoid
@@ -317,6 +328,8 @@ realMatrixAdditionGroup =
     }
 
 
+{-| Group instance for Matrix under the addition operation with complex values.
+-}
 complexMatrixAdditionGroup : Group.Group (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionGroup =
     { monoid = complexMatrixAdditionMonoid
@@ -324,6 +337,8 @@ complexMatrixAdditionGroup =
     }
 
 
+{-| Abelian Group instance for Matrix under the addition operation with real values.
+-}
 realMatrixAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix Float)
 realMatrixAdditionAbelianGroup =
     AbelianGroup.AbelianGroup
@@ -332,6 +347,8 @@ realMatrixAdditionAbelianGroup =
         }
 
 
+{-| Abelian Group instance for Matrix under the addition operation with complex values.
+-}
 complexMatrixAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionAbelianGroup =
     AbelianGroup.AbelianGroup
@@ -1306,7 +1323,7 @@ parseMatrix matrixElementParser =
         |= listOfRowVectorParser (parseRowVector matrixElementParser)
 
 
-{-| Real Numbered Vector Space
+{-| Real Numbered Vector Space for Matrix
 -}
 realMatrixSpace : MatrixSpace Float
 realMatrixSpace =
@@ -1315,6 +1332,8 @@ realMatrixSpace =
     }
 
 
+{-| Real Numbered Inner Product Space for Matrix
+-}
 realMatrixInnerProductSpace : InnerProductSpace Float
 realMatrixInnerProductSpace =
     { matrixSpace = realMatrixSpace

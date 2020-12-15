@@ -31,6 +31,8 @@ module Vector exposing
     , empty
     , append
     , concat
+    , realVectorCommutativeSemigroup, complexVectorCommutativeSemigroup
+    , realVectorCommutativeMonoid, complexVectorCommutativeMonoid
     , map
     , pure
     , andMap
@@ -48,7 +50,6 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , complexVectorCommutativeMonoid, complexVectorCommutativeSemigroup, realVectorCommutativeMonoid, realVectorCommutativeSemigroup
     )
 
 {-| A module for Vectors
@@ -103,11 +104,13 @@ module Vector exposing
 @docs all
 
 
-# Monoid
+# SemiGroup, Monoid, Group, Ring, Field
 
 @docs empty
 @docs append
 @docs concat
+@docs realVectorCommutativeSemigroup, complexVectorCommutativeSemigroup
+@docs realVectorCommutativeMonoid, complexVectorCommutativeMonoid
 
 
 # Functor, Applicative, Monad, Foldable

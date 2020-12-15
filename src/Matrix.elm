@@ -63,6 +63,7 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
+    , complexMatrixAdditionAbelianGroup, complexMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeSemigroup, normComplex, realMatrixAdditionCommutativeMonoid, realMatrixAdditionCommutativeSemigroup, realMatrixInnerProductSpace
     )
 
 {-| A module for Matrix
@@ -177,8 +178,8 @@ module Matrix exposing
 
 -}
 
-import AbelianGroup exposing (AbelianGroup)
-import CommutativeDivisionRing exposing (CommutativeDivisionRing)
+import AbelianGroup
+import CommutativeDivisionRing
 import CommutativeMonoid
 import CommutativeSemigroup
 import ComplexNumbers

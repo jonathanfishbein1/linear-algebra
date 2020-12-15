@@ -8,11 +8,8 @@ module Internal.Matrix exposing
     , subtractRow
     )
 
-import AbelianGroup exposing (AbelianGroup)
+import AbelianGroup
 import CommutativeDivisionRing
-import CommutativeMonoid
-import CommutativeRing
-import CommutativeSemigroup
 import Field
 import List.Extra
 import Vector
@@ -21,7 +18,7 @@ import Vector
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
 findPivot : Vector.VectorSpace a -> List (Vector.Vector a) -> Int -> Maybe Int
-findPivot { abelianGroup, field } listOfRowVectors initialRowIndex =
+findPivot { field } listOfRowVectors initialRowIndex =
     let
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             field
@@ -91,9 +88,6 @@ scale { abelianGroup, field } rowIndex rowVector =
 
         (AbelianGroup.AbelianGroup groupAddition) =
             commutativeDivisionRing.addition
-
-        (AbelianGroup.AbelianGroup vectorGroup) =
-            abelianGroup
     in
     Vector.getAt rowIndex rowVector
         |> Maybe.map

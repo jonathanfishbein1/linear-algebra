@@ -6,7 +6,7 @@ import Field
 import Float.Extra
 import Fuzz
 import Matrix
-import Monoid exposing (Monoid)
+import Monoid
 import Test
 import Vector
 

@@ -48,6 +48,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
+    , complexVectorCommutativeMonoid, complexVectorCommutativeSemigroup, realVectorCommutativeMonoid, realVectorCommutativeSemigroup
     )
 
 {-| A module for Vectors
@@ -142,7 +143,6 @@ module Vector exposing
 import AbelianGroup
 import CommutativeDivisionRing
 import CommutativeMonoid
-import CommutativeRing
 import CommutativeSemigroup
 import ComplexNumbers
 import Field

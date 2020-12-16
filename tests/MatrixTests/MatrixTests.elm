@@ -6,6 +6,7 @@ import Field
 import Float.Extra
 import Fuzz
 import Matrix
+import Monoid
 import Test
 import Vector
 
@@ -52,7 +53,7 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ -4, -11, 22 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Vector.realVectorSpace matrix b
+                        Matrix.solve Vector.realInnerProductSpace matrix b
 
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
@@ -74,7 +75,7 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ 3, 0, -2 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Vector.realVectorSpace matrix b
+                        Matrix.solve Vector.realInnerProductSpace matrix b
 
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ 5, -1.0, -1.0 ]
@@ -96,7 +97,7 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ 8, 12, 4 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Vector.realVectorSpace matrix b
+                        Matrix.solve Vector.realInnerProductSpace matrix b
                 in
                 Expect.equal reducedRowEchelonFormMatrix (Matrix.Inconsistant "No Unique Solution")
         , Test.test
@@ -115,9 +116,10 @@ suite =
                         Matrix.ColumnVector <| Vector.Vector [ 7, 12, 4 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Vector.realVectorSpace matrix b
+                        Matrix.solve Vector.realInnerProductSpace matrix b
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
+                Expect.equal reducedRowEchelonFormMatrix
+                    (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
         , Test.test
             "tests matrix null space calculation"
           <|
@@ -130,7 +132,7 @@ suite =
                             ]
 
                     nullSpace =
-                        Matrix.nullSpace Vector.realVectorSpace matrix
+                        Matrix.nullSpace Vector.realInnerProductSpace matrix
 
                     expected =
                         Matrix.ColumnVector <| Vector.Vector [ 0, 0 ]
@@ -146,7 +148,7 @@ suite =
                         , Vector.Vector [ 0, -3 ]
                         ]
                 in
-                Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent Vector.realVectorSpace listOfVectors)
+                Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent Vector.realInnerProductSpace listOfVectors)
         , Test.test
             "tests matrix linearlyIndependent with two colinear vectors"
           <|
@@ -157,7 +159,7 @@ suite =
                         , Vector.Vector [ 2, 4 ]
                         ]
                 in
-                Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent Vector.realVectorSpace listOfVectors)
+                Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent Vector.realInnerProductSpace listOfVectors)
         , Test.test "tests matrix doesSetSpanSpace with standard basis vectors" <|
             \_ ->
                 let
@@ -179,8 +181,8 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.zeros Field.realField 2
-                        , Vector.zeros Field.realField 2
+                        [ Vector.zeros Monoid.numberSum 2
+                        , Vector.zeros Monoid.numberSum 2
                         ]
 
                     r2 =
@@ -275,7 +277,7 @@ suite =
                         Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
+                        Matrix.areBasis Vector.realInnerProductSpace r2 listOfVectors
                 in
                 Expect.true "Vectors are basis for R2" result
         , Test.test
@@ -284,15 +286,15 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.zeros Field.realField 2
-                        , Vector.zeros Field.realField 2
+                        [ Vector.zeros Monoid.numberSum 2
+                        , Vector.zeros Monoid.numberSum 2
                         ]
 
                     r2 =
                         Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
+                        Matrix.areBasis Vector.realInnerProductSpace r2 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R2" result
         , Test.test
@@ -310,7 +312,7 @@ suite =
                         Matrix.VectorDimension 3
 
                     result =
-                        Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
+                        Matrix.areBasis Vector.realInnerProductSpace r3 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R3" result
         , Test.test
@@ -328,7 +330,7 @@ suite =
                         Matrix.VectorDimension 3
 
                     result =
-                        Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
+                        Matrix.areBasis Vector.realInnerProductSpace r3 listOfVectors
                 in
                 Expect.true "Vectors are basis fro R3" result
         , Test.test
@@ -346,7 +348,7 @@ suite =
                         Matrix.VectorDimension 3
 
                     result =
-                        Matrix.areBasis Vector.realVectorSpace r3 listOfVectors
+                        Matrix.areBasis Vector.realInnerProductSpace r3 listOfVectors
                 in
                 Expect.false "Vectors are not basis R3" result
         , Test.test
@@ -364,7 +366,7 @@ suite =
                         Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
+                        Matrix.areBasis Vector.realInnerProductSpace r2 listOfVectors
                 in
                 Expect.false "Vectors are not basis for R2" result
         , Test.test
@@ -381,7 +383,7 @@ suite =
                         Matrix.VectorDimension 2
 
                     result =
-                        Matrix.areBasis Vector.realVectorSpace r2 listOfVectors
+                        Matrix.areBasis Vector.realInnerProductSpace r2 listOfVectors
                 in
                 Expect.false "Vectos are not basis for R2" result
         , Test.test
@@ -395,7 +397,8 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
                             ]
                 in
-                Expect.equal (Matrix.solveMatrix Vector.realVectorSpace matrix) (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
+                Expect.equal (Matrix.solveMatrix Vector.realInnerProductSpace matrix)
+                    (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
         , Test.test
             "tests matrix fold"
           <|
@@ -553,7 +556,7 @@ suite =
                             ]
 
                     identity =
-                        Matrix.identity Field.realField (Matrix.mDimension matrix)
+                        Matrix.identity Field.numberField (Matrix.mDimension matrix)
 
                     matrixInverseProduct =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace matrix inverse
@@ -579,7 +582,7 @@ suite =
                             ]
 
                     identity =
-                        Matrix.identity Field.realField (Matrix.mDimension matrix)
+                        Matrix.identity Field.numberField (Matrix.mDimension matrix)
 
                     inverseMatrixProduct =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace inverse matrix
@@ -644,7 +647,12 @@ suite =
                                 4
                             )
                 in
-                Expect.equal determinantComplex (Ok expectedDeterminant)
+                case determinantComplex of
+                    Ok dComplex ->
+                        Expect.true "determinants are equal" (ComplexNumbers.equal dComplex expectedDeterminant)
+
+                    _ ->
+                        Expect.fail "determinants not equal"
         , Test.test
             "tests complex matrix inverse 2 x 2"
           <|
@@ -1273,10 +1281,10 @@ suite =
 
                     cTimesm1Timem2 =
                         Matrix.multiplyMatrices Vector.realInnerProductSpace m1 m2
-                            |> Result.map (Matrix.scalarMultiplication Field.realField one)
+                            |> Result.map (Matrix.scalarMultiplication Field.numberField one)
 
                     cTimesm1ThenTimesm2 =
-                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField one m1) m2
+                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.numberField one m1) m2
                 in
                 Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
         , Test.fuzz3
@@ -1306,19 +1314,19 @@ suite =
                             ]
 
                     matrixSumIJ =
-                        Matrix.addMatrices Field.realField matrixI matrixJ
+                        Matrix.addMatrices Field.numberField matrixI matrixJ
 
                     tensorProductIJK =
-                        Matrix.tensorProduct Field.realField matrixSumIJ matrixK
+                        Matrix.tensorProduct Field.numberField matrixSumIJ matrixK
 
                     tensorProductIK =
-                        Matrix.tensorProduct Field.realField matrixI matrixK
+                        Matrix.tensorProduct Field.numberField matrixI matrixK
 
                     tensorProductJK =
-                        Matrix.tensorProduct Field.realField matrixJ matrixK
+                        Matrix.tensorProduct Field.numberField matrixJ matrixK
 
                     matrixSumTensorProductIKJK =
-                        Matrix.addMatrices Field.realField tensorProductIK tensorProductJK
+                        Matrix.addMatrices Field.numberField tensorProductIK tensorProductJK
                 in
                 Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK matrixSumTensorProductIKJK)
         , Test.test
@@ -1387,7 +1395,40 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
-                            |> Matrix.scalarMultiplication Field.realField 2
+                            |> Matrix.scalarMultiplication Field.numberField 2
                 in
                 Expect.true "Are row equivalent" (Matrix.areRowEquivalent Vector.realVectorSpace matrixOne matrixTwo)
+        , Test.fuzz3
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange 1 10)
+            (Fuzz.floatRange 1 10)
+            "tests matrix rank"
+          <|
+            \one two three ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ one, 0, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, two, 0 ]
+                            , Matrix.RowVector <| Vector.Vector [ 0, 0, three ]
+                            ]
+
+                    rank =
+                        Matrix.rank Vector.realInnerProductSpace matrix
+                in
+                Expect.equal rank 3
+        , Test.fuzz2
+            (Fuzz.map Basics.toFloat (Fuzz.intRange 1 10))
+            (Fuzz.map Basics.toFloat (Fuzz.intRange 1 10))
+            "tests matrix rank with two colinear vectors"
+          <|
+            \one two ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector <| Vector.Vector [ one, two ]
+                            , Matrix.RowVector <| Vector.Vector [ one * 2, two * 2 ]
+                            ]
+                in
+                Expect.equal (Matrix.rank Vector.realInnerProductSpace matrix) 1
         ]

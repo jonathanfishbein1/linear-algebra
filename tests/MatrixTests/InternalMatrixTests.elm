@@ -156,7 +156,7 @@ suite =
                 in
                 case firstElement of
                     Just element ->
-                        Expect.equal element 1
+                        Expect.within (Expect.Absolute 0.000000001) element 1
 
                     Nothing ->
                         Expect.fail "error"
@@ -196,7 +196,7 @@ suite =
                 in
                 case firstElement of
                     Just element ->
-                        Expect.equal element ComplexNumbers.one
+                        Expect.true "ComplexNumber is equal to one " (ComplexNumbers.equal element ComplexNumbers.one)
 
                     Nothing ->
                         Expect.fail "error"
@@ -300,7 +300,7 @@ suite =
                 in
                 case firstElementSecondRow of
                     Just element ->
-                        Expect.within (Expect.Absolute 0.000000001) element 0
+                        Expect.within (Expect.Absolute 0.1) element 0
 
                     Nothing ->
                         Expect.fail "error"

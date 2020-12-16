@@ -8,6 +8,8 @@ module Internal.Matrix exposing
     , subtractRow
     )
 
+import AbelianGroup
+import CommutativeDivisionRing
 import Field
 import List.Extra
 import Vector
@@ -16,13 +18,23 @@ import Vector
 {-| Internal function for finding pivot entry in Gaussian elimination
 -}
 findPivot : Vector.VectorSpace a -> List (Vector.Vector a) -> Int -> Maybe Int
-findPivot { abelianGroup } listOfRowVectors initialRowIndex =
+findPivot { field } listOfRowVectors initialRowIndex =
+    let
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+            field
+
+        (AbelianGroup.AbelianGroup group) =
+            commutativeDivisionRing.addition
+
+        monoid =
+            group.monoid
+    in
     List.Extra.find
         (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration listOfRowVectors
                 |> Maybe.andThen (Vector.getAt initialRowIndex)
-                |> Maybe.withDefault abelianGroup.field.zero
-                |> (/=) abelianGroup.field.zero
+                |> Maybe.withDefault monoid.identity
+                |> (/=) monoid.identity
         )
         (List.range initialRowIndex (List.length listOfRowVectors - 1))
 
@@ -33,23 +45,34 @@ subtractRow :
     -> Vector.Vector a
     -> Vector.Vector a
     -> Vector.Vector a
-subtractRow { abelianGroup } r currentRow nextRow =
+subtractRow { abelianGroup, field } r currentRow nextRow =
+    let
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+            field
+
+        (AbelianGroup.AbelianGroup groupAddition) =
+            commutativeDivisionRing.addition
+
+        (AbelianGroup.AbelianGroup vectorGroup) =
+            abelianGroup
+    in
     Vector.getAt r nextRow
         |> Maybe.andThen
             (\nElement ->
                 Vector.getAt r currentRow
                     |> Maybe.map
                         (\currentElement ->
-                            (if currentElement == abelianGroup.field.zero then
-                                currentRow
-
-                             else
-                                Vector.scalarMultiplication
-                                    abelianGroup.field
-                                    (abelianGroup.field.divide nElement currentElement)
+                            vectorGroup.inverse
+                                (if currentElement == groupAddition.monoid.identity then
                                     currentRow
-                            )
-                                |> abelianGroup.subtractVects nextRow
+
+                                 else
+                                    Vector.scalarMultiplication
+                                        field
+                                        (commutativeDivisionRing.multiplication.monoid.semigroup nElement (commutativeDivisionRing.multiplication.inverse currentElement))
+                                        currentRow
+                                )
+                                |> vectorGroup.monoid.semigroup nextRow
                         )
             )
         |> Maybe.withDefault nextRow
@@ -58,17 +81,24 @@ subtractRow { abelianGroup } r currentRow nextRow =
 {-| Internal function for scalling rows by pivot entry
 -}
 scale : Vector.VectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a
-scale { abelianGroup } rowIndex rowVector =
+scale { abelianGroup, field } rowIndex rowVector =
+    let
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+            field
+
+        (AbelianGroup.AbelianGroup groupAddition) =
+            commutativeDivisionRing.addition
+    in
     Vector.getAt rowIndex rowVector
         |> Maybe.map
             (\elementAtRowIndex ->
                 Vector.map
                     (\rowElement ->
-                        if elementAtRowIndex == abelianGroup.field.zero then
+                        if elementAtRowIndex == groupAddition.monoid.identity then
                             rowElement
 
                         else
-                            abelianGroup.field.divide rowElement elementAtRowIndex
+                            commutativeDivisionRing.multiplication.monoid.semigroup rowElement (commutativeDivisionRing.multiplication.inverse elementAtRowIndex)
                     )
                     rowVector
             )
@@ -97,13 +127,23 @@ reduceRowBackwards vectorSpace rowIndex listOfVectors =
         ++ List.drop (rowIndex + 1) listOfVectors
 
 
-diagonal : Field.Field a -> Int -> Int -> a
-diagonal { zero, one } columnIndex rowIndex =
+diagonal : CommutativeDivisionRing.CommutativeDivisionRing a -> Int -> Int -> a
+diagonal (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) columnIndex rowIndex =
+    let
+        (AbelianGroup.AbelianGroup group) =
+            commutativeDivisionRing.addition
+
+        additionMonoid =
+            group.monoid
+
+        multiplicationMonoid =
+            commutativeDivisionRing.multiplication.monoid
+    in
     if columnIndex == rowIndex then
-        one
+        multiplicationMonoid.identity
 
     else
-        zero
+        additionMonoid.identity
 
 
 map2VectorCartesian :
@@ -135,6 +175,15 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
     let
         firstPivot =
             findPivot vectorSpace listOfVectors rowIndex
+
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+            vectorSpace.field
+
+        (AbelianGroup.AbelianGroup group) =
+            commutativeDivisionRing.addition
+
+        monoid =
+            group.monoid
     in
     case firstPivot of
         Just fPivot ->
@@ -173,7 +222,7 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
                     nextNonZero =
                         List.Extra.getAt rowIndex listOfVectors
                             |> Maybe.andThen
-                                (Vector.findIndex ((/=) vectorSpace.abelianGroup.field.zero))
+                                (Vector.findIndex ((/=) monoid.identity))
                             |> Maybe.withDefault rowIndex
 
                     currentRow =

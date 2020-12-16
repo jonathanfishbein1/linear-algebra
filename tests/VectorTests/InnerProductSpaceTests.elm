@@ -20,7 +20,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.dotProduct Field.realField a a
+                        Vector.dotProduct Field.numberField a a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -43,15 +43,15 @@ suite =
 
                     aPlusBDotc =
                         Vector.dotProduct
-                            Field.realField
-                            (Vector.addVectors Field.realField a b)
+                            Field.numberField
+                            (Vector.addVectors Field.numberField a b)
                             c
 
                     aDotC =
-                        Vector.dotProduct Field.realField a c
+                        Vector.dotProduct Field.numberField a c
 
                     bDotC =
-                        Vector.dotProduct Field.realField b c
+                        Vector.dotProduct Field.numberField b c
 
                     aDotCPlusBDotC =
                         aDotC + bDotC
@@ -73,12 +73,12 @@ suite =
 
                     threeTimesADotB =
                         Vector.dotProduct
-                            Field.realField
-                            (Vector.scalarMultiplication Field.realField three a)
+                            Field.numberField
+                            (Vector.scalarMultiplication Field.numberField three a)
                             b
 
                     aDotBTimesThree =
-                        Vector.dotProduct Field.realField a b * three
+                        Vector.dotProduct Field.numberField a b * three
                 in
                 Expect.within (Expect.Absolute 0.000000001) aDotBTimesThree threeTimesADotB
         , Test.fuzz2
@@ -95,10 +95,10 @@ suite =
                         Vector.Vector [ two ]
 
                     aDotB =
-                        Vector.dotProduct Field.realField a b
+                        Vector.dotProduct Field.numberField a b
 
                     bDotA =
-                        Vector.dotProduct Field.realField b a
+                        Vector.dotProduct Field.numberField b a
                 in
                 Expect.within (Expect.Absolute 0.000000001) bDotA aDotB
         , Test.fuzz
@@ -111,10 +111,10 @@ suite =
                         Vector.Vector [ one ]
 
                     squareRootADotA =
-                        Basics.sqrt (Vector.dotProduct Field.realField a a)
+                        Basics.sqrt (Vector.dotProduct Field.numberField a a)
 
                     aLength =
-                        Vector.length Field.realField a
+                        Vector.lengthReal a
                 in
                 squareRootADotA
                     |> Expect.within (Expect.Absolute 0.000000001) aLength
@@ -128,7 +128,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.length Field.realField a
+                        Vector.lengthReal a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -147,16 +147,16 @@ suite =
 
                     absXDotY =
                         Vector.dotProduct
-                            Field.realField
+                            Field.numberField
                             x
                             y
                             |> Basics.abs
 
                     lengthOfX =
-                        Vector.length Field.realField x
+                        Vector.lengthReal x
 
                     lengthOfY =
-                        Vector.length Field.realField y
+                        Vector.lengthReal y
 
                     lengthOfXTimesLengthOfY =
                         lengthOfX * lengthOfY
@@ -178,18 +178,15 @@ suite =
 
                     aPlusBLength =
                         Vector.addVectors
-                            Field.realField
+                            Field.numberField
                             a
                             b
-                            |> Vector.length
-                                Field.realField
+                            |> Vector.lengthReal
 
                     lengthAPlusLengthB =
-                        Vector.length
-                            Field.realField
+                        Vector.lengthReal
                             a
-                            + Vector.length
-                                Field.realField
+                            + Vector.lengthReal
                                 b
                 in
                 aPlusBLength
@@ -205,12 +202,11 @@ suite =
                         Vector.Vector [ one ]
 
                     legnthOfTwoTimesA =
-                        Vector.length
-                            Field.realField
-                            (Vector.scalarMultiplication Field.realField two a)
+                        Vector.lengthReal
+                            (Vector.scalarMultiplication Field.numberField two a)
 
                     lengthOfATimesTwo =
-                        Basics.abs two * Vector.length Field.realField a
+                        Basics.abs two * Vector.lengthReal a
                 in
                 legnthOfTwoTimesA
                     |> Expect.within (Expect.Absolute 0.000000001) lengthOfATimesTwo
@@ -224,7 +220,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.distance Vector.realVectorAbelianGroup a a
+                        Vector.distanceReal a a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -246,13 +242,13 @@ suite =
                         Vector.Vector [ three ]
 
                     distanceAB =
-                        Vector.distance Vector.realVectorAbelianGroup a b
+                        Vector.distanceReal a b
 
                     distanceAC =
-                        Vector.distance Vector.realVectorAbelianGroup a c
+                        Vector.distanceReal a c
 
                     distanceCB =
-                        Vector.distance Vector.realVectorAbelianGroup c b
+                        Vector.distanceReal c b
                 in
                 distanceAB
                     |> Expect.atMost (distanceAC + distanceCB)
@@ -271,13 +267,13 @@ suite =
 
                     distanceAB =
                         Vector.dotProduct
-                            Field.realField
+                            Field.numberField
                             a
                             b
 
                     distanceBA =
                         Vector.dotProduct
-                            Field.realField
+                            Field.numberField
                             b
                             a
                 in

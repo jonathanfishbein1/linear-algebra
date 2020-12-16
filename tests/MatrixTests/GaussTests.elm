@@ -2,6 +2,7 @@ module MatrixTests.GaussTests exposing (suite)
 
 import ComplexNumbers
 import Expect
+import Float.Extra
 import Fuzz
 import Matrix
 import Test
@@ -146,7 +147,7 @@ suite =
                     rowEchelonFormMatrix =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
-                Expect.equal rowEchelonFormMatrix expected
+                Expect.true "matrices are equal" (Matrix.equal (Float.Extra.equalWithin 0.0001) rowEchelonFormMatrix expected)
         , Test.test
             "tests matrix gaussianReduce put matrix into Row Echelon Form"
           <|

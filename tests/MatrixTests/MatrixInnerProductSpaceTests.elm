@@ -48,7 +48,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ three ] ]
 
                     aPlusBDotc =
-                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.addMatrices Field.realField a b) c
+                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.addMatrices Field.numberField a b) c
 
                     aDotB =
                         Matrix.dotProduct Vector.realInnerProductSpace a c
@@ -79,7 +79,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
 
                     threeTimesADotB =
-                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField three a) b
+                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.numberField three a) b
 
                     aDotBTimesThree =
                         Result.map2
@@ -120,7 +120,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
 
                     expected =
-                        Matrix.norm Vector.realInnerProductSpace a
+                        Matrix.normReal a
                 in
                 case expected of
                     Ok norm ->
@@ -142,13 +142,13 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
 
                     aPlusBLength =
-                        Matrix.norm Vector.realInnerProductSpace <| Matrix.addMatrices Field.realField a b
+                        Matrix.normReal (Matrix.addMatrices Field.numberField a b)
 
                     lengthAPlusLengthB =
                         Result.map2
                             (+)
-                            (Matrix.norm Vector.realInnerProductSpace a)
-                            (Matrix.norm Vector.realInnerProductSpace b)
+                            (Matrix.normReal a)
+                            (Matrix.normReal b)
                 in
                 case aPlusBLength of
                     Ok aBLength ->
@@ -172,12 +172,12 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
 
                     legnthOfTwoTimesA =
-                        Matrix.norm Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.realField two a)
+                        Matrix.normReal (Matrix.scalarMultiplication Field.numberField two a)
 
                     lengthOfATimesTwo =
                         Result.map
                             ((*) two >> Basics.abs)
-                            (Matrix.norm Vector.realInnerProductSpace a)
+                            (Matrix.normReal a)
                 in
                 case legnthOfTwoTimesA of
                     Ok twoAL ->

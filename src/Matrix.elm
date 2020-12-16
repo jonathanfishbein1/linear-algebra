@@ -16,10 +16,12 @@ module Matrix exposing
     , subMatrix
     , nullSpace
     , determinant
-    , norm
+    , normReal
+    , normComplex
     , leftNullSpace
     , getDiagonal
     , getDiagonalProduct
+    , rank
     , addMatrices
     , subtractMatrices
     , multiplyMatrixVector
@@ -43,6 +45,10 @@ module Matrix exposing
     , empty
     , concatHorizontal
     , concatVertical
+    , realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
+    , realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
+    , realMatrixInnerProductSpace
+    , complexMatrixAdditionAbelianGroup
     , map
     , pure
     , andMap
@@ -94,10 +100,12 @@ module Matrix exposing
 @docs subMatrix
 @docs nullSpace
 @docs determinant
-@docs norm
+@docs normReal
+@docs normComplex
 @docs leftNullSpace
 @docs getDiagonal
 @docs getDiagonalProduct
+@docs rank
 
 
 # Binary Operations
@@ -128,11 +136,15 @@ module Matrix exposing
 @docs areRowEquivalent
 
 
-# Monoid
+# Semigroup, Monoid, Group, Ring, Field, VectorSpace, InnerProductSpace
 
 @docs empty
 @docs concatHorizontal
 @docs concatVertical
+@docs realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
+@docs realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
+@docs realMatrixInnerProductSpace
+@docs complexMatrixAdditionAbelianGroup
 
 
 # Functor, Applicative, Monad, Foldable
@@ -175,13 +187,20 @@ module Matrix exposing
 
 -}
 
+import AbelianGroup
+import CommutativeDivisionRing
+import CommutativeMonoid
+import CommutativeSemigroup
 import ComplexNumbers
 import Field
 import Float.Extra
+import Group
 import Internal.Matrix
 import List.Extra
 import Maybe.Extra
+import Monoid
 import Parser exposing ((|.), (|=))
+import Semigroup
 import Typeclasses.Classes.Equality
 import Typeclasses.Classes.Monoid
 import Typeclasses.Classes.Semigroup
@@ -226,19 +245,130 @@ type VectorDimension
     = VectorDimension Int
 
 
-{-| Type to represent a Abelian Group for Matrix
+{-| Type to represent a Vector Space
 -}
-type alias AbelianGroup a =
-    { field : Field.Field a
-    , addMatrcs : Matrix a -> Matrix a -> Matrix a
-    , subtractMatrcs : Matrix a -> Matrix a -> Matrix a
+type alias MatrixSpace a =
+    { abelianGroup : AbelianGroup.AbelianGroup (Matrix a)
+    , matrixScalarMultiplication : a -> Matrix a -> Matrix a
     }
+
+
+{-| Type to represent an Inner Product Space
+-}
+type alias InnerProductSpace a =
+    { matrixSpace : MatrixSpace a
+    , innerProduct : Matrix a -> Matrix a -> Result String Float
+    , norm : Matrix a -> Result String Float
+    , distance : Matrix a -> Matrix a -> Result String Float
+    }
+
+
+{-| Semigroup instance for Matrix under the addition operation with real values.
+-}
+realMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix Float)
+realMatrixAdditionSemigroup =
+    addMatrices Field.numberField
+
+
+{-| Semigroup instance for Matrix under the addition operation with complex values.
+-}
+complexMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionSemigroup =
+    addMatrices ComplexNumbers.complexField
+
+
+{-| Commutative Semigroup instance for Matrix under the addition operation with real values.
+-}
+realMatrixAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix Float)
+realMatrixAdditionCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup realMatrixAdditionSemigroup
+
+
+{-| Commutative Semigroup instance for Matrix under the addition operation with complex values.
+-}
+complexMatrixAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup complexMatrixAdditionSemigroup
+
+
+{-| Monoid instance for Matrix under the addition operation with real values.
+-}
+realMatrixAdditionMonoid : Monoid.Monoid (Matrix Float)
+realMatrixAdditionMonoid =
+    Monoid.semigroupAndIdentity realMatrixAdditionSemigroup empty
+
+
+{-| Monoid instance for Matrix under the addition operation with complex values.
+-}
+complexMatrixAdditionMonoid : Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionMonoid =
+    Monoid.semigroupAndIdentity complexMatrixAdditionSemigroup empty
+
+
+{-| Commutative Monoid instance for Matrix under the addition operation with real values.
+-}
+realMatrixAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix Float)
+realMatrixAdditionCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid realMatrixAdditionMonoid
+
+
+{-| Commutative Monoid instance for Matrix under the addition operation with complex values.
+-}
+complexMatrixAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid complexMatrixAdditionMonoid
+
+
+{-| Group instance for Matrix under the addition operation with real values.
+-}
+realMatrixAdditionGroup : Group.Group (Matrix Float)
+realMatrixAdditionGroup =
+    { monoid = realMatrixAdditionMonoid
+    , inverse = map Group.numberSum.inverse
+    }
+
+
+{-| Group instance for Matrix under the addition operation with complex values.
+-}
+complexMatrixAdditionGroup : Group.Group (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionGroup =
+    { monoid = complexMatrixAdditionMonoid
+    , inverse = map ComplexNumbers.complexSumGroup.inverse
+    }
+
+
+{-| Abelian Group instance for Matrix under the addition operation with real values.
+-}
+realMatrixAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix Float)
+realMatrixAdditionAbelianGroup =
+    AbelianGroup.AbelianGroup
+        { monoid = realMatrixAdditionMonoid
+        , inverse = realMatrixAdditionGroup.inverse
+        }
+
+
+{-| Abelian Group instance for Matrix under the addition operation with complex values.
+-}
+complexMatrixAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix (ComplexNumbers.ComplexNumber Float))
+complexMatrixAdditionAbelianGroup =
+    AbelianGroup.AbelianGroup
+        { monoid = complexMatrixAdditionMonoid
+        , inverse = complexMatrixAdditionGroup.inverse
+        }
+
+
+{-| Calculate distance between two vectors
+-}
+distanceReal : Matrix Float -> Matrix Float -> Result String Float
+distanceReal matrixOne matrixTwo =
+    realMatrixAdditionSemigroup matrixOne (realMatrixAdditionGroup.inverse matrixTwo)
+        |> normReal
 
 
 {-| Create Identity Matrix with n dimension
 -}
 identity : Field.Field a -> Int -> Matrix a
-identity field dimension =
+identity (Field.Field field) dimension =
     Matrix
         (List.Extra.initialize dimension
             (\columnIndex ->
@@ -254,10 +384,14 @@ identity field dimension =
 {-| Create Matrix with m x n dimension filled with zeros
 -}
 zeros : Field.Field a -> Int -> Int -> Matrix a
-zeros field m n =
+zeros (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) m n =
+    let
+        (AbelianGroup.AbelianGroup group) =
+            commutativeDivisionRing.addition
+    in
     List.Extra.initialize m
         (\_ ->
-            Vector.zeros field n
+            Vector.zeros group.monoid n
                 |> RowVector
         )
         |> Matrix
@@ -273,8 +407,8 @@ zeroSquareMatrix field dimension =
 {-| Scalar multiplication over a Matrix
 -}
 scalarMultiplication : Field.Field a -> a -> Matrix a -> Matrix a
-scalarMultiplication { multiply } scalar =
-    map (multiply scalar)
+scalarMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) scalar =
+    map (commutativeDivisionRing.multiplication.monoid.semigroup scalar)
 
 
 {-| Transpose a Matrix
@@ -311,11 +445,35 @@ adjoint matrix =
 
 {-| Calculate the norm of a Matrix
 -}
-norm : Vector.InnerProductSpace a -> Matrix a -> Result String a
-norm innerProductSpace matrix =
-    dotProduct innerProductSpace matrix matrix
+normReal : Matrix Float -> Result String Float
+normReal matrix =
+    dotProduct Vector.realInnerProductSpace matrix matrix
         |> Result.map
-            (innerProductSpace.vectorSpace.abelianGroup.field.power (1 / 2))
+            Basics.sqrt
+
+
+{-| Calculate the norm of a Matrix
+-}
+normComplex : Matrix (ComplexNumbers.ComplexNumber Float) -> Result String Float
+normComplex matrix =
+    dotProduct Vector.complexInnerProductSpace matrix matrix
+        |> Result.map
+            (ComplexNumbers.real >> Basics.sqrt)
+
+
+{-| Calculate the rank of a Matrix
+-}
+rank : Vector.InnerProductSpace a -> Matrix a -> Int
+rank innerProductSpace matrix =
+    let
+        (Matrix listOfRowVectorsREF) =
+            gaussianReduce innerProductSpace.vectorSpace matrix
+    in
+    listOfRowVectorsREF
+        |> List.Extra.count
+            (\(RowVector vector) ->
+                innerProductSpace.length vector /= 0
+            )
 
 
 {-| Try to calculate the determinant
@@ -328,7 +486,7 @@ determinant vectorSpace matrix =
     in
     Result.andThen
         (\squareMatrix ->
-            getDiagonalProduct vectorSpace.abelianGroup.field squareMatrix
+            getDiagonalProduct vectorSpace.field squareMatrix
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularForm
@@ -346,7 +504,7 @@ invert vectorSpace matrix =
 
                 augmentedMatrix =
                     appendHorizontal invertableMatrix
-                        (identity vectorSpace.abelianGroup.field sizeOfMatrix)
+                        (identity vectorSpace.field sizeOfMatrix)
 
                 reducedRowEchelonForm =
                     gaussJordan vectorSpace augmentedMatrix
@@ -383,25 +541,31 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 
 {-| Calculate the null space of a matrix
 -}
-nullSpace : Vector.VectorSpace a -> Matrix a -> Consistancy a
-nullSpace vectorSpace matrix =
+nullSpace : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+nullSpace innerProductSpace matrix =
     let
         numberOfRows =
             mDimension matrix
 
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+            innerProductSpace.vectorSpace.field
+
+        (AbelianGroup.AbelianGroup additionGroup) =
+            commutativeDivisionRing.addition
+
         b =
-            List.repeat numberOfRows vectorSpace.abelianGroup.field.zero
+            List.repeat numberOfRows additionGroup.monoid.identity
                 |> Vector.Vector
                 |> ColumnVector
     in
-    solve vectorSpace matrix b
+    solve innerProductSpace matrix b
 
 
 {-| Calculate the left nullspace of a Matrix
 -}
-leftNullSpace : Vector.VectorSpace a -> Matrix a -> Consistancy a
-leftNullSpace vectorSpace =
-    transpose >> nullSpace vectorSpace
+leftNullSpace : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+leftNullSpace innerProductSpace =
+    transpose >> nullSpace innerProductSpace
 
 
 {-| Get the diagonal of a Matrix
@@ -427,31 +591,39 @@ getDiagonal matrix =
 {-| Get the Product of the diagonal of a Matrix
 -}
 getDiagonalProduct : Field.Field a -> Matrix a -> Maybe a
-getDiagonalProduct { multiply, one } matrix =
+getDiagonalProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) matrix =
     getDiagonal matrix
         |> Maybe.map
             (List.foldl
                 (\elem acc ->
-                    multiply
+                    commutativeDivisionRing.multiplication.monoid.semigroup
                         elem
                         acc
                 )
-                one
+                commutativeDivisionRing.multiplication.monoid.identity
             )
 
 
 {-| Add two Matrices together
 -}
 addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
-addMatrices { add } =
-    map2 add
+addMatrices (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+    let
+        (AbelianGroup.AbelianGroup groupAddition) =
+            commutativeDivisionRing.addition
+    in
+    map2 groupAddition.monoid.semigroup
 
 
 {-| Subtract two Matrices
 -}
 subtractMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
-subtractMatrices { subtract } =
-    map2 subtract
+subtractMatrices (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+    let
+        (AbelianGroup.AbelianGroup groupAddition) =
+            commutativeDivisionRing.addition
+    in
+    map2 (\x y -> groupAddition.monoid.semigroup x (groupAddition.inverse y))
 
 
 {-| Multiply a Vector by a Matrix
@@ -523,7 +695,7 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
     case productMatrix of
         Ok pMatrix ->
             if isSquareMatrix pMatrix then
-                getDiagonalProduct vectorInnerProductSpace.vectorSpace.abelianGroup.field pMatrix
+                getDiagonalProduct vectorInnerProductSpace.vectorSpace.field pMatrix
                     |> Result.fromMaybe "Index out of range"
 
             else
@@ -637,9 +809,16 @@ isUnitary matrix =
 -}
 isInvertable : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
 isInvertable vectorSpace matrix =
+    let
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+            vectorSpace.field
+
+        (AbelianGroup.AbelianGroup groupAddition) =
+            commutativeDivisionRing.addition
+    in
     case determinant vectorSpace matrix of
         Ok deter ->
-            if deter == vectorSpace.abelianGroup.field.zero then
+            if deter == groupAddition.monoid.identity then
                 Err "Determinant is zero matrix is not invertable"
 
             else
@@ -655,7 +834,7 @@ isRightStochastic : Matrix Float -> Bool
 isRightStochastic (Matrix listOfRowVectors) =
     if isSquareMatrix (Matrix listOfRowVectors) then
         List.all
-            (\(RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Field.realField vector) 1)
+            (\(RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
             listOfRowVectors
 
     else
@@ -672,7 +851,7 @@ isLeftStochastic matrix =
     in
     if isSquareMatrix (Matrix transposedListOfRowVectors) then
         List.all
-            (\(RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Field.realField vector) 1)
+            (\(RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
             transposedListOfRowVectors
 
     else
@@ -787,14 +966,20 @@ coefficientMatrix matrix =
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination
 -}
-solveMatrix : Vector.VectorSpace a -> Matrix a -> Consistancy a
-solveMatrix vectorSpace (Matrix listOfRowVectors) =
+solveMatrix : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+solveMatrix innerProductSpace (Matrix listOfRowVectors) =
     let
         (Matrix listOfRowVectorsRREF) =
-            gaussJordan vectorSpace (Matrix listOfRowVectors)
+            gaussJordan innerProductSpace.vectorSpace (Matrix listOfRowVectors)
 
         (Matrix variableSide) =
             coefficientMatrix (Matrix listOfRowVectorsRREF)
+
+        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+            innerProductSpace.vectorSpace.field
+
+        (AbelianGroup.AbelianGroup additionGroup) =
+            commutativeDivisionRing.addition
 
         notConstrainedEnough =
             variableSide
@@ -802,7 +987,7 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
                     (\(RowVector (Vector.Vector row)) ->
                         let
                             countOfOnes =
-                                List.Extra.count ((/=) vectorSpace.abelianGroup.field.zero) row
+                                List.Extra.count ((/=) additionGroup.monoid.identity) row
                         in
                         countOfOnes > 1
                     )
@@ -812,10 +997,10 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
                 |> List.any
                     (\(RowVector (Vector.Vector row)) ->
                         List.all
-                            ((==) vectorSpace.abelianGroup.field.zero)
+                            ((==) additionGroup.monoid.identity)
                             (List.take (List.length row - 1) row)
-                            && Vector.length vectorSpace.abelianGroup.field (Vector.Vector row)
-                            /= vectorSpace.abelianGroup.field.zero
+                            && innerProductSpace.length (Vector.Vector row)
+                            /= 0
                     )
 
         solution =
@@ -829,17 +1014,13 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
 
     else if notConstrainedEnough then
         let
-            rank =
-                listOfRowVectorsRREF
-                    |> List.Extra.count
-                        (\(RowVector vector) ->
-                            Vector.length vectorSpace.abelianGroup.field vector /= vectorSpace.abelianGroup.field.zero
-                        )
+            rnk =
+                rank innerProductSpace (Matrix listOfRowVectorsRREF)
 
             nullity =
-                nDimension (Matrix listOfRowVectorsRREF) - rank
+                nDimension (Matrix listOfRowVectorsRREF) - rnk
         in
-        InfiniteSolutions { nullity = nullity, rank = rank }
+        InfiniteSolutions { nullity = nullity, rank = rnk }
             |> Consistant
 
     else
@@ -853,8 +1034,8 @@ solveMatrix vectorSpace (Matrix listOfRowVectors) =
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
 -}
-solve : Vector.VectorSpace a -> Matrix a -> ColumnVector a -> Consistancy a
-solve vectorSpace matrix (ColumnVector (Vector.Vector constants)) =
+solve : Vector.InnerProductSpace a -> Matrix a -> ColumnVector a -> Consistancy a
+solve innerProductSpace matrix (ColumnVector (Vector.Vector constants)) =
     let
         matrixB =
             constants
@@ -864,30 +1045,19 @@ solve vectorSpace matrix (ColumnVector (Vector.Vector constants)) =
         augmentedMatrix =
             concatHorizontal.semigroup.prepend matrix matrixB
     in
-    solveMatrix vectorSpace augmentedMatrix
+    solveMatrix innerProductSpace augmentedMatrix
 
 
 {-| Predicate to determine if a list of Vectors are linearly independent
 -}
-areLinearlyIndependent : Vector.VectorSpace a -> List (Vector.Vector a) -> Bool
-areLinearlyIndependent vectorSpace listOfVectors =
+areLinearlyIndependent : Vector.InnerProductSpace a -> List (Vector.Vector a) -> Bool
+areLinearlyIndependent innerProductSpace listOfVectors =
     let
         matrix =
             List.map RowVector listOfVectors
                 |> Matrix
-
-        matrixNullSpace =
-            nullSpace vectorSpace matrix
-
-        numberOfRows =
-            mDimension matrix
     in
-    case matrixNullSpace of
-        Consistant (UniqueSolution resultVector) ->
-            resultVector == ColumnVector (Vector.zeros vectorSpace.abelianGroup.field numberOfRows)
-
-        _ ->
-            False
+    rank innerProductSpace matrix == nDimension matrix
 
 
 {-| Determine whether list of vectors spans a space
@@ -903,7 +1073,7 @@ doesSetSpanSpace vSpace (VectorDimension vectorDimension) vectors =
     else
         let
             identityRowVectors =
-                identity vSpace.abelianGroup.field vectorDimension
+                identity vSpace.field vectorDimension
 
             listOfRowVectorsRREF =
                 gaussJordan vSpace (Matrix (List.map RowVector vectors))
@@ -934,11 +1104,11 @@ mDimension (Matrix listOfRowVectors) =
 
 {-| Determine whether list of vectors are a basis for a space
 -}
-areBasis : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> Bool
-areBasis vectorSpace vectorDimension vectors =
-    doesSetSpanSpace vectorSpace vectorDimension vectors
+areBasis : Vector.InnerProductSpace a -> VectorDimension -> List (Vector.Vector a) -> Bool
+areBasis innerProductSpace vectorDimension vectors =
+    doesSetSpanSpace innerProductSpace.vectorSpace vectorDimension vectors
         == Ok True
-        && areLinearlyIndependent vectorSpace vectors
+        && areLinearlyIndependent innerProductSpace vectors
 
 
 rowVectorMap : (a -> b) -> RowVector a -> RowVector b
@@ -1153,11 +1323,21 @@ parseMatrix matrixElementParser =
         |= listOfRowVectorParser (parseRowVector matrixElementParser)
 
 
-{-| Real numbered Abelian Group for Matrix
+{-| Real Numbered Vector Space for Matrix
 -}
-realMatrixAbelianGroup : AbelianGroup Float
-realMatrixAbelianGroup =
-    { field = Field.realField
-    , addMatrcs = addMatrices Field.realField
-    , subtractMatrcs = subtractMatrices Field.realField
+realMatrixSpace : MatrixSpace Float
+realMatrixSpace =
+    { abelianGroup = realMatrixAdditionAbelianGroup
+    , matrixScalarMultiplication = scalarMultiplication Field.numberField
+    }
+
+
+{-| Real Numbered Inner Product Space for Matrix
+-}
+realMatrixInnerProductSpace : InnerProductSpace Float
+realMatrixInnerProductSpace =
+    { matrixSpace = realMatrixSpace
+    , innerProduct = dotProduct Vector.realInnerProductSpace
+    , norm = normReal
+    , distance = distanceReal
     }

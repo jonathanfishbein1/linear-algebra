@@ -22,6 +22,7 @@ module Matrix exposing
     , getDiagonal
     , getDiagonalProduct
     , rank
+    , createMatrixFromColumnVectors
     , addMatrices
     , subtractMatrices
     , multiplyMatrixVector
@@ -106,6 +107,7 @@ module Matrix exposing
 @docs getDiagonal
 @docs getDiagonalProduct
 @docs rank
+@docs createMatrixFromColumnVectors
 
 
 # Binary Operations
@@ -355,6 +357,15 @@ complexMatrixAdditionAbelianGroup =
         { monoid = complexMatrixAdditionMonoid
         , inverse = complexMatrixAdditionGroup.inverse
         }
+
+
+{-| Create a Matrix from a list of Column Vectors
+-}
+createMatrixFromColumnVectors : List (ColumnVector a) -> Matrix a
+createMatrixFromColumnVectors columnVectors =
+    List.map (\(ColumnVector vector) -> RowVector vector) columnVectors
+        |> Matrix
+        |> transpose
 
 
 {-| Calculate distance between two vectors

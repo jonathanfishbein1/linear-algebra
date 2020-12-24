@@ -1431,4 +1431,28 @@ suite =
                             ]
                 in
                 Expect.equal (Matrix.rank Vector.realInnerProductSpace matrix) 1
+        , Test.fuzz2
+            Fuzz.int
+            Fuzz.int
+            "tests matrix createMatrixFromColumnVectors"
+          <|
+            \one two ->
+                let
+                    vectorOne =
+                        Vector.Vector [ one, one ]
+
+                    veectorTwo =
+                        Vector.Vector [ two, two ]
+
+                    matrix =
+                        Matrix.createMatrixFromColumnVectors [ Matrix.ColumnVector vectorOne, Matrix.ColumnVector veectorTwo ]
+
+                    expectedMatrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector vectorOne
+                            , Matrix.RowVector veectorTwo
+                            ]
+                            |> Matrix.transpose
+                in
+                Expect.equal matrix expectedMatrix
         ]

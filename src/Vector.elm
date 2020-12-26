@@ -746,3 +746,12 @@ readComplexVector vectorString =
 findIndex : (a -> Bool) -> Vector a -> Maybe Int
 findIndex predicate (Vector list) =
     List.Extra.findIndex predicate list
+
+
+{-| Take the complex conjugate of a Complex Numbered Vector
+-}
+conjugate :
+    Vector (ComplexNumbers.ComplexNumber number)
+    -> Vector (ComplexNumbers.ComplexNumber number)
+conjugate =
+    map ComplexNumbers.conjugate

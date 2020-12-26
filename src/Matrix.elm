@@ -438,9 +438,8 @@ transpose (Matrix listOfRowVectors) =
 conjugate :
     Matrix (ComplexNumbers.ComplexNumber number)
     -> Matrix (ComplexNumbers.ComplexNumber number)
-conjugate matrix =
-    matrix
-        |> map ComplexNumbers.conjugate
+conjugate =
+    map ComplexNumbers.conjugate
 
 
 {-| Perform the adjoint operation on a Complex Numbered Matrix

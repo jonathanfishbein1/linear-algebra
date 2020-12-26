@@ -357,8 +357,8 @@ lengthReal vector =
 -}
 lengthComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Float
 lengthComplex vector =
-    dotProduct ComplexNumbers.complexField vector vector
-        |> ComplexNumbers.modulus
+    dotProduct ComplexNumbers.complexField vector (conjugate vector)
+        |> ComplexNumbers.real
         |> Basics.sqrt
 
 

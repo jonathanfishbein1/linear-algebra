@@ -16,6 +16,7 @@ module Vector exposing
     , lengthComplex
     , sum
     , normaliseReal
+    , conjugate
     , addVectors
     , subtractVectors
     , hadamardMultiplication
@@ -82,6 +83,7 @@ module Vector exposing
 @docs lengthComplex
 @docs sum
 @docs normaliseReal
+@docs conjugate
 
 
 # Binary Operations
@@ -357,7 +359,7 @@ lengthReal vector =
 -}
 lengthComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Float
 lengthComplex vector =
-    dotProduct ComplexNumbers.complexField vector (conjugate vector)
+    dotProduct ComplexNumbers.complexField (conjugate vector) vector
         |> ComplexNumbers.real
         |> Basics.sqrt
 

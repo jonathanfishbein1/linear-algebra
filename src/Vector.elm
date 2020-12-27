@@ -16,6 +16,7 @@ module Vector exposing
     , lengthComplex
     , sum
     , normaliseReal
+    , conjugate
     , addVectors
     , subtractVectors
     , hadamardMultiplication
@@ -82,6 +83,7 @@ module Vector exposing
 @docs lengthComplex
 @docs sum
 @docs normaliseReal
+@docs conjugate
 
 
 # Binary Operations
@@ -357,8 +359,8 @@ lengthReal vector =
 -}
 lengthComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Float
 lengthComplex vector =
-    dotProduct ComplexNumbers.complexField vector vector
-        |> ComplexNumbers.modulus
+    dotProduct ComplexNumbers.complexField (conjugate vector) vector
+        |> ComplexNumbers.real
         |> Basics.sqrt
 
 
@@ -746,3 +748,12 @@ readComplexVector vectorString =
 findIndex : (a -> Bool) -> Vector a -> Maybe Int
 findIndex predicate (Vector list) =
     List.Extra.findIndex predicate list
+
+
+{-| Take the complex conjugate of a Complex Numbered Vector
+-}
+conjugate :
+    Vector (ComplexNumbers.ComplexNumber number)
+    -> Vector (ComplexNumbers.ComplexNumber number)
+conjugate =
+    map ComplexNumbers.conjugate

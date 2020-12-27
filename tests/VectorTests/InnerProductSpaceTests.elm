@@ -1,5 +1,6 @@
 module VectorTests.InnerProductSpaceTests exposing (suite)
 
+import ComplexNumbers
 import Expect
 import Field
 import Fuzz
@@ -210,6 +211,83 @@ suite =
                 in
                 legnthOfTwoTimesA
                     |> Expect.within (Expect.Absolute 0.000000001) lengthOfATimesTwo
+        , Test.fuzz
+            (Fuzz.floatRange -10 10)
+            "tests complex vector length equals square root of dot product"
+          <|
+            \one ->
+                let
+                    complexNumber =
+                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real one) (ComplexNumbers.Imaginary one)
+
+                    a =
+                        Vector.Vector [ complexNumber ]
+
+                    squareRootADotA =
+                        Vector.dotProduct ComplexNumbers.complexField a (Vector.conjugate a)
+                            |> ComplexNumbers.real
+                            |> Basics.sqrt
+
+                    aLength =
+                        Vector.lengthComplex a
+                in
+                squareRootADotA
+                    |> Expect.within (Expect.Absolute 0.000000001) aLength
+        , Test.fuzz
+            Fuzz.float
+            "tests complex vector length is nondegenerative"
+          <|
+            \one ->
+                let
+                    complexNumber =
+                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real one) (ComplexNumbers.Imaginary one)
+
+                    a =
+                        Vector.Vector [ complexNumber ]
+
+                    expected =
+                        Vector.lengthComplex a
+                in
+                expected
+                    |> Expect.atLeast 0
+        , Test.fuzz2
+            (Fuzz.floatRange -10 10)
+            (Fuzz.floatRange -10 10)
+            "tests complex vector dot product satisfies Cauchy-Shwartz inequality"
+          <|
+            \one two ->
+                let
+                    complexNumberOne =
+                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real one) (ComplexNumbers.Imaginary one)
+
+                    complexNumberTwo =
+                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real two) (ComplexNumbers.Imaginary two)
+
+                    x =
+                        Vector.Vector [ complexNumberOne ]
+
+                    y =
+                        Vector.Vector [ complexNumberTwo ]
+
+                    absXDotY =
+                        Vector.dotProduct
+                            ComplexNumbers.complexField
+                            x
+                            y
+                            |> ComplexNumbers.real
+                            |> Basics.abs
+
+                    lengthOfX =
+                        Vector.lengthComplex x
+
+                    lengthOfY =
+                        Vector.lengthComplex y
+
+                    lengthOfXTimesLengthOfY =
+                        lengthOfX * lengthOfY
+                in
+                absXDotY
+                    |> Expect.atMost lengthOfXTimesLengthOfY
         , Test.fuzz
             Fuzz.float
             "tests distance is nondegenerative"

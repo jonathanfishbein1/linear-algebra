@@ -3,7 +3,7 @@
     "name": "jonathanfishbein1/linear-algebra",
     "summary": "linear algebra in elm",
     "license": "BSD-3-Clause",
-    "version": "10.1.0",
+    "version": "10.2.0",
     "exposed-modules": [
         "Vector",
         "Matrix"

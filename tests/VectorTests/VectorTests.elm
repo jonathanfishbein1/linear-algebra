@@ -180,7 +180,7 @@ suite =
                         Vector.normaliseReal a
                             |> Vector.lengthReal
                 in
-                Expect.within (Expect.Absolute 0.1)
+                Expect.within (Expect.Absolute 0.000000001)
                     normalisedALength
                     1
         , Test.fuzz
@@ -205,7 +205,7 @@ suite =
                         Vector.normaliseComplex a
                             |> Vector.lengthComplex
                 in
-                Expect.within (Expect.Absolute 0.1)
+                Expect.within (Expect.Absolute 0.000000001)
                     normalisedALength
                     1
         , Test.fuzz2

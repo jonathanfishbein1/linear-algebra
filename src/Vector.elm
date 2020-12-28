@@ -16,6 +16,7 @@ module Vector exposing
     , lengthComplex
     , sum
     , normaliseReal
+    , normaliseComplex
     , conjugate
     , addVectors
     , subtractVectors
@@ -83,6 +84,7 @@ module Vector exposing
 @docs lengthComplex
 @docs sum
 @docs normaliseReal
+@docs normaliseComplex
 @docs conjugate
 
 
@@ -149,7 +151,7 @@ import AbelianGroup
 import CommutativeDivisionRing
 import CommutativeMonoid
 import CommutativeSemigroup
-import ComplexNumbers
+import ComplexNumbers exposing (ComplexNumber)
 import Field
 import Group
 import List.Extra
@@ -372,7 +374,18 @@ normaliseReal v =
         v
 
     else
-        map ((*) (1 / lengthReal v)) v
+        scalarMultiplication Field.numberField (1 / lengthReal v) v
+
+
+{-| Adjust a real valued vector so that its length is exactly one
+-}
+normaliseComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Vector (ComplexNumbers.ComplexNumber Float)
+normaliseComplex v =
+    if lengthComplex v == 0 then
+        v
+
+    else
+        scalarMultiplication ComplexNumbers.complexField (ComplexNumbers.ComplexNumber (ComplexNumbers.Real (1 / lengthComplex v)) (ComplexNumbers.Imaginary 0)) v
 
 
 {-| Add two Vectors

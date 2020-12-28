@@ -180,7 +180,32 @@ suite =
                         Vector.normaliseReal a
                             |> Vector.lengthReal
                 in
-                Expect.within (Expect.Absolute 0.00000001)
+                Expect.within (Expect.Absolute 0.1)
+                    normalisedALength
+                    1
+        , Test.fuzz
+            (Fuzz.floatRange 1 10)
+            "tests complex unit vector length is 1"
+          <|
+            \one ->
+                let
+                    complexNumber =
+                        ComplexNumbers.ComplexNumber
+                            (ComplexNumbers.Real
+                                one
+                            )
+                            (ComplexNumbers.Imaginary
+                                one
+                            )
+
+                    a =
+                        Vector.Vector [ complexNumber ]
+
+                    normalisedALength =
+                        Vector.normaliseComplex a
+                            |> Vector.lengthComplex
+                in
+                Expect.within (Expect.Absolute 0.1)
                     normalisedALength
                     1
         , Test.fuzz2

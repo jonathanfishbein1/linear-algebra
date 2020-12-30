@@ -32,6 +32,8 @@ module Matrix exposing
     , isSquareMatrix
     , isSymmetric
     , isHermitian
+    , isOnto
+    , isOneToOne
     , isInvertable
     , isUnitary
     , areBasis
@@ -125,6 +127,8 @@ module Matrix exposing
 @docs isSquareMatrix
 @docs isSymmetric
 @docs isHermitian
+@docs isOnto
+@docs isOneToOne
 @docs isInvertable
 @docs isUnitary
 @docs areBasis
@@ -832,6 +836,8 @@ isInvertable innerProductSpace matrix =
             Err (error ++ " Matrix is not invertable")
 
 
+{-| Determine whether a matirx is onto
+-}
 isOnto : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
 isOnto innerProductSpace matrix =
     if rank innerProductSpace matrix == mDimension matrix then
@@ -841,6 +847,8 @@ isOnto innerProductSpace matrix =
         Err "Matrix not onto"
 
 
+{-| Determine whether a matirx is one to one
+-}
 isOneToOne : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
 isOneToOne innerProductSpace matrix =
     if rank innerProductSpace matrix == nDimension matrix then

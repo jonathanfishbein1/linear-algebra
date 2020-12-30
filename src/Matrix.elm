@@ -504,9 +504,9 @@ determinant vectorSpace matrix =
 
 {-| Try to calculate the inverse of a matrix
 -}
-invert : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
-invert vectorSpace matrix =
-    case isInvertable vectorSpace matrix of
+invert : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
+invert innerProductSpace matrix =
+    case isInvertable innerProductSpace matrix of
         Ok invertableMatrix ->
             let
                 sizeOfMatrix =
@@ -514,10 +514,10 @@ invert vectorSpace matrix =
 
                 augmentedMatrix =
                     appendHorizontal invertableMatrix
-                        (identity vectorSpace.field sizeOfMatrix)
+                        (identity innerProductSpace.vectorSpace.field sizeOfMatrix)
 
                 reducedRowEchelonForm =
-                    gaussJordan vectorSpace augmentedMatrix
+                    gaussJordan innerProductSpace.vectorSpace augmentedMatrix
 
                 inverse =
                     subMatrix
@@ -807,7 +807,7 @@ isHermitian matrix =
 -}
 isUnitary : Matrix (ComplexNumbers.ComplexNumber Float) -> Bool
 isUnitary matrix =
-    case invert Vector.complexVectorSpace matrix of
+    case invert Vector.complexInnerProductSpace matrix of
         Ok inverse ->
             equal ComplexNumbers.equal inverse (adjoint matrix)
 
@@ -817,25 +817,37 @@ isUnitary matrix =
 
 {-| Determine whether a matirx is invertable
 -}
-isInvertable : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
-isInvertable vectorSpace matrix =
-    let
-        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
-            vectorSpace.field
+isInvertable : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
+isInvertable innerProductSpace matrix =
+    case isOnto innerProductSpace matrix of
+        Ok ontoMatrix ->
+            case isOneToOne innerProductSpace ontoMatrix of
+                Ok ontoAndOneToOneMatrix ->
+                    Ok ontoAndOneToOneMatrix
 
-        (AbelianGroup.AbelianGroup groupAddition) =
-            commutativeDivisionRing.addition
-    in
-    case determinant vectorSpace matrix of
-        Ok deter ->
-            if deter == groupAddition.monoid.identity then
-                Err "Determinant is zero matrix is not invertable"
+                Err error ->
+                    Err (error ++ " Matrix is not invertable")
 
-            else
-                Ok matrix
+        Err error ->
+            Err (error ++ " Matrix is not invertable")
 
-        Err msg ->
-            Err msg
+
+isOnto : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
+isOnto innerProductSpace matrix =
+    if rank innerProductSpace matrix == mDimension matrix then
+        Ok matrix
+
+    else
+        Err "Matrix not onto"
+
+
+isOneToOne : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
+isOneToOne innerProductSpace matrix =
+    if rank innerProductSpace matrix == nDimension matrix then
+        Ok matrix
+
+    else
+        Err "Matrix not one to one"
 
 
 {-| Predicate if matrix is right stochastic

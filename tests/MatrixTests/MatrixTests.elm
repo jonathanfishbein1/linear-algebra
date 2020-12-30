@@ -533,7 +533,7 @@ suite =
                             ]
 
                     inverse =
-                        Matrix.invert Vector.realVectorSpace matrix
+                        Matrix.invert Vector.realInnerProductSpace matrix
                 in
                 Expect.equal inverse (Ok expectedInverse)
         , Test.test
@@ -701,7 +701,7 @@ suite =
                             ]
 
                     inverseComplex =
-                        Matrix.invert Vector.complexVectorSpace matrix
+                        Matrix.invert Vector.complexInnerProductSpace matrix
 
                     expectedComplexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
@@ -860,9 +860,9 @@ suite =
                             ]
 
                     isInvertable =
-                        Matrix.isInvertable Vector.realVectorSpace matrix
+                        Matrix.isInvertable Vector.realInnerProductSpace matrix
                 in
-                Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
+                Expect.equal isInvertable (Err "Matrix not onto Matrix is not invertable")
         , Test.test
             "tests sumMatrix"
           <|
@@ -897,9 +897,9 @@ suite =
                             ]
 
                     isInvertable =
-                        Matrix.isInvertable Vector.complexVectorSpace matrix
+                        Matrix.isInvertable Vector.complexInnerProductSpace matrix
                 in
-                Expect.equal isInvertable (Err "Determinant is zero matrix is not invertable")
+                Expect.equal isInvertable (Err "Matrix not onto Matrix is not invertable")
         , Test.fuzz
             Fuzz.int
             "test if matrix is square"

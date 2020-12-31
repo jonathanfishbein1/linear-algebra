@@ -743,8 +743,8 @@ parseVector vectorElementsParser =
 {-| Try to read a string into a Real Vector
 -}
 readRealVector : String -> Result (List Parser.DeadEnd) (Vector Float)
-readRealVector vectorString =
-    Parser.run (parseVector negativeOrPositiveFloat) vectorString
+readRealVector =
+    Parser.run (parseVector negativeOrPositiveFloat)
 
 
 {-| Try to read a string into a Complex Vector
@@ -752,8 +752,8 @@ readRealVector vectorString =
 readComplexVector :
     String
     -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumber Float))
-readComplexVector vectorString =
-    Parser.run (parseVector ComplexNumbers.parseComplexNumber) vectorString
+readComplexVector =
+    Parser.run (parseVector ComplexNumbers.parseComplexNumber)
 
 
 {-| Find index of a value in a Vector

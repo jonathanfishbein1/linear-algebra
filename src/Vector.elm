@@ -449,8 +449,8 @@ angleBetween vectorOne vectorTwo =
 {-| Calculate the sum of a Vector
 -}
 sum : Monoid.Monoid a -> Vector a -> a
-sum monoid =
-    foldl monoid.semigroup monoid.identity
+sum monoid (Vector vect) =
+    monoid.concat vect
 
 
 {-| Calculate distance between two vectors

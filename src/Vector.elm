@@ -18,6 +18,7 @@ module Vector exposing
     , normaliseReal
     , normaliseComplex
     , conjugate
+    , add
     , subtract
     , hadamardMultiplication
     , dotProduct
@@ -51,7 +52,6 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , add
     )
 
 {-| A module for Vectors
@@ -90,7 +90,7 @@ module Vector exposing
 
 # Binary Operations
 
-@docs addVectors
+@docs add
 @docs subtract
 @docs hadamardMultiplication
 @docs dotProduct

@@ -53,8 +53,8 @@ suite =
                                 )
                             ]
                 in
-                Vector.addVectors ComplexNumbers.complexField v w
-                    |> Expect.equal (Vector.addVectors ComplexNumbers.complexField w v)
+                Vector.add ComplexNumbers.complexField v w
+                    |> Expect.equal (Vector.add ComplexNumbers.complexField w v)
         , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)
@@ -118,12 +118,12 @@ suite =
                             ]
 
                     vPlusWPlusX =
-                        Vector.addVectors ComplexNumbers.complexField v w
-                            |> Vector.addVectors ComplexNumbers.complexField x
+                        Vector.add ComplexNumbers.complexField v w
+                            |> Vector.add ComplexNumbers.complexField x
 
                     wPlusXPlusV =
-                        Vector.addVectors ComplexNumbers.complexField w x
-                            |> Vector.addVectors ComplexNumbers.complexField v
+                        Vector.add ComplexNumbers.complexField w x
+                            |> Vector.add ComplexNumbers.complexField v
                 in
                 Expect.true "vectors sums equal" (Vector.equal ComplexNumbers.equal vPlusWPlusX wPlusXPlusV)
         , Test.fuzz2
@@ -144,7 +144,7 @@ suite =
                                 )
                             ]
                 in
-                Vector.addVectors ComplexNumbers.complexField (Vector.Vector [ ComplexNumbers.zero ]) w
+                Vector.add ComplexNumbers.complexField (Vector.Vector [ ComplexNumbers.zero ]) w
                     |> Expect.equal w
         , Test.fuzz2
             Fuzz.float
@@ -174,6 +174,6 @@ suite =
                         Vector.Vector
                             [ ComplexNumbers.zero ]
                 in
-                Vector.subtractVectors ComplexNumbers.complexField v w
+                Vector.subtract ComplexNumbers.complexField v w
                     |> Expect.equal zero
         ]

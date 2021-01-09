@@ -21,7 +21,7 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.dotProduct Field.numberField a a
+                        Vector.dotProduct Field.float a a
                 in
                 expected
                     |> Expect.atLeast 0
@@ -44,15 +44,15 @@ suite =
 
                     aPlusBDotc =
                         Vector.dotProduct
-                            Field.numberField
-                            (Vector.addVectors Field.numberField a b)
+                            Field.float
+                            (Vector.add Field.float a b)
                             c
 
                     aDotC =
-                        Vector.dotProduct Field.numberField a c
+                        Vector.dotProduct Field.float a c
 
                     bDotC =
-                        Vector.dotProduct Field.numberField b c
+                        Vector.dotProduct Field.float b c
 
                     aDotCPlusBDotC =
                         aDotC + bDotC
@@ -74,12 +74,12 @@ suite =
 
                     threeTimesADotB =
                         Vector.dotProduct
-                            Field.numberField
-                            (Vector.scalarMultiplication Field.numberField three a)
+                            Field.float
+                            (Vector.scalarMultiplication Field.float three a)
                             b
 
                     aDotBTimesThree =
-                        Vector.dotProduct Field.numberField a b * three
+                        Vector.dotProduct Field.float a b * three
                 in
                 Expect.within (Expect.Absolute 0.000000001) aDotBTimesThree threeTimesADotB
         , Test.fuzz2
@@ -96,10 +96,10 @@ suite =
                         Vector.Vector [ two ]
 
                     aDotB =
-                        Vector.dotProduct Field.numberField a b
+                        Vector.dotProduct Field.float a b
 
                     bDotA =
-                        Vector.dotProduct Field.numberField b a
+                        Vector.dotProduct Field.float b a
                 in
                 Expect.within (Expect.Absolute 0.000000001) bDotA aDotB
         , Test.fuzz
@@ -112,7 +112,7 @@ suite =
                         Vector.Vector [ one ]
 
                     squareRootADotA =
-                        Basics.sqrt (Vector.dotProduct Field.numberField a a)
+                        Basics.sqrt (Vector.dotProduct Field.float a a)
 
                     aLength =
                         Vector.lengthReal a
@@ -148,7 +148,7 @@ suite =
 
                     absXDotY =
                         Vector.dotProduct
-                            Field.numberField
+                            Field.float
                             x
                             y
                             |> Basics.abs
@@ -178,8 +178,8 @@ suite =
                         Vector.Vector [ two ]
 
                     aPlusBLength =
-                        Vector.addVectors
-                            Field.numberField
+                        Vector.add
+                            Field.float
                             a
                             b
                             |> Vector.lengthReal
@@ -204,7 +204,7 @@ suite =
 
                     legnthOfTwoTimesA =
                         Vector.lengthReal
-                            (Vector.scalarMultiplication Field.numberField two a)
+                            (Vector.scalarMultiplication Field.float two a)
 
                     lengthOfATimesTwo =
                         Basics.abs two * Vector.lengthReal a
@@ -345,13 +345,13 @@ suite =
 
                     distanceAB =
                         Vector.dotProduct
-                            Field.numberField
+                            Field.float
                             a
                             b
 
                     distanceBA =
                         Vector.dotProduct
-                            Field.numberField
+                            Field.float
                             b
                             a
                 in

@@ -556,10 +556,10 @@ suite =
                             ]
 
                     identity =
-                        Matrix.identity Field.numberField (Matrix.mDimension matrix)
+                        Matrix.identity Field.float (Matrix.mDimension matrix)
 
                     matrixInverseProduct =
-                        Matrix.multiplyMatrices Vector.realInnerProductSpace matrix inverse
+                        Matrix.multiply Vector.realInnerProductSpace matrix inverse
                 in
                 Expect.equal matrixInverseProduct (Ok identity)
         , Test.test
@@ -582,10 +582,10 @@ suite =
                             ]
 
                     identity =
-                        Matrix.identity Field.numberField (Matrix.mDimension matrix)
+                        Matrix.identity Field.float (Matrix.mDimension matrix)
 
                     inverseMatrixProduct =
-                        Matrix.multiplyMatrices Vector.realInnerProductSpace inverse matrix
+                        Matrix.multiply Vector.realInnerProductSpace inverse matrix
                 in
                 Expect.equal inverseMatrixProduct (Ok identity)
         , Test.test
@@ -975,12 +975,12 @@ suite =
                             ]
 
                     m1Plusm2Transpose =
-                        Matrix.addMatrices ComplexNumbers.complexField m1 m2
+                        Matrix.add ComplexNumbers.complexField m1 m2
                             |> Matrix.transpose
 
                     m1TransposePlusm2Transpose =
                         Matrix.transpose m1
-                            |> Matrix.addMatrices ComplexNumbers.complexField (Matrix.transpose m2)
+                            |> Matrix.add ComplexNumbers.complexField (Matrix.transpose m2)
                 in
                 Expect.equal m1Plusm2Transpose m1TransposePlusm2Transpose
         , Test.fuzz2
@@ -1084,12 +1084,12 @@ suite =
                             ]
 
                     m1Plusm2Conjugate =
-                        Matrix.addMatrices ComplexNumbers.complexField m1 m2
+                        Matrix.add ComplexNumbers.complexField m1 m2
                             |> Matrix.conjugate
 
                     m1ConjugatePlusm2Conjugate =
                         Matrix.conjugate m1
-                            |> Matrix.addMatrices ComplexNumbers.complexField (Matrix.conjugate m2)
+                            |> Matrix.add ComplexNumbers.complexField (Matrix.conjugate m2)
                 in
                 Expect.equal m1Plusm2Conjugate m1ConjugatePlusm2Conjugate
         , Test.fuzz2
@@ -1196,12 +1196,12 @@ suite =
                             ]
 
                     m1Plusm2Adjoint =
-                        Matrix.addMatrices ComplexNumbers.complexField m1 m2
+                        Matrix.add ComplexNumbers.complexField m1 m2
                             |> Matrix.adjoint
 
                     m1ConjugatePlusm2Adjoint =
                         Matrix.adjoint m1
-                            |> Matrix.addMatrices ComplexNumbers.complexField (Matrix.conjugate m2)
+                            |> Matrix.add ComplexNumbers.complexField (Matrix.conjugate m2)
                 in
                 Expect.equal m1Plusm2Adjoint m1ConjugatePlusm2Adjoint
         , Test.fuzz2
@@ -1280,11 +1280,11 @@ suite =
                         Matrix.Matrix [ v2 ]
 
                     cTimesm1Timem2 =
-                        Matrix.multiplyMatrices Vector.realInnerProductSpace m1 m2
-                            |> Result.map (Matrix.scalarMultiplication Field.numberField one)
+                        Matrix.multiply Vector.realInnerProductSpace m1 m2
+                            |> Result.map (Matrix.scalarMultiplication Field.float one)
 
                     cTimesm1ThenTimesm2 =
-                        Matrix.multiplyMatrices Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.numberField one m1) m2
+                        Matrix.multiply Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.float one m1) m2
                 in
                 Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
         , Test.fuzz3
@@ -1314,19 +1314,19 @@ suite =
                             ]
 
                     matrixSumIJ =
-                        Matrix.addMatrices Field.numberField matrixI matrixJ
+                        Matrix.add Field.float matrixI matrixJ
 
                     tensorProductIJK =
-                        Matrix.tensorProduct Field.numberField matrixSumIJ matrixK
+                        Matrix.tensorProduct Field.float matrixSumIJ matrixK
 
                     tensorProductIK =
-                        Matrix.tensorProduct Field.numberField matrixI matrixK
+                        Matrix.tensorProduct Field.float matrixI matrixK
 
                     tensorProductJK =
-                        Matrix.tensorProduct Field.numberField matrixJ matrixK
+                        Matrix.tensorProduct Field.float matrixJ matrixK
 
                     matrixSumTensorProductIKJK =
-                        Matrix.addMatrices Field.numberField tensorProductIK tensorProductJK
+                        Matrix.add Field.float tensorProductIK tensorProductJK
                 in
                 Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK matrixSumTensorProductIKJK)
         , Test.test
@@ -1395,7 +1395,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
-                            |> Matrix.scalarMultiplication Field.numberField 2
+                            |> Matrix.scalarMultiplication Field.float 2
                 in
                 Expect.true "Are row equivalent" (Matrix.areRowEquivalent Vector.realVectorSpace matrixOne matrixTwo)
         , Test.fuzz3

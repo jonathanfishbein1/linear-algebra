@@ -48,7 +48,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ three ] ]
 
                     aPlusBDotc =
-                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.addMatrices Field.numberField a b) c
+                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.add Field.float a b) c
 
                     aDotB =
                         Matrix.dotProduct Vector.realInnerProductSpace a c
@@ -79,7 +79,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
 
                     threeTimesADotB =
-                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.numberField three a) b
+                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.float three a) b
 
                     aDotBTimesThree =
                         Result.map2
@@ -142,7 +142,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
 
                     aPlusBLength =
-                        Matrix.normReal (Matrix.addMatrices Field.numberField a b)
+                        Matrix.normReal (Matrix.add Field.float a b)
 
                     lengthAPlusLengthB =
                         Result.map2
@@ -172,7 +172,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
 
                     legnthOfTwoTimesA =
-                        Matrix.normReal (Matrix.scalarMultiplication Field.numberField two a)
+                        Matrix.normReal (Matrix.scalarMultiplication Field.float two a)
 
                     lengthOfATimesTwo =
                         Result.map

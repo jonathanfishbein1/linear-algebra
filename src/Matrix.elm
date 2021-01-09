@@ -23,10 +23,10 @@ module Matrix exposing
     , getDiagonalProduct
     , rank
     , createMatrixFromColumnVectors
-    , addMatrices
-    , subtractMatrices
+    , add
+    , subtract
     , multiplyMatrixVector
-    , multiplyMatrices
+    , multiply
     , dotProduct
     , tensorProduct
     , isSquareMatrix
@@ -114,10 +114,10 @@ module Matrix exposing
 
 # Binary Operations
 
-@docs addMatrices
-@docs subtractMatrices
+@docs add
+@docs subtract
 @docs multiplyMatrixVector
-@docs multiplyMatrices
+@docs multiply
 @docs dotProduct
 @docs tensorProduct
 
@@ -273,14 +273,14 @@ type alias InnerProductSpace a =
 -}
 realMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix Float)
 realMatrixAdditionSemigroup =
-    addMatrices Field.numberField
+    add Field.float
 
 
 {-| Semigroup instance for Matrix under the addition operation with complex values.
 -}
 complexMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionSemigroup =
-    addMatrices ComplexNumbers.complexField
+    add ComplexNumbers.complexField
 
 
 {-| Commutative Semigroup instance for Matrix under the addition operation with real values.
@@ -620,8 +620,8 @@ getDiagonalProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing
 
 {-| Add two Matrices together
 -}
-addMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
-addMatrices (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+add : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+add (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
     let
         (AbelianGroup.AbelianGroup groupAddition) =
             commutativeDivisionRing.addition
@@ -631,8 +631,8 @@ addMatrices (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commut
 
 {-| Subtract two Matrices
 -}
-subtractMatrices : Field.Field a -> Matrix a -> Matrix a -> Matrix a
-subtractMatrices (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+subtract : Field.Field a -> Matrix a -> Matrix a -> Matrix a
+subtract (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
     let
         (AbelianGroup.AbelianGroup groupAddition) =
             commutativeDivisionRing.addition
@@ -667,12 +667,12 @@ multiplyMatrixVector innerProductSpace (Matrix matrix) vector =
 
 {-| Matrix Matrix multiplication
 -}
-multiplyMatrices :
+multiply :
     Vector.InnerProductSpace a
     -> Matrix a
     -> Matrix a
     -> Result String (Matrix a)
-multiplyMatrices innerProductSpace (Matrix matrixOne) matrixTwo =
+multiply innerProductSpace (Matrix matrixOne) matrixTwo =
     if nDimension (Matrix matrixOne) == mDimension matrixTwo then
         let
             (Matrix matrixTranspose) =
@@ -704,7 +704,7 @@ dotProduct : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String
 dotProduct vectorInnerProductSpace matrixOne matrixTwo =
     let
         productMatrix =
-            multiplyMatrices vectorInnerProductSpace matrixOne matrixTwo
+            multiply vectorInnerProductSpace matrixOne matrixTwo
     in
     case productMatrix of
         Ok pMatrix ->
@@ -1358,7 +1358,7 @@ parseMatrix matrixElementParser =
 realMatrixSpace : MatrixSpace Float
 realMatrixSpace =
     { abelianGroup = realMatrixAdditionAbelianGroup
-    , matrixScalarMultiplication = scalarMultiplication Field.numberField
+    , matrixScalarMultiplication = scalarMultiplication Field.float
     }
 
 

@@ -118,7 +118,7 @@ suite =
                             ]
 
                     vPlusW =
-                        Vector.addVectors ComplexNumbers.complexField v w
+                        Vector.add ComplexNumbers.complexField v w
 
                     cvPlusW =
                         Vector.scalarMultiplication ComplexNumbers.complexField c vPlusW
@@ -130,7 +130,7 @@ suite =
                         Vector.scalarMultiplication ComplexNumbers.complexField c v
 
                     cVPluscW =
-                        Vector.addVectors ComplexNumbers.complexField cW cV
+                        Vector.add ComplexNumbers.complexField cW cV
 
                     result =
                         Vector.equal ComplexNumbers.equal cvPlusW cVPluscW
@@ -185,7 +185,7 @@ suite =
                         Vector.scalarMultiplication ComplexNumbers.complexField c2 v
 
                     c1VPlusc2V =
-                        Vector.addVectors ComplexNumbers.complexField c1V c2V
+                        Vector.add ComplexNumbers.complexField c1V c2V
 
                     result =
                         Vector.equal ComplexNumbers.equal c1VPlusc2V c1Plusc2V

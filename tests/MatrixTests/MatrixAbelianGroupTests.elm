@@ -65,8 +65,8 @@ suite =
                     m2 =
                         Matrix.Matrix [ w, v ]
                 in
-                Matrix.addMatrices ComplexNumbers.complexField m1 m2
-                    |> Expect.equal (Matrix.addMatrices ComplexNumbers.complexField m2 m1)
+                Matrix.add ComplexNumbers.complexField m1 m2
+                    |> Expect.equal (Matrix.add ComplexNumbers.complexField m2 m1)
         , Test.fuzz3
             (Fuzz.map toFloat Fuzz.int)
             (Fuzz.map toFloat Fuzz.int)
@@ -142,12 +142,12 @@ suite =
                         Matrix.Matrix [ x, w, v ]
 
                     m1Plusm2AndThenPlusm3 =
-                        Matrix.addMatrices ComplexNumbers.complexField m1 m2
-                            |> Matrix.addMatrices ComplexNumbers.complexField m3
+                        Matrix.add ComplexNumbers.complexField m1 m2
+                            |> Matrix.add ComplexNumbers.complexField m3
 
                     m2Plusm3AndThenm1 =
-                        Matrix.addMatrices ComplexNumbers.complexField m2 m3
-                            |> Matrix.addMatrices ComplexNumbers.complexField m1
+                        Matrix.add ComplexNumbers.complexField m2 m3
+                            |> Matrix.add ComplexNumbers.complexField m1
                 in
                 m1Plusm2AndThenPlusm3
                     |> Expect.equal m2Plusm3AndThenm1
@@ -190,6 +190,6 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.addMatrices ComplexNumbers.complexField v w
+                Matrix.add ComplexNumbers.complexField v w
                     |> Expect.equal zero
         ]

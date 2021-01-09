@@ -48,7 +48,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ three ] ]
 
                     aPlusBDotc =
-                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.addMatrices Field.numberField a b) c
+                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.add Field.numberField a b) c
 
                     aDotB =
                         Matrix.dotProduct Vector.realInnerProductSpace a c
@@ -142,7 +142,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
 
                     aPlusBLength =
-                        Matrix.normReal (Matrix.addMatrices Field.numberField a b)
+                        Matrix.normReal (Matrix.add Field.numberField a b)
 
                     lengthAPlusLengthB =
                         Result.map2

@@ -45,7 +45,7 @@ suite =
                     aPlusBDotc =
                         Vector.dotProduct
                             Field.numberField
-                            (Vector.addVectors Field.numberField a b)
+                            (Vector.add Field.numberField a b)
                             c
 
                     aDotC =
@@ -178,7 +178,7 @@ suite =
                         Vector.Vector [ two ]
 
                     aPlusBLength =
-                        Vector.addVectors
+                        Vector.add
                             Field.numberField
                             a
                             b

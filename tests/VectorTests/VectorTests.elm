@@ -90,10 +90,10 @@ suite =
                         Vector.hadamardMultiplication
                             Field.numberField
                             a
-                            (Vector.addVectors Field.numberField b c)
+                            (Vector.add Field.numberField b c)
 
                     sumAHadamardBAHadamardC =
-                        Vector.addVectors
+                        Vector.add
                             Field.numberField
                             (Vector.hadamardMultiplication Field.numberField a b)
                             (Vector.hadamardMultiplication Field.numberField a c)
@@ -390,7 +390,7 @@ suite =
                         Vector.Vector [ one, two ]
 
                     result =
-                        Vector.subtractVectors Field.numberField vectorOne vectorTwo
+                        Vector.subtract Field.numberField vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ 0, 0 ])
         , Test.test
@@ -426,7 +426,7 @@ suite =
                         Vector.Vector [ two, three ]
 
                     vectorSumIJ =
-                        Vector.addVectors Field.numberField vectorI vectorJ
+                        Vector.add Field.numberField vectorI vectorJ
 
                     tensorProductIJK =
                         Vector.tensorProduct Field.numberField vectorSumIJ vectorK
@@ -438,7 +438,7 @@ suite =
                         Vector.tensorProduct Field.numberField vectorJ vectorK
 
                     vectorSumTensorProductIKJK =
-                        Vector.addVectors Field.numberField tensorProductIK tensorProductJK
+                        Vector.add Field.numberField tensorProductIK tensorProductJK
                 in
                 Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK vectorSumTensorProductIKJK)
         , Test.fuzz3

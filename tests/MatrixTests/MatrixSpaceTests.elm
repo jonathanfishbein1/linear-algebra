@@ -129,7 +129,7 @@ suite =
                             ]
 
                     vPlusW =
-                        Matrix.addMatrices ComplexNumbers.complexField v w
+                        Matrix.add ComplexNumbers.complexField v w
 
                     cvPlusW =
                         Matrix.scalarMultiplication ComplexNumbers.complexField c vPlusW
@@ -141,7 +141,7 @@ suite =
                         Matrix.scalarMultiplication ComplexNumbers.complexField c v
 
                     cVPluscW =
-                        Matrix.addMatrices ComplexNumbers.complexField cW cV
+                        Matrix.add ComplexNumbers.complexField cW cV
 
                     result =
                         Matrix.equal ComplexNumbers.equal cvPlusW cVPluscW
@@ -192,7 +192,7 @@ suite =
                             ]
 
                     vPlusW =
-                        Matrix.addMatrices ComplexNumbers.complexField v w
+                        Matrix.add ComplexNumbers.complexField v w
 
                     cvPlusW =
                         Matrix.scalarMultiplication ComplexNumbers.complexField c vPlusW
@@ -204,7 +204,7 @@ suite =
                         Matrix.scalarMultiplication ComplexNumbers.complexField c v
 
                     cVPluscW =
-                        Matrix.addMatrices ComplexNumbers.complexField cW cV
+                        Matrix.add ComplexNumbers.complexField cW cV
 
                     result =
                         Matrix.equal ComplexNumbers.equal cvPlusW cVPluscW

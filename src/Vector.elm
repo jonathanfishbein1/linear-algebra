@@ -18,8 +18,7 @@ module Vector exposing
     , normaliseReal
     , normaliseComplex
     , conjugate
-    , addVectors
-    , subtractVectors
+    , subtract
     , hadamardMultiplication
     , dotProduct
     , angleBetween
@@ -52,6 +51,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
+    , add
     )
 
 {-| A module for Vectors
@@ -91,7 +91,7 @@ module Vector exposing
 # Binary Operations
 
 @docs addVectors
-@docs subtractVectors
+@docs subtract
 @docs hadamardMultiplication
 @docs dotProduct
 @docs angleBetween
@@ -202,14 +202,14 @@ type alias InnerProductSpace a =
 -}
 realVectorSemigroup : Semigroup.Semigroup (Vector Float)
 realVectorSemigroup =
-    addVectors Field.numberField
+    add Field.numberField
 
 
 {-| Semigroup instance for a complex valued Vector.
 -}
 complexVectorSemigroup : Semigroup.Semigroup (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorSemigroup =
-    addVectors ComplexNumbers.complexField
+    add ComplexNumbers.complexField
 
 
 {-| Commutative Semigroup instance for a real valued Vector.
@@ -390,8 +390,8 @@ normaliseComplex v =
 
 {-| Add two Vectors
 -}
-addVectors : Field.Field a -> Vector a -> Vector a -> Vector a
-addVectors (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+add : Field.Field a -> Vector a -> Vector a -> Vector a
+add (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
     let
         (AbelianGroup.AbelianGroup group) =
             commutativeDivisionRing.addition
@@ -401,13 +401,13 @@ addVectors (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commuta
 
 {-| Subtract Vectors
 -}
-subtractVectors : Field.Field a -> Vector a -> Vector a -> Vector a
-subtractVectors (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) vectorOne vectorTwo =
+subtract : Field.Field a -> Vector a -> Vector a -> Vector a
+subtract (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) vectorOne vectorTwo =
     let
         (AbelianGroup.AbelianGroup group) =
             commutativeDivisionRing.addition
     in
-    addVectors (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) vectorOne (map group.inverse vectorTwo)
+    add (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) vectorOne (map group.inverse vectorTwo)
 
 
 {-| Hadamard Multiplication Vectors

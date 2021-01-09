@@ -28,13 +28,13 @@ suite =
 
                     aHadamardB =
                         Vector.hadamardMultiplication
-                            Field.numberField
+                            Field.float
                             a
                             b
 
                     bhadamardA =
                         Vector.hadamardMultiplication
-                            Field.numberField
+                            Field.float
                             b
                             a
                 in
@@ -58,15 +58,15 @@ suite =
 
                     aHadamardBHadamardC =
                         Vector.hadamardMultiplication
-                            Field.numberField
-                            (Vector.hadamardMultiplication Field.numberField a b)
+                            Field.float
+                            (Vector.hadamardMultiplication Field.float a b)
                             c
 
                     bHadamardCHadamardA =
                         Vector.hadamardMultiplication
-                            Field.numberField
+                            Field.float
                             a
-                            (Vector.hadamardMultiplication Field.numberField b c)
+                            (Vector.hadamardMultiplication Field.float b c)
                 in
                 Expect.true "vectors equal" (Vector.equal (Float.Extra.equalWithin 0.1) aHadamardBHadamardC bHadamardCHadamardA)
         , Test.fuzz3
@@ -88,15 +88,15 @@ suite =
 
                     aHadamardSumBC =
                         Vector.hadamardMultiplication
-                            Field.numberField
+                            Field.float
                             a
-                            (Vector.add Field.numberField b c)
+                            (Vector.add Field.float b c)
 
                     sumAHadamardBAHadamardC =
                         Vector.add
-                            Field.numberField
-                            (Vector.hadamardMultiplication Field.numberField a b)
-                            (Vector.hadamardMultiplication Field.numberField a c)
+                            Field.float
+                            (Vector.hadamardMultiplication Field.float a b)
+                            (Vector.hadamardMultiplication Field.float a c)
                 in
                 Expect.true "vectors equal" (Vector.equal (Float.Extra.equalWithin 0.1) aHadamardSumBC sumAHadamardBAHadamardC)
         , Test.fuzz3
@@ -114,17 +114,17 @@ suite =
                         Vector.Vector3 two three one
 
                     (Field.Field commutativeDivisionRing) =
-                        Field.numberField
+                        Field.float
 
                     aCrossB =
                         Vector.cross commutativeDivisionRing a b
                             |> Vector.vector3ToVector
 
                     aDotACrossB =
-                        Vector.dotProduct Field.numberField (Vector.vector3ToVector a) aCrossB
+                        Vector.dotProduct Field.float (Vector.vector3ToVector a) aCrossB
 
                     bDotACrossB =
-                        Vector.dotProduct Field.numberField (Vector.vector3ToVector b) aCrossB
+                        Vector.dotProduct Field.float (Vector.vector3ToVector b) aCrossB
 
                     result =
                         Float.Extra.equalWithin 0.000000001 0 aDotACrossB && Float.Extra.equalWithin 0.000000001 0 bDotACrossB
@@ -145,7 +145,7 @@ suite =
                         Vector.Vector3 two three one
 
                     aCrossB =
-                        Vector.cross CommutativeDivisionRing.floatCommutativeDivisionRing a b
+                        Vector.cross CommutativeDivisionRing.float a b
                             |> Vector.vector3ToVector
 
                     aVector =
@@ -231,7 +231,7 @@ suite =
                         Vector.Scalar one
 
                     isSubspace =
-                        Vector.vectorSubspace Field.numberField Vector.realVectorAbelianGroup scalar vectors predicates
+                        Vector.vectorSubspace Field.float Vector.realVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
@@ -258,7 +258,7 @@ suite =
                         Vector.Scalar one
 
                     isSubspace =
-                        Vector.vectorSubspace Field.numberField Vector.realVectorAbelianGroup scalar vectors predicates
+                        Vector.vectorSubspace Field.float Vector.realVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
@@ -390,7 +390,7 @@ suite =
                         Vector.Vector [ one, two ]
 
                     result =
-                        Vector.subtract Field.numberField vectorOne vectorTwo
+                        Vector.subtract Field.float vectorOne vectorTwo
                 in
                 Expect.equal result (Vector.Vector [ 0, 0 ])
         , Test.test
@@ -405,7 +405,7 @@ suite =
                         Vector.Vector [ 3, 4 ]
 
                     tensorProduct =
-                        Vector.tensorProduct Field.numberField vectorOne vectorTwo
+                        Vector.tensorProduct Field.float vectorOne vectorTwo
                 in
                 Expect.equal tensorProduct (Vector.Vector [ 3, 4, 6, 8 ])
         , Test.fuzz3
@@ -426,19 +426,19 @@ suite =
                         Vector.Vector [ two, three ]
 
                     vectorSumIJ =
-                        Vector.add Field.numberField vectorI vectorJ
+                        Vector.add Field.float vectorI vectorJ
 
                     tensorProductIJK =
-                        Vector.tensorProduct Field.numberField vectorSumIJ vectorK
+                        Vector.tensorProduct Field.float vectorSumIJ vectorK
 
                     tensorProductIK =
-                        Vector.tensorProduct Field.numberField vectorI vectorK
+                        Vector.tensorProduct Field.float vectorI vectorK
 
                     tensorProductJK =
-                        Vector.tensorProduct Field.numberField vectorJ vectorK
+                        Vector.tensorProduct Field.float vectorJ vectorK
 
                     vectorSumTensorProductIKJK =
-                        Vector.add Field.numberField tensorProductIK tensorProductJK
+                        Vector.add Field.float tensorProductIK tensorProductJK
                 in
                 Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK vectorSumTensorProductIKJK)
         , Test.fuzz3

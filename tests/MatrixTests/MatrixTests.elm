@@ -556,7 +556,7 @@ suite =
                             ]
 
                     identity =
-                        Matrix.identity Field.numberField (Matrix.mDimension matrix)
+                        Matrix.identity Field.float (Matrix.mDimension matrix)
 
                     matrixInverseProduct =
                         Matrix.multiply Vector.realInnerProductSpace matrix inverse
@@ -582,7 +582,7 @@ suite =
                             ]
 
                     identity =
-                        Matrix.identity Field.numberField (Matrix.mDimension matrix)
+                        Matrix.identity Field.float (Matrix.mDimension matrix)
 
                     inverseMatrixProduct =
                         Matrix.multiply Vector.realInnerProductSpace inverse matrix
@@ -1281,10 +1281,10 @@ suite =
 
                     cTimesm1Timem2 =
                         Matrix.multiply Vector.realInnerProductSpace m1 m2
-                            |> Result.map (Matrix.scalarMultiplication Field.numberField one)
+                            |> Result.map (Matrix.scalarMultiplication Field.float one)
 
                     cTimesm1ThenTimesm2 =
-                        Matrix.multiply Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.numberField one m1) m2
+                        Matrix.multiply Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.float one m1) m2
                 in
                 Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
         , Test.fuzz3
@@ -1314,19 +1314,19 @@ suite =
                             ]
 
                     matrixSumIJ =
-                        Matrix.add Field.numberField matrixI matrixJ
+                        Matrix.add Field.float matrixI matrixJ
 
                     tensorProductIJK =
-                        Matrix.tensorProduct Field.numberField matrixSumIJ matrixK
+                        Matrix.tensorProduct Field.float matrixSumIJ matrixK
 
                     tensorProductIK =
-                        Matrix.tensorProduct Field.numberField matrixI matrixK
+                        Matrix.tensorProduct Field.float matrixI matrixK
 
                     tensorProductJK =
-                        Matrix.tensorProduct Field.numberField matrixJ matrixK
+                        Matrix.tensorProduct Field.float matrixJ matrixK
 
                     matrixSumTensorProductIKJK =
-                        Matrix.add Field.numberField tensorProductIK tensorProductJK
+                        Matrix.add Field.float tensorProductIK tensorProductJK
                 in
                 Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK matrixSumTensorProductIKJK)
         , Test.test
@@ -1395,7 +1395,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
-                            |> Matrix.scalarMultiplication Field.numberField 2
+                            |> Matrix.scalarMultiplication Field.float 2
                 in
                 Expect.true "Are row equivalent" (Matrix.areRowEquivalent Vector.realVectorSpace matrixOne matrixTwo)
         , Test.fuzz3

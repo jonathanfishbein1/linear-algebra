@@ -273,7 +273,7 @@ type alias InnerProductSpace a =
 -}
 realMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix Float)
 realMatrixAdditionSemigroup =
-    add Field.numberField
+    add Field.float
 
 
 {-| Semigroup instance for Matrix under the addition operation with complex values.
@@ -1358,7 +1358,7 @@ parseMatrix matrixElementParser =
 realMatrixSpace : MatrixSpace Float
 realMatrixSpace =
     { abelianGroup = realMatrixAdditionAbelianGroup
-    , matrixScalarMultiplication = scalarMultiplication Field.numberField
+    , matrixScalarMultiplication = scalarMultiplication Field.float
     }
 
 

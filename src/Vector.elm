@@ -202,7 +202,7 @@ type alias InnerProductSpace a =
 -}
 realVectorSemigroup : Semigroup.Semigroup (Vector Float)
 realVectorSemigroup =
-    add Field.numberField
+    add Field.float
 
 
 {-| Semigroup instance for a complex valued Vector.
@@ -297,8 +297,8 @@ complexVectorAbelianGroup =
 realVectorSpace : VectorSpace Float
 realVectorSpace =
     { abelianGroup = realVectorAbelianGroup
-    , vectorScalarMultiplication = scalarMultiplication Field.numberField
-    , field = Field.numberField
+    , vectorScalarMultiplication = scalarMultiplication Field.float
+    , field = Field.float
     }
 
 
@@ -317,7 +317,7 @@ complexVectorSpace =
 realInnerProductSpace : InnerProductSpace Float
 realInnerProductSpace =
     { vectorSpace = realVectorSpace
-    , innerProduct = dotProduct Field.numberField
+    , innerProduct = dotProduct Field.float
     , length = lengthReal
     , distance = distanceReal
     }
@@ -353,7 +353,7 @@ scalarMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRi
 -}
 lengthReal : Vector Float -> Float
 lengthReal vector =
-    dotProduct Field.numberField vector vector
+    dotProduct Field.float vector vector
         |> Basics.sqrt
 
 
@@ -374,7 +374,7 @@ normaliseReal v =
         v
 
     else
-        scalarMultiplication Field.numberField (1 / lengthReal v) v
+        scalarMultiplication Field.float (1 / lengthReal v) v
 
 
 {-| Adjust a real valued vector so that its length is exactly one
@@ -435,7 +435,7 @@ angleBetween : Vector Float -> Vector Float -> Float
 angleBetween vectorOne vectorTwo =
     let
         dotP =
-            dotProduct Field.numberField vectorOne vectorTwo
+            dotProduct Field.float vectorOne vectorTwo
 
         lengthVectorOne =
             lengthReal vectorOne

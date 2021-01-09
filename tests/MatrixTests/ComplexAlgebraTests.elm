@@ -99,7 +99,7 @@ suite =
                         Matrix.Matrix
                             [ v1, v2, v3 ]
                 in
-                Expect.equal (Matrix.identity Field.numberField 3) m1
+                Expect.equal (Matrix.identity Field.float 3) m1
         , Test.fuzz3
             Fuzz.float
             Fuzz.float
@@ -137,7 +137,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiply Vector.realInnerProductSpace (Matrix.identity Field.numberField 3) m1
+                        Matrix.multiply Vector.realInnerProductSpace (Matrix.identity Field.float 3) m1
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3
@@ -177,7 +177,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiply Vector.realInnerProductSpace m1 (Matrix.identity Field.numberField 3)
+                        Matrix.multiply Vector.realInnerProductSpace m1 (Matrix.identity Field.float 3)
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3
@@ -226,10 +226,10 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m1Timesm2Plus3 =
-                        Matrix.multiply Vector.realInnerProductSpace m1 (Matrix.add Field.numberField m2 m3)
+                        Matrix.multiply Vector.realInnerProductSpace m1 (Matrix.add Field.float m2 m3)
 
                     m1Timesm2Plusem1Timesm3 =
-                        Result.map2 (Matrix.add Field.numberField) (Matrix.multiply Vector.realInnerProductSpace m1 m2) (Matrix.multiply Vector.realInnerProductSpace m1 m3)
+                        Result.map2 (Matrix.add Field.float) (Matrix.multiply Vector.realInnerProductSpace m1 m2) (Matrix.multiply Vector.realInnerProductSpace m1 m3)
                 in
                 Expect.equal m1Timesm2Plus3 m1Timesm2Plusem1Timesm3
         , Test.fuzz3
@@ -278,11 +278,11 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m2Plusm3Timesm1 =
-                        Matrix.multiply Vector.realInnerProductSpace (Matrix.add Field.numberField m2 m3) m1
+                        Matrix.multiply Vector.realInnerProductSpace (Matrix.add Field.float m2 m3) m1
 
                     m2Timesm1Plusm3Timesm1 =
                         Result.map2
-                            (Matrix.add Field.numberField)
+                            (Matrix.add Field.float)
                             (Matrix.multiply Vector.realInnerProductSpace m2 m1)
                             (Matrix.multiply Vector.realInnerProductSpace m3 m1)
                 in

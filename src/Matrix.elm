@@ -50,6 +50,7 @@ module Matrix exposing
     , concatVertical
     , realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
     , realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
+    , realMatrixAlgebra
     , realMatrixInnerProductSpace
     , complexMatrixAdditionAbelianGroup
     , map
@@ -149,6 +150,7 @@ module Matrix exposing
 @docs concatVertical
 @docs realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
 @docs realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
+@docs realMatrixAlgebra
 @docs realMatrixInnerProductSpace
 @docs complexMatrixAdditionAbelianGroup
 
@@ -256,6 +258,18 @@ type VectorDimension
 type alias MatrixSpace a =
     { abelianGroup : AbelianGroup.AbelianGroup (Matrix a)
     , matrixScalarMultiplication : a -> Matrix a -> Matrix a
+    }
+
+
+{-| Type to represent a Matrix Algebra
+-}
+type alias MatrixAlgebra a =
+    { matrixSpace : MatrixSpace a
+    , multiply :
+        Vector.InnerProductSpace a
+        -> Matrix a
+        -> Matrix a
+        -> Result String (Matrix a)
     }
 
 
@@ -1362,6 +1376,15 @@ realMatrixSpace =
     }
 
 
+{-| Complex Numbered Vector Space for Matrix
+-}
+complexMatrixSpace : MatrixSpace (ComplexNumbers.ComplexNumber Float)
+complexMatrixSpace =
+    { abelianGroup = complexMatrixAdditionAbelianGroup
+    , matrixScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
+    }
+
+
 {-| Real Numbered Inner Product Space for Matrix
 -}
 realMatrixInnerProductSpace : InnerProductSpace Float
@@ -1370,4 +1393,22 @@ realMatrixInnerProductSpace =
     , innerProduct = dotProduct Vector.realInnerProductSpace
     , norm = normReal
     , distance = distanceReal
+    }
+
+
+{-| Real Numbered Matrix Algebra
+-}
+realMatrixAlgebra : MatrixAlgebra Float
+realMatrixAlgebra =
+    { matrixSpace = realMatrixSpace
+    , multiply = multiply
+    }
+
+
+{-| Complex Numbered Matrix Algebra
+-}
+complexMatrixAlgebra : MatrixAlgebra (ComplexNumbers.ComplexNumber Float)
+complexMatrixAlgebra =
+    { matrixSpace = complexMatrixSpace
+    , multiply = multiply
     }

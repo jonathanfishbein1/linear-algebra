@@ -854,6 +854,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR3C1, complexNumberR3C2, complexNumberR3C3 ]
                             ]
                             |> Matrix.squareMatrix
+                            |> Result.andThen Matrix.complexInvertableMatrix
 
                     isUnitary =
                         Result.map Matrix.isUnitary matrix

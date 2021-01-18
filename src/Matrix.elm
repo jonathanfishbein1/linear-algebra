@@ -72,7 +72,7 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , complexInvertableMatrix, realInvertableMatrix, squareMatrix
+    , complexInvertableMatrix, realInvertableMatrix, squareMatrix, unitaryMatrix
     )
 
 {-| A module for Matrix
@@ -242,6 +242,14 @@ type InvertableMatrix a
     = InvertableMatrix (SquareMatrix a)
 
 
+type HermitianMatrix a
+    = HermitianMatrix (SquareMatrix a)
+
+
+type UnitaryMatrix a
+    = UnitaryMatrix (InvertableMatrix a)
+
+
 {-| Type to represent result of Gauss-Jordan reduction
 -}
 type Consistancy a
@@ -320,6 +328,26 @@ complexInvertableMatrix matrix =
 
         Err error ->
             Err "Not an Invertable Matrix"
+
+
+hermitianMatrix : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (HermitianMatrix (ComplexNumbers.ComplexNumber Float))
+hermitianMatrix matrix =
+    if isHermitian matrix then
+        HermitianMatrix matrix
+            |> Ok
+
+    else
+        Err "Not an Invertable Matrix"
+
+
+unitaryMatrix : InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (UnitaryMatrix (ComplexNumbers.ComplexNumber Float))
+unitaryMatrix matrix =
+    if isUnitary matrix then
+        UnitaryMatrix matrix
+            |> Ok
+
+    else
+        Err "Not an Invertable Matrix"
 
 
 {-| Semigroup instance for Matrix under the addition operation with real values.
@@ -862,8 +890,8 @@ isHermitian (SquareMatrix matrix) =
 
 {-| Determine whether a matirx is unitary
 -}
-isUnitary : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
-isUnitary (SquareMatrix matrix) =
+isUnitary : InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
+isUnitary (InvertableMatrix (SquareMatrix matrix)) =
     case invert Vector.complexInnerProductSpace (SquareMatrix matrix) of
         Ok inverse ->
             equal ComplexNumbers.equal inverse (adjoint matrix)

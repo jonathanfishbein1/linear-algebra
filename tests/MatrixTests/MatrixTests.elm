@@ -476,6 +476,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 3, 4 ]
                             ]
                             |> Matrix.squareMatrix
+                            |> Result.andThen Matrix.realInvertableMatrix
 
                     determinant =
                         Result.andThen (Matrix.determinant Vector.realVectorSpace) matrix
@@ -493,6 +494,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 4, 0, 1 ]
                             ]
                             |> Matrix.squareMatrix
+                            |> Result.andThen Matrix.realInvertableMatrix
 
                     determinant =
                         Result.andThen (Matrix.determinant Vector.realVectorSpace) matrix
@@ -511,6 +513,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 2, 3, 0, 0 ]
                             ]
                             |> Matrix.squareMatrix
+                            |> Result.andThen Matrix.realInvertableMatrix
 
                     determinant =
                         Result.andThen (Matrix.determinant Vector.realVectorSpace) matrix
@@ -639,6 +642,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
                             |> Matrix.squareMatrix
+                            |> Result.andThen Matrix.complexInvertableMatrix
 
                     determinantComplex =
                         Result.andThen (Matrix.determinant Vector.complexVectorSpace) matrix

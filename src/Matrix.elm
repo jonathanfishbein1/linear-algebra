@@ -72,7 +72,7 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , squareMatrix
+    , complexInvertableMatrix, realInvertableMatrix, squareMatrix
     )
 
 {-| A module for Matrix
@@ -238,6 +238,10 @@ type SquareMatrix a
     = SquareMatrix (Matrix a)
 
 
+type InvertableMatrix a
+    = InvertableMatrix (SquareMatrix a)
+
+
 {-| Type to represent result of Gauss-Jordan reduction
 -}
 type Consistancy a
@@ -296,6 +300,26 @@ squareMatrix matrix =
 
     else
         Err "Not a Square Matrix"
+
+
+realInvertableMatrix : SquareMatrix Float -> Result String (InvertableMatrix Float)
+realInvertableMatrix matrix =
+    case isInvertable Vector.realInnerProductSpace matrix of
+        Ok invMatrix ->
+            Result.map InvertableMatrix (squareMatrix invMatrix)
+
+        Err error ->
+            Err "Not an Invertable Matrix"
+
+
+complexInvertableMatrix : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (InvertableMatrix (ComplexNumbers.ComplexNumber Float))
+complexInvertableMatrix matrix =
+    case isInvertable Vector.complexInnerProductSpace matrix of
+        Ok invMatrix ->
+            Result.map InvertableMatrix (squareMatrix invMatrix)
+
+        Err error ->
+            Err "Not an Invertable Matrix"
 
 
 {-| Semigroup instance for Matrix under the addition operation with real values.
@@ -521,8 +545,8 @@ rank innerProductSpace matrix =
 
 {-| Try to calculate the determinant
 -}
-determinant : Vector.VectorSpace a -> SquareMatrix a -> Result String a
-determinant vectorSpace matrix =
+determinant : Vector.VectorSpace a -> InvertableMatrix a -> Result String a
+determinant vectorSpace (InvertableMatrix matrix) =
     let
         upperTriangularForm =
             upperTriangle vectorSpace matrix
@@ -540,13 +564,13 @@ determinant vectorSpace matrix =
 invert : Vector.InnerProductSpace a -> SquareMatrix a -> Result String (Matrix a)
 invert innerProductSpace matrix =
     case isInvertable innerProductSpace matrix of
-        Ok invertableMatrix ->
+        Ok invMatrix ->
             let
                 sizeOfMatrix =
-                    mDimension invertableMatrix
+                    mDimension invMatrix
 
                 augmentedMatrix =
-                    appendHorizontal invertableMatrix
+                    appendHorizontal invMatrix
                         (identity innerProductSpace.vectorSpace.field sizeOfMatrix)
 
                 reducedRowEchelonForm =

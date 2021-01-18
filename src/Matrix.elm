@@ -350,7 +350,9 @@ realInvertableMatrix matrix =
             Result.map InvertableMatrix (squareMatrix invMatrix)
 
         Err error ->
-            Err "Not an Invertable Matrix"
+            "Not an Invertable Matrix "
+                ++ error
+                |> Err
 
 
 {-| Construct a Doubly Stochastic Matrix
@@ -374,7 +376,9 @@ complexInvertableMatrix matrix =
             Result.map InvertableMatrix (squareMatrix invMatrix)
 
         Err error ->
-            Err "Not an Invertable Matrix"
+            "Not an Invertable Matrix "
+                ++ error
+                |> Err
 
 
 {-| Construct a Hermitian Matrix

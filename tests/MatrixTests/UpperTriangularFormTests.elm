@@ -22,9 +22,10 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 4, 6, 3 ]
                             , Matrix.RowVector <| Vector.Vector [ 1, 4, 4 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     upperTriangularFormMatrix =
-                        Matrix.upperTriangle Vector.realVectorSpace matrix
+                        Result.andThen (Matrix.upperTriangle Vector.realVectorSpace) matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -45,9 +46,10 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 6) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 3) (ComplexNumbers.Imaginary 0) ]
                             , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (ComplexNumbers.Real 1) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0), ComplexNumbers.ComplexNumber (ComplexNumbers.Real 4) (ComplexNumbers.Imaginary 0) ]
                             ]
+                            |> Matrix.squareMatrix
 
                     upperTriangularFormMatrix =
-                        Matrix.upperTriangle Vector.complexVectorSpace matrix
+                        Result.andThen (Matrix.upperTriangle Vector.complexVectorSpace) matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -108,9 +110,10 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     upperTriangularFormMatrix =
-                        Matrix.upperTriangle Vector.complexVectorSpace matrix
+                        Result.andThen (Matrix.upperTriangle Vector.complexVectorSpace) matrix
 
                     complexNumberExpectedR2C2 =
                         ComplexNumbers.ComplexNumber

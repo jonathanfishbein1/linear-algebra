@@ -475,9 +475,10 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ 1, 2 ]
                             , Matrix.RowVector <| Vector.Vector [ 3, 4 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     determinant =
-                        Matrix.determinant Vector.realVectorSpace matrix
+                        Result.andThen (Matrix.determinant Vector.realVectorSpace) matrix
                 in
                 Expect.equal determinant (Ok -2)
         , Test.test
@@ -491,9 +492,10 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 2, -1, 3 ]
                             , Matrix.RowVector <| Vector.Vector [ 4, 0, 1 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     determinant =
-                        Matrix.determinant Vector.realVectorSpace matrix
+                        Result.andThen (Matrix.determinant Vector.realVectorSpace) matrix
                 in
                 Expect.equal determinant (Ok 35)
         , Test.test
@@ -508,9 +510,10 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 0, 1, 2, 3 ]
                             , Matrix.RowVector <| Vector.Vector [ 2, 3, 0, 0 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     determinant =
-                        Matrix.determinant Vector.realVectorSpace matrix
+                        Result.andThen (Matrix.determinant Vector.realVectorSpace) matrix
                 in
                 Expect.equal determinant (Ok 7)
         , Test.test
@@ -634,9 +637,10 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     determinantComplex =
-                        Matrix.determinant Vector.complexVectorSpace matrix
+                        Result.andThen (Matrix.determinant Vector.complexVectorSpace) matrix
 
                     expectedDeterminant =
                         ComplexNumbers.ComplexNumber

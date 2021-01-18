@@ -72,6 +72,7 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
+    , squareMatrix
     )
 
 {-| A module for Matrix
@@ -233,6 +234,10 @@ type Matrix a
     = Matrix (List (RowVector a))
 
 
+type SquareMatrix a
+    = SquareMatrix (Matrix a)
+
+
 {-| Type to represent result of Gauss-Jordan reduction
 -}
 type Consistancy a
@@ -281,6 +286,16 @@ type alias InnerProductSpace a =
     , norm : Matrix a -> Result String Float
     , distance : Matrix a -> Matrix a -> Result String Float
     }
+
+
+squareMatrix : Matrix a -> Result String (SquareMatrix a)
+squareMatrix matrix =
+    if isSquareMatrix matrix then
+        SquareMatrix matrix
+            |> Ok
+
+    else
+        Err "Not a Square Matrix"
 
 
 {-| Semigroup instance for Matrix under the addition operation with real values.
@@ -506,15 +521,15 @@ rank innerProductSpace matrix =
 
 {-| Try to calculate the determinant
 -}
-determinant : Vector.VectorSpace a -> Matrix a -> Result String a
+determinant : Vector.VectorSpace a -> SquareMatrix a -> Result String a
 determinant vectorSpace matrix =
     let
         upperTriangularForm =
             upperTriangle vectorSpace matrix
     in
     Result.andThen
-        (\squareMatrix ->
-            getDiagonalProduct vectorSpace.field squareMatrix
+        (\sqMatrix ->
+            getDiagonalProduct vectorSpace.field sqMatrix
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularForm
@@ -930,25 +945,21 @@ all predicate (Matrix listOfRowVectors) =
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
-upperTriangle vectorSpace (Matrix matrix) =
-    if isSquareMatrix (Matrix matrix) then
-        let
-            listOfVectors =
-                List.map
-                    (\(RowVector vector) -> vector)
-                    matrix
-        in
-        List.foldl
-            (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace)
-            listOfVectors
-            (List.range 0 (List.length matrix - 1))
-            |> List.map RowVector
-            |> Matrix
-            |> Ok
-
-    else
-        Err "Must be Square Matrix"
+upperTriangle : Vector.VectorSpace a -> SquareMatrix a -> Result String (Matrix a)
+upperTriangle vectorSpace (SquareMatrix (Matrix matrix)) =
+    let
+        listOfVectors =
+            List.map
+                (\(RowVector vector) -> vector)
+                matrix
+    in
+    List.foldl
+        (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace)
+        listOfVectors
+        (List.range 0 (List.length matrix - 1))
+        |> List.map RowVector
+        |> Matrix
+        |> Ok
 
 
 {-| Gaussian Elimination

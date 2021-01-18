@@ -824,15 +824,15 @@ isSquareMatrix matrix =
 
 {-| Predicate to determine if Matrix is symmetric
 -}
-isSymmetric : Matrix a -> Bool
-isSymmetric matrix =
+isSymmetric : SquareMatrix a -> Bool
+isSymmetric (SquareMatrix matrix) =
     transpose matrix == matrix
 
 
 {-| Predicate to determine if Matrix is Hermitian
 -}
-isHermitian : Matrix (ComplexNumbers.ComplexNumber number) -> Bool
-isHermitian matrix =
+isHermitian : SquareMatrix (ComplexNumbers.ComplexNumber number) -> Bool
+isHermitian (SquareMatrix matrix) =
     adjoint matrix == matrix
 
 

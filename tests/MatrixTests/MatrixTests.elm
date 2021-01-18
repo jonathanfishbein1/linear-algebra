@@ -1391,11 +1391,17 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     isDoublyStochastic =
-                        Matrix.isDoublyStochastic matrix
+                        Result.map Matrix.isDoublyStochastic matrix
                 in
-                Expect.true "Is Doubly Stochastic" isDoublyStochastic
+                case isDoublyStochastic of
+                    Ok result ->
+                        Expect.true  "Is Doubly Stochastic" result
+
+                    Err error ->
+                        Expect.fail error
         , Test.test
             "tests areRowEquivalent"
           <|

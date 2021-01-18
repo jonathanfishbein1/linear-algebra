@@ -250,6 +250,10 @@ type UnitaryMatrix a
     = UnitaryMatrix (InvertableMatrix a)
 
 
+type DoublyStochasticMatrix a
+    = DoublyStochastic (SquareMatrix a)
+
+
 {-| Type to represent result of Gauss-Jordan reduction
 -}
 type Consistancy a
@@ -318,6 +322,16 @@ realInvertableMatrix matrix =
 
         Err error ->
             Err "Not an Invertable Matrix"
+
+
+doublyStochasticMatrix : SquareMatrix Float -> Result String (DoublyStochasticMatrix Float)
+doublyStochasticMatrix matrix =
+    if isDoublyStochastic matrix then
+        DoublyStochastic matrix
+            |> Ok
+
+    else
+        Err "Not a Doubly Stochastic Matrix"
 
 
 complexInvertableMatrix : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (InvertableMatrix (ComplexNumbers.ComplexNumber Float))
@@ -971,8 +985,8 @@ isLeftStochastic matrix =
 
 {-| Predicate if matrix is doubly stochastic
 -}
-isDoublyStochastic : Matrix Float -> Bool
-isDoublyStochastic matrix =
+isDoublyStochastic : SquareMatrix Float -> Bool
+isDoublyStochastic (SquareMatrix matrix) =
     if isRightStochastic matrix && isLeftStochastic matrix then
         all
             ((<=) 0)

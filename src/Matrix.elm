@@ -5,6 +5,12 @@ module Matrix exposing
     , Solution(..)
     , Consistancy(..)
     , VectorDimension(..)
+    , squareMatrix
+    , realInvertableMatrix
+    , doublyStochasticMatrix
+    , complexInvertableMatrix
+    , hermitianMatrix
+    , unitaryMatrix
     , identity
     , zeros
     , zeroSquareMatrix
@@ -72,7 +78,6 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , complexInvertableMatrix, realInvertableMatrix, squareMatrix, unitaryMatrix
     )
 
 {-| A module for Matrix
@@ -86,6 +91,16 @@ module Matrix exposing
 @docs Solution
 @docs Consistancy
 @docs VectorDimension
+
+
+# Constructors
+
+@docs squareMatrix
+@docs realInvertableMatrix
+@docs doublyStochasticMatrix
+@docs complexInvertableMatrix
+@docs hermitianMatrix
+@docs unitaryMatrix
 
 
 # Values
@@ -234,22 +249,32 @@ type Matrix a
     = Matrix (List (RowVector a))
 
 
+{-| Square Matrix type
+-}
 type SquareMatrix a
     = SquareMatrix (Matrix a)
 
 
+{-| Invertable Matrix type
+-}
 type InvertableMatrix a
     = InvertableMatrix (SquareMatrix a)
 
 
+{-| Hermitian Matrix type
+-}
 type HermitianMatrix a
     = HermitianMatrix (SquareMatrix a)
 
 
+{-| Unitary Matrix type
+-}
 type UnitaryMatrix a
     = UnitaryMatrix (InvertableMatrix a)
 
 
+{-| Doubly Stochastic Matrix type
+-}
 type DoublyStochasticMatrix a
     = DoublyStochastic (SquareMatrix a)
 
@@ -304,6 +329,8 @@ type alias InnerProductSpace a =
     }
 
 
+{-| Construct a Square Matrix
+-}
 squareMatrix : Matrix a -> Result String (SquareMatrix a)
 squareMatrix matrix =
     if isSquareMatrix matrix then
@@ -314,6 +341,8 @@ squareMatrix matrix =
         Err "Not a Square Matrix"
 
 
+{-| Construct a Real numbered Invertable Matrix
+-}
 realInvertableMatrix : SquareMatrix Float -> Result String (InvertableMatrix Float)
 realInvertableMatrix matrix =
     case isInvertable Vector.realInnerProductSpace matrix of
@@ -324,6 +353,8 @@ realInvertableMatrix matrix =
             Err "Not an Invertable Matrix"
 
 
+{-| Construct a Doubly Stochastic Matrix
+-}
 doublyStochasticMatrix : SquareMatrix Float -> Result String (DoublyStochasticMatrix Float)
 doublyStochasticMatrix matrix =
     if isDoublyStochastic matrix then
@@ -334,6 +365,8 @@ doublyStochasticMatrix matrix =
         Err "Not a Doubly Stochastic Matrix"
 
 
+{-| Construct a Complex numbered Invertable Matrix
+-}
 complexInvertableMatrix : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (InvertableMatrix (ComplexNumbers.ComplexNumber Float))
 complexInvertableMatrix matrix =
     case isInvertable Vector.complexInnerProductSpace matrix of
@@ -344,6 +377,8 @@ complexInvertableMatrix matrix =
             Err "Not an Invertable Matrix"
 
 
+{-| Construct a Hermitian Matrix
+-}
 hermitianMatrix : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (HermitianMatrix (ComplexNumbers.ComplexNumber Float))
 hermitianMatrix matrix =
     if isHermitian matrix then
@@ -354,6 +389,8 @@ hermitianMatrix matrix =
         Err "Not an Invertable Matrix"
 
 
+{-| Construct an Unitary Matrix
+-}
 unitaryMatrix : InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (UnitaryMatrix (ComplexNumbers.ComplexNumber Float))
 unitaryMatrix matrix =
     if isUnitary matrix then

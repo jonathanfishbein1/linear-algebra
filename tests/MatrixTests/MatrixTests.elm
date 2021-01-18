@@ -527,6 +527,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ -1, 2, 3 ]
                             , Matrix.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     expectedInverse =
                         Matrix.Matrix
@@ -536,7 +537,7 @@ suite =
                             ]
 
                     inverse =
-                        Matrix.invert Vector.realInnerProductSpace matrix
+                        Result.andThen (Matrix.invert Vector.realInnerProductSpace) matrix
                 in
                 Expect.equal inverse (Ok expectedInverse)
         , Test.test
@@ -703,9 +704,10 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     inverseComplex =
-                        Matrix.invert Vector.complexInnerProductSpace matrix
+                        Result.andThen (Matrix.invert Vector.complexInnerProductSpace) matrix
 
                     expectedComplexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
@@ -847,11 +849,17 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2, complexNumberR2C3 ]
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR3C1, complexNumberR3C2, complexNumberR3C3 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     isUnitary =
-                        Matrix.isUnitary matrix
+                        Result.map Matrix.isUnitary matrix
                 in
-                Expect.true "is Unitary" isUnitary
+                case isUnitary of
+                    Ok result ->
+                        Expect.true "is unitary" result
+
+                    Err error ->
+                        Expect.fail error
         , Test.test
             "tests invertability"
           <|
@@ -862,9 +870,10 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ 2, 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 1, 3 ]
                             ]
+                            |> Matrix.squareMatrix
 
                     isInvertable =
-                        Matrix.isInvertable Vector.realInnerProductSpace matrix
+                        Result.andThen (Matrix.isInvertable Vector.realInnerProductSpace) matrix
                 in
                 Expect.equal isInvertable (Err "Matrix not onto Matrix is not invertable")
         , Test.test
@@ -899,9 +908,10 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.one, ComplexNumbers.zero ]
                             , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
                             ]
+                            |> Matrix.squareMatrix
 
                     isInvertable =
-                        Matrix.isInvertable Vector.complexInnerProductSpace matrix
+                        Result.andThen (Matrix.isInvertable Vector.complexInnerProductSpace) matrix
                 in
                 Expect.equal isInvertable (Err "Matrix not onto Matrix is not invertable")
         , Test.fuzz

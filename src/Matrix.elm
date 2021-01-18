@@ -537,7 +537,7 @@ determinant vectorSpace matrix =
 
 {-| Try to calculate the inverse of a matrix
 -}
-invert : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
+invert : Vector.InnerProductSpace a -> SquareMatrix a -> Result String (Matrix a)
 invert innerProductSpace matrix =
     case isInvertable innerProductSpace matrix of
         Ok invertableMatrix ->
@@ -838,9 +838,9 @@ isHermitian matrix =
 
 {-| Determine whether a matirx is unitary
 -}
-isUnitary : Matrix (ComplexNumbers.ComplexNumber Float) -> Bool
-isUnitary matrix =
-    case invert Vector.complexInnerProductSpace matrix of
+isUnitary : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
+isUnitary (SquareMatrix matrix) =
+    case invert Vector.complexInnerProductSpace (SquareMatrix matrix) of
         Ok inverse ->
             equal ComplexNumbers.equal inverse (adjoint matrix)
 
@@ -850,8 +850,8 @@ isUnitary matrix =
 
 {-| Determine whether a matirx is invertable
 -}
-isInvertable : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
-isInvertable innerProductSpace matrix =
+isInvertable : Vector.InnerProductSpace a -> SquareMatrix a -> Result String (Matrix a)
+isInvertable innerProductSpace (SquareMatrix matrix) =
     case isOnto innerProductSpace matrix of
         Ok ontoMatrix ->
             case isOneToOne innerProductSpace ontoMatrix of

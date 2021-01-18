@@ -5,6 +5,12 @@ module Matrix exposing
     , Solution(..)
     , Consistancy(..)
     , VectorDimension(..)
+    , squareMatrix
+    , realInvertableMatrix
+    , doublyStochasticMatrix
+    , complexInvertableMatrix
+    , hermitianMatrix
+    , unitaryMatrix
     , identity
     , zeros
     , zeroSquareMatrix
@@ -50,6 +56,7 @@ module Matrix exposing
     , concatVertical
     , realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
     , realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
+    , realMatrixAlgebra
     , realMatrixInnerProductSpace
     , complexMatrixAdditionAbelianGroup
     , map
@@ -84,6 +91,16 @@ module Matrix exposing
 @docs Solution
 @docs Consistancy
 @docs VectorDimension
+
+
+# Constructors
+
+@docs squareMatrix
+@docs realInvertableMatrix
+@docs doublyStochasticMatrix
+@docs complexInvertableMatrix
+@docs hermitianMatrix
+@docs unitaryMatrix
 
 
 # Values
@@ -149,6 +166,7 @@ module Matrix exposing
 @docs concatVertical
 @docs realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
 @docs realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
+@docs realMatrixAlgebra
 @docs realMatrixInnerProductSpace
 @docs complexMatrixAdditionAbelianGroup
 
@@ -231,6 +249,36 @@ type Matrix a
     = Matrix (List (RowVector a))
 
 
+{-| Square Matrix type
+-}
+type SquareMatrix a
+    = SquareMatrix (Matrix a)
+
+
+{-| Invertable Matrix type
+-}
+type InvertableMatrix a
+    = InvertableMatrix (SquareMatrix a)
+
+
+{-| Hermitian Matrix type
+-}
+type HermitianMatrix a
+    = HermitianMatrix (SquareMatrix a)
+
+
+{-| Unitary Matrix type
+-}
+type UnitaryMatrix a
+    = UnitaryMatrix (InvertableMatrix a)
+
+
+{-| Doubly Stochastic Matrix type
+-}
+type DoublyStochasticMatrix a
+    = DoublyStochastic (SquareMatrix a)
+
+
 {-| Type to represent result of Gauss-Jordan reduction
 -}
 type Consistancy a
@@ -259,6 +307,18 @@ type alias MatrixSpace a =
     }
 
 
+{-| Type to represent a Matrix Algebra
+-}
+type alias MatrixAlgebra a =
+    { matrixSpace : MatrixSpace a
+    , multiply :
+        Vector.InnerProductSpace a
+        -> Matrix a
+        -> Matrix a
+        -> Result String (Matrix a)
+    }
+
+
 {-| Type to represent an Inner Product Space
 -}
 type alias InnerProductSpace a =
@@ -267,6 +327,82 @@ type alias InnerProductSpace a =
     , norm : Matrix a -> Result String Float
     , distance : Matrix a -> Matrix a -> Result String Float
     }
+
+
+{-| Construct a Square Matrix
+-}
+squareMatrix : Matrix a -> Result String (SquareMatrix a)
+squareMatrix matrix =
+    if isSquareMatrix matrix then
+        SquareMatrix matrix
+            |> Ok
+
+    else
+        Err "Not a Square Matrix"
+
+
+{-| Construct a Real numbered Invertable Matrix
+-}
+realInvertableMatrix : SquareMatrix Float -> Result String (InvertableMatrix Float)
+realInvertableMatrix matrix =
+    case isInvertable Vector.realInnerProductSpace matrix of
+        Ok invMatrix ->
+            Result.map InvertableMatrix (squareMatrix invMatrix)
+
+        Err error ->
+            "Not an Invertable Matrix "
+                ++ error
+                |> Err
+
+
+{-| Construct a Doubly Stochastic Matrix
+-}
+doublyStochasticMatrix : SquareMatrix Float -> Result String (DoublyStochasticMatrix Float)
+doublyStochasticMatrix matrix =
+    if isDoublyStochastic matrix then
+        DoublyStochastic matrix
+            |> Ok
+
+    else
+        Err "Not a Doubly Stochastic Matrix"
+
+
+{-| Construct a Complex numbered Invertable Matrix
+-}
+complexInvertableMatrix : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (InvertableMatrix (ComplexNumbers.ComplexNumber Float))
+complexInvertableMatrix matrix =
+    case isInvertable Vector.complexInnerProductSpace matrix of
+        Ok invMatrix ->
+            Result.map InvertableMatrix (squareMatrix invMatrix)
+
+        Err error ->
+            "Not an Invertable Matrix "
+                ++ error
+                |> Err
+
+
+{-| Construct a Hermitian Matrix
+-}
+hermitianMatrix : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (HermitianMatrix (ComplexNumbers.ComplexNumber Float))
+hermitianMatrix matrix =
+    if isHermitian matrix then
+        HermitianMatrix matrix
+            |> Ok
+
+    else
+        Err "Not an Invertable Matrix"
+
+
+{-| Construct an Unitary Matrix
+-}
+unitaryMatrix : InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (UnitaryMatrix (ComplexNumbers.ComplexNumber Float))
+unitaryMatrix matrix =
+    if isUnitary matrix then
+        UnitaryMatrix matrix
+            |> Ok
+
+    else
+        Err "Not an Invertable Matrix"
 
 
 {-| Semigroup instance for Matrix under the addition operation with real values.
@@ -492,15 +628,15 @@ rank innerProductSpace matrix =
 
 {-| Try to calculate the determinant
 -}
-determinant : Vector.VectorSpace a -> Matrix a -> Result String a
-determinant vectorSpace matrix =
+determinant : Vector.VectorSpace a -> InvertableMatrix a -> Result String a
+determinant vectorSpace (InvertableMatrix matrix) =
     let
         upperTriangularForm =
             upperTriangle vectorSpace matrix
     in
     Result.andThen
-        (\squareMatrix ->
-            getDiagonalProduct vectorSpace.field squareMatrix
+        (\sqMatrix ->
+            getDiagonalProduct vectorSpace.field sqMatrix
                 |> Result.fromMaybe "Index out of range"
         )
         upperTriangularForm
@@ -508,16 +644,16 @@ determinant vectorSpace matrix =
 
 {-| Try to calculate the inverse of a matrix
 -}
-invert : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
+invert : Vector.InnerProductSpace a -> SquareMatrix a -> Result String (Matrix a)
 invert innerProductSpace matrix =
     case isInvertable innerProductSpace matrix of
-        Ok invertableMatrix ->
+        Ok invMatrix ->
             let
                 sizeOfMatrix =
-                    mDimension invertableMatrix
+                    mDimension invMatrix
 
                 augmentedMatrix =
-                    appendHorizontal invertableMatrix
+                    appendHorizontal invMatrix
                         (identity innerProductSpace.vectorSpace.field sizeOfMatrix)
 
                 reducedRowEchelonForm =
@@ -795,23 +931,23 @@ isSquareMatrix matrix =
 
 {-| Predicate to determine if Matrix is symmetric
 -}
-isSymmetric : Matrix a -> Bool
-isSymmetric matrix =
+isSymmetric : SquareMatrix a -> Bool
+isSymmetric (SquareMatrix matrix) =
     transpose matrix == matrix
 
 
 {-| Predicate to determine if Matrix is Hermitian
 -}
-isHermitian : Matrix (ComplexNumbers.ComplexNumber number) -> Bool
-isHermitian matrix =
+isHermitian : SquareMatrix (ComplexNumbers.ComplexNumber number) -> Bool
+isHermitian (SquareMatrix matrix) =
     adjoint matrix == matrix
 
 
 {-| Determine whether a matirx is unitary
 -}
-isUnitary : Matrix (ComplexNumbers.ComplexNumber Float) -> Bool
-isUnitary matrix =
-    case invert Vector.complexInnerProductSpace matrix of
+isUnitary : InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
+isUnitary (InvertableMatrix (SquareMatrix matrix)) =
+    case invert Vector.complexInnerProductSpace (SquareMatrix matrix) of
         Ok inverse ->
             equal ComplexNumbers.equal inverse (adjoint matrix)
 
@@ -821,8 +957,8 @@ isUnitary matrix =
 
 {-| Determine whether a matirx is invertable
 -}
-isInvertable : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
-isInvertable innerProductSpace matrix =
+isInvertable : Vector.InnerProductSpace a -> SquareMatrix a -> Result String (Matrix a)
+isInvertable innerProductSpace (SquareMatrix matrix) =
     case isOnto innerProductSpace matrix of
         Ok ontoMatrix ->
             case isOneToOne innerProductSpace ontoMatrix of
@@ -890,8 +1026,8 @@ isLeftStochastic matrix =
 
 {-| Predicate if matrix is doubly stochastic
 -}
-isDoublyStochastic : Matrix Float -> Bool
-isDoublyStochastic matrix =
+isDoublyStochastic : SquareMatrix Float -> Bool
+isDoublyStochastic (SquareMatrix matrix) =
     if isRightStochastic matrix && isLeftStochastic matrix then
         all
             ((<=) 0)
@@ -916,25 +1052,21 @@ all predicate (Matrix listOfRowVectors) =
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
-upperTriangle vectorSpace (Matrix matrix) =
-    if isSquareMatrix (Matrix matrix) then
-        let
-            listOfVectors =
-                List.map
-                    (\(RowVector vector) -> vector)
-                    matrix
-        in
-        List.foldl
-            (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace)
-            listOfVectors
-            (List.range 0 (List.length matrix - 1))
-            |> List.map RowVector
-            |> Matrix
-            |> Ok
-
-    else
-        Err "Must be Square Matrix"
+upperTriangle : Vector.VectorSpace a -> SquareMatrix a -> Result String (Matrix a)
+upperTriangle vectorSpace (SquareMatrix (Matrix matrix)) =
+    let
+        listOfVectors =
+            List.map
+                (\(RowVector vector) -> vector)
+                matrix
+    in
+    List.foldl
+        (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace)
+        listOfVectors
+        (List.range 0 (List.length matrix - 1))
+        |> List.map RowVector
+        |> Matrix
+        |> Ok
 
 
 {-| Gaussian Elimination
@@ -1362,6 +1494,15 @@ realMatrixSpace =
     }
 
 
+{-| Complex Numbered Vector Space for Matrix
+-}
+complexMatrixSpace : MatrixSpace (ComplexNumbers.ComplexNumber Float)
+complexMatrixSpace =
+    { abelianGroup = complexMatrixAdditionAbelianGroup
+    , matrixScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
+    }
+
+
 {-| Real Numbered Inner Product Space for Matrix
 -}
 realMatrixInnerProductSpace : InnerProductSpace Float
@@ -1370,4 +1511,22 @@ realMatrixInnerProductSpace =
     , innerProduct = dotProduct Vector.realInnerProductSpace
     , norm = normReal
     , distance = distanceReal
+    }
+
+
+{-| Real Numbered Matrix Algebra
+-}
+realMatrixAlgebra : MatrixAlgebra Float
+realMatrixAlgebra =
+    { matrixSpace = realMatrixSpace
+    , multiply = multiply
+    }
+
+
+{-| Complex Numbered Matrix Algebra
+-}
+complexMatrixAlgebra : MatrixAlgebra (ComplexNumbers.ComplexNumber Float)
+complexMatrixAlgebra =
+    { matrixSpace = complexMatrixSpace
+    , multiply = multiply
     }

@@ -81,7 +81,7 @@ subtractRow { abelianGroup, field } r currentRow nextRow =
 {-| Internal function for scalling rows by pivot entry
 -}
 scale : Vector.VectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a
-scale { abelianGroup, field } rowIndex rowVector =
+scale { field } rowIndex rowVector =
     let
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             field
@@ -122,9 +122,11 @@ reduceRowBackwards vectorSpace rowIndex listOfVectors =
                 |> List.map
                     (subtractRow vectorSpace rowIndex row)
     in
-    prevRows
-        ++ [ row ]
-        ++ List.drop (rowIndex + 1) listOfVectors
+    List.concat
+        [ prevRows
+        , [ row ]
+        , List.drop (rowIndex + 1) listOfVectors
+        ]
 
 
 diagonal : CommutativeDivisionRing.CommutativeDivisionRing a -> Int -> Int -> a
@@ -207,9 +209,11 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
                             )
 
                 newMatrixReduceRow =
-                    List.take rowIndex swappedListOfVectors
-                        ++ [ currentRow ]
-                        ++ nextRows
+                    List.concat
+                        [ List.take rowIndex swappedListOfVectors
+                        , [ currentRow ]
+                        , nextRows
+                        ]
             in
             newMatrixReduceRow
 
@@ -235,8 +239,10 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
                                 (subtractRow vectorSpace nextNonZero currentRow)
 
                     newMatrixReduceRow =
-                        List.take rowIndex listOfVectors
-                            ++ [ currentRow ]
-                            ++ nextRows
+                        List.concat
+                            [ List.take rowIndex listOfVectors
+                            , [ currentRow ]
+                            , nextRows
+                            ]
                 in
                 newMatrixReduceRow

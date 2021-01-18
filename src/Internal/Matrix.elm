@@ -81,7 +81,7 @@ subtractRow { abelianGroup, field } r currentRow nextRow =
 {-| Internal function for scalling rows by pivot entry
 -}
 scale : Vector.VectorSpace a -> Int -> Vector.Vector a -> Vector.Vector a
-scale { abelianGroup, field } rowIndex rowVector =
+scale {  field } rowIndex rowVector =
     let
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             field

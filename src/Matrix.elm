@@ -630,16 +630,9 @@ rank innerProductSpace matrix =
 -}
 determinant : Vector.VectorSpace a -> InvertableMatrix a -> Result String a
 determinant vectorSpace (InvertableMatrix (SquareMatrix matrix)) =
-    let
-        upperTriangularForm =
-            upperTriangle vectorSpace matrix
-    in
-    Result.andThen
-        (\sqMatrix ->
-            getDiagonalProduct vectorSpace.field sqMatrix
-                |> Result.fromMaybe "Index out of range"
-        )
-        upperTriangularForm
+    upperTriangle vectorSpace matrix
+        |> getDiagonalProduct vectorSpace.field
+        |> Result.fromMaybe "Index out of range"
 
 
 {-| Try to calculate the inverse of a matrix
@@ -1052,7 +1045,7 @@ all predicate (Matrix listOfRowVectors) =
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+upperTriangle : Vector.VectorSpace a -> Matrix a -> Matrix a
 upperTriangle vectorSpace (Matrix matrix) =
     let
         listOfVectors =
@@ -1066,7 +1059,6 @@ upperTriangle vectorSpace (Matrix matrix) =
         (List.range 0 (List.length matrix - 1))
         |> List.map RowVector
         |> Matrix
-        |> Ok
 
 
 {-| Gaussian Elimination

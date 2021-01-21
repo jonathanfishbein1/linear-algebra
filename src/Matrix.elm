@@ -1066,21 +1066,18 @@ upperTriangle vectorSpace (Matrix matrix) =
 gaussianReduce : Vector.VectorSpace a -> Matrix a -> Matrix a
 gaussianReduce vectorSpace (Matrix matrix) =
     let
-        listOfVectors =
+        (Matrix upperTriangularFormRectangle) =
+            upperTriangle vectorSpace (Matrix matrix)
+
+        listOfVectorsUpperTriangularFormRectangle =
             List.map
                 (\(RowVector vector) -> vector)
-                matrix
-
-        upperTriangularFormRectangle =
-            List.foldl
-                (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace)
-                listOfVectors
-                (List.range 0 (List.length matrix - 1))
+                upperTriangularFormRectangle
 
         rowEchelonForm =
             List.indexedMap
                 (Internal.Matrix.scale vectorSpace)
-                upperTriangularFormRectangle
+                listOfVectorsUpperTriangularFormRectangle
     in
     rowEchelonForm
         |> List.map RowVector

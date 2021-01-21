@@ -198,7 +198,7 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
                         |> Maybe.withDefault Vector.empty
 
                 nextRows =
-                    List.drop (rowIndex + 1) listOfVectors
+                    List.drop (rowIndex + 1) swappedListOfVectors
                         |> List.map
                             (\row ->
                                 let

@@ -121,6 +121,27 @@ suite =
                 Expect.equal reducedRowEchelonFormMatrix
                     (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
         , Test.test
+            "tests matrix solve, github issue 2"
+          <|
+            \_ ->
+                let
+                    matrix =
+                        Matrix.Matrix
+                            [ Matrix.RowVector (Vector.Vector [ 0, 1, 0, 0 ])
+                            , Matrix.RowVector (Vector.Vector [ 0, 0, 0, 1 ])
+                            , Matrix.RowVector (Vector.Vector [ 0, 0, -2, 1 ])
+                            , Matrix.RowVector (Vector.Vector [ -2, 1, 0, 0 ])
+                            ]
+
+                    b =
+                        Matrix.ColumnVector <| Vector.Vector [ 312, 184, 0, 0 ]
+
+                    reducedRowEchelonFormMatrix =
+                        Matrix.solve Vector.realInnerProductSpace matrix b
+                in
+                Expect.equal reducedRowEchelonFormMatrix
+                    (Matrix.Consistant (Matrix.UniqueSolution (Matrix.ColumnVector (Vector.Vector [ 156, 312, 92, 184 ]))))
+        , Test.test
             "tests matrix null space calculation"
           <|
             \_ ->
@@ -1398,7 +1419,7 @@ suite =
                 in
                 case isDoublyStochastic of
                     Ok result ->
-                        Expect.true  "Is Doubly Stochastic" result
+                        Expect.true "Is Doubly Stochastic" result
 
                     Err error ->
                         Expect.fail error

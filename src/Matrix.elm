@@ -629,17 +629,10 @@ rank innerProductSpace matrix =
 {-| Try to calculate the determinant
 -}
 determinant : Vector.VectorSpace a -> InvertableMatrix a -> Result String a
-determinant vectorSpace (InvertableMatrix matrix) =
-    let
-        upperTriangularForm =
-            upperTriangle vectorSpace matrix
-    in
-    Result.andThen
-        (\sqMatrix ->
-            getDiagonalProduct vectorSpace.field sqMatrix
-                |> Result.fromMaybe "Index out of range"
-        )
-        upperTriangularForm
+determinant vectorSpace (InvertableMatrix (SquareMatrix matrix)) =
+    upperTriangle vectorSpace matrix
+        |> getDiagonalProduct vectorSpace.field
+        |> Result.fromMaybe "Index out of range"
 
 
 {-| Try to calculate the inverse of a matrix
@@ -1052,8 +1045,8 @@ all predicate (Matrix listOfRowVectors) =
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Vector.VectorSpace a -> SquareMatrix a -> Result String (Matrix a)
-upperTriangle vectorSpace (SquareMatrix (Matrix matrix)) =
+upperTriangle : Vector.VectorSpace a -> Matrix a -> Matrix a
+upperTriangle vectorSpace (Matrix matrix) =
     let
         listOfVectors =
             List.map
@@ -1066,7 +1059,6 @@ upperTriangle vectorSpace (SquareMatrix (Matrix matrix)) =
         (List.range 0 (List.length matrix - 1))
         |> List.map RowVector
         |> Matrix
-        |> Ok
 
 
 {-| Gaussian Elimination
@@ -1074,21 +1066,18 @@ upperTriangle vectorSpace (SquareMatrix (Matrix matrix)) =
 gaussianReduce : Vector.VectorSpace a -> Matrix a -> Matrix a
 gaussianReduce vectorSpace (Matrix matrix) =
     let
-        listOfVectors =
+        (Matrix upperTriangularFormRectangle) =
+            upperTriangle vectorSpace (Matrix matrix)
+
+        listOfVectorsUpperTriangularFormRectangle =
             List.map
                 (\(RowVector vector) -> vector)
-                matrix
-
-        upperTriangularFormRectangle =
-            List.foldl
-                (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace)
-                listOfVectors
-                (List.range 0 (List.length matrix - 1))
+                upperTriangularFormRectangle
 
         rowEchelonForm =
             List.indexedMap
                 (Internal.Matrix.scale vectorSpace)
-                upperTriangularFormRectangle
+                listOfVectorsUpperTriangularFormRectangle
     in
     rowEchelonForm
         |> List.map RowVector

@@ -629,7 +629,7 @@ rank innerProductSpace matrix =
 {-| Try to calculate the determinant
 -}
 determinant : Vector.VectorSpace a -> InvertableMatrix a -> Result String a
-determinant vectorSpace (InvertableMatrix matrix) =
+determinant vectorSpace (InvertableMatrix (SquareMatrix matrix)) =
     let
         upperTriangularForm =
             upperTriangle vectorSpace matrix
@@ -1052,8 +1052,8 @@ all predicate (Matrix listOfRowVectors) =
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Vector.VectorSpace a -> SquareMatrix a -> Result String (Matrix a)
-upperTriangle vectorSpace (SquareMatrix (Matrix matrix)) =
+upperTriangle : Vector.VectorSpace a -> Matrix a -> Result String (Matrix a)
+upperTriangle vectorSpace (Matrix matrix) =
     let
         listOfVectors =
             List.map

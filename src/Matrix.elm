@@ -1525,9 +1525,8 @@ complexMatrixAlgebra =
 
 {-| Calculate the commuter of two Hermitian Matricies
 -}
-commuter : HermitianMatrix (ComplexNumbers.ComplexNumber Float) -> HermitianMatrix (ComplexNumbers.ComplexNumber Float) -> Matrix (ComplexNumbers.ComplexNumber Float)
-commuter (HermitianMatrix (SquareMatrix matrixOne)) (HermitianMatrix (SquareMatrix matrixTwo)) =
-    Result.map2 (subtract ComplexNumbers.complexField)
-        (multiply Vector.complexInnerProductSpace matrixOne matrixTwo)
-        (multiply Vector.complexInnerProductSpace matrixTwo matrixOne)
-        |> Result.withDefault empty
+commuter : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String (Matrix a)
+commuter innerProductSpace matrixOne matrixTwo =
+    Result.map2 (subtract innerProductSpace.vectorSpace.field)
+        (multiply innerProductSpace matrixOne matrixTwo)
+        (multiply innerProductSpace matrixTwo matrixOne)

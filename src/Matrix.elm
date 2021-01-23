@@ -272,7 +272,7 @@ type UnitaryMatrix a
 {-| Doubly Stochastic Matrix type
 -}
 type DoublyStochasticMatrix a
-    = DoublyStochastic (SquareMatrix a)
+    = DoublyStochasticMatrix (SquareMatrix a)
 
 
 {-| Type to represent result of Gauss-Jordan reduction

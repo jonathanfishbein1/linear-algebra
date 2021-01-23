@@ -98,16 +98,6 @@ module Matrix exposing
 @docs DoublyStochasticMatrix
 
 
-# Constructors
-
-@docs squareMatrix
-@docs realInvertableMatrix
-@docs doublyStochasticMatrix
-@docs complexInvertableMatrix
-@docs hermitianMatrix
-@docs unitaryMatrix
-
-
 # Values
 
 @docs identity

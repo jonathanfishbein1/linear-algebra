@@ -2,7 +2,6 @@ module MatrixTests.MatrixSpaceTests exposing (suite)
 
 import ComplexNumbers
 import Expect
-import Field
 import Fuzz
 import Matrix
 import Test

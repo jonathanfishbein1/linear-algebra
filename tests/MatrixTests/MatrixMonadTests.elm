@@ -1,6 +1,5 @@
 module MatrixTests.MatrixMonadTests exposing (suite)
 
-import ComplexNumbers
 import Expect
 import Fuzz
 import Matrix

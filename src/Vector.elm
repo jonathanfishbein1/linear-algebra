@@ -151,7 +151,7 @@ import AbelianGroup
 import CommutativeDivisionRing
 import CommutativeMonoid
 import CommutativeSemigroup
-import ComplexNumbers exposing (ComplexNumber)
+import ComplexNumbers
 import Field
 import Group
 import List.Extra

@@ -35,6 +35,7 @@ module Matrix exposing
     , multiply
     , dotProduct
     , tensorProduct
+    , commuter
     , isSquareMatrix
     , isSymmetric
     , isHermitian
@@ -137,6 +138,7 @@ module Matrix exposing
 @docs multiply
 @docs dotProduct
 @docs tensorProduct
+@docs commuter
 
 
 # Matrix Predicates and Properties
@@ -1519,3 +1521,12 @@ complexMatrixAlgebra =
     { matrixSpace = complexMatrixSpace
     , multiply = multiply
     }
+
+
+{-| Calculate the commuter of two Hermitian Matricies
+-}
+commuter : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String (Matrix a)
+commuter innerProductSpace matrixOne matrixTwo =
+    Result.map2 (subtract innerProductSpace.vectorSpace.field)
+        (multiply innerProductSpace matrixOne matrixTwo)
+        (multiply innerProductSpace matrixTwo matrixOne)

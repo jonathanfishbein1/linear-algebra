@@ -3,7 +3,6 @@ module MatrixTests.GaussTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Float.Extra
-import Fuzz
 import Matrix
 import Test
 import Vector

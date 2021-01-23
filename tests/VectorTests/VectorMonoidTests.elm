@@ -13,6 +13,26 @@ suite =
         [ Test.fuzz2
             Fuzz.float
             Fuzz.float
+            "tests empty vector is additive identity"
+          <|
+            \one two ->
+                let
+                    w =
+                        Vector.Vector
+                            [ ComplexNumbers.ComplexNumber
+                                (ComplexNumbers.Real
+                                    one
+                                )
+                                (ComplexNumbers.Imaginary
+                                    two
+                                )
+                            ]
+                in
+                Vector.add ComplexNumbers.complexField (Vector.Vector [ ComplexNumbers.zero ]) w
+                    |> Expect.equal w
+        , Test.fuzz2
+            Fuzz.float
+            Fuzz.float
             "tests Vector empty or identity value right"
           <|
             \one two ->

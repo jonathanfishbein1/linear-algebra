@@ -5,6 +5,10 @@ module Matrix exposing
     , Solution(..)
     , Consistancy(..)
     , VectorDimension(..)
+    , SquareMatrix
+    , InvertableMatrix
+    , HermitianMatrix
+    , UnitaryMatrix
     , squareMatrix
     , realInvertableMatrix
     , doublyStochasticMatrix
@@ -92,6 +96,10 @@ module Matrix exposing
 @docs Solution
 @docs Consistancy
 @docs VectorDimension
+@docs SquareMatrix
+@docs InvertableMatrix
+@docs HermitianMatrix
+@docs UnitaryMatrix
 
 
 # Constructors

@@ -496,11 +496,11 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ 1, 2 ]
                             , Matrix.RowVector <| Vector.Vector [ 3, 4 ]
                             ]
-                            |> Matrix.squareMatrix
-                            |> Result.andThen Matrix.realInvertableMatrix
+                            |> Matrix.SquareMatrix
+                            |> Matrix.InvertableMatrix
 
                     determinant =
-                        Result.andThen (Matrix.determinant Vector.realVectorSpace) matrix
+                        Matrix.determinant Vector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok -2)
         , Test.test
@@ -514,11 +514,11 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 2, -1, 3 ]
                             , Matrix.RowVector <| Vector.Vector [ 4, 0, 1 ]
                             ]
-                            |> Matrix.squareMatrix
-                            |> Result.andThen Matrix.realInvertableMatrix
+                            |> Matrix.SquareMatrix
+                            |> Matrix.InvertableMatrix
 
                     determinant =
-                        Result.andThen (Matrix.determinant Vector.realVectorSpace) matrix
+                        Matrix.determinant Vector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok 35)
         , Test.test
@@ -533,11 +533,11 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 0, 1, 2, 3 ]
                             , Matrix.RowVector <| Vector.Vector [ 2, 3, 0, 0 ]
                             ]
-                            |> Matrix.squareMatrix
-                            |> Result.andThen Matrix.realInvertableMatrix
+                            |> Matrix.SquareMatrix
+                            |> Matrix.InvertableMatrix
 
                     determinant =
-                        Result.andThen (Matrix.determinant Vector.realVectorSpace) matrix
+                        Matrix.determinant Vector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok 7)
         , Test.test
@@ -551,7 +551,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ -1, 2, 3 ]
                             , Matrix.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
-                            |> Matrix.squareMatrix
+                            |> Matrix.SquareMatrix
 
                     expectedInverse =
                         Matrix.Matrix
@@ -561,7 +561,7 @@ suite =
                             ]
 
                     inverse =
-                        Result.andThen (Matrix.invert Vector.realInnerProductSpace) matrix
+                        Matrix.invert Vector.realInnerProductSpace matrix
                 in
                 Expect.equal inverse (Ok expectedInverse)
         , Test.test
@@ -662,11 +662,11 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
-                            |> Matrix.squareMatrix
-                            |> Result.andThen Matrix.complexInvertableMatrix
+                            |> Matrix.SquareMatrix
+                            |> Matrix.InvertableMatrix
 
                     determinantComplex =
-                        Result.andThen (Matrix.determinant Vector.complexVectorSpace) matrix
+                        Matrix.determinant Vector.complexVectorSpace matrix
 
                     expectedDeterminant =
                         ComplexNumbers.ComplexNumber
@@ -729,10 +729,10 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
-                            |> Matrix.squareMatrix
+                            |> Matrix.SquareMatrix
 
                     inverseComplex =
-                        Result.andThen (Matrix.invert Vector.complexInnerProductSpace) matrix
+                        Matrix.invert Vector.complexInnerProductSpace matrix
 
                     expectedComplexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
@@ -874,18 +874,13 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2, complexNumberR2C3 ]
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR3C1, complexNumberR3C2, complexNumberR3C3 ]
                             ]
-                            |> Matrix.squareMatrix
-                            |> Result.andThen Matrix.complexInvertableMatrix
+                            |> Matrix.SquareMatrix
+                            |> Matrix.InvertableMatrix
 
                     isUnitary =
-                        Result.map Matrix.isUnitary matrix
+                        Matrix.isUnitary matrix
                 in
-                case isUnitary of
-                    Ok result ->
-                        Expect.true "is unitary" result
-
-                    Err error ->
-                        Expect.fail error
+                Expect.true "is unitary" isUnitary
         , Test.test
             "tests invertability"
           <|
@@ -896,10 +891,10 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ 2, 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 1, 3 ]
                             ]
-                            |> Matrix.squareMatrix
+                            |> Matrix.SquareMatrix
 
                     isInvertable =
-                        Result.andThen (Matrix.isInvertable Vector.realInnerProductSpace) matrix
+                        Matrix.isInvertable Vector.realInnerProductSpace matrix
                 in
                 Expect.equal isInvertable (Err "Matrix not onto Matrix is not invertable")
         , Test.test
@@ -934,10 +929,10 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.one, ComplexNumbers.zero ]
                             , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
                             ]
-                            |> Matrix.squareMatrix
+                            |> Matrix.SquareMatrix
 
                     isInvertable =
-                        Result.andThen (Matrix.isInvertable Vector.complexInnerProductSpace) matrix
+                        Matrix.isInvertable Vector.complexInnerProductSpace matrix
                 in
                 Expect.equal isInvertable (Err "Matrix not onto Matrix is not invertable")
         , Test.fuzz
@@ -1412,17 +1407,12 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
-                            |> Matrix.squareMatrix
+                            |> Matrix.SquareMatrix
 
                     isDoublyStochastic =
-                        Result.map Matrix.isDoublyStochastic matrix
+                        Matrix.isDoublyStochastic matrix
                 in
-                case isDoublyStochastic of
-                    Ok result ->
-                        Expect.true "Is Doubly Stochastic" result
-
-                    Err error ->
-                        Expect.fail error
+                Expect.true "Is Doubly Stochastic" isDoublyStochastic
         , Test.test
             "tests areRowEquivalent"
           <|

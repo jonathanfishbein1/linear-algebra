@@ -5,17 +5,11 @@ module Matrix exposing
     , Solution(..)
     , Consistancy(..)
     , VectorDimension(..)
-    , SquareMatrix
-    , InvertableMatrix
-    , HermitianMatrix
-    , UnitaryMatrix
-    , DoublyStochasticMatrix
-    , squareMatrix
-    , realInvertableMatrix
-    , doublyStochasticMatrix
-    , complexInvertableMatrix
-    , hermitianMatrix
-    , unitaryMatrix
+    , SquareMatrix(..)
+    , InvertableMatrix(..)
+    , HermitianMatrix(..)
+    , UnitaryMatrix(..)
+    , DoublyStochasticMatrix(..)
     , identity
     , zeros
     , zeroSquareMatrix
@@ -339,82 +333,6 @@ type alias InnerProductSpace a =
     , norm : Matrix a -> Result String Float
     , distance : Matrix a -> Matrix a -> Result String Float
     }
-
-
-{-| Construct a Square Matrix
--}
-squareMatrix : Matrix a -> Result String (SquareMatrix a)
-squareMatrix matrix =
-    if isSquareMatrix matrix then
-        SquareMatrix matrix
-            |> Ok
-
-    else
-        Err "Not a Square Matrix"
-
-
-{-| Construct a Real numbered Invertable Matrix
--}
-realInvertableMatrix : SquareMatrix Float -> Result String (InvertableMatrix Float)
-realInvertableMatrix matrix =
-    case isInvertable Vector.realInnerProductSpace matrix of
-        Ok invMatrix ->
-            Result.map InvertableMatrix (squareMatrix invMatrix)
-
-        Err error ->
-            "Not an Invertable Matrix "
-                ++ error
-                |> Err
-
-
-{-| Construct a Doubly Stochastic Matrix
--}
-doublyStochasticMatrix : SquareMatrix Float -> Result String (DoublyStochasticMatrix Float)
-doublyStochasticMatrix matrix =
-    if isDoublyStochastic matrix then
-        DoublyStochastic matrix
-            |> Ok
-
-    else
-        Err "Not a Doubly Stochastic Matrix"
-
-
-{-| Construct a Complex numbered Invertable Matrix
--}
-complexInvertableMatrix : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (InvertableMatrix (ComplexNumbers.ComplexNumber Float))
-complexInvertableMatrix matrix =
-    case isInvertable Vector.complexInnerProductSpace matrix of
-        Ok invMatrix ->
-            Result.map InvertableMatrix (squareMatrix invMatrix)
-
-        Err error ->
-            "Not an Invertable Matrix "
-                ++ error
-                |> Err
-
-
-{-| Construct a Hermitian Matrix
--}
-hermitianMatrix : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (HermitianMatrix (ComplexNumbers.ComplexNumber Float))
-hermitianMatrix matrix =
-    if isHermitian matrix then
-        HermitianMatrix matrix
-            |> Ok
-
-    else
-        Err "Not an Invertable Matrix"
-
-
-{-| Construct an Unitary Matrix
--}
-unitaryMatrix : InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (UnitaryMatrix (ComplexNumbers.ComplexNumber Float))
-unitaryMatrix matrix =
-    if isUnitary matrix then
-        UnitaryMatrix matrix
-            |> Ok
-
-    else
-        Err "Not an Invertable Matrix"
 
 
 {-| Semigroup instance for Matrix under the addition operation with real values.

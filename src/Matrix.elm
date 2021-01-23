@@ -470,9 +470,10 @@ zeros (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeD
 
 {-| Create square Matrix with n dimension filled with zeros
 -}
-zeroSquareMatrix : Field.Field a -> Int -> Matrix a
+zeroSquareMatrix : Field.Field a -> Int -> SquareMatrix a
 zeroSquareMatrix field dimension =
     zeros field dimension dimension
+        |> SquareMatrix
 
 
 {-| Scalar multiplication over a Matrix

@@ -9,6 +9,7 @@ module Matrix exposing
     , InvertableMatrix
     , HermitianMatrix
     , UnitaryMatrix
+    , DoublyStochasticMatrix
     , squareMatrix
     , realInvertableMatrix
     , doublyStochasticMatrix
@@ -100,6 +101,7 @@ module Matrix exposing
 @docs InvertableMatrix
 @docs HermitianMatrix
 @docs UnitaryMatrix
+@docs DoublyStochasticMatrix
 
 
 # Constructors

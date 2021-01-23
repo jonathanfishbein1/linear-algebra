@@ -2,10 +2,7 @@ module MatrixTests.MatrixAbelianGroupTests exposing (suite)
 
 import ComplexNumbers
 import Expect
-import Field
-import Fuzz
 import Matrix
-import Parser
 import Test
 import Vector
 
@@ -13,12 +10,10 @@ import Vector
 suite : Test.Test
 suite =
     Test.describe "Matrix Abelian Group Tests"
-        [ Test.fuzz2
-            Fuzz.int
-            Fuzz.int
+        [ Test.test
             "tests matrix inverse"
           <|
-            \one two ->
+            \_ ->
                 let
                     complexOneNegative =
                         ComplexNumbers.ComplexNumber

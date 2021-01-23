@@ -2,10 +2,8 @@ module MatrixTests.MatrixSemigroupTests exposing (..)
 
 import ComplexNumbers
 import Expect
-import Field
 import Fuzz
 import Matrix
-import Parser
 import Test
 import Vector
 

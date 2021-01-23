@@ -2,7 +2,6 @@ module MatrixTests.JordanTests exposing (suite)
 
 import ComplexNumbers
 import Expect
-import Fuzz
 import Matrix
 import Test
 import Vector

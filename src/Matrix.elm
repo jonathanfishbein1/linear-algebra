@@ -5,24 +5,14 @@ module Matrix exposing
     , Solution(..)
     , Consistancy(..)
     , VectorDimension(..)
-    , SquareMatrix(..)
-    , InvertableMatrix(..)
-    , HermitianMatrix(..)
-    , UnitaryMatrix(..)
-    , DoublyStochasticMatrix(..)
     , identity
     , zeros
-    , zeroSquareMatrix
     , scalarMultiplication
     , transpose
     , conjugate
     , adjoint
-    , invert
     , subMatrix
     , nullSpace
-    , determinant
-    , normReal
-    , normComplex
     , leftNullSpace
     , getDiagonal
     , getDiagonalProduct
@@ -32,24 +22,15 @@ module Matrix exposing
     , subtract
     , multiplyMatrixVector
     , multiply
-    , dotProduct
     , tensorProduct
     , commuter
-    , isSquareMatrix
-    , isSymmetric
-    , isHermitian
     , isOnto
     , isOneToOne
-    , isInvertable
-    , isUnitary
     , areBasis
     , areLinearlyIndependent
     , doesSetSpanSpace
     , mDimension
     , nDimension
-    , isRightStochastic
-    , isLeftStochastic
-    , isDoublyStochastic
     , areRowEquivalent
     , empty
     , concatHorizontal
@@ -57,7 +38,6 @@ module Matrix exposing
     , realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
     , realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
     , realMatrixAlgebra
-    , realMatrixInnerProductSpace
     , complexMatrixAdditionAbelianGroup
     , map
     , pure
@@ -78,6 +58,7 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
+    , MatrixSpace, all, appendHorizontal, realMatrixAdditionGroup, realMatrixAdditionSemigroup, realMatrixSpace
     )
 
 {-| A module for Matrix
@@ -245,36 +226,6 @@ type Matrix a
     = Matrix (List (RowVector a))
 
 
-{-| Square Matrix type
--}
-type SquareMatrix a
-    = SquareMatrix (Matrix a)
-
-
-{-| Invertable Matrix type
--}
-type InvertableMatrix a
-    = InvertableMatrix (SquareMatrix a)
-
-
-{-| Hermitian Matrix type
--}
-type HermitianMatrix a
-    = HermitianMatrix (SquareMatrix a)
-
-
-{-| Unitary Matrix type
--}
-type UnitaryMatrix a
-    = UnitaryMatrix (InvertableMatrix a)
-
-
-{-| Doubly Stochastic Matrix type
--}
-type DoublyStochasticMatrix a
-    = DoublyStochasticMatrix (SquareMatrix a)
-
-
 {-| Type to represent result of Gauss-Jordan reduction
 -}
 type Consistancy a
@@ -312,16 +263,6 @@ type alias MatrixAlgebra a =
         -> Matrix a
         -> Matrix a
         -> Result String (Matrix a)
-    }
-
-
-{-| Type to represent an Inner Product Space
--}
-type alias InnerProductSpace a =
-    { matrixSpace : MatrixSpace a
-    , innerProduct : Matrix a -> Matrix a -> Result String Float
-    , norm : Matrix a -> Result String Float
-    , distance : Matrix a -> Matrix a -> Result String Float
     }
 
 
@@ -428,14 +369,6 @@ createMatrixFromColumnVectors columnVectors =
         |> transpose
 
 
-{-| Calculate distance between two vectors
--}
-distanceReal : Matrix Float -> Matrix Float -> Result String Float
-distanceReal matrixOne matrixTwo =
-    realMatrixAdditionSemigroup matrixOne (realMatrixAdditionGroup.inverse matrixTwo)
-        |> normReal
-
-
 {-| Create Identity Matrix with n dimension
 -}
 identity : Field.Field a -> Int -> Matrix a
@@ -466,14 +399,6 @@ zeros (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeD
                 |> RowVector
         )
         |> Matrix
-
-
-{-| Create square Matrix with n dimension filled with zeros
--}
-zeroSquareMatrix : Field.Field a -> Int -> SquareMatrix a
-zeroSquareMatrix field dimension =
-    zeros field dimension dimension
-        |> SquareMatrix
 
 
 {-| Scalar multiplication over a Matrix
@@ -514,24 +439,6 @@ adjoint matrix =
         |> transpose
 
 
-{-| Calculate the norm of a Matrix
--}
-normReal : Matrix Float -> Result String Float
-normReal matrix =
-    dotProduct Vector.realInnerProductSpace matrix matrix
-        |> Result.map
-            Basics.sqrt
-
-
-{-| Calculate the norm of a Matrix
--}
-normComplex : Matrix (ComplexNumbers.ComplexNumber Float) -> Result String Float
-normComplex matrix =
-    dotProduct Vector.complexInnerProductSpace matrix matrix
-        |> Result.map
-            (ComplexNumbers.real >> Basics.sqrt)
-
-
 {-| Calculate the rank of a Matrix
 -}
 rank : Vector.InnerProductSpace a -> Matrix a -> Int
@@ -545,46 +452,6 @@ rank innerProductSpace matrix =
             (\(RowVector vector) ->
                 innerProductSpace.length vector /= 0
             )
-
-
-{-| Try to calculate the determinant
--}
-determinant : Vector.VectorSpace a -> InvertableMatrix a -> Result String a
-determinant vectorSpace (InvertableMatrix (SquareMatrix matrix)) =
-    upperTriangle vectorSpace matrix
-        |> getDiagonalProduct vectorSpace.field
-        |> Result.fromMaybe "Index out of range"
-
-
-{-| Try to calculate the inverse of a matrix
--}
-invert : Vector.InnerProductSpace a -> SquareMatrix a -> Result String (Matrix a)
-invert innerProductSpace matrix =
-    case isInvertable innerProductSpace matrix of
-        Ok invMatrix ->
-            let
-                sizeOfMatrix =
-                    mDimension invMatrix
-
-                augmentedMatrix =
-                    appendHorizontal invMatrix
-                        (identity innerProductSpace.vectorSpace.field sizeOfMatrix)
-
-                reducedRowEchelonForm =
-                    gaussJordan innerProductSpace.vectorSpace augmentedMatrix
-
-                inverse =
-                    subMatrix
-                        0
-                        (mDimension reducedRowEchelonForm)
-                        sizeOfMatrix
-                        (nDimension reducedRowEchelonForm)
-                        reducedRowEchelonForm
-            in
-            Ok inverse
-
-        Err err ->
-            Err err
 
 
 {-| Calculate the submatrix given a starting and ending row and column index
@@ -748,27 +615,6 @@ multiply innerProductSpace (Matrix matrixOne) matrixTwo =
         Err "first matrix must have same number of columns as the second matrix has rows"
 
 
-{-| Calculate the dot product of two Matricies
--}
-dotProduct : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String a
-dotProduct vectorInnerProductSpace matrixOne matrixTwo =
-    let
-        productMatrix =
-            multiply vectorInnerProductSpace matrixOne matrixTwo
-    in
-    case productMatrix of
-        Ok pMatrix ->
-            if isSquareMatrix pMatrix then
-                getDiagonalProduct vectorInnerProductSpace.vectorSpace.field pMatrix
-                    |> Result.fromMaybe "Index out of range"
-
-            else
-                Err "Must be Square Matrix"
-
-        Err err ->
-            Err err
-
-
 {-| Calculate the tensor product of two Matricies
 -}
 tensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
@@ -836,56 +682,6 @@ andThen fMatrix (Matrix listOfRowVectors) =
         |> Matrix
 
 
-{-| Determine whether a matirx is square
--}
-isSquareMatrix : Matrix a -> Bool
-isSquareMatrix matrix =
-    mDimension matrix == nDimension matrix
-
-
-{-| Predicate to determine if Matrix is symmetric
--}
-isSymmetric : SquareMatrix a -> Bool
-isSymmetric (SquareMatrix matrix) =
-    transpose matrix == matrix
-
-
-{-| Predicate to determine if Matrix is Hermitian
--}
-isHermitian : SquareMatrix (ComplexNumbers.ComplexNumber number) -> Bool
-isHermitian (SquareMatrix matrix) =
-    adjoint matrix == matrix
-
-
-{-| Determine whether a matirx is unitary
--}
-isUnitary : InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
-isUnitary (InvertableMatrix (SquareMatrix matrix)) =
-    case invert Vector.complexInnerProductSpace (SquareMatrix matrix) of
-        Ok inverse ->
-            equal ComplexNumbers.equal inverse (adjoint matrix)
-
-        Err _ ->
-            False
-
-
-{-| Determine whether a matirx is invertable
--}
-isInvertable : Vector.InnerProductSpace a -> SquareMatrix a -> Result String (Matrix a)
-isInvertable innerProductSpace (SquareMatrix matrix) =
-    case isOnto innerProductSpace matrix of
-        Ok ontoMatrix ->
-            case isOneToOne innerProductSpace ontoMatrix of
-                Ok ontoAndOneToOneMatrix ->
-                    Ok ontoAndOneToOneMatrix
-
-                Err error ->
-                    Err (error ++ " Matrix is not invertable")
-
-        Err error ->
-            Err (error ++ " Matrix is not invertable")
-
-
 {-| Determine whether a matirx is onto
 -}
 isOnto : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
@@ -906,49 +702,6 @@ isOneToOne innerProductSpace matrix =
 
     else
         Err "Matrix not one to one"
-
-
-{-| Predicate if matrix is right stochastic
--}
-isRightStochastic : Matrix Float -> Bool
-isRightStochastic (Matrix listOfRowVectors) =
-    if isSquareMatrix (Matrix listOfRowVectors) then
-        List.all
-            (\(RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
-            listOfRowVectors
-
-    else
-        False
-
-
-{-| Predicate if matrix is left stochastic
--}
-isLeftStochastic : Matrix Float -> Bool
-isLeftStochastic matrix =
-    let
-        (Matrix transposedListOfRowVectors) =
-            transpose matrix
-    in
-    if isSquareMatrix (Matrix transposedListOfRowVectors) then
-        List.all
-            (\(RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
-            transposedListOfRowVectors
-
-    else
-        False
-
-
-{-| Predicate if matrix is doubly stochastic
--}
-isDoublyStochastic : SquareMatrix Float -> Bool
-isDoublyStochastic (SquareMatrix matrix) =
-    if isRightStochastic matrix && isLeftStochastic matrix then
-        all
-            ((<=) 0)
-            matrix
-
-    else
-        False
 
 
 {-| Predicate to determine if two matricies are row equivalent
@@ -1410,17 +1163,6 @@ complexMatrixSpace : MatrixSpace (ComplexNumbers.ComplexNumber Float)
 complexMatrixSpace =
     { abelianGroup = complexMatrixAdditionAbelianGroup
     , matrixScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
-    }
-
-
-{-| Real Numbered Inner Product Space for Matrix
--}
-realMatrixInnerProductSpace : InnerProductSpace Float
-realMatrixInnerProductSpace =
-    { matrixSpace = realMatrixSpace
-    , innerProduct = dotProduct Vector.realInnerProductSpace
-    , norm = normReal
-    , distance = distanceReal
     }
 
 

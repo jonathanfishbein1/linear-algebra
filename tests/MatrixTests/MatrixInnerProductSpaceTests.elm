@@ -4,6 +4,7 @@ import Expect
 import Field
 import Fuzz
 import Matrix
+import SquareMatrix
 import Test
 import Vector
 
@@ -21,7 +22,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
 
                     expected =
-                        Matrix.dotProduct Vector.realInnerProductSpace a a
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace a a
                 in
                 case expected of
                     Ok exp ->
@@ -48,13 +49,13 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ three ] ]
 
                     aPlusBDotc =
-                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.add Field.float a b) c
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace (Matrix.add Field.float a b) c
 
                     aDotB =
-                        Matrix.dotProduct Vector.realInnerProductSpace a c
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace a c
 
                     bDotC =
-                        Matrix.dotProduct Vector.realInnerProductSpace b c
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace b c
 
                     aDotBPlusbDotC =
                         Result.map2
@@ -79,12 +80,12 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
 
                     threeTimesADotB =
-                        Matrix.dotProduct Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.float three a) b
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.float three a) b
 
                     aDotBTimesThree =
                         Result.map2
                             (*)
-                            (Matrix.dotProduct Vector.realInnerProductSpace a b)
+                            (SquareMatrix.dotProduct Vector.realInnerProductSpace a b)
                             (Ok three)
                 in
                 threeTimesADotB
@@ -103,10 +104,10 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
 
                     aDotB =
-                        Matrix.dotProduct Vector.realInnerProductSpace a b
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace a b
 
                     bDotA =
-                        Matrix.dotProduct Vector.realInnerProductSpace b a
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace b a
                 in
                 aDotB
                     |> Expect.equal bDotA
@@ -120,7 +121,7 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
 
                     expected =
-                        Matrix.normReal a
+                        SquareMatrix.normReal a
                 in
                 case expected of
                     Ok norm ->
@@ -142,13 +143,13 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
 
                     aPlusBLength =
-                        Matrix.normReal (Matrix.add Field.float a b)
+                        SquareMatrix.normReal (Matrix.add Field.float a b)
 
                     lengthAPlusLengthB =
                         Result.map2
                             (+)
-                            (Matrix.normReal a)
-                            (Matrix.normReal b)
+                            (SquareMatrix.normReal a)
+                            (SquareMatrix.normReal b)
                 in
                 case aPlusBLength of
                     Ok aBLength ->
@@ -172,12 +173,12 @@ suite =
                         Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
 
                     legnthOfTwoTimesA =
-                        Matrix.normReal (Matrix.scalarMultiplication Field.float two a)
+                        SquareMatrix.normReal (Matrix.scalarMultiplication Field.float two a)
 
                     lengthOfATimesTwo =
                         Result.map
                             ((*) two >> Basics.abs)
-                            (Matrix.normReal a)
+                            (SquareMatrix.normReal a)
                 in
                 case legnthOfTwoTimesA of
                     Ok twoAL ->

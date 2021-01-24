@@ -1,11 +1,14 @@
 module SquareMatrix exposing
     ( SquareMatrix(..)
+    , InnerProductSpace
     , zeroSquareMatrix
+    , realMatrixInnerProductSpace
     , isSymmetric
     , dimension
     , isSquareMatrix
     , normReal
     , normComplex
+    , distanceReal
     , isRightStochastic
     , isLeftStochastic
     , dotProduct
@@ -89,6 +92,8 @@ isSymmetric (SquareMatrix matrix) =
     Matrix.transpose matrix == matrix
 
 
+{-| Dimension of the matrix
+-}
 dimension : SquareMatrix a -> Int
 dimension (SquareMatrix matrix) =
     Matrix.mDimension matrix

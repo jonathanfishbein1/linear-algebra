@@ -1,16 +1,54 @@
 module SquareMatrix exposing
     ( SquareMatrix(..)
+    , zeroSquareMatrix
+    , isSymmetric
     , dimension
+    , isSquareMatrix
+    , normReal
+    , normComplex
+    , isRightStochastic
+    , isLeftStochastic
     , dotProduct
     , getAt
-    , isLeftStochastic
-    , isRightStochastic
-    , isSquareMatrix
-    , isSymmetric
-    , normComplex
-    , normReal
-    , zeroSquareMatrix
     )
+
+{-| A module for Matrix
+
+
+# Types
+
+@docs SquareMatrix
+@docs InnerProductSpace
+
+
+# Values
+
+@docs zeroSquareMatrix
+@docs realMatrixInnerProductSpace
+
+
+# Matrix Predicates and Properties
+
+@docs isSymmetric
+@docs dimension
+@docs isSquareMatrix
+@docs normReal
+@docs normComplex
+@docs distanceReal
+@docs isRightStochastic
+@docs isLeftStochastic
+
+
+# Binary Operations
+
+@docs dotProduct
+
+
+# Manipulation
+
+@docs getAt
+
+-}
 
 import ComplexNumbers
 import Field
@@ -54,13 +92,6 @@ isSymmetric (SquareMatrix matrix) =
 dimension : SquareMatrix a -> Int
 dimension (SquareMatrix matrix) =
     Matrix.mDimension matrix
-
-
-{-| Get the value in a matrix at the specified row and column
--}
-getAt : ( Int, Int ) -> SquareMatrix a -> Maybe a
-getAt ( rowIndex, columnIndex ) (SquareMatrix matrix) =
-    Matrix.getAt ( rowIndex, columnIndex ) matrix
 
 
 {-| Determine whether a matirx is square
@@ -156,3 +187,10 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
 
         Err err ->
             Err err
+
+
+{-| Get the value in a matrix at the specified row and column
+-}
+getAt : ( Int, Int ) -> SquareMatrix a -> Maybe a
+getAt ( rowIndex, columnIndex ) (SquareMatrix matrix) =
+    Matrix.getAt ( rowIndex, columnIndex ) matrix

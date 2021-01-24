@@ -24,8 +24,6 @@ module Matrix exposing
     , multiply
     , tensorProduct
     , commuter
-    , isOnto
-    , isOneToOne
     , areBasis
     , areLinearlyIndependent
     , doesSetSpanSpace
@@ -58,7 +56,7 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , MatrixSpace, all, appendHorizontal, realMatrixAdditionGroup, realMatrixAdditionSemigroup, realMatrixSpace
+    , MatrixSpace, all, appendHorizontal, isOneToOne, isOnto, realMatrixAdditionGroup, realMatrixAdditionSemigroup, realMatrixSpace
     )
 
 {-| A module for Matrix
@@ -72,18 +70,12 @@ module Matrix exposing
 @docs Solution
 @docs Consistancy
 @docs VectorDimension
-@docs SquareMatrix
-@docs InvertableMatrix
-@docs HermitianMatrix
-@docs UnitaryMatrix
-@docs DoublyStochasticMatrix
 
 
 # Values
 
 @docs identity
 @docs zeros
-@docs zeroSquareMatrix
 
 
 # Unitary Operations
@@ -95,9 +87,6 @@ module Matrix exposing
 @docs invert
 @docs subMatrix
 @docs nullSpace
-@docs determinant
-@docs normReal
-@docs normComplex
 @docs leftNullSpace
 @docs getDiagonal
 @docs getDiagonalProduct
@@ -111,28 +100,17 @@ module Matrix exposing
 @docs subtract
 @docs multiplyMatrixVector
 @docs multiply
-@docs dotProduct
 @docs tensorProduct
 @docs commuter
 
 
 # Matrix Predicates and Properties
 
-@docs isSquareMatrix
-@docs isSymmetric
-@docs isHermitian
-@docs isOnto
-@docs isOneToOne
-@docs isInvertable
-@docs isUnitary
 @docs areBasis
 @docs areLinearlyIndependent
 @docs doesSetSpanSpace
 @docs mDimension
 @docs nDimension
-@docs isRightStochastic
-@docs isLeftStochastic
-@docs isDoublyStochastic
 @docs areRowEquivalent
 
 
@@ -194,7 +172,6 @@ import CommutativeMonoid
 import CommutativeSemigroup
 import ComplexNumbers
 import Field
-import Float.Extra
 import Group
 import Internal.Matrix
 import List.Extra

@@ -5,6 +5,7 @@ module Matrix exposing
     , Solution(..)
     , Consistancy(..)
     , VectorDimension(..)
+    , MatrixSpace
     , identity
     , zeros
     , scalarMultiplication
@@ -30,6 +31,9 @@ module Matrix exposing
     , mDimension
     , nDimension
     , areRowEquivalent
+    , all
+    , isOneToOne
+    , isOnto
     , empty
     , concatHorizontal
     , concatVertical
@@ -37,6 +41,10 @@ module Matrix exposing
     , realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
     , realMatrixAlgebra
     , complexMatrixAdditionAbelianGroup
+    , appendHorizontal
+    , realMatrixAdditionGroup
+    , realMatrixAdditionSemigroup
+    , realMatrixSpace
     , map
     , pure
     , andMap
@@ -56,7 +64,6 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , MatrixSpace, all, appendHorizontal, isOneToOne, isOnto, realMatrixAdditionGroup, realMatrixAdditionSemigroup, realMatrixSpace
     )
 
 {-| A module for Matrix
@@ -70,6 +77,7 @@ module Matrix exposing
 @docs Solution
 @docs Consistancy
 @docs VectorDimension
+@docs MatrixSpace
 
 
 # Values
@@ -84,7 +92,6 @@ module Matrix exposing
 @docs transpose
 @docs conjugate
 @docs adjoint
-@docs invert
 @docs subMatrix
 @docs nullSpace
 @docs leftNullSpace
@@ -112,9 +119,12 @@ module Matrix exposing
 @docs mDimension
 @docs nDimension
 @docs areRowEquivalent
+@docs all
+@docs isOneToOne
+@docs isOnto
 
 
-# Semigroup, Monoid, Group, Ring, Field, VectorSpace, InnerProductSpace
+# Semigroup, Monoid, Group, Ring, Field, VectorSpace
 
 @docs empty
 @docs concatHorizontal
@@ -122,8 +132,11 @@ module Matrix exposing
 @docs realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
 @docs realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
 @docs realMatrixAlgebra
-@docs realMatrixInnerProductSpace
 @docs complexMatrixAdditionAbelianGroup
+@docs appendHorizontal
+@docs realMatrixAdditionGroup
+@docs realMatrixAdditionSemigroup
+@docs realMatrixSpace
 
 
 # Functor, Applicative, Monad, Foldable
@@ -688,6 +701,8 @@ areRowEquivalent vectorSpace matrixOne matrixTwo =
     gaussJordan vectorSpace matrixOne == gaussJordan vectorSpace matrixTwo
 
 
+{-| Predicate to determine if all values in the matric satisfy the given predicate
+-}
 all : (a -> Bool) -> Matrix a -> Bool
 all predicate (Matrix listOfRowVectors) =
     List.map (rowVectorAll predicate) listOfRowVectors

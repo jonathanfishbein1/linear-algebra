@@ -15,7 +15,7 @@ module SquareMatrix exposing
     , getAt
     )
 
-{-| A module for Matrix
+{-| A module for Square Matrix
 
 
 # Types

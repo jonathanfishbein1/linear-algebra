@@ -2,10 +2,36 @@ module InvertableMatrix exposing
     ( InvertableMatrix(..)
     , determinant
     , dimension
-    , getAt
-    , invert
     , isInvertable
+    , invert
+    , getAt
     )
+
+{-| A module for Invertable Matrix
+
+
+# Types
+
+@docs InvertableMatrix
+
+
+# Matrix Predicates and Properties
+
+@docs determinant
+@docs dimension
+@docs isInvertable
+
+
+# Binary Operations
+
+@docs invert
+
+
+# Manipulation
+
+@docs getAt
+
+-}
 
 import Matrix
 import SquareMatrix
@@ -75,6 +101,8 @@ isInvertable innerProductSpace (SquareMatrix.SquareMatrix matrix) =
             Err (error ++ " Matrix is not invertable")
 
 
+{-| Dimension of the matrix
+-}
 dimension : InvertableMatrix a -> Int
 dimension (InvertableMatrix matrix) =
     SquareMatrix.dimension matrix

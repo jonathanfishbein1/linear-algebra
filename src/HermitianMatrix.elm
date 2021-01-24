@@ -3,6 +3,20 @@ module HermitianMatrix exposing
     , isHermitian
     )
 
+{-| A module for Hermitian Matrix
+
+
+# Types
+
+@docs HermitianMatrix
+
+
+# Matrix Predicates and Properties
+
+@docs isHermitian
+
+-}
+
 import ComplexNumbers
 import Matrix
 import SquareMatrix

@@ -3,6 +3,20 @@ module DoublyStochasticMatrix exposing
     , isDoublyStochastic
     )
 
+{-| A module for Doubly Stochastic Matrix
+
+
+# Types
+
+@docs DoublyStochasticMatrix
+
+
+# Matrix Predicates and Properties
+
+@docs isDoublyStochastic
+
+-}
+
 import Matrix
 import SquareMatrix
 

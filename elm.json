@@ -8,7 +8,10 @@
         "Vector",
         "Matrix",
         "SquareMatrix",
-        "InvertableMatrix"
+        "InvertableMatrix",
+        "UnitaryMatrix",
+        "HermitianMatrix",
+        "DoublyStochasticMatrix"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {

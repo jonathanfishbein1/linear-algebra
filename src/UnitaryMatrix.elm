@@ -1,9 +1,29 @@
 module UnitaryMatrix exposing
     ( UnitaryMatrix(..)
+    , isUnitary
     , dimension
     , getAt
-    , isUnitary
     )
+
+{-| A module for Unitary Matrix
+
+
+# Types
+
+@docs UnitaryMatrix
+
+
+# Matrix Predicates and Properties
+
+@docs isUnitary
+@docs dimension
+
+
+# Manipulation
+
+@docs getAt
+
+-}
 
 import ComplexNumbers
 import InvertableMatrix
@@ -30,6 +50,8 @@ isUnitary (InvertableMatrix.InvertableMatrix (SquareMatrix.SquareMatrix matrix))
             False
 
 
+{-| Dimension of the matrix
+-}
 dimension : UnitaryMatrix a -> Int
 dimension (UnitaryMatrix matrix) =
     InvertableMatrix.dimension matrix

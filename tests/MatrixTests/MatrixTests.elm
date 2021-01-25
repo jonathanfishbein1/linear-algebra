@@ -1379,6 +1379,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
+                            |> SquareMatrix.SquareMatrix
 
                     isRightStochastic =
                         SquareMatrix.isRightStochastic matrix
@@ -1395,6 +1396,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
+                            |> SquareMatrix.SquareMatrix
 
                     isLeftStochastic =
                         SquareMatrix.isLeftStochastic matrix

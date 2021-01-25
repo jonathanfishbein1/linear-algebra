@@ -19,7 +19,9 @@ suite =
             \one ->
                 let
                     a =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     expected =
                         SquareMatrix.dotProduct Vector.realInnerProductSpace a a
@@ -40,16 +42,22 @@ suite =
             \one two three ->
                 let
                     a =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     b =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ two ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     c =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ three ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ three ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     aPlusBDotc =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace (Matrix.add Field.float a b) c
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace (SquareMatrix.add Field.float a b) c
 
                     aDotB =
                         SquareMatrix.dotProduct Vector.realInnerProductSpace a c
@@ -74,13 +82,17 @@ suite =
             \one two three ->
                 let
                     a =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     b =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ two ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     threeTimesADotB =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.float three a) b
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace (SquareMatrix.scalarMultiplication Field.float three a) b
 
                     aDotBTimesThree =
                         Result.map2
@@ -98,10 +110,14 @@ suite =
             \one two ->
                 let
                     a =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     b =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ two ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     aDotB =
                         SquareMatrix.dotProduct Vector.realInnerProductSpace a b
@@ -118,7 +134,9 @@ suite =
             \one ->
                 let
                     a =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     expected =
                         SquareMatrix.normReal a
@@ -137,13 +155,17 @@ suite =
             \one two ->
                 let
                     a =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     b =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ two ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ two ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     aPlusBLength =
-                        SquareMatrix.normReal (Matrix.add Field.float a b)
+                        SquareMatrix.normReal (SquareMatrix.add Field.float a b)
 
                     lengthAPlusLengthB =
                         Result.map2
@@ -170,10 +192,12 @@ suite =
             \one two ->
                 let
                     a =
-                        Matrix.Matrix <| [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                        [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                            |> Matrix.Matrix
+                            |> SquareMatrix.SquareMatrix
 
                     legnthOfTwoTimesA =
-                        SquareMatrix.normReal (Matrix.scalarMultiplication Field.float two a)
+                        SquareMatrix.normReal (SquareMatrix.scalarMultiplication Field.float two a)
 
                     lengthOfATimesTwo =
                         Result.map

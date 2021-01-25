@@ -31,7 +31,7 @@ type DoublyStochasticMatrix a
 -}
 isDoublyStochastic : SquareMatrix.SquareMatrix Float -> Bool
 isDoublyStochastic (SquareMatrix.SquareMatrix matrix) =
-    if SquareMatrix.isRightStochastic matrix && SquareMatrix.isLeftStochastic matrix then
+    if SquareMatrix.isRightStochastic (SquareMatrix.SquareMatrix matrix) && SquareMatrix.isLeftStochastic (SquareMatrix.SquareMatrix matrix) then
         Matrix.all
             ((<=) 0)
             matrix

@@ -1,7 +1,8 @@
 module HermitianMatrix exposing
     ( HermitianMatrix(..)
     , isHermitian
-    , dimension, getAt
+    , dimension
+    , getAt
     )
 
 {-| A module for Hermitian Matrix
@@ -15,6 +16,12 @@ module HermitianMatrix exposing
 # Matrix Predicates and Properties
 
 @docs isHermitian
+@docs dimension
+
+
+# Manipulation
+
+@docs getAt
 
 -}
 

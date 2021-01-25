@@ -42,7 +42,7 @@ type UnitaryMatrix a
 -}
 isUnitary : InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
 isUnitary (InvertableMatrix.InvertableMatrix (SquareMatrix.SquareMatrix matrix)) =
-    case InvertableMatrix.invert Vector.complexInnerProductSpace (SquareMatrix.SquareMatrix matrix) of
+    case InvertableMatrix.invert Vector.complexInnerProductSpace (InvertableMatrix.InvertableMatrix (SquareMatrix.SquareMatrix matrix)) of
         Ok inverse ->
             Matrix.equal ComplexNumbers.equal inverse (Matrix.adjoint matrix)
 

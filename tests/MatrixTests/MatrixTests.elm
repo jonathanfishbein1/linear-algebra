@@ -556,6 +556,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> InvertableMatrix.InvertableMatrix
 
                     expectedInverse =
                         Matrix.Matrix
@@ -734,6 +735,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> InvertableMatrix.InvertableMatrix
 
                     inverseComplex =
                         InvertableMatrix.invert Vector.complexInnerProductSpace matrix

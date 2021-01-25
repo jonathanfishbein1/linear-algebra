@@ -55,8 +55,8 @@ determinant vectorSpace (InvertableMatrix (SquareMatrix.SquareMatrix matrix)) =
 
 {-| Try to calculate the inverse of a matrix
 -}
-invert : Vector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Result String (Matrix.Matrix a)
-invert innerProductSpace matrix =
+invert : Vector.InnerProductSpace a -> InvertableMatrix a -> Result String (Matrix.Matrix a)
+invert innerProductSpace (InvertableMatrix matrix) =
     case isInvertable innerProductSpace matrix of
         Ok invMatrix ->
             let

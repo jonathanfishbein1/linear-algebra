@@ -5,6 +5,7 @@ module InvertableMatrix exposing
     , isInvertable
     , invert
     , getAt
+    , multiply
     )
 
 {-| A module for Invertable Matrix
@@ -113,3 +114,15 @@ dimension (InvertableMatrix matrix) =
 getAt : ( Int, Int ) -> InvertableMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (InvertableMatrix matrix) =
     SquareMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Invertable Matrix Invertable Matrix multiplication
+-}
+multiply :
+    Vector.InnerProductSpace a
+    -> InvertableMatrix a
+    -> InvertableMatrix a
+    -> Result String (InvertableMatrix a)
+multiply innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
+    SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
+        |> Result.map InvertableMatrix

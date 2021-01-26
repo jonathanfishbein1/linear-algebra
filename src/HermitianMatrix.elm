@@ -3,6 +3,7 @@ module HermitianMatrix exposing
     , isHermitian
     , dimension
     , getAt
+    , multiply
     )
 
 {-| A module for Hermitian Matrix
@@ -28,6 +29,7 @@ module HermitianMatrix exposing
 import ComplexNumbers
 import Matrix
 import SquareMatrix
+import Vector
 
 
 {-| Hermitian Matrix type
@@ -55,3 +57,15 @@ dimension (HermitianMatrix matrix) =
 getAt : ( Int, Int ) -> HermitianMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (HermitianMatrix matrix) =
     SquareMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Hermitian Matrix Hermitian Matrix multiplication
+-}
+multiply :
+    Vector.InnerProductSpace a
+    -> HermitianMatrix a
+    -> HermitianMatrix a
+    -> Result String (HermitianMatrix a)
+multiply innerProductSpace (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
+    SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
+        |> Result.map HermitianMatrix

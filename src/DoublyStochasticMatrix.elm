@@ -1,6 +1,7 @@
 module DoublyStochasticMatrix exposing
     ( DoublyStochasticMatrix(..)
     , isDoublyStochastic
+    , multiply
     )
 
 {-| A module for Doubly Stochastic Matrix
@@ -19,6 +20,7 @@ module DoublyStochasticMatrix exposing
 
 import Matrix
 import SquareMatrix
+import Vector
 
 
 {-| Doubly Stochastic Matrix type
@@ -38,3 +40,15 @@ isDoublyStochastic (SquareMatrix.SquareMatrix matrix) =
 
     else
         False
+
+
+{-| Doubly Stochastic Matrixx Doubly Stochastic Matrix multiplication
+-}
+multiply :
+    Vector.InnerProductSpace a
+    -> DoublyStochasticMatrix a
+    -> DoublyStochasticMatrix a
+    -> Result String (DoublyStochasticMatrix a)
+multiply innerProductSpace (DoublyStochasticMatrix matrixOne) (DoublyStochasticMatrix matrixTwo) =
+    SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
+        |> Result.map DoublyStochasticMatrix

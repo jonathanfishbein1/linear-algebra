@@ -3,6 +3,7 @@ module UnitaryMatrix exposing
     , isUnitary
     , dimension
     , getAt
+    , multiply
     )
 
 {-| A module for Unitary Matrix
@@ -62,3 +63,15 @@ dimension (UnitaryMatrix matrix) =
 getAt : ( Int, Int ) -> UnitaryMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (UnitaryMatrix matrix) =
     InvertableMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Unitary Matrix Unitary Matrix multiplication
+-}
+multiply :
+    Vector.InnerProductSpace a
+    -> UnitaryMatrix a
+    -> UnitaryMatrix a
+    -> Result String (UnitaryMatrix a)
+multiply innerProductSpace (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
+    InvertableMatrix.multiply innerProductSpace matrixOne matrixTwo
+        |> Result.map UnitaryMatrix

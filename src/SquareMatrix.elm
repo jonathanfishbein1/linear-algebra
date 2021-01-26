@@ -11,6 +11,7 @@ module SquareMatrix exposing
     , isRightStochastic
     , isLeftStochastic
     , dotProduct
+    , multiply
     , getAt
     ,  add
        -- , realMatrixInnerProductSpace
@@ -48,6 +49,7 @@ module SquareMatrix exposing
 # Binary Operations
 
 @docs dotProduct
+@docs multiply
 
 
 # Manipulation
@@ -212,3 +214,15 @@ scalarMultiplication : Field.Field a -> a -> SquareMatrix a -> SquareMatrix a
 scalarMultiplication field scalar (SquareMatrix matrix) =
     Matrix.scalarMultiplication field scalar matrix
         |> SquareMatrix
+
+
+{-| Square Matrix Square Matrix multiplication
+-}
+multiply :
+    Vector.InnerProductSpace a
+    -> SquareMatrix a
+    -> SquareMatrix a
+    -> Result String (SquareMatrix a)
+multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.multiply innerProductSpace matrixOne matrixTwo
+        |> Result.map SquareMatrix

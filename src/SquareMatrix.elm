@@ -162,16 +162,15 @@ isLeftStochastic (SquareMatrix matrix) =
         transposedListOfRowVectors
 
 
-
--- {-| Real Numbered Inner Product Space for Matrix
--- -}
--- realMatrixInnerProductSpace : InnerProductSpace Float
--- realMatrixInnerProductSpace =
---     { matrixSpace = SquareMatrix Matrix.realMatrixSpace
---     , innerProduct = dotProduct Vector.realInnerProductSpace
---     , norm = normReal
---     , distance = distanceReal
---     }
+{-| Real Numbered Inner Product Space for Matrix
+-}
+realMatrixInnerProductSpace : InnerProductSpace Float
+realMatrixInnerProductSpace =
+    { matrixSpace = Matrix.realMatrixSpace
+    , innerProduct = dotProduct Vector.realInnerProductSpace
+    , norm = normReal
+    , distance = distanceReal
+    }
 
 
 {-| Calculate the dot product of two Matricies

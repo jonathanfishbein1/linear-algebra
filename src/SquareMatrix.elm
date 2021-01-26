@@ -12,6 +12,7 @@ module SquareMatrix exposing
     , isLeftStochastic
     , dotProduct
     , multiply
+    , multiplyMatrixVector
     , getAt
     ,  add
        -- , realMatrixInnerProductSpace
@@ -50,6 +51,7 @@ module SquareMatrix exposing
 
 @docs dotProduct
 @docs multiply
+@docs multiplyMatrixVector
 
 
 # Manipulation
@@ -226,3 +228,14 @@ multiply :
 multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     Matrix.multiply innerProductSpace matrixOne matrixTwo
         |> Result.map SquareMatrix
+
+
+{-| Multiply a Vector by a Matrix
+-}
+multiplyMatrixVector :
+    Vector.InnerProductSpace a
+    -> SquareMatrix a
+    -> Vector.Vector a
+    -> Result String (Vector.Vector a)
+multiplyMatrixVector innerProductSpace (SquareMatrix matrix) vector =
+    Matrix.multiplyMatrixVector innerProductSpace matrix vector

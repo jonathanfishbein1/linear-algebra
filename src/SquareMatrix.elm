@@ -2,6 +2,7 @@ module SquareMatrix exposing
     ( SquareMatrix(..)
     , InnerProductSpace
     , zeroSquareMatrix
+    , realMatrixInnerProductSpace
     , isSymmetric
     , dimension
     , isSquareMatrix
@@ -14,10 +15,7 @@ module SquareMatrix exposing
     , multiply
     , multiplyMatrixVector
     , getAt
-    ,  add
-       -- , realMatrixInnerProductSpace
-      , scalarMultiplication
-
+    , add, scalarMultiplication
     )
 
 {-| A module for Square Matrix

@@ -17,6 +17,7 @@ module SquareMatrix exposing
     , multiplyMatrixVector
     , add
     , getAt
+    , complexMatrixInnerProductSpace
     )
 
 {-| A module for Square Matrix
@@ -83,7 +84,7 @@ type SquareMatrix a
 -}
 type alias InnerProductSpace a =
     { matrixSpace : Matrix.MatrixSpace a
-    , innerProduct : SquareMatrix a -> SquareMatrix a -> Result String Float
+    , innerProduct : SquareMatrix a -> SquareMatrix a -> Result String a
     , norm : SquareMatrix a -> Result String Float
     , distance : SquareMatrix a -> SquareMatrix a -> Result String Float
     }
@@ -145,6 +146,13 @@ distanceReal (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
         |> normReal
 
 
+distanceComplex : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String Float
+distanceComplex (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.complexMatrixAdditionSemigroup matrixOne (Matrix.complexMatrixAdditionGroup.inverse matrixTwo)
+        |> SquareMatrix
+        |> normComplex
+
+
 {-| Predicate if matrix is right stochastic
 -}
 isRightStochastic : SquareMatrix Float -> Bool
@@ -175,6 +183,17 @@ realMatrixInnerProductSpace =
     , innerProduct = dotProduct Vector.realInnerProductSpace
     , norm = normReal
     , distance = distanceReal
+    }
+
+
+{-| Complex Numbered Inner Product Space for Matrix
+-}
+complexMatrixInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumber Float)
+complexMatrixInnerProductSpace =
+    { matrixSpace = Matrix.complexMatrixSpace
+    , innerProduct = dotProduct Vector.complexInnerProductSpace
+    , norm = normComplex
+    , distance = distanceComplex
     }
 
 

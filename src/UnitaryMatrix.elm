@@ -2,6 +2,8 @@ module UnitaryMatrix exposing
     ( UnitaryMatrix(..)
     , isUnitary
     , dimension
+    , multiply
+    , multiplyMatrixVector
     , getAt
     )
 
@@ -17,6 +19,12 @@ module UnitaryMatrix exposing
 
 @docs isUnitary
 @docs dimension
+
+
+# Binary Operations
+
+@docs multiply
+@docs multiplyMatrixVector
 
 
 # Manipulation
@@ -42,7 +50,7 @@ type UnitaryMatrix a
 -}
 isUnitary : InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
 isUnitary (InvertableMatrix.InvertableMatrix (SquareMatrix.SquareMatrix matrix)) =
-    case InvertableMatrix.invert Vector.complexInnerProductSpace (SquareMatrix.SquareMatrix matrix) of
+    case InvertableMatrix.invert Vector.complexInnerProductSpace (InvertableMatrix.InvertableMatrix (SquareMatrix.SquareMatrix matrix)) of
         Ok inverse ->
             Matrix.equal ComplexNumbers.equal inverse (Matrix.adjoint matrix)
 
@@ -62,3 +70,26 @@ dimension (UnitaryMatrix matrix) =
 getAt : ( Int, Int ) -> UnitaryMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (UnitaryMatrix matrix) =
     InvertableMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Unitary Matrix Unitary Matrix multiplication
+-}
+multiply :
+    Vector.InnerProductSpace a
+    -> UnitaryMatrix a
+    -> UnitaryMatrix a
+    -> Result String (UnitaryMatrix a)
+multiply innerProductSpace (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
+    InvertableMatrix.multiply innerProductSpace matrixOne matrixTwo
+        |> Result.map UnitaryMatrix
+
+
+{-| Multiply a Vector by a Matrix
+-}
+multiplyMatrixVector :
+    Vector.InnerProductSpace a
+    -> UnitaryMatrix a
+    -> Vector.Vector a
+    -> Result String (Vector.Vector a)
+multiplyMatrixVector innerProductSpace (UnitaryMatrix matrix) vector =
+    InvertableMatrix.multiplyMatrixVector innerProductSpace matrix vector

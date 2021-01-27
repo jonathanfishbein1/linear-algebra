@@ -1,6 +1,7 @@
 module DoublyStochasticMatrix exposing
     ( DoublyStochasticMatrix(..)
     , isDoublyStochastic
+    , multiply
     )
 
 {-| A module for Doubly Stochastic Matrix
@@ -15,10 +16,16 @@ module DoublyStochasticMatrix exposing
 
 @docs isDoublyStochastic
 
+
+# Binary Operations
+
+@docs multiply
+
 -}
 
 import Matrix
 import SquareMatrix
+import Vector
 
 
 {-| Doubly Stochastic Matrix type
@@ -31,10 +38,22 @@ type DoublyStochasticMatrix a
 -}
 isDoublyStochastic : SquareMatrix.SquareMatrix Float -> Bool
 isDoublyStochastic (SquareMatrix.SquareMatrix matrix) =
-    if SquareMatrix.isRightStochastic matrix && SquareMatrix.isLeftStochastic matrix then
+    if SquareMatrix.isRightStochastic (SquareMatrix.SquareMatrix matrix) && SquareMatrix.isLeftStochastic (SquareMatrix.SquareMatrix matrix) then
         Matrix.all
             ((<=) 0)
             matrix
 
     else
         False
+
+
+{-| Doubly Stochastic Matrixx Doubly Stochastic Matrix multiplication
+-}
+multiply :
+    Vector.InnerProductSpace a
+    -> DoublyStochasticMatrix a
+    -> DoublyStochasticMatrix a
+    -> Result String (DoublyStochasticMatrix a)
+multiply innerProductSpace (DoublyStochasticMatrix matrixOne) (DoublyStochasticMatrix matrixTwo) =
+    SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
+        |> Result.map DoublyStochasticMatrix

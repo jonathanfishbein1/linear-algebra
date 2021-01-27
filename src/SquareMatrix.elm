@@ -11,7 +11,11 @@ module SquareMatrix exposing
     , distanceReal
     , isRightStochastic
     , isLeftStochastic
+    , scalarMultiplication
     , dotProduct
+    , multiply
+    , multiplyMatrixVector
+    , add
     , getAt
     )
 
@@ -42,9 +46,17 @@ module SquareMatrix exposing
 @docs isLeftStochastic
 
 
+# Unitary Operations
+
+@docs scalarMultiplication
+
+
 # Binary Operations
 
 @docs dotProduct
+@docs multiply
+@docs multiplyMatrixVector
+@docs add
 
 
 # Manipulation
@@ -71,9 +83,9 @@ type SquareMatrix a
 -}
 type alias InnerProductSpace a =
     { matrixSpace : Matrix.MatrixSpace a
-    , innerProduct : Matrix.Matrix a -> Matrix.Matrix a -> Result String Float
-    , norm : Matrix.Matrix a -> Result String Float
-    , distance : Matrix.Matrix a -> Matrix.Matrix a -> Result String Float
+    , innerProduct : SquareMatrix a -> SquareMatrix a -> Result String Float
+    , norm : SquareMatrix a -> Result String Float
+    , distance : SquareMatrix a -> SquareMatrix a -> Result String Float
     }
 
 
@@ -108,7 +120,7 @@ isSquareMatrix matrix =
 
 {-| Calculate the norm of a Matrix
 -}
-normReal : Matrix.Matrix Float -> Result String Float
+normReal : SquareMatrix Float -> Result String Float
 normReal matrix =
     dotProduct Vector.realInnerProductSpace matrix matrix
         |> Result.map
@@ -117,7 +129,7 @@ normReal matrix =
 
 {-| Calculate the norm of a Matrix
 -}
-normComplex : Matrix.Matrix (ComplexNumbers.ComplexNumber Float) -> Result String Float
+normComplex : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String Float
 normComplex matrix =
     dotProduct Vector.complexInnerProductSpace matrix matrix
         |> Result.map
@@ -126,40 +138,33 @@ normComplex matrix =
 
 {-| Calculate distance between two vectors
 -}
-distanceReal : Matrix.Matrix Float -> Matrix.Matrix Float -> Result String Float
-distanceReal matrixOne matrixTwo =
+distanceReal : SquareMatrix Float -> SquareMatrix Float -> Result String Float
+distanceReal (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     Matrix.realMatrixAdditionSemigroup matrixOne (Matrix.realMatrixAdditionGroup.inverse matrixTwo)
+        |> SquareMatrix
         |> normReal
 
 
 {-| Predicate if matrix is right stochastic
 -}
-isRightStochastic : Matrix.Matrix Float -> Bool
-isRightStochastic (Matrix.Matrix listOfRowVectors) =
-    if isSquareMatrix (Matrix.Matrix listOfRowVectors) then
-        List.all
-            (\(Matrix.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
-            listOfRowVectors
-
-    else
-        False
+isRightStochastic : SquareMatrix Float -> Bool
+isRightStochastic (SquareMatrix (Matrix.Matrix listOfRowVectors)) =
+    List.all
+        (\(Matrix.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
+        listOfRowVectors
 
 
 {-| Predicate if matrix is left stochastic
 -}
-isLeftStochastic : Matrix.Matrix Float -> Bool
-isLeftStochastic matrix =
+isLeftStochastic : SquareMatrix Float -> Bool
+isLeftStochastic (SquareMatrix matrix) =
     let
         (Matrix.Matrix transposedListOfRowVectors) =
             Matrix.transpose matrix
     in
-    if isSquareMatrix (Matrix.Matrix transposedListOfRowVectors) then
-        List.all
-            (\(Matrix.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
-            transposedListOfRowVectors
-
-    else
-        False
+    List.all
+        (\(Matrix.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
+        transposedListOfRowVectors
 
 
 {-| Real Numbered Inner Product Space for Matrix
@@ -175,8 +180,8 @@ realMatrixInnerProductSpace =
 
 {-| Calculate the dot product of two Matricies
 -}
-dotProduct : Vector.InnerProductSpace a -> Matrix.Matrix a -> Matrix.Matrix a -> Result String a
-dotProduct vectorInnerProductSpace matrixOne matrixTwo =
+dotProduct : Vector.InnerProductSpace a -> SquareMatrix a -> SquareMatrix a -> Result String a
+dotProduct vectorInnerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     let
         productMatrix =
             Matrix.multiply vectorInnerProductSpace matrixOne matrixTwo
@@ -199,3 +204,42 @@ dotProduct vectorInnerProductSpace matrixOne matrixTwo =
 getAt : ( Int, Int ) -> SquareMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (SquareMatrix matrix) =
     Matrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Add two Square Matrices together
+-}
+add : Field.Field a -> SquareMatrix a -> SquareMatrix a -> SquareMatrix a
+add field (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.add field matrixOne matrixTwo
+        |> SquareMatrix
+
+
+{-| Scalar multiplication over a Square Matrix
+-}
+scalarMultiplication : Field.Field a -> a -> SquareMatrix a -> SquareMatrix a
+scalarMultiplication field scalar (SquareMatrix matrix) =
+    Matrix.scalarMultiplication field scalar matrix
+        |> SquareMatrix
+
+
+{-| Square Matrix Square Matrix multiplication
+-}
+multiply :
+    Vector.InnerProductSpace a
+    -> SquareMatrix a
+    -> SquareMatrix a
+    -> Result String (SquareMatrix a)
+multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.multiply innerProductSpace matrixOne matrixTwo
+        |> Result.map SquareMatrix
+
+
+{-| Multiply a Vector by a Matrix
+-}
+multiplyMatrixVector :
+    Vector.InnerProductSpace a
+    -> SquareMatrix a
+    -> Vector.Vector a
+    -> Result String (Vector.Vector a)
+multiplyMatrixVector innerProductSpace (SquareMatrix matrix) vector =
+    Matrix.multiplyMatrixVector innerProductSpace matrix vector

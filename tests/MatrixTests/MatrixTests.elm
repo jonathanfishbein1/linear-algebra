@@ -556,6 +556,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> InvertableMatrix.InvertableMatrix
 
                     expectedInverse =
                         Matrix.Matrix
@@ -734,6 +735,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> InvertableMatrix.InvertableMatrix
 
                     inverseComplex =
                         InvertableMatrix.invert Vector.complexInnerProductSpace matrix
@@ -1379,6 +1381,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
+                            |> SquareMatrix.SquareMatrix
 
                     isRightStochastic =
                         SquareMatrix.isRightStochastic matrix
@@ -1395,6 +1398,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , Matrix.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
+                            |> SquareMatrix.SquareMatrix
 
                     isLeftStochastic =
                         SquareMatrix.isLeftStochastic matrix

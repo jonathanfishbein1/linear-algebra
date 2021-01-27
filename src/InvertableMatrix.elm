@@ -4,6 +4,8 @@ module InvertableMatrix exposing
     , dimension
     , isInvertable
     , invert
+    , multiply
+    , multiplyMatrixVector
     , getAt
     )
 
@@ -25,6 +27,8 @@ module InvertableMatrix exposing
 # Binary Operations
 
 @docs invert
+@docs multiply
+@docs multiplyMatrixVector
 
 
 # Manipulation
@@ -55,8 +59,8 @@ determinant vectorSpace (InvertableMatrix (SquareMatrix.SquareMatrix matrix)) =
 
 {-| Try to calculate the inverse of a matrix
 -}
-invert : Vector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Result String (Matrix.Matrix a)
-invert innerProductSpace matrix =
+invert : Vector.InnerProductSpace a -> InvertableMatrix a -> Result String (Matrix.Matrix a)
+invert innerProductSpace (InvertableMatrix matrix) =
     case isInvertable innerProductSpace matrix of
         Ok invMatrix ->
             let
@@ -113,3 +117,26 @@ dimension (InvertableMatrix matrix) =
 getAt : ( Int, Int ) -> InvertableMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (InvertableMatrix matrix) =
     SquareMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Invertable Matrix Invertable Matrix multiplication
+-}
+multiply :
+    Vector.InnerProductSpace a
+    -> InvertableMatrix a
+    -> InvertableMatrix a
+    -> Result String (InvertableMatrix a)
+multiply innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
+    SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
+        |> Result.map InvertableMatrix
+
+
+{-| Multiply a Vector by a Matrix
+-}
+multiplyMatrixVector :
+    Vector.InnerProductSpace a
+    -> InvertableMatrix a
+    -> Vector.Vector a
+    -> Result String (Vector.Vector a)
+multiplyMatrixVector innerProductSpace (InvertableMatrix matrix) vector =
+    SquareMatrix.multiplyMatrixVector innerProductSpace matrix vector

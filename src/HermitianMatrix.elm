@@ -81,9 +81,8 @@ multiply innerProductSpace (HermitianMatrix matrixOne) (HermitianMatrix matrixTw
 {-| Multiply a Vector by a Matrix
 -}
 multiplyMatrixVector :
-    Vector.InnerProductSpace a
-    -> HermitianMatrix a
-    -> Vector.Vector a
-    -> Result String (Vector.Vector a)
-multiplyMatrixVector innerProductSpace (HermitianMatrix matrix) vector =
-    SquareMatrix.multiplyMatrixVector innerProductSpace matrix vector
+    HermitianMatrix (ComplexNumbers.ComplexNumber Float)
+    -> Vector.Vector (ComplexNumbers.ComplexNumber Float)
+    -> Result String (Vector.Vector (ComplexNumbers.ComplexNumber Float))
+multiplyMatrixVector (HermitianMatrix matrix) vector =
+    SquareMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector

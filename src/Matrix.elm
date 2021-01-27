@@ -45,6 +45,9 @@ module Matrix exposing
     , realMatrixAdditionGroup
     , realMatrixAdditionSemigroup
     , realMatrixSpace
+    , complexMatrixSpace
+    , complexMatrixAdditionSemigroup
+    , complexMatrixAdditionGroup
     , map
     , pure
     , andMap
@@ -137,6 +140,9 @@ module Matrix exposing
 @docs realMatrixAdditionGroup
 @docs realMatrixAdditionSemigroup
 @docs realMatrixSpace
+@docs complexMatrixSpace
+@docs complexMatrixAdditionSemigroup
+@docs complexMatrixAdditionGroup
 
 
 # Functor, Applicative, Monad, Foldable

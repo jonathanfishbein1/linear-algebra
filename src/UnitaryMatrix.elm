@@ -3,7 +3,7 @@ module UnitaryMatrix exposing
     , isUnitary
     , dimension
     , getAt
-    , multiply
+    , multiply, multiplyMatrixVector
     )
 
 {-| A module for Unitary Matrix
@@ -75,3 +75,14 @@ multiply :
 multiply innerProductSpace (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
     InvertableMatrix.multiply innerProductSpace matrixOne matrixTwo
         |> Result.map UnitaryMatrix
+
+
+{-| Multiply a Vector by a Matrix
+-}
+multiplyMatrixVector :
+    Vector.InnerProductSpace a
+    -> UnitaryMatrix a
+    -> Vector.Vector a
+    -> Result String (Vector.Vector a)
+multiplyMatrixVector innerProductSpace (UnitaryMatrix matrix) vector =
+    InvertableMatrix.multiplyMatrixVector innerProductSpace matrix vector

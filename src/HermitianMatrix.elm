@@ -3,7 +3,7 @@ module HermitianMatrix exposing
     , isHermitian
     , dimension
     , getAt
-    , multiply
+    , multiply, multiplyMatrixVector
     )
 
 {-| A module for Hermitian Matrix
@@ -69,3 +69,14 @@ multiply :
 multiply innerProductSpace (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
     SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
         |> Result.map HermitianMatrix
+
+
+{-| Multiply a Vector by a Matrix
+-}
+multiplyMatrixVector :
+    Vector.InnerProductSpace a
+    -> HermitianMatrix a
+    -> Vector.Vector a
+    -> Result String (Vector.Vector a)
+multiplyMatrixVector innerProductSpace (HermitianMatrix matrix) vector =
+    SquareMatrix.multiplyMatrixVector innerProductSpace matrix vector

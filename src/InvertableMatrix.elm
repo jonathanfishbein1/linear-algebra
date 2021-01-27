@@ -5,7 +5,7 @@ module InvertableMatrix exposing
     , isInvertable
     , invert
     , getAt
-    , multiply
+    , multiply, multiplyMatrixVector
     )
 
 {-| A module for Invertable Matrix
@@ -126,3 +126,14 @@ multiply :
 multiply innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
     SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
         |> Result.map InvertableMatrix
+
+
+{-| Multiply a Vector by a Matrix
+-}
+multiplyMatrixVector :
+    Vector.InnerProductSpace a
+    -> InvertableMatrix a
+    -> Vector.Vector a
+    -> Result String (Vector.Vector a)
+multiplyMatrixVector innerProductSpace (InvertableMatrix matrix) vector =
+    SquareMatrix.multiplyMatrixVector innerProductSpace matrix vector

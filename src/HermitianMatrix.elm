@@ -2,6 +2,7 @@ module HermitianMatrix exposing
     ( HermitianMatrix(..)
     , isHermitian
     , dimension
+    , multiply
     , multiplyMatrixVector
     , getAt
     )

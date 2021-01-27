@@ -3,6 +3,7 @@ module SquareMatrix exposing
     , InnerProductSpace
     , zeroSquareMatrix
     , realMatrixInnerProductSpace
+    , complexMatrixInnerProductSpace
     , isSymmetric
     , dimension
     , isSquareMatrix
@@ -17,7 +18,6 @@ module SquareMatrix exposing
     , multiplyMatrixVector
     , add
     , getAt
-    , complexMatrixInnerProductSpace
     )
 
 {-| A module for Square Matrix
@@ -33,6 +33,7 @@ module SquareMatrix exposing
 
 @docs zeroSquareMatrix
 @docs realMatrixInnerProductSpace
+@docs complexMatrixInnerProductSpace
 
 
 # Matrix Predicates and Properties

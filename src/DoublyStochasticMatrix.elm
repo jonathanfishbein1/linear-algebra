@@ -16,6 +16,11 @@ module DoublyStochasticMatrix exposing
 
 @docs isDoublyStochastic
 
+
+# Binary Operations
+
+@docs multiply
+
 -}
 
 import Matrix

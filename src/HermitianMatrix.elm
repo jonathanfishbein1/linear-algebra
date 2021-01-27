@@ -2,8 +2,9 @@ module HermitianMatrix exposing
     ( HermitianMatrix(..)
     , isHermitian
     , dimension
+    , multiply
     , getAt
-    , multiply, multiplyMatrixVector
+    , multiplyMatrixVector
     )
 
 {-| A module for Hermitian Matrix
@@ -18,6 +19,11 @@ module HermitianMatrix exposing
 
 @docs isHermitian
 @docs dimension
+
+
+# Binary Operations
+
+@docs multiply
 
 
 # Manipulation

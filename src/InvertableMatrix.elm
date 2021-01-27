@@ -4,8 +4,9 @@ module InvertableMatrix exposing
     , dimension
     , isInvertable
     , invert
+    , multiply
+    , multiplyMatrixVector
     , getAt
-    , multiply, multiplyMatrixVector
     )
 
 {-| A module for Invertable Matrix
@@ -26,6 +27,8 @@ module InvertableMatrix exposing
 # Binary Operations
 
 @docs invert
+@docs multiply
+@docs multiplyMatrixVector
 
 
 # Manipulation

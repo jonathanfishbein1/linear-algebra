@@ -2,8 +2,9 @@ module UnitaryMatrix exposing
     ( UnitaryMatrix(..)
     , isUnitary
     , dimension
+    , multiply
+    , multiplyMatrixVector
     , getAt
-    , multiply, multiplyMatrixVector
     )
 
 {-| A module for Unitary Matrix
@@ -18,6 +19,12 @@ module UnitaryMatrix exposing
 
 @docs isUnitary
 @docs dimension
+
+
+# Binary Operations
+
+@docs multiply
+@docs multiplyMatrixVector
 
 
 # Manipulation

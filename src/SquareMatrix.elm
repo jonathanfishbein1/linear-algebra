@@ -11,11 +11,12 @@ module SquareMatrix exposing
     , distanceReal
     , isRightStochastic
     , isLeftStochastic
+    , scalarMultiplication
     , dotProduct
     , multiply
     , multiplyMatrixVector
+    , add
     , getAt
-    , add, scalarMultiplication
     )
 
 {-| A module for Square Matrix
@@ -45,11 +46,17 @@ module SquareMatrix exposing
 @docs isLeftStochastic
 
 
+# Unitary Operations
+
+@docs scalarMultiplication
+
+
 # Binary Operations
 
 @docs dotProduct
 @docs multiply
 @docs multiplyMatrixVector
+@docs add
 
 
 # Manipulation

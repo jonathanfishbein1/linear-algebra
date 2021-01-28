@@ -2,6 +2,8 @@ module HermitianMatrix exposing
     ( HermitianMatrix(..)
     , isHermitian
     , dimension
+    , identity
+    , scalarMultiplication
     , multiply
     , multiplyMatrixVector
     , subtract
@@ -20,6 +22,12 @@ module HermitianMatrix exposing
 
 @docs isHermitian
 @docs dimension
+
+
+# Unitary Operations
+
+@docs identity
+@docs scalarMultiplication
 
 
 # Binary Operations
@@ -94,4 +102,20 @@ multiplyMatrixVector (HermitianMatrix matrix) vector =
 subtract : HermitianMatrix Float -> HermitianMatrix Float -> HermitianMatrix Float
 subtract (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
     SquareMatrix.subtract ComplexNumbers.complexField matrixOne matrixTwo
+        |> HermitianMatrix
+
+
+{-| Create Square Identity Matrix with n dimension with Complex Numbers
+-}
+identity : Int -> HermitianMatrix Float
+identity dim =
+    SquareMatrix.identity ComplexNumbers.complexField dim
+        |> HermitianMatrix
+
+
+{-| Scalar multiplication over a Hermitian Matrix
+-}
+scalarMultiplication : ComplexNumbers.ComplexNumber Float -> HermitianMatrix Float -> HermitianMatrix Float
+scalarMultiplication scalar (HermitianMatrix matrix) =
+    SquareMatrix.scalarMultiplication ComplexNumbers.complexField scalar matrix
         |> HermitianMatrix

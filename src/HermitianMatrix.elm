@@ -4,6 +4,7 @@ module HermitianMatrix exposing
     , dimension
     , multiply
     , multiplyMatrixVector
+    , subtract
     , getAt
     )
 
@@ -25,6 +26,7 @@ module HermitianMatrix exposing
 
 @docs multiply
 @docs multiplyMatrixVector
+@docs subtract
 
 
 # Manipulation
@@ -86,3 +88,11 @@ multiplyMatrixVector :
     -> Result String (Vector.Vector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (HermitianMatrix matrix) vector =
     SquareMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector
+
+
+{-| Subtract two Hermitian Matrices
+-}
+subtract : HermitianMatrix (ComplexNumbers.ComplexNumber Float) -> HermitianMatrix (ComplexNumbers.ComplexNumber Float) -> HermitianMatrix (ComplexNumbers.ComplexNumber Float)
+subtract (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
+    SquareMatrix.subtract ComplexNumbers.complexField matrixOne matrixTwo
+        |> HermitianMatrix

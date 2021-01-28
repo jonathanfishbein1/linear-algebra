@@ -42,8 +42,8 @@ import Vector
 
 {-| Unitary Matrix type
 -}
-type UnitaryMatrix a
-    = UnitaryMatrix (InvertableMatrix.InvertableMatrix a)
+type UnitaryMatrix number
+    = UnitaryMatrix (InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber number))
 
 
 {-| Determine whether a matirx is unitary
@@ -60,14 +60,14 @@ isUnitary (InvertableMatrix.InvertableMatrix (SquareMatrix.SquareMatrix matrix))
 
 {-| Dimension of the matrix
 -}
-dimension : UnitaryMatrix a -> Int
+dimension : UnitaryMatrix number -> Int
 dimension (UnitaryMatrix matrix) =
     InvertableMatrix.dimension matrix
 
 
 {-| Get the value in a matrix at the specified row and column
 -}
-getAt : ( Int, Int ) -> UnitaryMatrix a -> Maybe a
+getAt : ( Int, Int ) -> UnitaryMatrix number -> Maybe (ComplexNumbers.ComplexNumber number)
 getAt ( rowIndex, columnIndex ) (UnitaryMatrix matrix) =
     InvertableMatrix.getAt ( rowIndex, columnIndex ) matrix
 
@@ -75,21 +75,19 @@ getAt ( rowIndex, columnIndex ) (UnitaryMatrix matrix) =
 {-| Unitary Matrix Unitary Matrix multiplication
 -}
 multiply :
-    Vector.InnerProductSpace a
-    -> UnitaryMatrix a
-    -> UnitaryMatrix a
-    -> Result String (UnitaryMatrix a)
-multiply innerProductSpace (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
-    InvertableMatrix.multiply innerProductSpace matrixOne matrixTwo
+    UnitaryMatrix Float
+    -> UnitaryMatrix Float
+    -> Result String (UnitaryMatrix Float)
+multiply (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
+    InvertableMatrix.multiply Vector.complexInnerProductSpace matrixOne matrixTwo
         |> Result.map UnitaryMatrix
 
 
 {-| Multiply a Vector by a Matrix
 -}
 multiplyMatrixVector :
-    Vector.InnerProductSpace a
-    -> UnitaryMatrix a
-    -> Vector.Vector a
-    -> Result String (Vector.Vector a)
-multiplyMatrixVector innerProductSpace (UnitaryMatrix matrix) vector =
-    InvertableMatrix.multiplyMatrixVector innerProductSpace matrix vector
+    UnitaryMatrix Float
+    -> Vector.Vector (ComplexNumbers.ComplexNumber Float)
+    -> Result String (Vector.Vector (ComplexNumbers.ComplexNumber Float))
+multiplyMatrixVector (UnitaryMatrix matrix) vector =
+    InvertableMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector

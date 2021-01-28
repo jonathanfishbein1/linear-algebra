@@ -43,8 +43,8 @@ import Vector
 
 {-| Hermitian Matrix type
 -}
-type HermitianMatrix a
-    = HermitianMatrix (SquareMatrix.SquareMatrix a)
+type HermitianMatrix number
+    = HermitianMatrix (SquareMatrix.SquareMatrix (ComplexNumbers.ComplexNumber number))
 
 
 {-| Predicate to determine if Matrix is Hermitian
@@ -56,14 +56,14 @@ isHermitian (SquareMatrix.SquareMatrix matrix) =
 
 {-| Dimension of the matrix
 -}
-dimension : HermitianMatrix a -> Int
+dimension : HermitianMatrix number -> Int
 dimension (HermitianMatrix matrix) =
     SquareMatrix.dimension matrix
 
 
 {-| Get the value in a matrix at the specified row and column
 -}
-getAt : ( Int, Int ) -> HermitianMatrix a -> Maybe a
+getAt : ( Int, Int ) -> HermitianMatrix number -> Maybe (ComplexNumbers.ComplexNumber number)
 getAt ( rowIndex, columnIndex ) (HermitianMatrix matrix) =
     SquareMatrix.getAt ( rowIndex, columnIndex ) matrix
 
@@ -71,19 +71,18 @@ getAt ( rowIndex, columnIndex ) (HermitianMatrix matrix) =
 {-| Hermitian Matrix Hermitian Matrix multiplication
 -}
 multiply :
-    Vector.InnerProductSpace a
-    -> HermitianMatrix a
-    -> HermitianMatrix a
-    -> Result String (HermitianMatrix a)
-multiply innerProductSpace (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
-    SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
+    HermitianMatrix Float
+    -> HermitianMatrix Float
+    -> Result String (HermitianMatrix Float)
+multiply (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
+    SquareMatrix.multiply Vector.complexInnerProductSpace matrixOne matrixTwo
         |> Result.map HermitianMatrix
 
 
 {-| Multiply a Vector by a Matrix
 -}
 multiplyMatrixVector :
-    HermitianMatrix (ComplexNumbers.ComplexNumber Float)
+    HermitianMatrix Float
     -> Vector.Vector (ComplexNumbers.ComplexNumber Float)
     -> Result String (Vector.Vector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (HermitianMatrix matrix) vector =
@@ -92,7 +91,7 @@ multiplyMatrixVector (HermitianMatrix matrix) vector =
 
 {-| Subtract two Hermitian Matrices
 -}
-subtract : HermitianMatrix (ComplexNumbers.ComplexNumber Float) -> HermitianMatrix (ComplexNumbers.ComplexNumber Float) -> HermitianMatrix (ComplexNumbers.ComplexNumber Float)
+subtract : HermitianMatrix Float -> HermitianMatrix Float -> HermitianMatrix Float
 subtract (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
     SquareMatrix.subtract ComplexNumbers.complexField matrixOne matrixTwo
         |> HermitianMatrix

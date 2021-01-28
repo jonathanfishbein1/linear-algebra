@@ -13,6 +13,7 @@ module SquareMatrix exposing
     , isRightStochastic
     , isLeftStochastic
     , scalarMultiplication
+    , identity
     , dotProduct
     , multiply
     , multiplyMatrixVector
@@ -51,6 +52,7 @@ module SquareMatrix exposing
 # Unitary Operations
 
 @docs scalarMultiplication
+@docs identity
 
 
 # Binary Operations
@@ -263,3 +265,11 @@ multiplyMatrixVector :
     -> Result String (Vector.Vector a)
 multiplyMatrixVector innerProductSpace (SquareMatrix matrix) vector =
     Matrix.multiplyMatrixVector innerProductSpace matrix vector
+
+
+{-| Create Square Identity Matrix with n dimension
+-}
+identity : Field.Field a -> Int -> SquareMatrix a
+identity (Field.Field field) dim =
+    Matrix.identity (Field.Field field) dim
+        |> SquareMatrix

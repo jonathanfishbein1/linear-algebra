@@ -21,10 +21,10 @@ suite =
             \one two ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Vector.pure one
 
                     b =
-                        Vector.Vector [ two ]
+                        Vector.pure two
 
                     aHadamardB =
                         Vector.hadamardMultiplication
@@ -48,13 +48,13 @@ suite =
             \one two three ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Vector.pure one
 
                     b =
-                        Vector.Vector [ two ]
+                        Vector.pure two
 
                     c =
-                        Vector.Vector [ three ]
+                        Vector.pure three
 
                     aHadamardBHadamardC =
                         Vector.hadamardMultiplication
@@ -78,13 +78,13 @@ suite =
             \one two three ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Vector.pure one
 
                     b =
-                        Vector.Vector [ two ]
+                        Vector.pure two
 
                     c =
-                        Vector.Vector [ three ]
+                        Vector.pure three
 
                     aHadamardSumBC =
                         Vector.hadamardMultiplication
@@ -174,7 +174,7 @@ suite =
             \one ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Vector.pure one
 
                     normalisedALength =
                         Vector.normaliseReal a
@@ -199,7 +199,7 @@ suite =
                             )
 
                     a =
-                        Vector.Vector [ complexNumber ]
+                        Vector.pure complexNumber
 
                     normalisedALength =
                         Vector.normaliseComplex a
@@ -216,12 +216,10 @@ suite =
             \one two ->
                 let
                     vectors =
-                        [ Vector.Vector
-                            [ one
-                            ]
-                        , Vector.Vector
-                            [ two
-                            ]
+                        [ Vector.pure
+                            one
+                        , Vector.pure
+                            two
                         ]
 
                     predicates =
@@ -243,12 +241,8 @@ suite =
             \one two ->
                 let
                     vectors =
-                        [ Vector.Vector
-                            [ one
-                            ]
-                        , Vector.Vector
-                            [ two
-                            ]
+                        [ Vector.pure one
+                        , Vector.pure two
                         ]
 
                     predicates =
@@ -279,9 +273,8 @@ suite =
                             )
 
                     vectors =
-                        [ Vector.Vector
-                            [ complexNumber
-                            ]
+                        [ Vector.pure
+                            complexNumber
                         ]
 
                     predicates =
@@ -312,9 +305,7 @@ suite =
                             )
 
                     vectors =
-                        [ Vector.Vector
-                            [ complexNumber
-                            ]
+                        [ Vector.pure complexNumber
                         ]
 
                     complexOne =

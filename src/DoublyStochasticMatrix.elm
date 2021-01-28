@@ -30,8 +30,8 @@ import Vector
 
 {-| Doubly Stochastic Matrix type
 -}
-type DoublyStochasticMatrix a
-    = DoublyStochasticMatrix (SquareMatrix.SquareMatrix a)
+type DoublyStochasticMatrix
+    = DoublyStochasticMatrix (SquareMatrix.SquareMatrix Float)
 
 
 {-| Predicate if matrix is doubly stochastic
@@ -50,10 +50,9 @@ isDoublyStochastic (SquareMatrix.SquareMatrix matrix) =
 {-| Doubly Stochastic Matrixx Doubly Stochastic Matrix multiplication
 -}
 multiply :
-    Vector.InnerProductSpace a
-    -> DoublyStochasticMatrix a
-    -> DoublyStochasticMatrix a
-    -> Result String (DoublyStochasticMatrix a)
-multiply innerProductSpace (DoublyStochasticMatrix matrixOne) (DoublyStochasticMatrix matrixTwo) =
-    SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
+    DoublyStochasticMatrix
+    -> DoublyStochasticMatrix
+    -> Result String DoublyStochasticMatrix
+multiply (DoublyStochasticMatrix matrixOne) (DoublyStochasticMatrix matrixTwo) =
+    SquareMatrix.multiply Vector.realInnerProductSpace matrixOne matrixTwo
         |> Result.map DoublyStochasticMatrix

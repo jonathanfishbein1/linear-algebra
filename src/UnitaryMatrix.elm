@@ -83,7 +83,7 @@ multiply (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
         |> Result.map UnitaryMatrix
 
 
-{-| Multiply a Vector by a Matrix
+{-| Multiply a Vector by a Unitary Matrix
 -}
 multiplyMatrixVector :
     UnitaryMatrix Float

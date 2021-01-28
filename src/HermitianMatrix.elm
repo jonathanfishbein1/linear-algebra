@@ -79,7 +79,7 @@ multiply (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
         |> Result.map HermitianMatrix
 
 
-{-| Multiply a Vector by a Matrix
+{-| Multiply a Vector by a Hermitian Matrix
 -}
 multiplyMatrixVector :
     HermitianMatrix Float

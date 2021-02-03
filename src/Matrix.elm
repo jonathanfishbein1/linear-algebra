@@ -874,12 +874,12 @@ solve innerProductSpace matrix (ColumnVector (Vector.Vector constants)) =
 
 {-| Predicate to determine if a list of Vectors are linearly independent
 -}
-areLinearlyIndependent : Vector.InnerProductSpace a -> List (Vector.Vector a) -> Bool
-areLinearlyIndependent innerProductSpace listOfVectors =
+areLinearlyIndependent : Vector.InnerProductSpace a -> List (ColumnVector a) -> Bool
+areLinearlyIndependent innerProductSpace columnVectors =
     let
         matrix =
-            List.map RowVector listOfVectors
-                |> Matrix
+            Matrix (List.map (\(ColumnVector vector) -> RowVector vector) columnVectors)
+                |> transpose
     in
     rank innerProductSpace matrix == nDimension matrix
 
@@ -932,9 +932,9 @@ mDimension (Matrix listOfRowVectors) =
 
 {-| Determine whether list of vectors are a basis for a space
 -}
-areBasis : Vector.InnerProductSpace a -> VectorDimension -> List (Vector.Vector a) -> Bool
+areBasis : Vector.InnerProductSpace a -> VectorDimension -> List (ColumnVector a) -> Bool
 areBasis innerProductSpace vectorDimension vectors =
-    doesSetSpanSpace innerProductSpace.vectorSpace vectorDimension (List.map ColumnVector vectors)
+    doesSetSpanSpace innerProductSpace.vectorSpace vectorDimension vectors
         == Ok True
         && areLinearlyIndependent innerProductSpace vectors
 

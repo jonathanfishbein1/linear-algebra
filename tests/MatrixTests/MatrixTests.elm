@@ -59,8 +59,18 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.Vector [ 1, 0 ]
-                        , Vector.Vector [ 0, 1 ]
+                        [ Matrix.ColumnVector
+                            (Vector.Vector
+                                [ 1
+                                , 0
+                                ]
+                            )
+                        , Matrix.ColumnVector
+                            (Vector.Vector
+                                [ 0
+                                , 1
+                                ]
+                            )
                         ]
 
                     r2 =
@@ -76,8 +86,10 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.zeros Monoid.numberSum 2
-                        , Vector.zeros Monoid.numberSum 2
+                        [ Matrix.ColumnVector
+                            (Vector.zeros Monoid.numberSum 2)
+                        , Matrix.ColumnVector
+                            (Vector.zeros Monoid.numberSum 2)
                         ]
 
                     r2 =
@@ -93,9 +105,12 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.Vector [ 1, 0, 0 ]
-                        , Vector.Vector [ 0, 1, 0 ]
-                        , Vector.Vector [ 0, 0, 1 ]
+                        [ Matrix.ColumnVector
+                            (Vector.Vector [ 1, 0, 0 ])
+                        , Matrix.ColumnVector
+                            (Vector.Vector [ 0, 1, 0 ])
+                        , Matrix.ColumnVector
+                            (Vector.Vector [ 0, 0, 1 ])
                         ]
 
                     r3 =
@@ -111,9 +126,12 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.Vector [ 1, 0, 0 ]
-                        , Vector.Vector [ 1, 0, 0 ]
-                        , Vector.Vector [ 1, 0, 0 ]
+                        [ Matrix.ColumnVector
+                            (Vector.Vector [ 1, 0, 0 ])
+                        , Matrix.ColumnVector
+                            (Vector.Vector [ 1, 0, 0 ])
+                        , Matrix.ColumnVector
+                            (Vector.Vector [ 1, 0, 0 ])
                         ]
 
                     r3 =
@@ -129,9 +147,12 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.Vector [ 1, 0 ]
-                        , Vector.Vector [ 1, 0 ]
-                        , Vector.Vector [ 1, 0 ]
+                        [ Matrix.ColumnVector
+                            (Vector.Vector [ 1, 0 ])
+                        , Matrix.ColumnVector
+                            (Vector.Vector [ 1, 0 ])
+                        , Matrix.ColumnVector
+                            (Vector.Vector [ 1, 0 ])
                         ]
 
                     r2 =
@@ -147,8 +168,10 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Vector.Vector [ 1, 0, 0 ]
-                        , Vector.Vector [ 2, 0, 0 ]
+                        [ Matrix.ColumnVector
+                            (Vector.Vector [ 1, 0, 0 ])
+                        , Matrix.ColumnVector
+                            (Vector.Vector [ 2, 0, 0 ])
                         ]
 
                     r2 =

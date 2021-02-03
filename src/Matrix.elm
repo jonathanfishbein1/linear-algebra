@@ -886,21 +886,25 @@ areLinearlyIndependent innerProductSpace listOfVectors =
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> Result String Bool
-doesSetSpanSpace vSpace (VectorDimension vectorDimension) vectors =
-    if List.length vectors /= vectorDimension then
+doesSetSpanSpace : Vector.VectorSpace a -> VectorDimension -> List (ColumnVector a) -> Result String Bool
+doesSetSpanSpace vSpace (VectorDimension vectorDimension) columnVectors =
+    if List.length columnVectors /= vectorDimension then
         Err "Please input same number of vectors as vector space"
 
-    else if not <| List.all (\vector -> Vector.dimension vector == vectorDimension) vectors then
+    else if not <| List.all (\(ColumnVector vector) -> Vector.dimension vector == vectorDimension) columnVectors then
         Err "Please input vectors of equal length as vector space"
 
     else
         let
+            matrix =
+                Matrix (List.map (\(ColumnVector vector) -> RowVector vector) columnVectors)
+                    |> transpose
+
             identityRowVectors =
                 identity vSpace.field vectorDimension
 
             listOfRowVectorsRREF =
-                gaussJordan vSpace (Matrix (List.map RowVector vectors))
+                gaussJordan vSpace matrix
         in
         identityRowVectors
             == listOfRowVectorsRREF
@@ -930,7 +934,7 @@ mDimension (Matrix listOfRowVectors) =
 -}
 areBasis : Vector.InnerProductSpace a -> VectorDimension -> List (Vector.Vector a) -> Bool
 areBasis innerProductSpace vectorDimension vectors =
-    doesSetSpanSpace innerProductSpace.vectorSpace vectorDimension vectors
+    doesSetSpanSpace innerProductSpace.vectorSpace vectorDimension (List.map ColumnVector vectors)
         == Ok True
         && areLinearlyIndependent innerProductSpace vectors
 

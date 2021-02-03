@@ -91,8 +91,8 @@ multiply (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
 -}
 multiplyMatrixVector :
     HermitianMatrix Float
-    -> Vector.Vector (ComplexNumbers.ComplexNumber Float)
-    -> Result String (Vector.Vector (ComplexNumbers.ComplexNumber Float))
+    -> Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float)
+    -> Result String (Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (HermitianMatrix matrix) vector =
     SquareMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector
 

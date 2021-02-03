@@ -558,9 +558,9 @@ subtract (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutati
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> Matrix a
-    -> Vector.Vector a
-    -> Result String (Vector.Vector a)
-multiplyMatrixVector innerProductSpace (Matrix matrix) vector =
+    -> ColumnVector a
+    -> Result String (ColumnVector a)
+multiplyMatrixVector innerProductSpace (Matrix matrix) (ColumnVector vector) =
     if nDimension (Matrix matrix) == Vector.dimension vector then
         let
             listOfVectors =
@@ -572,6 +572,7 @@ multiplyMatrixVector innerProductSpace (Matrix matrix) vector =
                 (\(Vector.Vector elem) acc -> acc ++ elem)
                 []
             |> Vector.Vector
+            |> ColumnVector
             |> Ok
 
     else

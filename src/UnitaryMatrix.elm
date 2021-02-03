@@ -87,7 +87,7 @@ multiply (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
 -}
 multiplyMatrixVector :
     UnitaryMatrix Float
-    -> Vector.Vector (ComplexNumbers.ComplexNumber Float)
-    -> Result String (Vector.Vector (ComplexNumbers.ComplexNumber Float))
+    -> Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float)
+    -> Result String (Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (UnitaryMatrix matrix) vector =
     InvertableMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector

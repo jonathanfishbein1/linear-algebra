@@ -263,8 +263,8 @@ multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> SquareMatrix a
-    -> Vector.Vector a
-    -> Result String (Vector.Vector a)
+    -> Matrix.ColumnVector a
+    -> Result String (Matrix.ColumnVector a)
 multiplyMatrixVector innerProductSpace (SquareMatrix matrix) vector =
     Matrix.multiplyMatrixVector innerProductSpace matrix vector
 

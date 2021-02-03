@@ -136,7 +136,7 @@ multiply innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrix
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> InvertableMatrix a
-    -> Vector.Vector a
-    -> Result String (Vector.Vector a)
+    -> Matrix.ColumnVector a
+    -> Result String (Matrix.ColumnVector a)
 multiplyMatrixVector innerProductSpace (InvertableMatrix matrix) vector =
     SquareMatrix.multiplyMatrixVector innerProductSpace matrix vector

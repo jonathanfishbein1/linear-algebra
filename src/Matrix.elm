@@ -878,8 +878,7 @@ areLinearlyIndependent : Vector.InnerProductSpace a -> List (ColumnVector a) -> 
 areLinearlyIndependent innerProductSpace columnVectors =
     let
         matrix =
-            Matrix (List.map (\(ColumnVector vector) -> RowVector vector) columnVectors)
-                |> transpose
+            createMatrixFromColumnVectors columnVectors
     in
     rank innerProductSpace matrix == nDimension matrix
 
@@ -896,15 +895,11 @@ doesSetSpanSpace vSpace (VectorDimension vectorDimension) columnVectors =
 
     else
         let
-            matrix =
-                Matrix (List.map (\(ColumnVector vector) -> RowVector vector) columnVectors)
-                    |> transpose
-
             identityRowVectors =
                 identity vSpace.field vectorDimension
 
             listOfRowVectorsRREF =
-                gaussJordan vSpace matrix
+                gaussJordan vSpace (createMatrixFromColumnVectors columnVectors)
         in
         identityRowVectors
             == listOfRowVectorsRREF

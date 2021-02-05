@@ -7,6 +7,7 @@ module InvertableMatrix exposing
     , multiply
     , multiplyMatrixVector
     , getAt
+    , projXOntoSubspace
     )
 
 {-| A module for Invertable Matrix
@@ -140,3 +141,24 @@ multiplyMatrixVector :
     -> Result String (Matrix.ColumnVector a)
 multiplyMatrixVector innerProductSpace (InvertableMatrix matrix) vector =
     SquareMatrix.multiplyMatrixVector innerProductSpace matrix vector
+
+
+{-| Calculate the projection of a vector onto a subspace given by a list of basis vectors as column vectors
+-}
+projXOntoSubspace : Vector.InnerProductSpace a -> List (Matrix.ColumnVector a) -> Matrix.ColumnVector a -> Result String (Matrix.ColumnVector a)
+projXOntoSubspace innerProductSpace columnVectorBasis x =
+    let
+        matrix =
+            Matrix.createMatrixFromColumnVectors columnVectorBasis
+
+        transposeMatrix =
+            Matrix.transpose matrix
+
+        transformationMatrix =
+            Matrix.multiply innerProductSpace transposeMatrix matrix
+                |> Result.map (SquareMatrix.SquareMatrix >> InvertableMatrix)
+                |> Result.andThen (invert innerProductSpace)
+                |> Result.andThen (Matrix.multiply innerProductSpace matrix)
+                |> Result.andThen (\res -> Matrix.multiply innerProductSpace res transposeMatrix)
+    in
+    Result.andThen (\tMatrix -> Matrix.multiplyMatrixVector innerProductSpace tMatrix x) transformationMatrix

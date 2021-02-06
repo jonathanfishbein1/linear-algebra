@@ -470,9 +470,6 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 nullSpace : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
 nullSpace innerProductSpace matrix =
     let
-        numberOfRows =
-            mDimension matrix
-
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             innerProductSpace.vectorSpace.field
 
@@ -480,7 +477,7 @@ nullSpace innerProductSpace matrix =
             commutativeDivisionRing.addition
 
         b =
-            List.repeat numberOfRows additionGroup.monoid.identity
+            List.repeat (mDimension matrix) additionGroup.monoid.identity
                 |> Vector.Vector
                 |> ColumnVector
     in
@@ -499,12 +496,9 @@ leftNullSpace innerProductSpace =
 getDiagonal : Matrix a -> Maybe (List a)
 getDiagonal matrix =
     let
-        numberOfRows =
-            mDimension matrix
-
         indices =
             List.Extra.initialize
-                numberOfRows
+                (mDimension matrix)
                 (\index -> ( index, index ))
     in
     List.foldl
@@ -517,9 +511,9 @@ getDiagonal matrix =
 {-| Get the Product of the diagonal of a Matrix
 -}
 getDiagonalProduct : Field.Field a -> Matrix a -> Maybe a
-getDiagonalProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) matrix =
-    getDiagonal matrix
-        |> Maybe.map
+getDiagonalProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+    getDiagonal
+        >> Maybe.map
             (List.foldl
                 (\elem acc ->
                     commutativeDivisionRing.multiplication.monoid.semigroup

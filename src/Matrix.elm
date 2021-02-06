@@ -771,9 +771,9 @@ jordanReduce vectorSpace (Matrix matrix) =
 {-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
 gaussJordan : Vector.VectorSpace a -> Matrix a -> Matrix a
-gaussJordan vectorSpace matrix =
-    gaussianReduce vectorSpace matrix
-        |> jordanReduce vectorSpace
+gaussJordan vectorSpace =
+    gaussianReduce vectorSpace
+        >> jordanReduce vectorSpace
 
 
 coefficientMatrix : Matrix a -> Matrix a

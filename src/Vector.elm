@@ -433,17 +433,9 @@ dotProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commuta
 -}
 angleBetween : Vector Float -> Vector Float -> Float
 angleBetween vectorOne vectorTwo =
-    let
-        dotP =
-            dotProduct Field.float vectorOne vectorTwo
-
-        lengthVectorOne =
-            lengthReal vectorOne
-
-        lengthVectorTwo =
-            lengthReal vectorTwo
-    in
-    Basics.acos (dotP / (lengthVectorOne * lengthVectorTwo))
+    dotProduct Field.float vectorOne vectorTwo
+        / (lengthReal vectorOne * lengthReal vectorTwo)
+        |> Basics.acos
 
 
 {-| Calculate the sum of a Vector

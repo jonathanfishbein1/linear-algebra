@@ -272,9 +272,9 @@ multiplyMatrixVector innerProductSpace (SquareMatrix matrix) vector =
 {-| Create Square Identity Matrix with n dimension
 -}
 identity : Field.Field a -> Int -> SquareMatrix a
-identity (Field.Field field) dim =
-    Matrix.identity (Field.Field field) dim
-        |> SquareMatrix
+identity (Field.Field field) =
+    Matrix.identity (Field.Field field)
+        >> SquareMatrix
 
 
 {-| Subtract two Square Matrices

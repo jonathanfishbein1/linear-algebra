@@ -429,10 +429,9 @@ conjugate =
 adjoint :
     Matrix (ComplexNumbers.ComplexNumber number)
     -> Matrix (ComplexNumbers.ComplexNumber number)
-adjoint matrix =
-    matrix
-        |> map ComplexNumbers.conjugate
-        |> transpose
+adjoint =
+    map ComplexNumbers.conjugate
+        >> transpose
 
 
 {-| Calculate the rank of a Matrix

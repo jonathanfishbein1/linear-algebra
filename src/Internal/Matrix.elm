@@ -200,13 +200,7 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
                 nextRows =
                     List.drop (rowIndex + 1) swappedListOfVectors
                         |> List.map
-                            (\row ->
-                                let
-                                    subtractedRow =
-                                        subtractRow vectorSpace rowIndex currentRow row
-                                in
-                                subtractedRow
-                            )
+                            (subtractRow vectorSpace rowIndex currentRow)
 
                 newMatrixReduceRow =
                     List.concat

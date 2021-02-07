@@ -515,11 +515,7 @@ getDiagonalProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing
     getDiagonal
         >> Maybe.map
             (List.foldl
-                (\elem acc ->
-                    commutativeDivisionRing.multiplication.monoid.semigroup
-                        elem
-                        acc
-                )
+                commutativeDivisionRing.multiplication.monoid.semigroup
                 commutativeDivisionRing.multiplication.monoid.identity
             )
 

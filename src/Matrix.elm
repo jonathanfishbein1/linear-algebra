@@ -430,7 +430,7 @@ adjoint :
     Matrix (ComplexNumbers.ComplexNumber number)
     -> Matrix (ComplexNumbers.ComplexNumber number)
 adjoint =
-    map ComplexNumbers.conjugate
+    conjugate
         >> transpose
 
 

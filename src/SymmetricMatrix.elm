@@ -49,6 +49,7 @@ module SymmetricMatrix exposing
 
 -}
 
+import ColumnVector
 import ComplexNumbers
 import Field
 import Matrix
@@ -111,8 +112,8 @@ getAt ( rowIndex, columnIndex ) (SymmetricMatrix matrix) =
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> SymmetricMatrix a
-    -> Matrix.ColumnVector a
-    -> Result String (Matrix.ColumnVector a)
+    -> ColumnVector.ColumnVector a
+    -> Result String (ColumnVector.ColumnVector a)
 multiplyMatrixVector innerProductSpace (SymmetricMatrix matrix) vector =
     NormalMatrix.multiplyMatrixVector innerProductSpace matrix vector
 

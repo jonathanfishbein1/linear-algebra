@@ -1,5 +1,6 @@
 module MatrixTests.ComplexAlgebraTests exposing (suite)
 
+import ColumnVector
 import ComplexNumbers
 import Expect
 import Field
@@ -330,7 +331,7 @@ suite =
                             , 2
                             , 3
                             ]
-                            |> Matrix.ColumnVector
+                            |> ColumnVector.ColumnVector
 
                     m =
                         Matrix.Matrix
@@ -348,7 +349,7 @@ suite =
                             , 32
                             , 50
                             ]
-                            |> Matrix.ColumnVector
+                            |> ColumnVector.ColumnVector
                 in
                 Expect.equal mTimesV (Ok expected)
         , Test.fuzz3

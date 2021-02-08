@@ -52,6 +52,7 @@ module InvertableMatrix exposing
 
 -}
 
+import ColumnVector
 import Field
 import Matrix
 import NormalMatrix
@@ -155,15 +156,15 @@ multiply innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrix
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> InvertableMatrix a
-    -> Matrix.ColumnVector a
-    -> Result String (Matrix.ColumnVector a)
+    -> ColumnVector.ColumnVector a
+    -> Result String (ColumnVector.ColumnVector a)
 multiplyMatrixVector innerProductSpace (InvertableMatrix matrix) vector =
     NormalMatrix.multiplyMatrixVector innerProductSpace matrix vector
 
 
 {-| Calculate the projection of a vector onto a subspace given by a list of basis vectors as column vectors
 -}
-projXOntoSubspace : Vector.InnerProductSpace a -> List (Matrix.ColumnVector a) -> Matrix.ColumnVector a -> Result String (Matrix.ColumnVector a)
+projXOntoSubspace : Vector.InnerProductSpace a -> List (ColumnVector.ColumnVector a) -> ColumnVector.ColumnVector a -> Result String (ColumnVector.ColumnVector a)
 projXOntoSubspace innerProductSpace columnVectorBasis x =
     let
         matrix =

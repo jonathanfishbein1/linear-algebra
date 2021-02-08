@@ -1,6 +1,5 @@
 module Matrix exposing
     ( RowVector(..)
-    , ColumnVector(..)
     , Matrix(..)
     , Solution(..)
     , Consistancy(..)
@@ -188,6 +187,7 @@ module Matrix exposing
 -}
 
 import AbelianGroup
+import ColumnVector
 import CommutativeDivisionRing
 import CommutativeMonoid
 import CommutativeSemigroup
@@ -212,12 +212,6 @@ type RowVector a
     = RowVector (Vector.Vector a)
 
 
-{-| Column Vector
--}
-type ColumnVector a
-    = ColumnVector (Vector.Vector a)
-
-
 {-| Matrix type
 -}
 type Matrix a
@@ -234,7 +228,7 @@ type Consistancy a
 {-| Type to represent result of Gauss-Jordan reduction if system is consistant
 -}
 type Solution a
-    = UniqueSolution (ColumnVector a)
+    = UniqueSolution (ColumnVector.ColumnVector a)
     | InfiniteSolutions { nullity : Int, rank : Int }
 
 
@@ -360,9 +354,9 @@ complexMatrixAdditionAbelianGroup =
 
 {-| Create a Matrix from a list of Column Vectors
 -}
-createMatrixFromColumnVectors : List (ColumnVector a) -> Matrix a
+createMatrixFromColumnVectors : List (ColumnVector.ColumnVector a) -> Matrix a
 createMatrixFromColumnVectors =
-    List.map (\(ColumnVector vector) -> RowVector vector)
+    List.map (\(ColumnVector.ColumnVector vector) -> RowVector vector)
         >> Matrix
         >> transpose
 
@@ -481,7 +475,7 @@ nullSpace innerProductSpace matrix =
         b =
             List.repeat (mDimension matrix) additionGroup.monoid.identity
                 |> Vector.Vector
-                |> ColumnVector
+                |> ColumnVector.ColumnVector
     in
     solve innerProductSpace matrix b
 
@@ -549,9 +543,9 @@ subtract (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutati
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> Matrix a
-    -> ColumnVector a
-    -> Result String (ColumnVector a)
-multiplyMatrixVector innerProductSpace (Matrix matrix) (ColumnVector vector) =
+    -> ColumnVector.ColumnVector a
+    -> Result String (ColumnVector.ColumnVector a)
+multiplyMatrixVector innerProductSpace (Matrix matrix) (ColumnVector.ColumnVector vector) =
     if nDimension (Matrix matrix) == Vector.dimension vector then
         let
             listOfVectors =
@@ -563,7 +557,7 @@ multiplyMatrixVector innerProductSpace (Matrix matrix) (ColumnVector vector) =
                 (\(Vector.Vector elem) acc -> acc ++ elem)
                 []
             |> Vector.Vector
-            |> ColumnVector
+            |> ColumnVector.ColumnVector
             |> Ok
 
     else
@@ -842,15 +836,15 @@ solveMatrix innerProductSpace (Matrix listOfRowVectors) =
         UniqueSolution
             (solution
                 |> Vector.Vector
-                |> ColumnVector
+                |> ColumnVector.ColumnVector
             )
             |> Consistant
 
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
 -}
-solve : Vector.InnerProductSpace a -> Matrix a -> ColumnVector a -> Consistancy a
-solve innerProductSpace matrix (ColumnVector (Vector.Vector constants)) =
+solve : Vector.InnerProductSpace a -> Matrix a -> ColumnVector.ColumnVector a -> Consistancy a
+solve innerProductSpace matrix (ColumnVector.ColumnVector (Vector.Vector constants)) =
     let
         matrixB =
             constants
@@ -865,7 +859,7 @@ solve innerProductSpace matrix (ColumnVector (Vector.Vector constants)) =
 
 {-| Predicate to determine if a list of Vectors are linearly independent
 -}
-areLinearlyIndependent : Vector.InnerProductSpace a -> List (ColumnVector a) -> Bool
+areLinearlyIndependent : Vector.InnerProductSpace a -> List (ColumnVector.ColumnVector a) -> Bool
 areLinearlyIndependent innerProductSpace columnVectors =
     let
         matrix =
@@ -876,12 +870,12 @@ areLinearlyIndependent innerProductSpace columnVectors =
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : Vector.VectorSpace a -> VectorDimension -> List (ColumnVector a) -> Result String Bool
+doesSetSpanSpace : Vector.VectorSpace a -> VectorDimension -> List (ColumnVector.ColumnVector a) -> Result String Bool
 doesSetSpanSpace vSpace (VectorDimension vectorDimension) columnVectors =
     if List.length columnVectors /= vectorDimension then
         Err "Please input same number of vectors as vector space"
 
-    else if not <| List.all (\(ColumnVector vector) -> Vector.dimension vector == vectorDimension) columnVectors then
+    else if not <| List.all (\(ColumnVector.ColumnVector vector) -> Vector.dimension vector == vectorDimension) columnVectors then
         Err "Please input vectors of equal length as vector space"
 
     else
@@ -918,7 +912,7 @@ mDimension (Matrix listOfRowVectors) =
 
 {-| Determine whether list of vectors are a basis for a space
 -}
-areBasis : Vector.InnerProductSpace a -> VectorDimension -> List (ColumnVector a) -> Bool
+areBasis : Vector.InnerProductSpace a -> VectorDimension -> List (ColumnVector.ColumnVector a) -> Bool
 areBasis innerProductSpace vectorDimension vectors =
     doesSetSpanSpace innerProductSpace.vectorSpace vectorDimension vectors
         == Ok True

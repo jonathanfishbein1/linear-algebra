@@ -1,5 +1,6 @@
 module MatrixTests.MatrixTests exposing (suite)
 
+import ColumnVector
 import ComplexNumbers
 import Expect
 import Field
@@ -30,7 +31,7 @@ suite =
                         Matrix.nullSpace Vector.realInnerProductSpace matrix
 
                     expected =
-                        Matrix.ColumnVector <| Vector.Vector [ 0, 0 ]
+                        ColumnVector.ColumnVector <| Vector.Vector [ 0, 0 ]
                 in
                 Expect.equal nullSpace (Matrix.Consistant (Matrix.UniqueSolution expected))
         , Test.test
@@ -39,13 +40,13 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 2
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 0
                                 , -3
@@ -60,13 +61,13 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 2
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 2
                                 , 4
@@ -79,13 +80,13 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 0
                                 , 1
@@ -106,9 +107,9 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.zeros Monoid.numberSum 2)
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.zeros Monoid.numberSum 2)
                         ]
 
@@ -125,11 +126,11 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0, 0 ])
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector [ 0, 1, 0 ])
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector [ 0, 0, 1 ])
                         ]
 
@@ -146,11 +147,11 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0, 0 ])
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0, 0 ])
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0, 0 ])
                         ]
 
@@ -167,11 +168,11 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0 ])
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0 ])
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0 ])
                         ]
 
@@ -188,9 +189,9 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0, 0 ])
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector [ 2, 0, 0 ])
                         ]
 
@@ -207,13 +208,13 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 0
                                 , 1
@@ -234,9 +235,9 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.zeros Monoid.numberSum 2)
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.zeros Monoid.numberSum 2)
                         ]
 
@@ -253,19 +254,19 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
@@ -286,21 +287,21 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 0
                                 , 1
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 0
                                 , 0
@@ -322,19 +323,19 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
@@ -355,19 +356,19 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
@@ -388,13 +389,13 @@ suite =
             \_ ->
                 let
                     listOfVectors =
-                        [ Matrix.ColumnVector
+                        [ ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
-                        , Matrix.ColumnVector
+                        , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 2
                                 , 0
@@ -1007,7 +1008,7 @@ suite =
                         Vector.Vector [ two, two ]
 
                     matrix =
-                        Matrix.createMatrixFromColumnVectors [ Matrix.ColumnVector vectorOne, Matrix.ColumnVector veectorTwo ]
+                        Matrix.createMatrixFromColumnVectors [ ColumnVector.ColumnVector vectorOne, ColumnVector.ColumnVector veectorTwo ]
 
                     expectedMatrix =
                         Matrix.Matrix

@@ -103,6 +103,7 @@ module SquareMatrix exposing
 
 -}
 
+import ColumnVector
 import ComplexNumbers
 import Field
 import Float.Extra
@@ -288,8 +289,8 @@ multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> SquareMatrix a
-    -> Matrix.ColumnVector a
-    -> Result String (Matrix.ColumnVector a)
+    -> ColumnVector.ColumnVector a
+    -> Result String (ColumnVector.ColumnVector a)
 multiplyMatrixVector innerProductSpace (SquareMatrix matrix) vector =
     Matrix.multiplyMatrixVector innerProductSpace matrix vector
 
@@ -369,7 +370,7 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 
 {-| Create a Matrix from a list of Column Vectors
 -}
-createMatrixFromColumnVectors : List (Matrix.ColumnVector a) -> SquareMatrix a
+createMatrixFromColumnVectors : List (ColumnVector.ColumnVector a) -> SquareMatrix a
 createMatrixFromColumnVectors =
     Matrix.createMatrixFromColumnVectors
         >> SquareMatrix

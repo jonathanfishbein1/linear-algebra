@@ -1,11 +1,12 @@
 module UnitaryMatrix exposing
     ( UnitaryMatrix(..)
+    , identity
     , isUnitary
     , dimension
     , multiply
     , multiplyMatrixVector
     , getAt
-    , equal, identity
+    , equal
     )
 
 {-| A module for Unitary Matrix
@@ -14,6 +15,11 @@ module UnitaryMatrix exposing
 # Types
 
 @docs UnitaryMatrix
+
+
+# Constructors
+
+@docs identity
 
 
 # Matrix Predicates and Properties
@@ -32,10 +38,14 @@ module UnitaryMatrix exposing
 
 @docs getAt
 
+
+# Equality
+
+@docs equal
+
 -}
 
 import ComplexNumbers
-import Field
 import InvertableMatrix
 import Matrix
 import Vector

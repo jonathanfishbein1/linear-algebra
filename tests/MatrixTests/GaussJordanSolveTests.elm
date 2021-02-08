@@ -2,9 +2,11 @@ module MatrixTests.GaussJordanSolveTests exposing (suite)
 
 import ColumnVector
 import Expect
+import Float.Extra
 import Matrix
 import RowVector
 import Test
+import Typeclasses.Classes.Equality
 import Vector
 
 
@@ -50,7 +52,7 @@ suite =
                         ColumnVector.ColumnVector <| Vector.Vector [ -4, -11, 22 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Vector.realInnerProductSpace matrix b
+                        Matrix.solve (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6)) Vector.realInnerProductSpace matrix b
 
                     expected =
                         ColumnVector.ColumnVector <| Vector.Vector [ -8.0, 1.0, -2.0 ]
@@ -72,7 +74,7 @@ suite =
                         ColumnVector.ColumnVector <| Vector.Vector [ 3, 0, -2 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Vector.realInnerProductSpace matrix b
+                        Matrix.solve (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6)) Vector.realInnerProductSpace matrix b
 
                     expected =
                         ColumnVector.ColumnVector <| Vector.Vector [ 5, -1.0, -1.0 ]
@@ -85,16 +87,20 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, 1, 1 ]
-                            , RowVector.RowVector <| Vector.Vector [ 1, 2, 2, -1 ]
-                            , RowVector.RowVector <| Vector.Vector [ 2, 4, 0, 6 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 2, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 2 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 1 ]
                             ]
 
                     b =
-                        ColumnVector.ColumnVector <| Vector.Vector [ 8, 12, 4 ]
+                        ColumnVector.ColumnVector <| Vector.Vector [ 2, 1, 4 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Vector.realInnerProductSpace matrix b
+                        Matrix.solve
+                            (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6))
+                            Vector.realInnerProductSpace
+                            matrix
+                            b
                 in
                 Expect.equal reducedRowEchelonFormMatrix (Matrix.Inconsistant "No Unique Solution")
         , Test.test
@@ -113,7 +119,7 @@ suite =
                         ColumnVector.ColumnVector <| Vector.Vector [ 7, 12, 4 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Vector.realInnerProductSpace matrix b
+                        Matrix.solve (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6)) Vector.realInnerProductSpace matrix b
                 in
                 Expect.equal reducedRowEchelonFormMatrix
                     (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
@@ -134,7 +140,7 @@ suite =
                         ColumnVector.ColumnVector <| Vector.Vector [ 312, 184, 0, 0 ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Vector.realInnerProductSpace matrix b
+                        Matrix.solve (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6)) Vector.realInnerProductSpace matrix b
                 in
                 Expect.equal reducedRowEchelonFormMatrix
                     (Matrix.Consistant (Matrix.UniqueSolution (ColumnVector.ColumnVector (Vector.Vector [ 156, 312, 92, 184 ]))))

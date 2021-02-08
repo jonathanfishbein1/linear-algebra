@@ -168,7 +168,6 @@ module Matrix exposing
 # Solving
 
 @docs solve
-@docs solveMatrix
 
 
 # Manipulation
@@ -189,6 +188,7 @@ import CommutativeMonoid
 import CommutativeSemigroup
 import ComplexNumbers
 import Field
+import Float.Extra
 import Group
 import Internal.Matrix
 import List.Extra
@@ -454,8 +454,8 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 
 {-| Calculate the null space of a matrix
 -}
-nullSpace : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
-nullSpace innerProductSpace matrix =
+nullSpace : Typeclasses.Classes.Equality.Equality a -> Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+nullSpace eq innerProductSpace matrix =
     let
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             innerProductSpace.vectorSpace.field
@@ -468,14 +468,14 @@ nullSpace innerProductSpace matrix =
                 |> Vector.Vector
                 |> ColumnVector.ColumnVector
     in
-    solve innerProductSpace matrix b
+    solve eq innerProductSpace matrix b
 
 
 {-| Calculate the left nullspace of a Matrix
 -}
-leftNullSpace : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
-leftNullSpace innerProductSpace =
-    transpose >> nullSpace innerProductSpace
+leftNullSpace : Typeclasses.Classes.Equality.Equality a -> Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+leftNullSpace eq innerProductSpace =
+    transpose >> nullSpace eq innerProductSpace
 
 
 {-| Get the diagonal of a Matrix
@@ -766,8 +766,8 @@ coefficientMatrix matrix =
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
 -}
-solve : Vector.InnerProductSpace a -> Matrix a -> ColumnVector.ColumnVector a -> Consistancy a
-solve innerProductSpace matrix constants =
+solve : Typeclasses.Classes.Equality.Equality a -> Vector.InnerProductSpace a -> Matrix a -> ColumnVector.ColumnVector a -> Consistancy a
+solve { eq } innerProductSpace matrix constants =
     let
         matrixB =
             createMatrixFromColumnVectors [ constants ]
@@ -803,7 +803,7 @@ solve innerProductSpace matrix constants =
                 |> List.any
                     (\(RowVector.RowVector (Vector.Vector row)) ->
                         List.all
-                            ((==) additionGroup.monoid.identity)
+                            (eq additionGroup.monoid.identity)
                             (List.take (List.length row - 1) row)
                             && innerProductSpace.length (Vector.Vector row)
                             /= 0

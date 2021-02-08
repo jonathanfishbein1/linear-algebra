@@ -11,6 +11,7 @@ import Monoid
 import RowVector
 import SquareMatrix
 import Test
+import Typeclasses.Classes.Equality
 import Vector
 
 
@@ -29,7 +30,7 @@ suite =
                             ]
 
                     nullSpace =
-                        Matrix.nullSpace Vector.realInnerProductSpace matrix
+                        Matrix.nullSpace (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6)) Vector.realInnerProductSpace matrix
 
                     expected =
                         ColumnVector.ColumnVector <| Vector.Vector [ 0, 0 ]
@@ -425,7 +426,7 @@ suite =
                     b =
                         ColumnVector.ColumnVector <| Vector.Vector [ 2, 4 ]
                 in
-                Expect.equal (Matrix.solve Vector.realInnerProductSpace matrix b)
+                Expect.equal (Matrix.solve (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6)) Vector.realInnerProductSpace matrix b)
                     (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
         , Test.test
             "tests matrix fold"

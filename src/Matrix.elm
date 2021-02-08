@@ -59,7 +59,6 @@ module Matrix exposing
     , jordanReduce
     , gaussJordan
     , solve
-    , solveMatrix
     , getAt
     , setAt
     , printRealMatrix
@@ -765,13 +764,19 @@ coefficientMatrix matrix =
     subMatrix 0 (mDimension matrix) 0 (nDimension matrix - 1) matrix
 
 
-{-| Solve a system of linear equations using Gauss-Jordan elimination
+{-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
 -}
-solveMatrix : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
-solveMatrix innerProductSpace matrix =
+solve : Vector.InnerProductSpace a -> Matrix a -> ColumnVector.ColumnVector a -> Consistancy a
+solve innerProductSpace matrix constants =
     let
+        matrixB =
+            createMatrixFromColumnVectors [ constants ]
+
+        augmentedMatrix =
+            concatHorizontal.semigroup.prepend matrix matrixB
+
         (Matrix listOfRowVectorsRREF) =
-            gaussJordan innerProductSpace.vectorSpace matrix
+            gaussJordan innerProductSpace.vectorSpace augmentedMatrix
 
         (Matrix variableSide) =
             coefficientMatrix (Matrix listOfRowVectorsRREF)
@@ -831,22 +836,6 @@ solveMatrix innerProductSpace matrix =
                 |> ColumnVector.ColumnVector
             )
             |> Consistant
-
-
-{-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
--}
-solve : Vector.InnerProductSpace a -> Matrix a -> ColumnVector.ColumnVector a -> Consistancy a
-solve innerProductSpace matrix (ColumnVector.ColumnVector (Vector.Vector constants)) =
-    let
-        matrixB =
-            constants
-                |> List.map (List.singleton >> Vector.Vector >> RowVector.RowVector)
-                |> Matrix
-
-        augmentedMatrix =
-            concatHorizontal.semigroup.prepend matrix matrixB
-    in
-    solveMatrix innerProductSpace augmentedMatrix
 
 
 {-| Predicate to determine if a list of Vectors are linearly independent

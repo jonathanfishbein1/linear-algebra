@@ -418,11 +418,14 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ 1, 1, 2, 3, 2 ]
-                            , RowVector.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 1, 2, 3 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 1, 3, 1 ]
                             ]
+
+                    b =
+                        ColumnVector.ColumnVector <| Vector.Vector [ 2, 4 ]
                 in
-                Expect.equal (Matrix.solveMatrix Vector.realInnerProductSpace matrix)
+                Expect.equal (Matrix.solve Vector.realInnerProductSpace matrix b)
                     (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
         , Test.test
             "tests matrix fold"

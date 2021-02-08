@@ -1,10 +1,17 @@
 module SymmetricMatrix exposing
     ( SymmetricMatrix(..)
+    , identity
+    , dimension
     , isSymmetric
-    , adjoint, dimension, getAt, identity, multiply, multiplyMatrixVector, scalarMultiplication, subtract
+    , scalarMultiplication
+    , adjoint
+    , multiply
+    , multiplyMatrixVector
+    , subtract
+    , getAt
     )
 
-{-| A module for Square Matrix
+{-| A module for Symmetric Matrix
 
 
 # Types
@@ -12,9 +19,33 @@ module SymmetricMatrix exposing
 @docs SymmetricMatrix
 
 
+# Constructors
+
+@docs identity
+
+
 # Matrix Predicates and Properties
 
+@docs dimension
 @docs isSymmetric
+
+
+# Unitary Operations
+
+@docs scalarMultiplication
+@docs adjoint
+
+
+# Binary Operations
+
+@docs multiply
+@docs multiplyMatrixVector
+@docs subtract
+
+
+# Manipulation
+
+@docs getAt
 
 -}
 

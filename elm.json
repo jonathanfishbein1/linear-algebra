@@ -9,6 +9,7 @@
         "Matrix",
         "SquareMatrix",
         "NormalMatrix",
+        "SymmetricMatrix",
         "InvertableMatrix",
         "UnitaryMatrix",
         "HermitianMatrix",

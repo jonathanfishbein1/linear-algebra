@@ -19,7 +19,7 @@ module SquareMatrix exposing
     , add
     , subtract
     , getAt
-    , adjoint, transpose
+    , adjoint, appendHorizontal, createMatrixFromColumnVectors, equal, gaussJordan, getDiagonalProduct, subMatrix, transpose, upperTriangle
     )
 
 {-| A module for Square Matrix
@@ -293,3 +293,57 @@ transpose : SquareMatrix a -> SquareMatrix a
 transpose (SquareMatrix matrix) =
     Matrix.transpose matrix
         |> SquareMatrix
+
+
+{-| Put a matrix into Upper Triangular Form
+-}
+upperTriangle : Vector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
+upperTriangle vectorSpace (SquareMatrix matrix) =
+    Matrix.upperTriangle vectorSpace matrix
+        |> SquareMatrix
+
+
+{-| Get the Product of the diagonal of a Matrix
+-}
+getDiagonalProduct : Field.Field a -> SquareMatrix a -> Maybe a
+getDiagonalProduct field (SquareMatrix matrix) =
+    Matrix.getDiagonalProduct field matrix
+
+
+{-| Append Matricies together horizontally
+-}
+appendHorizontal : SquareMatrix a -> SquareMatrix a -> SquareMatrix a
+appendHorizontal (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.appendHorizontal matrixOne matrixTwo
+        |> SquareMatrix
+
+
+{-| Function composition of Gaussian Elimination and Jordan Elimination
+-}
+gaussJordan : Vector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
+gaussJordan vectorSpace (SquareMatrix matrix) =
+    Matrix.gaussJordan vectorSpace matrix
+        |> SquareMatrix
+
+
+{-| Calculate the submatrix given a starting and ending row and column index
+-}
+subMatrix : Int -> Int -> Int -> Int -> SquareMatrix a -> SquareMatrix a
+subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex (SquareMatrix matrix) =
+    Matrix.subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex matrix
+        |> SquareMatrix
+
+
+{-| Create a Matrix from a list of Column Vectors
+-}
+createMatrixFromColumnVectors : List (Matrix.ColumnVector a) -> SquareMatrix a
+createMatrixFromColumnVectors =
+    Matrix.createMatrixFromColumnVectors
+        >> SquareMatrix
+
+
+{-| Compare two matricies using comparator
+-}
+equal : (a -> a -> Bool) -> SquareMatrix a -> SquareMatrix a -> Bool
+equal comparator (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.equal comparator matrixOne matrixTwo

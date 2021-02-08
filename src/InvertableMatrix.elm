@@ -7,7 +7,7 @@ module InvertableMatrix exposing
     , multiply
     , multiplyMatrixVector
     , getAt
-    , projXOntoSubspace
+    , equal, projXOntoSubspace
     )
 
 {-| A module for Invertable Matrix
@@ -52,36 +52,37 @@ type InvertableMatrix a
 {-| Try to calculate the determinant
 -}
 determinant : Vector.VectorSpace a -> InvertableMatrix a -> Result String a
-determinant vectorSpace (InvertableMatrix (SquareMatrix.SquareMatrix matrix)) =
-    Matrix.upperTriangle vectorSpace matrix
-        |> Matrix.getDiagonalProduct vectorSpace.field
+determinant vectorSpace (InvertableMatrix matrix) =
+    SquareMatrix.upperTriangle vectorSpace matrix
+        |> SquareMatrix.getDiagonalProduct vectorSpace.field
         |> Result.fromMaybe "Index out of range"
 
 
 {-| Try to calculate the inverse of a matrix
 -}
-invert : Vector.InnerProductSpace a -> InvertableMatrix a -> Result String (Matrix.Matrix a)
+invert : Vector.InnerProductSpace a -> InvertableMatrix a -> Result String (InvertableMatrix a)
 invert innerProductSpace (InvertableMatrix matrix) =
     case isInvertable innerProductSpace matrix of
         Ok invMatrix ->
             let
                 sizeOfMatrix =
-                    Matrix.mDimension invMatrix
+                    SquareMatrix.dimension invMatrix
 
                 augmentedMatrix =
-                    Matrix.appendHorizontal invMatrix
-                        (Matrix.identity innerProductSpace.vectorSpace.field sizeOfMatrix)
+                    SquareMatrix.appendHorizontal invMatrix
+                        (SquareMatrix.identity innerProductSpace.vectorSpace.field sizeOfMatrix)
 
-                reducedRowEchelonForm =
-                    Matrix.gaussJordan innerProductSpace.vectorSpace augmentedMatrix
+                (SquareMatrix.SquareMatrix reducedRowEchelonForm) =
+                    SquareMatrix.gaussJordan innerProductSpace.vectorSpace augmentedMatrix
 
                 inverse =
-                    Matrix.subMatrix
+                    SquareMatrix.subMatrix
                         0
                         (Matrix.mDimension reducedRowEchelonForm)
                         sizeOfMatrix
                         (Matrix.nDimension reducedRowEchelonForm)
-                        reducedRowEchelonForm
+                        (SquareMatrix.SquareMatrix reducedRowEchelonForm)
+                        |> InvertableMatrix
             in
             Ok inverse
 
@@ -91,13 +92,13 @@ invert innerProductSpace (InvertableMatrix matrix) =
 
 {-| Determine whether a matirx is invertable
 -}
-isInvertable : Vector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Result String (Matrix.Matrix a)
+isInvertable : Vector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Result String (SquareMatrix.SquareMatrix a)
 isInvertable innerProductSpace (SquareMatrix.SquareMatrix matrix) =
     case Matrix.isOnto innerProductSpace matrix of
         Ok ontoMatrix ->
             case Matrix.isOneToOne innerProductSpace ontoMatrix of
                 Ok ontoAndOneToOneMatrix ->
-                    Ok ontoAndOneToOneMatrix
+                    Ok (SquareMatrix.SquareMatrix ontoAndOneToOneMatrix)
 
                 Err error ->
                     Err (error ++ " Matrix is not invertable")
@@ -149,16 +150,23 @@ projXOntoSubspace : Vector.InnerProductSpace a -> List (Matrix.ColumnVector a) -
 projXOntoSubspace innerProductSpace columnVectorBasis x =
     let
         matrix =
-            Matrix.createMatrixFromColumnVectors columnVectorBasis
+            SquareMatrix.createMatrixFromColumnVectors columnVectorBasis
 
         transposeMatrix =
-            Matrix.transpose matrix
+            SquareMatrix.transpose matrix
 
         transformationMatrix =
-            Matrix.multiply innerProductSpace transposeMatrix matrix
-                |> Result.map (SquareMatrix.SquareMatrix >> InvertableMatrix)
+            SquareMatrix.multiply innerProductSpace transposeMatrix matrix
+                |> Result.map InvertableMatrix
                 |> Result.andThen (invert innerProductSpace)
-                |> Result.andThen (Matrix.multiply innerProductSpace matrix)
-                |> Result.andThen (\res -> Matrix.multiply innerProductSpace res transposeMatrix)
+                |> Result.andThen (\(InvertableMatrix invMatrix) -> SquareMatrix.multiply innerProductSpace matrix invMatrix)
+                |> Result.andThen (\res -> SquareMatrix.multiply innerProductSpace res transposeMatrix)
     in
-    Result.andThen (\tMatrix -> Matrix.multiplyMatrixVector innerProductSpace tMatrix x) transformationMatrix
+    Result.andThen (\tMatrix -> SquareMatrix.multiplyMatrixVector innerProductSpace tMatrix x) transformationMatrix
+
+
+{-| Compare two matricies using comparator
+-}
+equal : (a -> a -> Bool) -> InvertableMatrix a -> InvertableMatrix a -> Bool
+equal comparator (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
+    SquareMatrix.equal comparator matrixOne matrixTwo

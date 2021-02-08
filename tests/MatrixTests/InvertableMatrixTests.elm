@@ -6,6 +6,7 @@ import Expect
 import Field
 import InvertableMatrix
 import Matrix
+import NormalMatrix exposing (NormalMatrix)
 import SquareMatrix
 import Test
 import UnitaryMatrix
@@ -89,6 +90,8 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 7, 5, -2 ]
                             , Matrix.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
+                            |> SquareMatrix.SquareMatrix
+                            |> InvertableMatrix.InvertableMatrix
 
                     inverse =
                         InvertableMatrix.invert Vector.realInnerProductSpace matrix
@@ -306,10 +309,12 @@ suite =
                             [ Matrix.RowVector <| Vector.Vector [ expectedComplexNumberR1C1, expectedComplexNumberR1C2 ]
                             , Matrix.RowVector <| Vector.Vector [ expectedComplexNumberR2C1, expectedComplexNumberR2C2 ]
                             ]
+                            |> SquareMatrix.SquareMatrix
+                            |> InvertableMatrix.InvertableMatrix
                 in
                 case inverseComplex of
                     Ok result ->
-                        Expect.true "matrices are equal" (Matrix.equal ComplexNumbers.equal result expectedInverse)
+                        Expect.true "matrices are equal" (InvertableMatrix.equal ComplexNumbers.equal result expectedInverse)
 
                     Err error ->
                         Expect.fail error

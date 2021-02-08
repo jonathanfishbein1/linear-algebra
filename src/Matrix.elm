@@ -359,10 +359,10 @@ complexMatrixAdditionAbelianGroup =
 {-| Create a Matrix from a list of Column Vectors
 -}
 createMatrixFromColumnVectors : List (ColumnVector a) -> Matrix a
-createMatrixFromColumnVectors columnVectors =
-    List.map (\(ColumnVector vector) -> RowVector vector) columnVectors
-        |> Matrix
-        |> transpose
+createMatrixFromColumnVectors =
+    List.map (\(ColumnVector vector) -> RowVector vector)
+        >> Matrix
+        >> transpose
 
 
 {-| Create Identity Matrix with n dimension

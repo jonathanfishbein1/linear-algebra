@@ -19,6 +19,7 @@ module SquareMatrix exposing
     , add
     , subtract
     , getAt
+    , adjoint
     )
 
 {-| A module for Square Matrix
@@ -263,8 +264,8 @@ multiplyMatrixVector innerProductSpace (SquareMatrix matrix) vector =
 {-| Create Square Identity Matrix with n dimension
 -}
 identity : Field.Field a -> Int -> SquareMatrix a
-identity (Field.Field field) =
-    Matrix.identity (Field.Field field)
+identity field =
+    Matrix.identity field
         >> SquareMatrix
 
 
@@ -273,4 +274,14 @@ identity (Field.Field field) =
 subtract : Field.Field a -> SquareMatrix a -> SquareMatrix a -> SquareMatrix a
 subtract field (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     Matrix.subtract field matrixOne matrixTwo
+        |> SquareMatrix
+
+
+{-| Perform the adjoint operation on a Complex Numbered Matrix
+-}
+adjoint :
+    SquareMatrix (ComplexNumbers.ComplexNumber number)
+    -> SquareMatrix (ComplexNumbers.ComplexNumber number)
+adjoint (SquareMatrix matrix) =
+    Matrix.adjoint matrix
         |> SquareMatrix

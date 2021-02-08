@@ -2,6 +2,7 @@ module ColumnVector exposing
     ( ColumnVector(..)
     , sum
     , scalarMultiplication
+    , conjugate
     , add
     , dimension
     , map
@@ -22,6 +23,7 @@ module ColumnVector exposing
 
 @docs sum
 @docs scalarMultiplication
+@docs conjugate
 
 
 # Binary Operations
@@ -51,6 +53,7 @@ module ColumnVector exposing
 
 -}
 
+import ComplexNumbers
 import Field
 import Monoid
 import Vector
@@ -119,3 +122,13 @@ getAt index (ColumnVector list) =
 dimension : ColumnVector a -> Int
 dimension (ColumnVector vector) =
     Vector.dimension vector
+
+
+{-| Take the complex conjugate of a Complex Numbered ColumnVector
+-}
+conjugate :
+    ColumnVector (ComplexNumbers.ComplexNumber number)
+    -> ColumnVector (ComplexNumbers.ComplexNumber number)
+conjugate (ColumnVector vector) =
+    Vector.conjugate vector
+        |> ColumnVector

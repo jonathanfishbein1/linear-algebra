@@ -48,6 +48,7 @@ module Matrix exposing
     , complexMatrixSpace
     , complexMatrixAdditionSemigroup
     , complexMatrixAdditionGroup
+    , complexMatrixAlgebra
     , map
     , pure
     , andMap
@@ -143,6 +144,7 @@ module Matrix exposing
 @docs complexMatrixSpace
 @docs complexMatrixAdditionSemigroup
 @docs complexMatrixAdditionGroup
+@docs complexMatrixAlgebra
 
 
 # Functor, Applicative, Monad, Foldable

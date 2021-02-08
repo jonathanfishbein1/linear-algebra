@@ -1,8 +1,6 @@
 module MatrixTests.GaussJordanSolveTests exposing (suite)
 
-import ComplexNumbers
 import Expect
-import Float.Extra
 import Matrix
 import Test
 import Vector

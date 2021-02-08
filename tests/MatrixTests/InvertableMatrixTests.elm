@@ -6,10 +6,9 @@ import Expect
 import Field
 import InvertableMatrix
 import Matrix
-import NormalMatrix exposing (NormalMatrix)
+import NormalMatrix
 import SquareMatrix
 import Test
-import UnitaryMatrix
 import Vector
 
 

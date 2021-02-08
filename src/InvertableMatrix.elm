@@ -1,5 +1,6 @@
 module InvertableMatrix exposing
     ( InvertableMatrix(..)
+    , identity
     , determinant
     , dimension
     , isInvertable
@@ -7,7 +8,8 @@ module InvertableMatrix exposing
     , multiply
     , multiplyMatrixVector
     , getAt
-    , equal, identity, projXOntoSubspace
+    , equal
+    , projXOntoSubspace
     )
 
 {-| A module for Invertable Matrix
@@ -16,6 +18,11 @@ module InvertableMatrix exposing
 # Types
 
 @docs InvertableMatrix
+
+
+# Constructors
+
+@docs identity
 
 
 # Matrix Predicates and Properties
@@ -35,6 +42,13 @@ module InvertableMatrix exposing
 # Manipulation
 
 @docs getAt
+
+
+# Equality
+
+@docs equal
+
+@docs projXOntoSubspace
 
 -}
 

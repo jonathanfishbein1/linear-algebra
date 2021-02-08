@@ -5,6 +5,7 @@ module SquareMatrix exposing
     , realMatrixInnerProductSpace
     , complexMatrixInnerProductSpace
     , createMatrixFromColumnVectors
+    , identity
     , dimension
     , isSquareMatrix
     , normReal
@@ -16,7 +17,6 @@ module SquareMatrix exposing
     , subMatrix
     , transpose
     , scalarMultiplication
-    , identity
     , adjoint
     , dotProduct
     , multiply
@@ -49,6 +49,7 @@ module SquareMatrix exposing
 # Constructors
 
 @docs createMatrixFromColumnVectors
+@docs identity
 
 
 # Matrix Predicates and Properties
@@ -68,7 +69,6 @@ module SquareMatrix exposing
 # Unitary Operations
 
 @docs scalarMultiplication
-@docs identity
 @docs adjoint
 
 

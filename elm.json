@@ -8,6 +8,7 @@
         "Vector",
         "Matrix",
         "SquareMatrix",
+        "NormalMatrix",
         "InvertableMatrix",
         "UnitaryMatrix",
         "HermitianMatrix",

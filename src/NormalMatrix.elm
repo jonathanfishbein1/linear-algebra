@@ -1,35 +1,79 @@
 module NormalMatrix exposing
     ( NormalMatrix(..)
-    , adjoint
-    , appendHorizontal
     , createMatrixFromColumnVectors
-    , dimension
-    , equal
-    , gaussJordan
-    , getAt
-    , getDiagonalProduct
     , identity
-    , isNormal
+    , dimension
+    , isNormalMatrix
+    , getDiagonalProduct
+    , subMatrix
+    , transpose
+    , scalarMultiplication
+    , adjoint
     , multiply
     , multiplyMatrixVector
-    , scalarMultiplication
-    , subMatrix
     , subtract
-    , transpose
+    , getAt
+    , appendHorizontal
+    , equal
+    , gaussJordan
     , upperTriangle
     )
 
-{-| A module for Square Matrix
+{-| A module for Normal Matrix
 
 
 # Types
 
-@docs SymmetricMatrix
+@docs NormalMatrix
+
+
+# Constructors
+
+@docs createMatrixFromColumnVectors
+@docs identity
 
 
 # Matrix Predicates and Properties
 
-@docs isSymmetric
+@docs dimension
+@docs isNormalMatrix
+@docs getDiagonalProduct
+@docs subMatrix
+@docs transpose
+
+
+# Unitary Operations
+
+@docs scalarMultiplication
+@docs adjoint
+
+
+# Binary Operations
+
+@docs multiply
+@docs multiplyMatrixVector
+@docs subtract
+
+
+# Manipulation
+
+@docs getAt
+
+
+# Monoid
+
+@docs appendHorizontal
+
+
+# Equality
+
+@docs equal
+
+
+# Matrix Forms
+
+@docs gaussJordan
+@docs upperTriangle
 
 -}
 
@@ -117,10 +161,10 @@ scalarMultiplication field scalar (NormalMatrix matrix) =
         |> NormalMatrix
 
 
-{-| Predicate to determine if Matrix is symmetric
+{-| Predicate to determine if Matrix is normal
 -}
-isNormal : Vector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
-isNormal innerProductSpace (SquareMatrix.SquareMatrix matrix) =
+isNormalMatrix : Vector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
+isNormalMatrix innerProductSpace (SquareMatrix.SquareMatrix matrix) =
     Matrix.multiply innerProductSpace (Matrix.transpose matrix) matrix == Matrix.multiply innerProductSpace matrix (Matrix.transpose matrix)
 
 

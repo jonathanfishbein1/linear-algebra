@@ -4,7 +4,8 @@ module SquareMatrix exposing
     , zeroSquareMatrix
     , realMatrixInnerProductSpace
     , complexMatrixInnerProductSpace
-    , isSymmetric
+    , createMatrixFromColumnVectors
+    , identity
     , dimension
     , isSquareMatrix
     , normReal
@@ -12,14 +13,21 @@ module SquareMatrix exposing
     , distanceReal
     , isRightStochastic
     , isLeftStochastic
+    , getDiagonalProduct
+    , subMatrix
+    , transpose
     , scalarMultiplication
-    , identity
+    , adjoint
     , dotProduct
     , multiply
     , multiplyMatrixVector
     , add
     , subtract
     , getAt
+    , appendHorizontal
+    , equal
+    , gaussJordan
+    , upperTriangle
     )
 
 {-| A module for Square Matrix
@@ -38,9 +46,14 @@ module SquareMatrix exposing
 @docs complexMatrixInnerProductSpace
 
 
+# Constructors
+
+@docs createMatrixFromColumnVectors
+@docs identity
+
+
 # Matrix Predicates and Properties
 
-@docs isSymmetric
 @docs dimension
 @docs isSquareMatrix
 @docs normReal
@@ -48,12 +61,15 @@ module SquareMatrix exposing
 @docs distanceReal
 @docs isRightStochastic
 @docs isLeftStochastic
+@docs getDiagonalProduct
+@docs subMatrix
+@docs transpose
 
 
 # Unitary Operations
 
 @docs scalarMultiplication
-@docs identity
+@docs adjoint
 
 
 # Binary Operations
@@ -68,6 +84,22 @@ module SquareMatrix exposing
 # Manipulation
 
 @docs getAt
+
+
+# Monoid
+
+@docs appendHorizontal
+
+
+# Equality
+
+@docs equal
+
+
+# Matrix Forms
+
+@docs gaussJordan
+@docs upperTriangle
 
 -}
 
@@ -101,13 +133,6 @@ zeroSquareMatrix : Field.Field a -> Int -> SquareMatrix a
 zeroSquareMatrix field dim =
     Matrix.zeros field dim dim
         |> SquareMatrix
-
-
-{-| Predicate to determine if Matrix is symmetric
--}
-isSymmetric : SquareMatrix a -> Bool
-isSymmetric (SquareMatrix matrix) =
-    Matrix.transpose matrix == matrix
 
 
 {-| Dimension of the matrix
@@ -263,8 +288,8 @@ multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> SquareMatrix a
-    -> Vector.Vector a
-    -> Result String (Vector.Vector a)
+    -> Matrix.ColumnVector a
+    -> Result String (Matrix.ColumnVector a)
 multiplyMatrixVector innerProductSpace (SquareMatrix matrix) vector =
     Matrix.multiplyMatrixVector innerProductSpace matrix vector
 
@@ -272,9 +297,9 @@ multiplyMatrixVector innerProductSpace (SquareMatrix matrix) vector =
 {-| Create Square Identity Matrix with n dimension
 -}
 identity : Field.Field a -> Int -> SquareMatrix a
-identity (Field.Field field) dim =
-    Matrix.identity (Field.Field field) dim
-        |> SquareMatrix
+identity field =
+    Matrix.identity field
+        >> SquareMatrix
 
 
 {-| Subtract two Square Matrices
@@ -283,3 +308,75 @@ subtract : Field.Field a -> SquareMatrix a -> SquareMatrix a -> SquareMatrix a
 subtract field (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     Matrix.subtract field matrixOne matrixTwo
         |> SquareMatrix
+
+
+{-| Perform the adjoint operation on a Complex Numbered Matrix
+-}
+adjoint :
+    SquareMatrix (ComplexNumbers.ComplexNumber number)
+    -> SquareMatrix (ComplexNumbers.ComplexNumber number)
+adjoint (SquareMatrix matrix) =
+    Matrix.adjoint matrix
+        |> SquareMatrix
+
+
+{-| Transpose a Matrix
+-}
+transpose : SquareMatrix a -> SquareMatrix a
+transpose (SquareMatrix matrix) =
+    Matrix.transpose matrix
+        |> SquareMatrix
+
+
+{-| Put a matrix into Upper Triangular Form
+-}
+upperTriangle : Vector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
+upperTriangle vectorSpace (SquareMatrix matrix) =
+    Matrix.upperTriangle vectorSpace matrix
+        |> SquareMatrix
+
+
+{-| Get the Product of the diagonal of a Matrix
+-}
+getDiagonalProduct : Field.Field a -> SquareMatrix a -> Maybe a
+getDiagonalProduct field (SquareMatrix matrix) =
+    Matrix.getDiagonalProduct field matrix
+
+
+{-| Append Matricies together horizontally
+-}
+appendHorizontal : SquareMatrix a -> SquareMatrix a -> SquareMatrix a
+appendHorizontal (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.appendHorizontal matrixOne matrixTwo
+        |> SquareMatrix
+
+
+{-| Function composition of Gaussian Elimination and Jordan Elimination
+-}
+gaussJordan : Vector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
+gaussJordan vectorSpace (SquareMatrix matrix) =
+    Matrix.gaussJordan vectorSpace matrix
+        |> SquareMatrix
+
+
+{-| Calculate the submatrix given a starting and ending row and column index
+-}
+subMatrix : Int -> Int -> Int -> Int -> SquareMatrix a -> SquareMatrix a
+subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex (SquareMatrix matrix) =
+    Matrix.subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex matrix
+        |> SquareMatrix
+
+
+{-| Create a Matrix from a list of Column Vectors
+-}
+createMatrixFromColumnVectors : List (Matrix.ColumnVector a) -> SquareMatrix a
+createMatrixFromColumnVectors =
+    Matrix.createMatrixFromColumnVectors
+        >> SquareMatrix
+
+
+{-| Compare two matricies using comparator
+-}
+equal : (a -> a -> Bool) -> SquareMatrix a -> SquareMatrix a -> Bool
+equal comparator (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.equal comparator matrixOne matrixTwo

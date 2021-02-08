@@ -326,7 +326,11 @@ suite =
                 let
                     v =
                         Vector.Vector
-                            [ 1, 2, 3 ]
+                            [ 1
+                            , 2
+                            , 3
+                            ]
+                            |> Matrix.ColumnVector
 
                     m =
                         Matrix.Matrix
@@ -339,7 +343,12 @@ suite =
                         Matrix.multiplyMatrixVector Vector.realInnerProductSpace m v
 
                     expected =
-                        Vector.Vector [ 14, 32, 50 ]
+                        Vector.Vector
+                            [ 14
+                            , 32
+                            , 50
+                            ]
+                            |> Matrix.ColumnVector
                 in
                 Expect.equal mTimesV (Ok expected)
         , Test.fuzz3

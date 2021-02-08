@@ -1,10 +1,12 @@
 module UnitaryMatrix exposing
     ( UnitaryMatrix(..)
+    , identity
     , isUnitary
     , dimension
     , multiply
     , multiplyMatrixVector
     , getAt
+    , equal
     )
 
 {-| A module for Unitary Matrix
@@ -13,6 +15,11 @@ module UnitaryMatrix exposing
 # Types
 
 @docs UnitaryMatrix
+
+
+# Constructors
+
+@docs identity
 
 
 # Matrix Predicates and Properties
@@ -31,12 +38,16 @@ module UnitaryMatrix exposing
 
 @docs getAt
 
+
+# Equality
+
+@docs equal
+
 -}
 
 import ComplexNumbers
 import InvertableMatrix
 import Matrix
-import SquareMatrix
 import Vector
 
 
@@ -49,13 +60,17 @@ type UnitaryMatrix number
 {-| Determine whether a matirx is unitary
 -}
 isUnitary : InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
-isUnitary (InvertableMatrix.InvertableMatrix (SquareMatrix.SquareMatrix matrix)) =
-    case InvertableMatrix.invert Vector.complexInnerProductSpace (InvertableMatrix.InvertableMatrix (SquareMatrix.SquareMatrix matrix)) of
-        Ok inverse ->
-            Matrix.equal ComplexNumbers.equal inverse (Matrix.adjoint matrix)
+isUnitary matrix =
+    InvertableMatrix.invert Vector.complexInnerProductSpace matrix
+        |> Result.andThen (\inverse -> multiply (UnitaryMatrix inverse) (UnitaryMatrix matrix))
+        |> (\resultMatrix ->
+                case resultMatrix of
+                    Ok resultM ->
+                        equal resultM (identity (dimension resultM))
 
-        Err _ ->
-            False
+                    Err _ ->
+                        False
+           )
 
 
 {-| Dimension of the matrix
@@ -87,7 +102,22 @@ multiply (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
 -}
 multiplyMatrixVector :
     UnitaryMatrix Float
-    -> Vector.Vector (ComplexNumbers.ComplexNumber Float)
-    -> Result String (Vector.Vector (ComplexNumbers.ComplexNumber Float))
+    -> Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float)
+    -> Result String (Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (UnitaryMatrix matrix) vector =
     InvertableMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector
+
+
+{-| Compare two matricies using comparator
+-}
+equal : UnitaryMatrix Float -> UnitaryMatrix Float -> Bool
+equal (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
+    InvertableMatrix.equal ComplexNumbers.equal matrixOne matrixTwo
+
+
+{-| Create Square Identity Matrix with n dimension
+-}
+identity : Int -> UnitaryMatrix Float
+identity =
+    InvertableMatrix.identity ComplexNumbers.complexField
+        >> UnitaryMatrix

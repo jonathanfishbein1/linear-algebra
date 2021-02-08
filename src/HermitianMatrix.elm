@@ -45,35 +45,35 @@ module HermitianMatrix exposing
 
 import ComplexNumbers
 import Matrix
-import SquareMatrix
+import SymmetricMatrix
 import Vector
 
 
 {-| Hermitian Matrix type
 -}
 type HermitianMatrix number
-    = HermitianMatrix (SquareMatrix.SquareMatrix (ComplexNumbers.ComplexNumber number))
+    = HermitianMatrix (SymmetricMatrix.SymmetricMatrix (ComplexNumbers.ComplexNumber number))
 
 
 {-| Predicate to determine if Matrix is Hermitian
 -}
-isHermitian : SquareMatrix.SquareMatrix (ComplexNumbers.ComplexNumber number) -> Bool
-isHermitian (SquareMatrix.SquareMatrix matrix) =
-    Matrix.adjoint matrix == matrix
+isHermitian : SymmetricMatrix.SymmetricMatrix (ComplexNumbers.ComplexNumber number) -> Bool
+isHermitian matrix =
+    SymmetricMatrix.adjoint matrix == matrix
 
 
 {-| Dimension of the matrix
 -}
 dimension : HermitianMatrix number -> Int
 dimension (HermitianMatrix matrix) =
-    SquareMatrix.dimension matrix
+    SymmetricMatrix.dimension matrix
 
 
 {-| Get the value in a matrix at the specified row and column
 -}
 getAt : ( Int, Int ) -> HermitianMatrix number -> Maybe (ComplexNumbers.ComplexNumber number)
 getAt ( rowIndex, columnIndex ) (HermitianMatrix matrix) =
-    SquareMatrix.getAt ( rowIndex, columnIndex ) matrix
+    SymmetricMatrix.getAt ( rowIndex, columnIndex ) matrix
 
 
 {-| Hermitian Matrix Hermitian Matrix multiplication
@@ -83,7 +83,7 @@ multiply :
     -> HermitianMatrix Float
     -> Result String (HermitianMatrix Float)
 multiply (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
-    SquareMatrix.multiply Vector.complexInnerProductSpace matrixOne matrixTwo
+    SymmetricMatrix.multiply Vector.complexInnerProductSpace matrixOne matrixTwo
         |> Result.map HermitianMatrix
 
 
@@ -91,31 +91,31 @@ multiply (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
 -}
 multiplyMatrixVector :
     HermitianMatrix Float
-    -> Vector.Vector (ComplexNumbers.ComplexNumber Float)
-    -> Result String (Vector.Vector (ComplexNumbers.ComplexNumber Float))
+    -> Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float)
+    -> Result String (Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (HermitianMatrix matrix) vector =
-    SquareMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector
+    SymmetricMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector
 
 
 {-| Subtract two Hermitian Matrices
 -}
 subtract : HermitianMatrix Float -> HermitianMatrix Float -> HermitianMatrix Float
 subtract (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
-    SquareMatrix.subtract ComplexNumbers.complexField matrixOne matrixTwo
+    SymmetricMatrix.subtract ComplexNumbers.complexField matrixOne matrixTwo
         |> HermitianMatrix
 
 
 {-| Create Square Identity Matrix with n dimension with Complex Numbers
 -}
 identity : Int -> HermitianMatrix Float
-identity dim =
-    SquareMatrix.identity ComplexNumbers.complexField dim
-        |> HermitianMatrix
+identity =
+    SymmetricMatrix.identity ComplexNumbers.complexField
+        >> HermitianMatrix
 
 
 {-| Scalar multiplication over a Hermitian Matrix
 -}
 scalarMultiplication : ComplexNumbers.ComplexNumber Float -> HermitianMatrix Float -> HermitianMatrix Float
 scalarMultiplication scalar (HermitianMatrix matrix) =
-    SquareMatrix.scalarMultiplication ComplexNumbers.complexField scalar matrix
+    SymmetricMatrix.scalarMultiplication ComplexNumbers.complexField scalar matrix
         |> HermitianMatrix

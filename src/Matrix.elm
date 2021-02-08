@@ -48,6 +48,7 @@ module Matrix exposing
     , complexMatrixSpace
     , complexMatrixAdditionSemigroup
     , complexMatrixAdditionGroup
+    , complexMatrixAlgebra
     , map
     , pure
     , andMap
@@ -143,6 +144,7 @@ module Matrix exposing
 @docs complexMatrixSpace
 @docs complexMatrixAdditionSemigroup
 @docs complexMatrixAdditionGroup
+@docs complexMatrixAlgebra
 
 
 # Functor, Applicative, Monad, Foldable
@@ -359,10 +361,10 @@ complexMatrixAdditionAbelianGroup =
 {-| Create a Matrix from a list of Column Vectors
 -}
 createMatrixFromColumnVectors : List (ColumnVector a) -> Matrix a
-createMatrixFromColumnVectors columnVectors =
-    List.map (\(ColumnVector vector) -> RowVector vector) columnVectors
-        |> Matrix
-        |> transpose
+createMatrixFromColumnVectors =
+    List.map (\(ColumnVector vector) -> RowVector vector)
+        >> Matrix
+        >> transpose
 
 
 {-| Create Identity Matrix with n dimension
@@ -429,10 +431,9 @@ conjugate =
 adjoint :
     Matrix (ComplexNumbers.ComplexNumber number)
     -> Matrix (ComplexNumbers.ComplexNumber number)
-adjoint matrix =
-    matrix
-        |> map ComplexNumbers.conjugate
-        |> transpose
+adjoint =
+    conjugate
+        >> transpose
 
 
 {-| Calculate the rank of a Matrix
@@ -471,9 +472,6 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 nullSpace : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
 nullSpace innerProductSpace matrix =
     let
-        numberOfRows =
-            mDimension matrix
-
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             innerProductSpace.vectorSpace.field
 
@@ -481,7 +479,7 @@ nullSpace innerProductSpace matrix =
             commutativeDivisionRing.addition
 
         b =
-            List.repeat numberOfRows additionGroup.monoid.identity
+            List.repeat (mDimension matrix) additionGroup.monoid.identity
                 |> Vector.Vector
                 |> ColumnVector
     in
@@ -500,12 +498,9 @@ leftNullSpace innerProductSpace =
 getDiagonal : Matrix a -> Maybe (List a)
 getDiagonal matrix =
     let
-        numberOfRows =
-            mDimension matrix
-
         indices =
             List.Extra.initialize
-                numberOfRows
+                (mDimension matrix)
                 (\index -> ( index, index ))
     in
     List.foldl
@@ -518,15 +513,11 @@ getDiagonal matrix =
 {-| Get the Product of the diagonal of a Matrix
 -}
 getDiagonalProduct : Field.Field a -> Matrix a -> Maybe a
-getDiagonalProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) matrix =
-    getDiagonal matrix
-        |> Maybe.map
+getDiagonalProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+    getDiagonal
+        >> Maybe.map
             (List.foldl
-                (\elem acc ->
-                    commutativeDivisionRing.multiplication.monoid.semigroup
-                        elem
-                        acc
-                )
+                commutativeDivisionRing.multiplication.monoid.semigroup
                 commutativeDivisionRing.multiplication.monoid.identity
             )
 
@@ -558,9 +549,9 @@ subtract (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutati
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> Matrix a
-    -> Vector.Vector a
-    -> Result String (Vector.Vector a)
-multiplyMatrixVector innerProductSpace (Matrix matrix) vector =
+    -> ColumnVector a
+    -> Result String (ColumnVector a)
+multiplyMatrixVector innerProductSpace (Matrix matrix) (ColumnVector vector) =
     if nDimension (Matrix matrix) == Vector.dimension vector then
         let
             listOfVectors =
@@ -572,6 +563,7 @@ multiplyMatrixVector innerProductSpace (Matrix matrix) vector =
                 (\(Vector.Vector elem) acc -> acc ++ elem)
                 []
             |> Vector.Vector
+            |> ColumnVector
             |> Ok
 
     else
@@ -777,9 +769,9 @@ jordanReduce vectorSpace (Matrix matrix) =
 {-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
 gaussJordan : Vector.VectorSpace a -> Matrix a -> Matrix a
-gaussJordan vectorSpace matrix =
-    gaussianReduce vectorSpace matrix
-        |> jordanReduce vectorSpace
+gaussJordan vectorSpace =
+    gaussianReduce vectorSpace
+        >> jordanReduce vectorSpace
 
 
 coefficientMatrix : Matrix a -> Matrix a
@@ -873,24 +865,23 @@ solve innerProductSpace matrix (ColumnVector (Vector.Vector constants)) =
 
 {-| Predicate to determine if a list of Vectors are linearly independent
 -}
-areLinearlyIndependent : Vector.InnerProductSpace a -> List (Vector.Vector a) -> Bool
-areLinearlyIndependent innerProductSpace listOfVectors =
+areLinearlyIndependent : Vector.InnerProductSpace a -> List (ColumnVector a) -> Bool
+areLinearlyIndependent innerProductSpace columnVectors =
     let
         matrix =
-            List.map RowVector listOfVectors
-                |> Matrix
+            createMatrixFromColumnVectors columnVectors
     in
     rank innerProductSpace matrix == nDimension matrix
 
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : Vector.VectorSpace a -> VectorDimension -> List (Vector.Vector a) -> Result String Bool
-doesSetSpanSpace vSpace (VectorDimension vectorDimension) vectors =
-    if List.length vectors /= vectorDimension then
+doesSetSpanSpace : Vector.VectorSpace a -> VectorDimension -> List (ColumnVector a) -> Result String Bool
+doesSetSpanSpace vSpace (VectorDimension vectorDimension) columnVectors =
+    if List.length columnVectors /= vectorDimension then
         Err "Please input same number of vectors as vector space"
 
-    else if not <| List.all (\vector -> Vector.dimension vector == vectorDimension) vectors then
+    else if not <| List.all (\(ColumnVector vector) -> Vector.dimension vector == vectorDimension) columnVectors then
         Err "Please input vectors of equal length as vector space"
 
     else
@@ -899,7 +890,7 @@ doesSetSpanSpace vSpace (VectorDimension vectorDimension) vectors =
                 identity vSpace.field vectorDimension
 
             listOfRowVectorsRREF =
-                gaussJordan vSpace (Matrix (List.map RowVector vectors))
+                gaussJordan vSpace (createMatrixFromColumnVectors columnVectors)
         in
         identityRowVectors
             == listOfRowVectorsRREF
@@ -927,7 +918,7 @@ mDimension (Matrix listOfRowVectors) =
 
 {-| Determine whether list of vectors are a basis for a space
 -}
-areBasis : Vector.InnerProductSpace a -> VectorDimension -> List (Vector.Vector a) -> Bool
+areBasis : Vector.InnerProductSpace a -> VectorDimension -> List (ColumnVector a) -> Bool
 areBasis innerProductSpace vectorDimension vectors =
     doesSetSpanSpace innerProductSpace.vectorSpace vectorDimension vectors
         == Ok True

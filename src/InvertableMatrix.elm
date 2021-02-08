@@ -1,5 +1,6 @@
 module InvertableMatrix exposing
     ( InvertableMatrix(..)
+    , identity
     , determinant
     , dimension
     , isInvertable
@@ -7,6 +8,8 @@ module InvertableMatrix exposing
     , multiply
     , multiplyMatrixVector
     , getAt
+    , equal
+    , projXOntoSubspace
     )
 
 {-| A module for Invertable Matrix
@@ -15,6 +18,11 @@ module InvertableMatrix exposing
 # Types
 
 @docs InvertableMatrix
+
+
+# Constructors
+
+@docs identity
 
 
 # Matrix Predicates and Properties
@@ -35,9 +43,18 @@ module InvertableMatrix exposing
 
 @docs getAt
 
+
+# Equality
+
+@docs equal
+
+@docs projXOntoSubspace
+
 -}
 
+import Field
 import Matrix
+import NormalMatrix
 import SquareMatrix
 import Vector
 
@@ -45,42 +62,44 @@ import Vector
 {-| Invertable Matrix type
 -}
 type InvertableMatrix a
-    = InvertableMatrix (SquareMatrix.SquareMatrix a)
+    = InvertableMatrix (NormalMatrix.NormalMatrix a)
 
 
 {-| Try to calculate the determinant
 -}
 determinant : Vector.VectorSpace a -> InvertableMatrix a -> Result String a
-determinant vectorSpace (InvertableMatrix (SquareMatrix.SquareMatrix matrix)) =
-    Matrix.upperTriangle vectorSpace matrix
-        |> Matrix.getDiagonalProduct vectorSpace.field
+determinant vectorSpace (InvertableMatrix matrix) =
+    NormalMatrix.upperTriangle vectorSpace matrix
+        |> NormalMatrix.getDiagonalProduct vectorSpace.field
         |> Result.fromMaybe "Index out of range"
 
 
 {-| Try to calculate the inverse of a matrix
 -}
-invert : Vector.InnerProductSpace a -> InvertableMatrix a -> Result String (Matrix.Matrix a)
+invert : Vector.InnerProductSpace a -> InvertableMatrix a -> Result String (InvertableMatrix a)
 invert innerProductSpace (InvertableMatrix matrix) =
     case isInvertable innerProductSpace matrix of
         Ok invMatrix ->
             let
                 sizeOfMatrix =
-                    Matrix.mDimension invMatrix
+                    NormalMatrix.dimension invMatrix
 
                 augmentedMatrix =
-                    Matrix.appendHorizontal invMatrix
-                        (Matrix.identity innerProductSpace.vectorSpace.field sizeOfMatrix)
+                    NormalMatrix.appendHorizontal invMatrix
+                        (NormalMatrix.identity innerProductSpace.vectorSpace.field sizeOfMatrix)
 
-                reducedRowEchelonForm =
-                    Matrix.gaussJordan innerProductSpace.vectorSpace augmentedMatrix
+                (NormalMatrix.NormalMatrix (SquareMatrix.SquareMatrix reducedRowEchelonForm)) =
+                    NormalMatrix.gaussJordan innerProductSpace.vectorSpace augmentedMatrix
 
                 inverse =
-                    Matrix.subMatrix
+                    SquareMatrix.subMatrix
                         0
                         (Matrix.mDimension reducedRowEchelonForm)
                         sizeOfMatrix
                         (Matrix.nDimension reducedRowEchelonForm)
-                        reducedRowEchelonForm
+                        (SquareMatrix.SquareMatrix reducedRowEchelonForm)
+                        |> NormalMatrix.NormalMatrix
+                        |> InvertableMatrix
             in
             Ok inverse
 
@@ -90,13 +109,13 @@ invert innerProductSpace (InvertableMatrix matrix) =
 
 {-| Determine whether a matirx is invertable
 -}
-isInvertable : Vector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Result String (Matrix.Matrix a)
-isInvertable innerProductSpace (SquareMatrix.SquareMatrix matrix) =
+isInvertable : Vector.InnerProductSpace a -> NormalMatrix.NormalMatrix a -> Result String (NormalMatrix.NormalMatrix a)
+isInvertable innerProductSpace (NormalMatrix.NormalMatrix (SquareMatrix.SquareMatrix matrix)) =
     case Matrix.isOnto innerProductSpace matrix of
         Ok ontoMatrix ->
             case Matrix.isOneToOne innerProductSpace ontoMatrix of
                 Ok ontoAndOneToOneMatrix ->
-                    Ok ontoAndOneToOneMatrix
+                    Ok (NormalMatrix.NormalMatrix (SquareMatrix.SquareMatrix ontoAndOneToOneMatrix))
 
                 Err error ->
                     Err (error ++ " Matrix is not invertable")
@@ -109,14 +128,14 @@ isInvertable innerProductSpace (SquareMatrix.SquareMatrix matrix) =
 -}
 dimension : InvertableMatrix a -> Int
 dimension (InvertableMatrix matrix) =
-    SquareMatrix.dimension matrix
+    NormalMatrix.dimension matrix
 
 
 {-| Get the value in a matrix at the specified row and column
 -}
 getAt : ( Int, Int ) -> InvertableMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (InvertableMatrix matrix) =
-    SquareMatrix.getAt ( rowIndex, columnIndex ) matrix
+    NormalMatrix.getAt ( rowIndex, columnIndex ) matrix
 
 
 {-| Invertable Matrix Invertable Matrix multiplication
@@ -127,7 +146,7 @@ multiply :
     -> InvertableMatrix a
     -> Result String (InvertableMatrix a)
 multiply innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
-    SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
+    NormalMatrix.multiply innerProductSpace matrixOne matrixTwo
         |> Result.map InvertableMatrix
 
 
@@ -136,7 +155,43 @@ multiply innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrix
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> InvertableMatrix a
-    -> Vector.Vector a
-    -> Result String (Vector.Vector a)
+    -> Matrix.ColumnVector a
+    -> Result String (Matrix.ColumnVector a)
 multiplyMatrixVector innerProductSpace (InvertableMatrix matrix) vector =
-    SquareMatrix.multiplyMatrixVector innerProductSpace matrix vector
+    NormalMatrix.multiplyMatrixVector innerProductSpace matrix vector
+
+
+{-| Calculate the projection of a vector onto a subspace given by a list of basis vectors as column vectors
+-}
+projXOntoSubspace : Vector.InnerProductSpace a -> List (Matrix.ColumnVector a) -> Matrix.ColumnVector a -> Result String (Matrix.ColumnVector a)
+projXOntoSubspace innerProductSpace columnVectorBasis x =
+    let
+        matrix =
+            NormalMatrix.createMatrixFromColumnVectors columnVectorBasis
+
+        transposeMatrix =
+            NormalMatrix.transpose matrix
+
+        transformationMatrix =
+            NormalMatrix.multiply innerProductSpace transposeMatrix matrix
+                |> Result.map InvertableMatrix
+                |> Result.andThen (invert innerProductSpace)
+                |> Result.andThen (\(InvertableMatrix invMatrix) -> NormalMatrix.multiply innerProductSpace matrix invMatrix)
+                |> Result.andThen (\res -> NormalMatrix.multiply innerProductSpace res transposeMatrix)
+    in
+    Result.andThen (\tMatrix -> NormalMatrix.multiplyMatrixVector innerProductSpace tMatrix x) transformationMatrix
+
+
+{-| Compare two matricies using comparator
+-}
+equal : (a -> a -> Bool) -> InvertableMatrix a -> InvertableMatrix a -> Bool
+equal comparator (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
+    NormalMatrix.equal comparator matrixOne matrixTwo
+
+
+{-| Create Square Identity Matrix with n dimension
+-}
+identity : Field.Field a -> Int -> InvertableMatrix a
+identity field =
+    NormalMatrix.identity field
+        >> InvertableMatrix

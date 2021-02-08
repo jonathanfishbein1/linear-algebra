@@ -768,10 +768,10 @@ coefficientMatrix matrix =
 {-| Solve a system of linear equations using Gauss-Jordan elimination
 -}
 solveMatrix : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
-solveMatrix innerProductSpace (Matrix listOfRowVectors) =
+solveMatrix innerProductSpace matrix =
     let
         (Matrix listOfRowVectorsRREF) =
-            gaussJordan innerProductSpace.vectorSpace (Matrix listOfRowVectors)
+            gaussJordan innerProductSpace.vectorSpace matrix
 
         (Matrix variableSide) =
             coefficientMatrix (Matrix listOfRowVectorsRREF)

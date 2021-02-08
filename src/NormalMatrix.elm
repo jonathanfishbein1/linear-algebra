@@ -46,14 +46,6 @@ type NormalMatrix a
     = NormalMatrix (SquareMatrix.SquareMatrix a)
 
 
-
--- {-| Predicate to determine if Matrix is symmetric
--- -}
--- isSymmetric : SquareMatrix.SquareMatrix a -> Bool
--- isSymmetric (SquareMatrix.SquareMatrix matrix) =
---     Matrix.transpose matrix == matrix
-
-
 {-| Perform the adjoint operation on a Complex Numbered Matrix
 -}
 adjoint :

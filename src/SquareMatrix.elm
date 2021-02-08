@@ -4,7 +4,6 @@ module SquareMatrix exposing
     , zeroSquareMatrix
     , realMatrixInnerProductSpace
     , complexMatrixInnerProductSpace
-    , isSymmetric
     , dimension
     , isSquareMatrix
     , normReal
@@ -40,7 +39,6 @@ module SquareMatrix exposing
 
 # Matrix Predicates and Properties
 
-@docs isSymmetric
 @docs dimension
 @docs isSquareMatrix
 @docs normReal
@@ -101,13 +99,6 @@ zeroSquareMatrix : Field.Field a -> Int -> SquareMatrix a
 zeroSquareMatrix field dim =
     Matrix.zeros field dim dim
         |> SquareMatrix
-
-
-{-| Predicate to determine if Matrix is symmetric
--}
-isSymmetric : SquareMatrix a -> Bool
-isSymmetric (SquareMatrix matrix) =
-    Matrix.transpose matrix == matrix
 
 
 {-| Dimension of the matrix

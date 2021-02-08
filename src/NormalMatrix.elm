@@ -4,6 +4,7 @@ module NormalMatrix exposing
     , dimension
     , getAt
     , identity
+    , isNormal
     , multiply
     , multiplyMatrixVector
     , scalarMultiplication
@@ -114,3 +115,10 @@ scalarMultiplication : Field.Field a -> a -> NormalMatrix a -> NormalMatrix a
 scalarMultiplication field scalar (NormalMatrix matrix) =
     SquareMatrix.scalarMultiplication field scalar matrix
         |> NormalMatrix
+
+
+{-| Predicate to determine if Matrix is symmetric
+-}
+isNormal : Vector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
+isNormal innerProductSpace (SquareMatrix.SquareMatrix matrix) =
+    Matrix.multiply innerProductSpace (Matrix.transpose matrix) matrix == Matrix.multiply innerProductSpace matrix (Matrix.transpose matrix)

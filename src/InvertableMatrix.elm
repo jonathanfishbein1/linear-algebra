@@ -7,7 +7,7 @@ module InvertableMatrix exposing
     , multiply
     , multiplyMatrixVector
     , getAt
-    , equal, projXOntoSubspace
+    , equal, identity, projXOntoSubspace
     )
 
 {-| A module for Invertable Matrix
@@ -38,7 +38,9 @@ module InvertableMatrix exposing
 
 -}
 
+import Field
 import Matrix
+import NormalMatrix
 import SquareMatrix
 import Vector
 
@@ -170,3 +172,11 @@ projXOntoSubspace innerProductSpace columnVectorBasis x =
 equal : (a -> a -> Bool) -> InvertableMatrix a -> InvertableMatrix a -> Bool
 equal comparator (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
     SquareMatrix.equal comparator matrixOne matrixTwo
+
+
+{-| Create Square Identity Matrix with n dimension
+-}
+identity : Field.Field a -> Int -> InvertableMatrix a
+identity field =
+    SquareMatrix.identity field
+        >> InvertableMatrix

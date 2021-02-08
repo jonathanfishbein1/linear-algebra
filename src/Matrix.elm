@@ -73,8 +73,6 @@ module Matrix exposing
 
 # Types
 
-@docs RowVector
-@docs ColumnVector
 @docs Matrix
 @docs Solution
 @docs Consistancy

@@ -3,6 +3,20 @@ module ColumnVector exposing
     , sum
     )
 
+{-| A module for Column Vector
+
+
+# Types
+
+@docs ColumnVector
+
+
+# Unitary Operations
+
+@docs sum
+
+-}
+
 import Monoid
 import Vector
 

@@ -6,6 +6,8 @@
     "version": "21.0.0",
     "exposed-modules": [
         "Vector",
+        "ColumnVector",
+        "RowVector",
         "Matrix",
         "SquareMatrix",
         "NormalMatrix",

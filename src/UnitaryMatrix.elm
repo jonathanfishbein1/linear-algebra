@@ -51,17 +51,16 @@ type UnitaryMatrix number
 -}
 isUnitary : InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
 isUnitary matrix =
-    case InvertableMatrix.invert Vector.complexInnerProductSpace matrix of
-        Ok inverse ->
-            case multiply (UnitaryMatrix inverse) (UnitaryMatrix matrix) of
-                Ok resultMatrix ->
-                    equal resultMatrix (identity (dimension resultMatrix))
+    InvertableMatrix.invert Vector.complexInnerProductSpace matrix
+        |> Result.andThen (\inverse -> multiply (UnitaryMatrix inverse) (UnitaryMatrix matrix))
+        |> (\resultMatrix ->
+                case resultMatrix of
+                    Ok resultM ->
+                        equal resultM (identity (dimension resultM))
 
-                Err _ ->
-                    False
-
-        Err _ ->
-            False
+                    Err _ ->
+                        False
+           )
 
 
 {-| Dimension of the matrix

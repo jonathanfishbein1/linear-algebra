@@ -4,6 +4,7 @@ module SquareMatrix exposing
     , zeroSquareMatrix
     , realMatrixInnerProductSpace
     , complexMatrixInnerProductSpace
+    , createMatrixFromColumnVectors
     , dimension
     , isSquareMatrix
     , normReal
@@ -11,15 +12,22 @@ module SquareMatrix exposing
     , distanceReal
     , isRightStochastic
     , isLeftStochastic
+    , getDiagonalProduct
+    , subMatrix
+    , transpose
     , scalarMultiplication
     , identity
+    , adjoint
     , dotProduct
     , multiply
     , multiplyMatrixVector
     , add
     , subtract
     , getAt
-    , adjoint, appendHorizontal, createMatrixFromColumnVectors, equal, gaussJordan, getDiagonalProduct, subMatrix, transpose, upperTriangle
+    , appendHorizontal
+    , equal
+    , gaussJordan
+    , upperTriangle
     )
 
 {-| A module for Square Matrix
@@ -38,6 +46,11 @@ module SquareMatrix exposing
 @docs complexMatrixInnerProductSpace
 
 
+# Constructors
+
+@docs createMatrixFromColumnVectors
+
+
 # Matrix Predicates and Properties
 
 @docs dimension
@@ -47,12 +60,16 @@ module SquareMatrix exposing
 @docs distanceReal
 @docs isRightStochastic
 @docs isLeftStochastic
+@docs getDiagonalProduct
+@docs subMatrix
+@docs transpose
 
 
 # Unitary Operations
 
 @docs scalarMultiplication
 @docs identity
+@docs adjoint
 
 
 # Binary Operations
@@ -67,6 +84,22 @@ module SquareMatrix exposing
 # Manipulation
 
 @docs getAt
+
+
+# Monoid
+
+@docs appendHorizontal
+
+
+# Equality
+
+@docs equal
+
+
+# Matrix Forms
+
+@docs gaussJordan
+@docs upperTriangle
 
 -}
 

@@ -35,8 +35,8 @@ type SymmetricMatrix a
 {-| Predicate to determine if Matrix is symmetric
 -}
 isSymmetric : NormalMatrix.NormalMatrix a -> Bool
-isSymmetric (NormalMatrix.NormalMatrix (SquareMatrix.SquareMatrix matrix)) =
-    Matrix.transpose matrix == matrix
+isSymmetric (NormalMatrix.NormalMatrix matrix) =
+    SquareMatrix.transpose matrix == matrix
 
 
 {-| Perform the adjoint operation on a Complex Numbered Matrix

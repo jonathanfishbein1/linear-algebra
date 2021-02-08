@@ -19,7 +19,7 @@ module SquareMatrix exposing
     , add
     , subtract
     , getAt
-    , adjoint
+    , adjoint, transpose
     )
 
 {-| A module for Square Matrix
@@ -284,4 +284,12 @@ adjoint :
     -> SquareMatrix (ComplexNumbers.ComplexNumber number)
 adjoint (SquareMatrix matrix) =
     Matrix.adjoint matrix
+        |> SquareMatrix
+
+
+{-| Transpose a Matrix
+-}
+transpose : SquareMatrix a -> SquareMatrix a
+transpose (SquareMatrix matrix) =
+    Matrix.transpose matrix
         |> SquareMatrix

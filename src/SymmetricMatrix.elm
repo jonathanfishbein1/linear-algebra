@@ -52,7 +52,6 @@ module SymmetricMatrix exposing
 import ColumnVector
 import ComplexNumbers
 import Field
-import Matrix
 import NormalMatrix
 import SquareMatrix
 import Vector

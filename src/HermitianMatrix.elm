@@ -45,7 +45,6 @@ module HermitianMatrix exposing
 
 import ColumnVector
 import ComplexNumbers
-import Matrix
 import SymmetricMatrix
 import Vector
 

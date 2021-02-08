@@ -48,7 +48,6 @@ module UnitaryMatrix exposing
 import ColumnVector
 import ComplexNumbers
 import InvertableMatrix
-import Matrix
 import Vector
 
 

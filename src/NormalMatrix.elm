@@ -1,14 +1,22 @@
 module NormalMatrix exposing
     ( NormalMatrix(..)
     , adjoint
+    , appendHorizontal
+    , createMatrixFromColumnVectors
     , dimension
+    , equal
+    , gaussJordan
     , getAt
+    , getDiagonalProduct
     , identity
     , isNormal
     , multiply
     , multiplyMatrixVector
     , scalarMultiplication
+    , subMatrix
     , subtract
+    , transpose
+    , upperTriangle
     )
 
 {-| A module for Square Matrix
@@ -122,3 +130,65 @@ scalarMultiplication field scalar (NormalMatrix matrix) =
 isNormal : Vector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
 isNormal innerProductSpace (SquareMatrix.SquareMatrix matrix) =
     Matrix.multiply innerProductSpace (Matrix.transpose matrix) matrix == Matrix.multiply innerProductSpace matrix (Matrix.transpose matrix)
+
+
+{-| Put a matrix into Upper Triangular Form
+-}
+upperTriangle : Vector.VectorSpace a -> NormalMatrix a -> NormalMatrix a
+upperTriangle vectorSpace (NormalMatrix matrix) =
+    SquareMatrix.upperTriangle vectorSpace matrix
+        |> NormalMatrix
+
+
+{-| Get the Product of the diagonal of a Matrix
+-}
+getDiagonalProduct : Field.Field a -> NormalMatrix a -> Maybe a
+getDiagonalProduct field (NormalMatrix matrix) =
+    SquareMatrix.getDiagonalProduct field matrix
+
+
+{-| Create a Matrix from a list of Column Vectors
+-}
+createMatrixFromColumnVectors : List (Matrix.ColumnVector a) -> NormalMatrix a
+createMatrixFromColumnVectors =
+    SquareMatrix.createMatrixFromColumnVectors
+        >> NormalMatrix
+
+
+{-| Transpose a Matrix
+-}
+transpose : NormalMatrix a -> NormalMatrix a
+transpose (NormalMatrix matrix) =
+    SquareMatrix.transpose matrix
+        |> NormalMatrix
+
+
+{-| Append Matricies together horizontally
+-}
+appendHorizontal : NormalMatrix a -> NormalMatrix a -> NormalMatrix a
+appendHorizontal (NormalMatrix matrixOne) (NormalMatrix matrixTwo) =
+    SquareMatrix.appendHorizontal matrixOne matrixTwo
+        |> NormalMatrix
+
+
+{-| Function composition of Gaussian Elimination and Jordan Elimination
+-}
+gaussJordan : Vector.VectorSpace a -> NormalMatrix a -> NormalMatrix a
+gaussJordan vectorSpace (NormalMatrix matrix) =
+    SquareMatrix.gaussJordan vectorSpace matrix
+        |> NormalMatrix
+
+
+{-| Calculate the submatrix given a starting and ending row and column index
+-}
+subMatrix : Int -> Int -> Int -> Int -> NormalMatrix a -> NormalMatrix a
+subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex (NormalMatrix matrix) =
+    SquareMatrix.subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex matrix
+        |> NormalMatrix
+
+
+{-| Compare two matricies using comparator
+-}
+equal : (a -> a -> Bool) -> NormalMatrix a -> NormalMatrix a -> Bool
+equal comparator (NormalMatrix matrixOne) (NormalMatrix matrixTwo) =
+    SquareMatrix.equal comparator matrixOne matrixTwo

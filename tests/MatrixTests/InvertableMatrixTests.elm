@@ -27,6 +27,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 3, 4 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
 
                     determinant =
@@ -45,6 +46,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 4, 0, 1 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
 
                     determinant =
@@ -64,6 +66,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 2, 3, 0, 0 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
 
                     determinant =
@@ -82,6 +85,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
 
                     expectedInverse =
@@ -91,6 +95,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
 
                     inverse =
@@ -196,6 +201,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
 
                     determinantComplex =
@@ -263,6 +269,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
 
                     inverseComplex =
@@ -310,6 +317,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ expectedComplexNumberR2C1, expectedComplexNumberR2C2 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
                 in
                 case inverseComplex of
@@ -329,6 +337,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ 1, 3 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
 
                     isInvertable =
                         InvertableMatrix.isInvertable Vector.realInnerProductSpace matrix
@@ -345,6 +354,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
 
                     isInvertable =
                         InvertableMatrix.isInvertable Vector.complexInnerProductSpace matrix

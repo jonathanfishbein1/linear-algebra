@@ -5,6 +5,7 @@ import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import InvertableMatrix
 import Matrix
+import NormalMatrix
 import SquareMatrix
 import Test
 import UnitaryMatrix
@@ -107,6 +108,7 @@ suite =
                             , Matrix.RowVector <| Vector.Vector [ complexNumberR3C1, complexNumberR3C2, complexNumberR3C3 ]
                             ]
                             |> SquareMatrix.SquareMatrix
+                            |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
 
                     isUnitary =

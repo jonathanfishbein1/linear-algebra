@@ -3,9 +3,11 @@
     "name": "jonathanfishbein1/linear-algebra",
     "summary": "linear algebra in elm",
     "license": "BSD-3-Clause",
-    "version": "21.0.0",
+    "version": "22.0.0",
     "exposed-modules": [
         "Vector",
+        "ColumnVector",
+        "RowVector",
         "Matrix",
         "SquareMatrix",
         "NormalMatrix",

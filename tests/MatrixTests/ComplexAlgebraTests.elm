@@ -1,10 +1,12 @@
 module MatrixTests.ComplexAlgebraTests exposing (suite)
 
+import ColumnVector
 import ComplexNumbers
 import Expect
 import Field
 import Fuzz
 import Matrix
+import RowVector
 import Test
 import Vector
 
@@ -21,7 +23,7 @@ suite =
             \one two three ->
                 let
                     v1 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ three
                                 , one
@@ -30,7 +32,7 @@ suite =
                                 ]
 
                     v2 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ one
                                 , three
@@ -39,7 +41,7 @@ suite =
                                 ]
 
                     v3 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ two
                                 , three
@@ -72,7 +74,7 @@ suite =
             \_ ->
                 let
                     v1 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ 1
                                 , 0
@@ -80,7 +82,7 @@ suite =
                                 ]
 
                     v2 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ 0
                                 , 1
@@ -88,7 +90,7 @@ suite =
                                 ]
 
                     v3 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ 0
                                 , 0
@@ -109,7 +111,7 @@ suite =
             \one two three ->
                 let
                     v1 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ three
                                 , one
@@ -117,7 +119,7 @@ suite =
                                 ]
 
                     v2 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ one
                                 , three
@@ -125,7 +127,7 @@ suite =
                                 ]
 
                     v3 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ two
                                 , three
@@ -149,7 +151,7 @@ suite =
             \one two three ->
                 let
                     v1 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ three
                                 , one
@@ -157,7 +159,7 @@ suite =
                                 ]
 
                     v2 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ one
                                 , three
@@ -165,7 +167,7 @@ suite =
                                 ]
 
                     v3 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ two
                                 , three
@@ -189,7 +191,7 @@ suite =
             \one two three ->
                 let
                     v1 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ three
                                 , one
@@ -198,7 +200,7 @@ suite =
                                 ]
 
                     v2 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ one
                                 , three
@@ -207,7 +209,7 @@ suite =
                                 ]
 
                     v3 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ two
                                 , three
@@ -241,7 +243,7 @@ suite =
             \one two three ->
                 let
                     v1 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ three
                                 , one
@@ -250,7 +252,7 @@ suite =
                                 ]
 
                     v2 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ one
                                 , three
@@ -259,7 +261,7 @@ suite =
                                 ]
 
                     v3 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ two
                                 , three
@@ -296,12 +298,12 @@ suite =
             \one two three ->
                 let
                     v1 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ three, one ]
 
                     v2 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ one, two ]
 
@@ -330,13 +332,13 @@ suite =
                             , 2
                             , 3
                             ]
-                            |> Matrix.ColumnVector
+                            |> ColumnVector.ColumnVector
 
                     m =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, 3 ]
-                            , Matrix.RowVector <| Vector.Vector [ 4, 5, 6 ]
-                            , Matrix.RowVector <| Vector.Vector [ 7, 8, 9 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, 3 ]
+                            , RowVector.RowVector <| Vector.Vector [ 4, 5, 6 ]
+                            , RowVector.RowVector <| Vector.Vector [ 7, 8, 9 ]
                             ]
 
                     mTimesV =
@@ -348,7 +350,7 @@ suite =
                             , 32
                             , 50
                             ]
-                            |> Matrix.ColumnVector
+                            |> ColumnVector.ColumnVector
                 in
                 Expect.equal mTimesV (Ok expected)
         , Test.fuzz3
@@ -375,12 +377,12 @@ suite =
                             (ComplexNumbers.Imaginary three)
 
                     v1 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ complexNumberThree, complexNumberOne ]
 
                     v2 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ complexNumberOne, complexNumberTwo ]
 
@@ -425,12 +427,12 @@ suite =
                         ComplexNumbers.ComplexNumber (ComplexNumbers.Real three) (ComplexNumbers.Imaginary two)
 
                     v1 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ complexNumberOne ]
 
                     v2 =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ complexNumberTwo ]
 

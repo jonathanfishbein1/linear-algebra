@@ -43,8 +43,8 @@ module HermitianMatrix exposing
 
 -}
 
+import ColumnVector
 import ComplexNumbers
-import Matrix
 import SymmetricMatrix
 import Vector
 
@@ -91,8 +91,8 @@ multiply (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
 -}
 multiplyMatrixVector :
     HermitianMatrix Float
-    -> Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float)
-    -> Result String (Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float))
+    -> ColumnVector.ColumnVector (ComplexNumbers.ComplexNumber Float)
+    -> Result String (ColumnVector.ColumnVector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (HermitianMatrix matrix) vector =
     SymmetricMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector
 

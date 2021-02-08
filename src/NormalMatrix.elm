@@ -77,6 +77,7 @@ module NormalMatrix exposing
 
 -}
 
+import ColumnVector
 import ComplexNumbers
 import Field
 import Matrix
@@ -131,8 +132,8 @@ getAt ( rowIndex, columnIndex ) (NormalMatrix matrix) =
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> NormalMatrix a
-    -> Matrix.ColumnVector a
-    -> Result String (Matrix.ColumnVector a)
+    -> ColumnVector.ColumnVector a
+    -> Result String (ColumnVector.ColumnVector a)
 multiplyMatrixVector innerProductSpace (NormalMatrix matrix) vector =
     SquareMatrix.multiplyMatrixVector innerProductSpace matrix vector
 
@@ -185,7 +186,7 @@ getDiagonalProduct field (NormalMatrix matrix) =
 
 {-| Create a Matrix from a list of Column Vectors
 -}
-createMatrixFromColumnVectors : List (Matrix.ColumnVector a) -> NormalMatrix a
+createMatrixFromColumnVectors : List (ColumnVector.ColumnVector a) -> NormalMatrix a
 createMatrixFromColumnVectors =
     SquareMatrix.createMatrixFromColumnVectors
         >> NormalMatrix

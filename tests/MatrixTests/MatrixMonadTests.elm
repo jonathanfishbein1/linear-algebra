@@ -3,6 +3,7 @@ module MatrixTests.MatrixMonadTests exposing (suite)
 import Expect
 import Fuzz
 import Matrix
+import RowVector
 import Test
 import Vector
 
@@ -19,7 +20,7 @@ suite =
                     f a =
                         [ a * 2 ]
                             |> Vector.Vector
-                            |> Matrix.RowVector
+                            |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix
 
@@ -55,14 +56,14 @@ suite =
                     f a =
                         [ a * 2 ]
                             |> Vector.Vector
-                            |> Matrix.RowVector
+                            |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix
 
                     g a =
                         [ a * 3 ]
                             |> Vector.Vector
-                            |> Matrix.RowVector
+                            |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix
 

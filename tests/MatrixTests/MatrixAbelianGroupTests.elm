@@ -3,6 +3,7 @@ module MatrixTests.MatrixAbelianGroupTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Matrix
+import RowVector
 import Test
 import Vector
 
@@ -27,21 +28,21 @@ suite =
 
                     v =
                         Matrix.Matrix
-                            [ Matrix.RowVector <|
+                            [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.one ]
                             ]
 
                     w =
                         Matrix.Matrix
-                            [ Matrix.RowVector <|
+                            [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ complexOneNegative ]
                             ]
 
                     zero =
                         Matrix.Matrix
-                            [ Matrix.RowVector <|
+                            [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.zero
                                     ]

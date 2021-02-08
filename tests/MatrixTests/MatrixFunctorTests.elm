@@ -3,6 +3,7 @@ module MatrixTests.MatrixFunctorTests exposing (suite)
 import Expect
 import Fuzz
 import Matrix
+import RowVector
 import Test
 import Vector
 
@@ -18,7 +19,7 @@ suite =
                 let
                     m =
                         Vector.Vector [ one ]
-                            |> Matrix.RowVector
+                            |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix
 
@@ -34,7 +35,7 @@ suite =
                 let
                     m =
                         Vector.Vector [ one ]
-                            |> Matrix.RowVector
+                            |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix
 

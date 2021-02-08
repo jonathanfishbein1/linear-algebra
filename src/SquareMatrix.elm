@@ -103,11 +103,13 @@ module SquareMatrix exposing
 
 -}
 
+import ColumnVector
 import ComplexNumbers
 import Field
 import Float.Extra
 import Matrix
 import Monoid
+import RowVector
 import Vector
 
 
@@ -188,7 +190,7 @@ distanceComplex (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 isRightStochastic : SquareMatrix Float -> Bool
 isRightStochastic (SquareMatrix (Matrix.Matrix listOfRowVectors)) =
     List.all
-        (\(Matrix.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
+        (\(RowVector.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
         listOfRowVectors
 
 
@@ -201,7 +203,7 @@ isLeftStochastic (SquareMatrix matrix) =
             Matrix.transpose matrix
     in
     List.all
-        (\(Matrix.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
+        (\(RowVector.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
         transposedListOfRowVectors
 
 
@@ -288,8 +290,8 @@ multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 multiplyMatrixVector :
     Vector.InnerProductSpace a
     -> SquareMatrix a
-    -> Matrix.ColumnVector a
-    -> Result String (Matrix.ColumnVector a)
+    -> ColumnVector.ColumnVector a
+    -> Result String (ColumnVector.ColumnVector a)
 multiplyMatrixVector innerProductSpace (SquareMatrix matrix) vector =
     Matrix.multiplyMatrixVector innerProductSpace matrix vector
 
@@ -369,7 +371,7 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 
 {-| Create a Matrix from a list of Column Vectors
 -}
-createMatrixFromColumnVectors : List (Matrix.ColumnVector a) -> SquareMatrix a
+createMatrixFromColumnVectors : List (ColumnVector.ColumnVector a) -> SquareMatrix a
 createMatrixFromColumnVectors =
     Matrix.createMatrixFromColumnVectors
         >> SquareMatrix

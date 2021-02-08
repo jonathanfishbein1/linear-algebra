@@ -3,6 +3,7 @@ module MatrixTests.MatrixMonoidTests exposing (suite)
 import Expect
 import Fuzz
 import Matrix
+import RowVector
 import Test
 import Vector
 
@@ -18,7 +19,7 @@ suite =
                 let
                     m =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <|
+                            [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ one
                                     ]
@@ -34,7 +35,7 @@ suite =
                 let
                     m =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <|
+                            [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ one
                                     ]
@@ -51,13 +52,13 @@ suite =
             \one two three ->
                 let
                     a =
-                        Matrix.RowVector <| Vector.Vector [ one ]
+                        RowVector.RowVector <| Vector.Vector [ one ]
 
                     b =
-                        Matrix.RowVector <| Vector.Vector [ two ]
+                        RowVector.RowVector <| Vector.Vector [ two ]
 
                     c =
-                        Matrix.RowVector <| Vector.Vector [ three ]
+                        RowVector.RowVector <| Vector.Vector [ three ]
 
                     m1 =
                         Matrix.Matrix [ a ]
@@ -91,7 +92,7 @@ suite =
                 let
                     m =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <|
+                            [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ one
                                     ]
@@ -107,7 +108,7 @@ suite =
                 let
                     m =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <|
+                            [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ one
                                     ]
@@ -124,13 +125,13 @@ suite =
             \one two three ->
                 let
                     a =
-                        Matrix.RowVector <| Vector.Vector [ one ]
+                        RowVector.RowVector <| Vector.Vector [ one ]
 
                     b =
-                        Matrix.RowVector <| Vector.Vector [ two ]
+                        RowVector.RowVector <| Vector.Vector [ two ]
 
                     c =
-                        Matrix.RowVector <| Vector.Vector [ three ]
+                        RowVector.RowVector <| Vector.Vector [ three ]
 
                     m1 =
                         Matrix.Matrix [ a ]
@@ -143,7 +144,7 @@ suite =
 
                     expected =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ three, two, one ]
+                            [ RowVector.RowVector <| Vector.Vector [ three, two, one ]
                             ]
 
                     listOfMonoids =
@@ -160,13 +161,13 @@ suite =
             \one two three ->
                 let
                     a =
-                        Matrix.RowVector <| Vector.Vector [ one ]
+                        RowVector.RowVector <| Vector.Vector [ one ]
 
                     b =
-                        Matrix.RowVector <| Vector.Vector [ two ]
+                        RowVector.RowVector <| Vector.Vector [ two ]
 
                     c =
-                        Matrix.RowVector <| Vector.Vector [ three ]
+                        RowVector.RowVector <| Vector.Vector [ three ]
 
                     m1 =
                         Matrix.Matrix
@@ -179,8 +180,8 @@ suite =
 
                     expected =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ three, one ]
-                            , Matrix.RowVector <| Vector.Vector [ two ]
+                            [ RowVector.RowVector <| Vector.Vector [ three, one ]
+                            , RowVector.RowVector <| Vector.Vector [ two ]
                             ]
 
                     listOfMonoids =

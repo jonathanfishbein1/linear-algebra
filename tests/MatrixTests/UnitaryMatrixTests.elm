@@ -6,6 +6,7 @@ import Expect
 import InvertableMatrix
 import Matrix
 import NormalMatrix
+import RowVector
 import SquareMatrix
 import Test
 import UnitaryMatrix
@@ -103,9 +104,9 @@ suite =
 
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2, complexNumberR1C3 ]
-                            , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2, complexNumberR2C3 ]
-                            , Matrix.RowVector <| Vector.Vector [ complexNumberR3C1, complexNumberR3C2, complexNumberR3C3 ]
+                            [ RowVector.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2, complexNumberR1C3 ]
+                            , RowVector.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2, complexNumberR2C3 ]
+                            , RowVector.RowVector <| Vector.Vector [ complexNumberR3C1, complexNumberR3C2, complexNumberR3C3 ]
                             ]
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix

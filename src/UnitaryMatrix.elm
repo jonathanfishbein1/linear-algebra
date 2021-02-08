@@ -45,9 +45,9 @@ module UnitaryMatrix exposing
 
 -}
 
+import ColumnVector
 import ComplexNumbers
 import InvertableMatrix
-import Matrix
 import Vector
 
 
@@ -102,8 +102,8 @@ multiply (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
 -}
 multiplyMatrixVector :
     UnitaryMatrix Float
-    -> Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float)
-    -> Result String (Matrix.ColumnVector (ComplexNumbers.ComplexNumber Float))
+    -> ColumnVector.ColumnVector (ComplexNumbers.ComplexNumber Float)
+    -> Result String (ColumnVector.ColumnVector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (UnitaryMatrix matrix) vector =
     InvertableMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector
 

@@ -4,6 +4,7 @@ import ComplexNumbers
 import Expect
 import Fuzz
 import Matrix
+import RowVector
 import Test
 import Vector
 
@@ -20,7 +21,7 @@ suite =
             \one two three ->
                 let
                     v =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
@@ -39,7 +40,7 @@ suite =
                                 ]
 
                     w =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
@@ -74,7 +75,7 @@ suite =
             \one two three ->
                 let
                     v =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
@@ -93,7 +94,7 @@ suite =
                                 ]
 
                     w =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real
@@ -112,7 +113,7 @@ suite =
                                 ]
 
                     x =
-                        Matrix.RowVector <|
+                        RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     (ComplexNumbers.Real

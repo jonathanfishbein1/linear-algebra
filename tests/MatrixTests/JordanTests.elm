@@ -3,6 +3,7 @@ module MatrixTests.JordanTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Matrix
+import RowVector
 import Test
 import Vector
 
@@ -17,9 +18,9 @@ suite =
                 let
                     rowEchelonFormMatrix =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <| Vector.Vector [ 1.0, 2.0, -1.0, -4.0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, -1.0, 3.0 ]
-                            , Matrix.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1.0, 2.0, -1.0, -4.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, -1.0, 3.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
                             ]
 
                     reducedRowEchelonFormMatrix =
@@ -27,9 +28,9 @@ suite =
 
                     expected =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
-                            , Matrix.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
                             ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
@@ -40,9 +41,9 @@ suite =
                 let
                     rowEchelonFormMatrix =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <| Vector.Vector [ 1.0, 1.0, 1.0, 3.0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, 2.0, -3.0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1.0, 1.0, 1.0, 3.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 2.0, -3.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
                             ]
 
                     reducedRowEchelonFormMatrix =
@@ -50,9 +51,9 @@ suite =
 
                     expected =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, 5.0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, -1.0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, 5.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, -1.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
                             ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
@@ -99,8 +100,8 @@ suite =
 
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
-                            , Matrix.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
+                            [ RowVector.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , RowVector.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
 
                     reducedRowEchelonFormMatrix =
@@ -108,8 +109,8 @@ suite =
 
                     expected =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ ComplexNumbers.one, ComplexNumbers.zero ]
-                            , Matrix.RowVector <| Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.one ]
+                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.one, ComplexNumbers.zero ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.one ]
                             ]
                 in
                 Expect.true "matricies equal" (Matrix.equal ComplexNumbers.equal reducedRowEchelonFormMatrix expected)

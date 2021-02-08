@@ -3,6 +3,7 @@ module MatrixTests.MatrixApplicativeFunctorTests exposing (suite)
 import Expect
 import Fuzz
 import Matrix
+import RowVector
 import Test
 import Vector
 
@@ -45,7 +46,7 @@ suite =
                         Matrix.pure identity
 
                     w =
-                        Matrix.Matrix [ Matrix.RowVector <| Vector.Vector [ one ] ]
+                        Matrix.Matrix [ RowVector.RowVector <| Vector.Vector [ one ] ]
 
                     leftSide =
                         Matrix.andMap w (Matrix.andMap v (Matrix.andMap u fPure))

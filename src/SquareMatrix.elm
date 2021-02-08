@@ -109,6 +109,7 @@ import Field
 import Float.Extra
 import Matrix
 import Monoid
+import RowVector
 import Vector
 
 
@@ -189,7 +190,7 @@ distanceComplex (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 isRightStochastic : SquareMatrix Float -> Bool
 isRightStochastic (SquareMatrix (Matrix.Matrix listOfRowVectors)) =
     List.all
-        (\(Matrix.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
+        (\(RowVector.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
         listOfRowVectors
 
 
@@ -202,7 +203,7 @@ isLeftStochastic (SquareMatrix matrix) =
             Matrix.transpose matrix
     in
     List.all
-        (\(Matrix.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
+        (\(RowVector.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
         transposedListOfRowVectors
 
 

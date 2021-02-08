@@ -3,6 +3,7 @@ module MatrixTests.GaussJordanSolveTests exposing (suite)
 import ColumnVector
 import Expect
 import Matrix
+import RowVector
 import Test
 import Vector
 
@@ -17,9 +18,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1, -4 ]
-                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
-                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, -1, -4 ]
+                            , RowVector.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
+                            , RowVector.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
                             ]
 
                     reducedRowEchelonFormMatrix =
@@ -27,9 +28,9 @@ suite =
 
                     expected =
                         Matrix.Matrix <|
-                            [ Matrix.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
-                            , Matrix.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -2.0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -2.0 ]
                             ]
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
@@ -40,9 +41,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, -1 ]
-                            , Matrix.RowVector <| Vector.Vector [ 2, 3, -1 ]
-                            , Matrix.RowVector <| Vector.Vector [ -2, 0, -3 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 2, 3, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ -2, 0, -3 ]
                             ]
 
                     b =
@@ -62,9 +63,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 1, 1 ]
-                            , Matrix.RowVector <| Vector.Vector [ 1, 2, 3 ]
-                            , Matrix.RowVector <| Vector.Vector [ 1, 3, 4 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 1, 1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 2, 3 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 3, 4 ]
                             ]
 
                     b =
@@ -84,9 +85,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, 1, 1 ]
-                            , Matrix.RowVector <| Vector.Vector [ 1, 2, 2, -1 ]
-                            , Matrix.RowVector <| Vector.Vector [ 2, 4, 0, 6 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, 1, 1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 2, 2, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 2, 4, 0, 6 ]
                             ]
 
                     b =
@@ -103,9 +104,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector <| Vector.Vector [ 1, 2, 1, 1 ]
-                            , Matrix.RowVector <| Vector.Vector [ 1, 2, 2, -1 ]
-                            , Matrix.RowVector <| Vector.Vector [ 2, 4, 0, 6 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, 1, 1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 2, 2, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 2, 4, 0, 6 ]
                             ]
 
                     b =
@@ -123,10 +124,10 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ Matrix.RowVector (Vector.Vector [ 0, 1, 0, 0 ])
-                            , Matrix.RowVector (Vector.Vector [ 0, 0, 0, 1 ])
-                            , Matrix.RowVector (Vector.Vector [ 0, 0, -2, 1 ])
-                            , Matrix.RowVector (Vector.Vector [ -2, 1, 0, 0 ])
+                            [ RowVector.RowVector (Vector.Vector [ 0, 1, 0, 0 ])
+                            , RowVector.RowVector (Vector.Vector [ 0, 0, 0, 1 ])
+                            , RowVector.RowVector (Vector.Vector [ 0, 0, -2, 1 ])
+                            , RowVector.RowVector (Vector.Vector [ -2, 1, 0, 0 ])
                             ]
 
                     b =

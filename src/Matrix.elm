@@ -1,6 +1,5 @@
 module Matrix exposing
-    ( RowVector(..)
-    , Matrix(..)
+    ( Matrix(..)
     , Solution(..)
     , Consistancy(..)
     , VectorDimension(..)
@@ -199,6 +198,7 @@ import List.Extra
 import Maybe.Extra
 import Monoid
 import Parser exposing ((|.), (|=))
+import RowVector
 import Semigroup
 import Typeclasses.Classes.Equality
 import Typeclasses.Classes.Monoid
@@ -206,16 +206,10 @@ import Typeclasses.Classes.Semigroup
 import Vector
 
 
-{-| Row Vector
--}
-type RowVector a
-    = RowVector (Vector.Vector a)
-
-
 {-| Matrix type
 -}
 type Matrix a
-    = Matrix (List (RowVector a))
+    = Matrix (List (RowVector.RowVector a))
 
 
 {-| Type to represent result of Gauss-Jordan reduction
@@ -356,7 +350,7 @@ complexMatrixAdditionAbelianGroup =
 -}
 createMatrixFromColumnVectors : List (ColumnVector.ColumnVector a) -> Matrix a
 createMatrixFromColumnVectors =
-    List.map (\(ColumnVector.ColumnVector vector) -> RowVector vector)
+    List.map (\(ColumnVector.ColumnVector vector) -> RowVector.RowVector vector)
         >> Matrix
         >> transpose
 
@@ -372,7 +366,7 @@ identity (Field.Field field) dimension =
                     dimension
                     (Internal.Matrix.diagonal field columnIndex)
                     |> Vector.Vector
-                    |> RowVector
+                    |> RowVector.RowVector
             )
         )
 
@@ -388,7 +382,7 @@ zeros (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeD
     List.Extra.initialize m
         (\_ ->
             Vector.zeros group.monoid n
-                |> RowVector
+                |> RowVector.RowVector
         )
         |> Matrix
 
@@ -405,9 +399,9 @@ scalarMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRi
 transpose : Matrix a -> Matrix a
 transpose (Matrix listOfRowVectors) =
     listOfRowVectors
-        |> List.map (\(RowVector (Vector.Vector x)) -> x)
+        |> List.map (\(RowVector.RowVector (Vector.Vector x)) -> x)
         |> List.Extra.transpose
-        |> List.map (Vector.Vector >> RowVector)
+        |> List.map (Vector.Vector >> RowVector.RowVector)
         |> Matrix
 
 
@@ -440,7 +434,7 @@ rank innerProductSpace matrix =
     in
     listOfRowVectorsREF
         |> List.Extra.count
-            (\(RowVector vector) ->
+            (\(RowVector.RowVector vector) ->
                 innerProductSpace.length vector /= 0
             )
 
@@ -452,11 +446,11 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
     List.take endingRowIndex listOfRowVectors
         |> List.drop startingRowIndex
         |> List.map
-            (\(RowVector (Vector.Vector row)) ->
+            (\(RowVector.RowVector (Vector.Vector row)) ->
                 List.take endingColumnIndex row
                     |> List.drop startingColumnIndex
                     |> Vector.Vector
-                    |> RowVector
+                    |> RowVector.RowVector
             )
         |> Matrix
 
@@ -550,7 +544,7 @@ multiplyMatrixVector innerProductSpace (Matrix matrix) (ColumnVector.ColumnVecto
         let
             listOfVectors =
                 matrix
-                    |> List.map (\(RowVector vec) -> vec)
+                    |> List.map (\(RowVector.RowVector vec) -> vec)
         in
         Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
             |> List.foldl
@@ -579,17 +573,17 @@ multiply innerProductSpace (Matrix matrixOne) matrixTwo =
 
             listOfVectors =
                 matrixTranspose
-                    |> List.map (\(RowVector vector) -> vector)
+                    |> List.map (\(RowVector.RowVector vector) -> vector)
 
             listOfVectorsOne =
                 matrixOne
-                    |> List.map (\(RowVector vector) -> vector)
+                    |> List.map (\(RowVector.RowVector vector) -> vector)
         in
         Internal.Matrix.map2VectorCartesian
             innerProductSpace
             listOfVectorsOne
             listOfVectors
-            |> List.map RowVector
+            |> List.map RowVector.RowVector
             |> Matrix
             |> Ok
 
@@ -612,14 +606,14 @@ tensorProduct field matrixOne matrixTwo =
 -}
 map : (a -> b) -> Matrix a -> Matrix b
 map f (Matrix listOfRowVectors) =
-    Matrix <| List.map (rowVectorMap f) listOfRowVectors
+    Matrix <| List.map (RowVector.map f) listOfRowVectors
 
 
 {-| Lift a binary function to work on Matrix
 -}
 map2 : (a -> b -> c) -> Matrix a -> Matrix b -> Matrix c
 map2 f (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
-    List.map2 (rowVectorMap2 f)
+    List.map2 (RowVector.map2 f)
         listOfRowVectorsOne
         listOfRowVectorsTwo
         |> Matrix
@@ -629,7 +623,7 @@ map2 f (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
 -}
 pure : a -> Matrix a
 pure a =
-    Matrix [ RowVector <| Vector.Vector <| [ a ] ]
+    Matrix [ RowVector.RowVector <| Vector.Vector <| [ a ] ]
 
 
 {-| Apply for Matrix
@@ -644,7 +638,7 @@ andMap fMatrix matrix =
 andThen : (a -> Matrix b) -> Matrix a -> Matrix b
 andThen fMatrix (Matrix listOfRowVectors) =
     List.concatMap
-        (\(RowVector (Vector.Vector listOfElements)) ->
+        (\(RowVector.RowVector (Vector.Vector listOfElements)) ->
             let
                 (Matrix result) =
                     List.concatMap
@@ -697,7 +691,7 @@ areRowEquivalent vectorSpace matrixOne matrixTwo =
 -}
 all : (a -> Bool) -> Matrix a -> Bool
 all predicate (Matrix listOfRowVectors) =
-    List.map (rowVectorAll predicate) listOfRowVectors
+    List.map (RowVector.all predicate) listOfRowVectors
         |> List.all ((==) True)
 
 
@@ -708,14 +702,14 @@ upperTriangle vectorSpace (Matrix matrix) =
     let
         listOfVectors =
             List.map
-                (\(RowVector vector) -> vector)
+                (\(RowVector.RowVector vector) -> vector)
                 matrix
     in
     List.foldl
         (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace)
         listOfVectors
         (List.range 0 (List.length matrix - 1))
-        |> List.map RowVector
+        |> List.map RowVector.RowVector
         |> Matrix
 
 
@@ -729,7 +723,7 @@ gaussianReduce vectorSpace (Matrix matrix) =
 
         listOfVectorsUpperTriangularFormRectangle =
             List.map
-                (\(RowVector vector) -> vector)
+                (\(RowVector.RowVector vector) -> vector)
                 upperTriangularFormRectangle
 
         rowEchelonForm =
@@ -738,7 +732,7 @@ gaussianReduce vectorSpace (Matrix matrix) =
                 listOfVectorsUpperTriangularFormRectangle
     in
     rowEchelonForm
-        |> List.map RowVector
+        |> List.map RowVector.RowVector
         |> Matrix
 
 
@@ -749,14 +743,14 @@ jordanReduce vectorSpace (Matrix matrix) =
     let
         listOfVectors =
             List.map
-                (\(RowVector vector) -> vector)
+                (\(RowVector.RowVector vector) -> vector)
                 matrix
     in
     List.foldl
         (Internal.Matrix.reduceRowBackwards vectorSpace)
         listOfVectors
         (List.reverse (List.range 0 (List.length matrix - 1)))
-        |> List.map RowVector
+        |> List.map RowVector.RowVector
         |> Matrix
 
 
@@ -793,7 +787,7 @@ solveMatrix innerProductSpace (Matrix listOfRowVectors) =
         notConstrainedEnough =
             variableSide
                 |> List.any
-                    (\(RowVector (Vector.Vector row)) ->
+                    (\(RowVector.RowVector (Vector.Vector row)) ->
                         let
                             countOfOnes =
                                 List.Extra.count ((/=) additionGroup.monoid.identity) row
@@ -804,7 +798,7 @@ solveMatrix innerProductSpace (Matrix listOfRowVectors) =
         anyAllZeroExceptAugmentedSide =
             listOfRowVectorsRREF
                 |> List.any
-                    (\(RowVector (Vector.Vector row)) ->
+                    (\(RowVector.RowVector (Vector.Vector row)) ->
                         List.all
                             ((==) additionGroup.monoid.identity)
                             (List.take (List.length row - 1) row)
@@ -814,7 +808,7 @@ solveMatrix innerProductSpace (Matrix listOfRowVectors) =
 
         solution =
             List.foldl
-                (\(RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
+                (\(RowVector.RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
                 []
                 listOfRowVectorsRREF
     in
@@ -848,7 +842,7 @@ solve innerProductSpace matrix (ColumnVector.ColumnVector (Vector.Vector constan
     let
         matrixB =
             constants
-                |> List.map (List.singleton >> Vector.Vector >> RowVector)
+                |> List.map (List.singleton >> Vector.Vector >> RowVector.RowVector)
                 |> Matrix
 
         augmentedMatrix =
@@ -899,7 +893,7 @@ nDimension (Matrix listOfRowVectors) =
         [] ->
             0
 
-        (RowVector x) :: _ ->
+        (RowVector.RowVector x) :: _ ->
             Vector.dimension x
 
 
@@ -919,36 +913,12 @@ areBasis innerProductSpace vectorDimension vectors =
         && areLinearlyIndependent innerProductSpace vectors
 
 
-rowVectorMap : (a -> b) -> RowVector a -> RowVector b
-rowVectorMap f (RowVector vector) =
-    Vector.map f vector
-        |> RowVector
-
-
-rowVectorMap2 : (a -> b -> c) -> RowVector a -> RowVector b -> RowVector c
-rowVectorMap2 f (RowVector vectorOne) (RowVector vectorTwo) =
-    Vector.map2 f vectorOne vectorTwo
-        |> RowVector
-
-
-{-| Left fold over a RowVector
--}
-rowVectorFoldl : (a -> b -> b) -> b -> RowVector a -> b
-rowVectorFoldl foldFunction acc (RowVector vector) =
-    Vector.foldl foldFunction acc vector
-
-
-rowVectorAll : (a -> Bool) -> RowVector a -> Bool
-rowVectorAll predicate (RowVector vector) =
-    Vector.all predicate vector
-
-
 {-| Left fold over a Matrix
 -}
 foldl : (a -> b -> b) -> b -> Matrix a -> b
 foldl foldFunction acc (Matrix listOfRowVectors) =
     List.foldl
-        (\row accumlator -> rowVectorFoldl foldFunction accumlator row)
+        (\row accumlator -> RowVector.foldl foldFunction accumlator row)
         acc
         listOfRowVectors
 
@@ -988,22 +958,22 @@ appendHorizontal (Matrix listOne) (Matrix listTwo) =
     in
     if difference == 0 then
         List.map2
-            (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo)
+            (\(RowVector.RowVector rowOne) (RowVector.RowVector rowTwo) -> RowVector.RowVector <| Vector.append rowOne rowTwo)
             listOne
             listTwo
             |> Matrix
 
     else if difference > 0 then
         List.map2
-            (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo)
+            (\(RowVector.RowVector rowOne) (RowVector.RowVector rowTwo) -> RowVector.RowVector <| Vector.append rowOne rowTwo)
             listOne
-            (listTwo ++ List.repeat difference (RowVector <| Vector.Vector []))
+            (listTwo ++ List.repeat difference (RowVector.RowVector <| Vector.Vector []))
             |> Matrix
 
     else
         List.map2
-            (\(RowVector rowOne) (RowVector rowTwo) -> RowVector <| Vector.append rowOne rowTwo)
-            (listOne ++ List.repeat (Basics.abs difference) (RowVector <| Vector.Vector []))
+            (\(RowVector.RowVector rowOne) (RowVector.RowVector rowTwo) -> RowVector.RowVector <| Vector.append rowOne rowTwo)
+            (listOne ++ List.repeat (Basics.abs difference) (RowVector.RowVector <| Vector.Vector []))
             listTwo
             |> Matrix
 
@@ -1048,7 +1018,7 @@ equal comparator =
 getAt : ( Int, Int ) -> Matrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (Matrix listOfRowVectors) =
     List.Extra.getAt rowIndex listOfRowVectors
-        |> Maybe.andThen (\(RowVector list) -> Vector.getAt columnIndex list)
+        |> Maybe.andThen (\(RowVector.RowVector list) -> Vector.getAt columnIndex list)
 
 
 {-| Set the value in a Matrix at the specified row and column
@@ -1056,7 +1026,7 @@ getAt ( rowIndex, columnIndex ) (Matrix listOfRowVectors) =
 setAt : ( Int, Int ) -> a -> Matrix a -> Matrix a
 setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
     List.Extra.getAt rowIndex listOfRowVectors
-        |> Maybe.map (\(RowVector list) -> RowVector <| Vector.setAt columnIndex element list)
+        |> Maybe.map (\(RowVector.RowVector list) -> RowVector.RowVector <| Vector.setAt columnIndex element list)
         |> Maybe.map
             (\newRow ->
                 List.Extra.setAt rowIndex newRow listOfRowVectors
@@ -1071,7 +1041,7 @@ printRealMatrix : Matrix Float -> String
 printRealMatrix (Matrix listOfRowVectors) =
     "Matrix [ "
         ++ List.foldl
-            (\(RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc)
+            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc)
             ""
             listOfRowVectors
         ++ " ]"
@@ -1083,7 +1053,7 @@ printComplexMatrix : Matrix (ComplexNumbers.ComplexNumber Float) -> String
 printComplexMatrix (Matrix listOfRowVectors) =
     "Matrix [ "
         ++ List.foldl
-            (\(RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc)
+            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc)
             ""
             listOfRowVectors
         ++ " ]"
@@ -1103,7 +1073,7 @@ readComplexMatrix matrixString =
     Parser.run (parseMatrix ComplexNumbers.parseComplexNumber) matrixString
 
 
-listOfRowVectorParser : Parser.Parser (RowVector a) -> Parser.Parser (List (RowVector a))
+listOfRowVectorParser : Parser.Parser (RowVector.RowVector a) -> Parser.Parser (List (RowVector.RowVector a))
 listOfRowVectorParser rowVectorParser =
     Parser.sequence
         { start = "["
@@ -1115,20 +1085,12 @@ listOfRowVectorParser rowVectorParser =
         }
 
 
-parseRowVector : Parser.Parser a -> Parser.Parser (RowVector a)
-parseRowVector rowVectorElementsParser =
-    Parser.succeed RowVector
-        |. Parser.keyword "RowVector"
-        |. Parser.spaces
-        |= Vector.parseVector rowVectorElementsParser
-
-
 parseMatrix : Parser.Parser a -> Parser.Parser (Matrix a)
 parseMatrix matrixElementParser =
     Parser.succeed Matrix
         |. Parser.keyword "Matrix"
         |. Parser.spaces
-        |= listOfRowVectorParser (parseRowVector matrixElementParser)
+        |= listOfRowVectorParser (RowVector.parseRowVector matrixElementParser)
 
 
 {-| Real Numbered Vector Space for Matrix

@@ -3,6 +3,7 @@ module ColumnVector exposing
     , sum
     , scalarMultiplication
     , add
+    , dimension
     , map
     , foldl
     , equal
@@ -26,6 +27,11 @@ module ColumnVector exposing
 # Binary Operations
 
 @docs add
+
+
+# ColumnVector Properties
+
+@docs dimension
 
 
 # Functor, Applicative, Monad, Foldable
@@ -106,3 +112,10 @@ equal comparator (ColumnVector vectorOne) (ColumnVector vectorTwo) =
 getAt : Int -> ColumnVector a -> Maybe a
 getAt index (ColumnVector list) =
     Vector.getAt index list
+
+
+{-| Count of number of elements in a Ket
+-}
+dimension : ColumnVector a -> Int
+dimension (ColumnVector vector) =
+    Vector.dimension vector

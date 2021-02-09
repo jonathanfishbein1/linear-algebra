@@ -188,7 +188,6 @@ import CommutativeMonoid
 import CommutativeSemigroup
 import ComplexNumbers
 import Field
-import Float.Extra
 import Group
 import Internal.Matrix
 import List.Extra
@@ -213,7 +212,7 @@ type Matrix a
 -}
 type Consistancy a
     = Consistant (Solution a)
-    | Inconsistant String
+    | Inconsistant String (Solution a)
 
 
 {-| Type to represent result of Gauss-Jordan reduction if system is consistant
@@ -816,7 +815,34 @@ solve { eq } innerProductSpace matrix constants =
                 listOfRowVectorsRREF
     in
     if anyAllZeroExceptAugmentedSide then
-        Inconsistant "No Unique Solution"
+        let
+            matrixTransposeMatrix =
+                multiply innerProductSpace (transpose matrix) matrix
+
+            matrixTransposeB =
+                multiplyMatrixVector innerProductSpace (transpose matrix) constants
+                    |> Result.map (List.singleton >> createMatrixFromColumnVectors)
+
+            augmentedMatrixStar =
+                Result.map2 concatHorizontal.semigroup.prepend matrixTransposeMatrix matrixTransposeB
+
+            (Matrix listOfRowVectorsRREFStar) =
+                Result.map (gaussJordan innerProductSpace.vectorSpace) augmentedMatrixStar
+                    |> Result.withDefault empty
+
+            solutionStar =
+                List.foldl
+                    (\(RowVector.RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
+                    []
+                    listOfRowVectorsRREFStar
+        in
+        Inconsistant "No Unique Solution: Least Squares Solution Provided"
+            (UniqueSolution
+                (solutionStar
+                    |> Vector.Vector
+                    |> ColumnVector.ColumnVector
+                )
+            )
 
     else if notConstrainedEnough then
         let

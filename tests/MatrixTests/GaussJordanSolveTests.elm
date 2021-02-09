@@ -101,8 +101,11 @@ suite =
                             Vector.realInnerProductSpace
                             matrix
                             b
+
+                    expected =
+                        ColumnVector.ColumnVector <| Vector.Vector [ 1.4285714285714286, 0.4285714285714286 ]
                 in
-                Expect.equal reducedRowEchelonFormMatrix (Matrix.Inconsistant "No Unique Solution")
+                Expect.equal reducedRowEchelonFormMatrix (Matrix.Inconsistant "No Unique Solution: Least Squares Solution Provided" (Matrix.UniqueSolution expected))
         , Test.test
             "tests matrix gaussJordan with infinite solutions"
           <|

@@ -886,15 +886,8 @@ doesSetSpanSpace vSpace (VectorDimension vectorDimension) columnVectors =
         Err "Please input vectors of equal length as vector space"
 
     else
-        let
-            identityRowVectors =
-                identity vSpace.field vectorDimension
-
-            listOfRowVectorsRREF =
-                gaussJordan vSpace (createMatrixFromColumnVectors columnVectors)
-        in
-        identityRowVectors
-            == listOfRowVectorsRREF
+        identity vSpace.field vectorDimension
+            == gaussJordan vSpace (createMatrixFromColumnVectors columnVectors)
             |> Ok
 
 

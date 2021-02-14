@@ -112,7 +112,7 @@ multiplyMatrixVector (UnitaryMatrix matrix) vector =
 -}
 equal : UnitaryMatrix Float -> UnitaryMatrix Float -> Bool
 equal (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
-    InvertableMatrix.equal ComplexNumbers.equal matrixOne matrixTwo
+    InvertableMatrix.equal ComplexNumbers.equal.eq matrixOne matrixTwo
 
 
 {-| Create Square Identity Matrix with n dimension

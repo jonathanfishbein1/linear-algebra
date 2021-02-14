@@ -4,6 +4,8 @@ import ComplexNumbers
 import Expect
 import Field
 import Fuzz
+import Imaginary
+import Real
 import Test
 import Vector
 
@@ -218,7 +220,7 @@ suite =
             \one ->
                 let
                     complexNumber =
-                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real one) (ComplexNumbers.Imaginary one)
+                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary one)
 
                     a =
                         Vector.Vector [ complexNumber ]
@@ -240,7 +242,7 @@ suite =
             \one ->
                 let
                     complexNumber =
-                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real one) (ComplexNumbers.Imaginary one)
+                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary one)
 
                     a =
                         Vector.Vector [ complexNumber ]
@@ -258,10 +260,10 @@ suite =
             \one two ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real one) (ComplexNumbers.Imaginary one)
+                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary one)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real two) (ComplexNumbers.Imaginary two)
+                        ComplexNumbers.ComplexNumber (Real.Real two) (Imaginary.Imaginary two)
 
                     x =
                         Vector.Vector [ complexNumberOne ]

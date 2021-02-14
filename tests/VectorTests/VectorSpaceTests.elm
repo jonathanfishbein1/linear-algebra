@@ -3,6 +3,8 @@ module VectorTests.VectorSpaceTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
+import Imaginary
+import Real
 import Test
 import Vector
 
@@ -20,15 +22,15 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
                 in
-                Expect.true "equal" (Vector.equal ComplexNumbers.equal (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
+                Expect.true "equal" (Vector.equal ComplexNumbers.equal.eq (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
         , Test.fuzz2
             Fuzz.float
             Fuzz.float
@@ -38,29 +40,29 @@ suite =
                 let
                     c1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
                     c2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 two
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 one
                             )
 
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
@@ -88,20 +90,20 @@ suite =
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
                     w =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     two
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     one
                                 )
                             ]
@@ -109,10 +111,10 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
@@ -133,7 +135,7 @@ suite =
                         Vector.add ComplexNumbers.complexField cW cV
 
                     result =
-                        Vector.equal ComplexNumbers.equal cvPlusW cVPluscW
+                        Vector.equal ComplexNumbers.equal.eq cvPlusW cVPluscW
                 in
                 Expect.true "All elements equal" result
         , Test.fuzz2
@@ -145,29 +147,29 @@ suite =
                 let
                     c1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
                     c2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 two
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 one
                             )
 
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
@@ -188,7 +190,7 @@ suite =
                         Vector.add ComplexNumbers.complexField c1V c2V
 
                     result =
-                        Vector.equal ComplexNumbers.equal c1VPlusc2V c1Plusc2V
+                        Vector.equal ComplexNumbers.equal.eq c1VPlusc2V c1Plusc2V
                 in
                 Expect.true "All elements equal" result
         ]

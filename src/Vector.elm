@@ -154,9 +154,11 @@ import CommutativeSemigroup
 import ComplexNumbers
 import Field
 import Group
+import Imaginary
 import List.Extra
 import Monoid
 import Parser exposing ((|.), (|=))
+import Real
 import Semigroup
 import Typeclasses.Classes.Equality
 
@@ -385,7 +387,7 @@ normaliseComplex v =
         v
 
     else
-        scalarMultiplication ComplexNumbers.complexField (ComplexNumbers.ComplexNumber (ComplexNumbers.Real (1 / lengthComplex v)) (ComplexNumbers.Imaginary 0)) v
+        scalarMultiplication ComplexNumbers.complexField (ComplexNumbers.ComplexNumber (Real.Real (1 / lengthComplex v)) (Imaginary.Imaginary 0)) v
 
 
 {-| Add two Vectors

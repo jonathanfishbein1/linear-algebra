@@ -3,6 +3,8 @@ module VectorTests.VectorMonoidTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
+import Imaginary
+import Real
 import Test
 import Vector
 
@@ -20,10 +22,10 @@ suite =
                     w =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
@@ -40,15 +42,15 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
                 in
-                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal (Vector.concat.semigroup v Vector.concat.identity) v)
+                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal.eq (Vector.concat.semigroup v Vector.concat.identity) v)
         , Test.fuzz2
             Fuzz.float
             Fuzz.float
@@ -59,15 +61,15 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
                 in
-                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal (Vector.concat.semigroup Vector.concat.identity v) v)
+                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal.eq (Vector.concat.semigroup Vector.concat.identity v) v)
         , Test.fuzz3
             Fuzz.int
             Fuzz.int
@@ -78,18 +80,18 @@ suite =
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real one)
-                            (ComplexNumbers.Imaginary two)
+                            (Real.Real one)
+                            (Imaginary.Imaginary two)
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real two)
-                            (ComplexNumbers.Imaginary three)
+                            (Real.Real two)
+                            (Imaginary.Imaginary three)
 
                     complexNumberThree =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real one)
-                            (ComplexNumbers.Imaginary three)
+                            (Real.Real one)
+                            (Imaginary.Imaginary three)
 
                     a =
                         Vector.Vector [ complexNumberOne ]

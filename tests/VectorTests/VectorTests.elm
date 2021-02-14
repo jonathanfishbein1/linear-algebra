@@ -6,6 +6,8 @@ import Expect
 import Field
 import Float.Extra
 import Fuzz
+import Imaginary
+import Real
 import Test
 import Vector
 
@@ -191,10 +193,10 @@ suite =
                 let
                     complexNumber =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 one
                             )
 
@@ -265,10 +267,10 @@ suite =
                 let
                     complexNumber =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -297,10 +299,10 @@ suite =
                 let
                     complexNumber =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -310,15 +312,15 @@ suite =
 
                     complexOne =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 1
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
                     predicates =
-                        [ ComplexNumbers.equal complexOne ]
+                        [ ComplexNumbers.equal.eq complexOne ]
 
                     scalar =
                         Vector.Scalar complexNumber
@@ -442,28 +444,28 @@ suite =
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberThree =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 three
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -485,5 +487,5 @@ suite =
                     cScalarMultiplicationVectorJTensorProductVectorK =
                         Vector.tensorProduct ComplexNumbers.complexField cScalarMultiplicationVectorJ vectorK
                 in
-                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal cScalarMultiplicationtensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
+                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal.eq cScalarMultiplicationtensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
         ]

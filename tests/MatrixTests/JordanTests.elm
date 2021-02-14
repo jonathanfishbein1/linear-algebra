@@ -2,7 +2,9 @@ module MatrixTests.JordanTests exposing (suite)
 
 import ComplexNumbers
 import Expect
+import Imaginary
 import Matrix
+import Real
 import RowVector
 import Test
 import Vector
@@ -64,37 +66,37 @@ suite =
                 let
                     complexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 1
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
                     complexNumberR1C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 1
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 -1
                             )
 
                     complexNumberR2C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 0
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
                     complexNumberR2C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 1
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
@@ -113,5 +115,5 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.one ]
                             ]
                 in
-                Expect.true "matricies equal" (Matrix.equal ComplexNumbers.equal reducedRowEchelonFormMatrix expected)
+                Expect.true "matricies equal" (Matrix.equal ComplexNumbers.equal.eq reducedRowEchelonFormMatrix expected)
         ]

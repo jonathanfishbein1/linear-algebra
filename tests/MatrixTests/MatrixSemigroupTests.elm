@@ -3,7 +3,9 @@ module MatrixTests.MatrixSemigroupTests exposing (..)
 import ComplexNumbers
 import Expect
 import Fuzz
+import Imaginary
 import Matrix
+import Real
 import RowVector
 import Test
 import Vector
@@ -24,17 +26,17 @@ suite =
                         RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
-                                    (ComplexNumbers.Real
+                                    (Real.Real
                                         three
                                     )
-                                    (ComplexNumbers.Imaginary
+                                    (Imaginary.Imaginary
                                         one
                                     )
                                 , ComplexNumbers.ComplexNumber
-                                    (ComplexNumbers.Real
+                                    (Real.Real
                                         three
                                     )
-                                    (ComplexNumbers.Imaginary
+                                    (Imaginary.Imaginary
                                         two
                                     )
                                 ]
@@ -43,17 +45,17 @@ suite =
                         RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
-                                    (ComplexNumbers.Real
+                                    (Real.Real
                                         two
                                     )
-                                    (ComplexNumbers.Imaginary
+                                    (Imaginary.Imaginary
                                         two
                                     )
                                 , ComplexNumbers.ComplexNumber
-                                    (ComplexNumbers.Real
+                                    (Real.Real
                                         one
                                     )
-                                    (ComplexNumbers.Imaginary
+                                    (Imaginary.Imaginary
                                         three
                                     )
                                 ]
@@ -78,17 +80,17 @@ suite =
                         RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
-                                    (ComplexNumbers.Real
+                                    (Real.Real
                                         three
                                     )
-                                    (ComplexNumbers.Imaginary
+                                    (Imaginary.Imaginary
                                         one
                                     )
                                 , ComplexNumbers.ComplexNumber
-                                    (ComplexNumbers.Real
+                                    (Real.Real
                                         three
                                     )
-                                    (ComplexNumbers.Imaginary
+                                    (Imaginary.Imaginary
                                         two
                                     )
                                 ]
@@ -97,17 +99,17 @@ suite =
                         RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
-                                    (ComplexNumbers.Real
+                                    (Real.Real
                                         two
                                     )
-                                    (ComplexNumbers.Imaginary
+                                    (Imaginary.Imaginary
                                         two
                                     )
                                 , ComplexNumbers.ComplexNumber
-                                    (ComplexNumbers.Real
+                                    (Real.Real
                                         one
                                     )
-                                    (ComplexNumbers.Imaginary
+                                    (Imaginary.Imaginary
                                         three
                                     )
                                 ]
@@ -116,17 +118,17 @@ suite =
                         RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
-                                    (ComplexNumbers.Real
+                                    (Real.Real
                                         one
                                     )
-                                    (ComplexNumbers.Imaginary
+                                    (Imaginary.Imaginary
                                         two
                                     )
                                 , ComplexNumbers.ComplexNumber
-                                    (ComplexNumbers.Real
+                                    (Real.Real
                                         three
                                     )
-                                    (ComplexNumbers.Imaginary
+                                    (Imaginary.Imaginary
                                         one
                                     )
                                 ]

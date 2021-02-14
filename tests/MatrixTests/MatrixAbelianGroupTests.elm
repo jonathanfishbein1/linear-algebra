@@ -2,7 +2,9 @@ module MatrixTests.MatrixAbelianGroupTests exposing (suite)
 
 import ComplexNumbers
 import Expect
+import Imaginary
 import Matrix
+import Real
 import RowVector
 import Test
 import Vector
@@ -18,11 +20,11 @@ suite =
                 let
                     complexOneNegative =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real <|
+                            (Real.Real <|
                                 Basics.negate
                                     1
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 

@@ -3,7 +3,9 @@ module MatrixTests.MatrixSpaceTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
+import Imaginary
 import Matrix
+import Real
 import RowVector
 import Test
 import Vector
@@ -22,15 +24,15 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
                 in
-                Expect.true "equal" (Vector.equal ComplexNumbers.equal (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
+                Expect.true "equal" (Vector.equal ComplexNumbers.equal.eq (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
         , Test.fuzz2
             Fuzz.float
             Fuzz.float
@@ -40,19 +42,19 @@ suite =
                 let
                     c1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
                     c2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 two
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 one
                             )
 
@@ -61,10 +63,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -93,10 +95,10 @@ suite =
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -105,10 +107,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             two
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             one
                                         )
                                     ]
@@ -119,10 +121,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -144,7 +146,7 @@ suite =
                         Matrix.add ComplexNumbers.complexField cW cV
 
                     result =
-                        Matrix.equal ComplexNumbers.equal cvPlusW cVPluscW
+                        Matrix.equal ComplexNumbers.equal.eq cvPlusW cVPluscW
                 in
                 Expect.true "All elements equal" result
         , Test.fuzz2
@@ -156,10 +158,10 @@ suite =
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -168,10 +170,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             two
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             one
                                         )
                                     ]
@@ -182,10 +184,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -207,7 +209,7 @@ suite =
                         Matrix.add ComplexNumbers.complexField cW cV
 
                     result =
-                        Matrix.equal ComplexNumbers.equal cvPlusW cVPluscW
+                        Matrix.equal ComplexNumbers.equal.eq cvPlusW cVPluscW
                 in
                 Expect.true "All elements equal" result
         ]

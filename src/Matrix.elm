@@ -65,6 +65,7 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
+    , equalImplementation
     )
 
 {-| A module for Matrix
@@ -1007,16 +1008,9 @@ equalImplementation comparator matrixOne matrixTwo =
 
 {-| `Equal` type for `Matrix`.
 -}
-matrixEqual : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Matrix a)
-matrixEqual comparator =
-    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
-
-
-{-| Compare two matricies using comparator
--}
-equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
+equal : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Matrix a)
 equal comparator =
-    (matrixEqual comparator).eq
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
 
 
 {-| Get the value in a matrix at the specified row and column

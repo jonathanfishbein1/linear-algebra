@@ -946,7 +946,7 @@ suite =
                     matrixSumTensorProductIKJK =
                         Matrix.add Field.float tensorProductIK tensorProductJK
                 in
-                Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK matrixSumTensorProductIKJK)
+                Expect.true "matricies equal" ((Matrix.equal (Float.Extra.equalWithin 0.1)).eq tensorProductIJK matrixSumTensorProductIKJK)
         , Test.test
             "tests areRowEquivalent"
           <|

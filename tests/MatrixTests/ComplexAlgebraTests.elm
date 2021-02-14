@@ -409,7 +409,7 @@ suite =
 
                     result =
                         Result.map2
-                            (Matrix.equal ComplexNumbers.equal.eq)
+                            (Matrix.equal ComplexNumbers.equal.eq).eq
                             aTimebThenConjugate
                             cTimesm1ThenTimesm2
                 in
@@ -453,7 +453,7 @@ suite =
 
                     result =
                         Result.map2
-                            (Matrix.equal ComplexNumbers.equal.eq)
+                            (Matrix.equal ComplexNumbers.equal.eq).eq
                             aTimebThenAdjoint
                             bAdjointTimesAAdjoint
                 in

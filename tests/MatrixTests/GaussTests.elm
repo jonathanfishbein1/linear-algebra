@@ -149,7 +149,7 @@ suite =
                     rowEchelonFormMatrix =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
-                Expect.true "matrices are equal" (Matrix.equal (Float.Extra.equalWithin 0.0001) rowEchelonFormMatrix expected)
+                Expect.true "matrices are equal" ((Matrix.equal (Float.Extra.equalWithin 0.0001)).eq rowEchelonFormMatrix expected)
         , Test.test
             "tests matrix gaussianReduce put matrix into Row Echelon Form"
           <|
@@ -195,7 +195,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 1) (Imaginary.Imaginary 0) ]
                             ]
                 in
-                Expect.true "matrics equal" (Matrix.equal ComplexNumbers.equal.eq rowEchelonFormMatrix expected)
+                Expect.true "matrics equal" ((Matrix.equal ComplexNumbers.equal.eq).eq rowEchelonFormMatrix expected)
         , Test.test
             "tests gaussianReduceComplex put complex matrix into Row Echelon Form complex entries with imaginary portion"
           <|
@@ -279,5 +279,5 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.zero, complexNumberExpectedR2C2 ]
                             ]
                 in
-                Expect.true "matricies equal" (Matrix.equal ComplexNumbers.equal.eq rowEchelonFormMatrix expected)
+                Expect.true "matricies equal" ((Matrix.equal ComplexNumbers.equal.eq).eq rowEchelonFormMatrix expected)
         ]

@@ -146,7 +146,7 @@ suite =
                         Matrix.add ComplexNumbers.complexField cW cV
 
                     result =
-                        Matrix.equal ComplexNumbers.equal.eq cvPlusW cVPluscW
+                        (Matrix.equal ComplexNumbers.equal.eq).eq cvPlusW cVPluscW
                 in
                 Expect.true "All elements equal" result
         , Test.fuzz2
@@ -209,7 +209,7 @@ suite =
                         Matrix.add ComplexNumbers.complexField cW cV
 
                     result =
-                        Matrix.equal ComplexNumbers.equal.eq cvPlusW cVPluscW
+                        (Matrix.equal ComplexNumbers.equal.eq).eq cvPlusW cVPluscW
                 in
                 Expect.true "All elements equal" result
         ]

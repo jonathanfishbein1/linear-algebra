@@ -10,6 +10,7 @@ module InvertableMatrix exposing
     , getAt
     , equal
     , projXOntoSubspace
+    , equalImplementation
     )
 
 {-| A module for Invertable Matrix
@@ -57,6 +58,7 @@ import Field
 import Matrix
 import NormalMatrix
 import SquareMatrix
+import Typeclasses.Classes.Equality
 import Vector
 
 
@@ -183,11 +185,18 @@ projXOntoSubspace innerProductSpace columnVectorBasis x =
     Result.andThen (\tMatrix -> NormalMatrix.multiplyMatrixVector innerProductSpace tMatrix x) transformationMatrix
 
 
+{-| Compare two Matrices for equality
+-}
+equalImplementation : (a -> a -> Bool) -> InvertableMatrix a -> InvertableMatrix a -> Bool
+equalImplementation comparator (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
+    NormalMatrix.equalImplementation comparator matrixOne matrixTwo
+
+
 {-| Compare two matricies using comparator
 -}
-equal : (a -> a -> Bool) -> InvertableMatrix a -> InvertableMatrix a -> Bool
-equal comparator (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
-    NormalMatrix.equal comparator matrixOne matrixTwo
+equal : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (InvertableMatrix a)
+equal comparator =
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
 
 
 {-| Create Square Identity Matrix with n dimension

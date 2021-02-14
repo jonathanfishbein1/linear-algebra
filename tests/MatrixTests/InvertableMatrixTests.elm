@@ -324,7 +324,7 @@ suite =
                 in
                 case inverseComplex of
                     Ok result ->
-                        Expect.true "matrices are equal" (InvertableMatrix.equal ComplexNumbers.equal.eq result expectedInverse)
+                        Expect.true "matrices are equal" ((InvertableMatrix.equal ComplexNumbers.equal.eq).eq result expectedInverse)
 
                     Err error ->
                         Expect.fail error

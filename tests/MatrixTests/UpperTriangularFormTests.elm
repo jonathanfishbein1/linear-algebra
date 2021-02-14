@@ -83,7 +83,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary 0) ]
                             ]
                 in
-                Expect.true "matrices are equal" (Matrix.equal ComplexNumbers.equal.eq upperTriangularFormMatrix expected)
+                Expect.true "matrices are equal" ((Matrix.equal ComplexNumbers.equal.eq).eq upperTriangularFormMatrix expected)
         , Test.test
             "tests upperTriangleComplex puts matrix into upper tirangle form"
           <|
@@ -149,5 +149,5 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.zero, complexNumberExpectedR2C2 ]
                             ]
                 in
-                Expect.true "matrices are equal" (Matrix.equal ComplexNumbers.equal.eq upperTriangularFormMatrix expected)
+                Expect.true "matrices are equal" ((Matrix.equal ComplexNumbers.equal.eq).eq upperTriangularFormMatrix expected)
         ]

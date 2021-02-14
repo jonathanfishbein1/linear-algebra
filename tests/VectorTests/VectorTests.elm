@@ -286,7 +286,7 @@ suite =
                         Vector.Scalar complexNumber
 
                     isSubspace =
-                        Vector.vectorSubspace ComplexNumbers.complexField Vector.complexVectorAbelianGroup scalar vectors predicates
+                        Vector.vectorSubspace ComplexNumbers.field Vector.complexVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
@@ -326,7 +326,7 @@ suite =
                         Vector.Scalar complexNumber
 
                     isSubspace =
-                        Vector.vectorSubspace ComplexNumbers.complexField Vector.complexVectorAbelianGroup scalar vectors predicates
+                        Vector.vectorSubspace ComplexNumbers.field Vector.complexVectorAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
@@ -476,16 +476,16 @@ suite =
                         Vector.Vector [ complexNumberThree, complexNumberTwo ]
 
                     tensorProductJK =
-                        Vector.tensorProduct ComplexNumbers.complexField vectorJ vectorK
+                        Vector.tensorProduct ComplexNumbers.field vectorJ vectorK
 
                     cScalarMultiplicationtensorProductJK =
-                        Vector.scalarMultiplication ComplexNumbers.complexField complexNumberOne tensorProductJK
+                        Vector.scalarMultiplication ComplexNumbers.field complexNumberOne tensorProductJK
 
                     cScalarMultiplicationVectorJ =
-                        Vector.scalarMultiplication ComplexNumbers.complexField complexNumberOne vectorJ
+                        Vector.scalarMultiplication ComplexNumbers.field complexNumberOne vectorJ
 
                     cScalarMultiplicationVectorJTensorProductVectorK =
-                        Vector.tensorProduct ComplexNumbers.complexField cScalarMultiplicationVectorJ vectorK
+                        Vector.tensorProduct ComplexNumbers.field cScalarMultiplicationVectorJ vectorK
                 in
                 Expect.true "vectors equal" ((Vector.equal ComplexNumbers.equal.eq).eq cScalarMultiplicationtensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
         ]

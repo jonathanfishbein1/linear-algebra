@@ -261,7 +261,7 @@ realMatrixAdditionSemigroup =
 -}
 complexMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionSemigroup =
-    add ComplexNumbers.complexField
+    add ComplexNumbers.field
 
 
 {-| Commutative Semigroup instance for Matrix under the addition operation with real values.
@@ -320,7 +320,7 @@ realMatrixAdditionGroup =
 complexMatrixAdditionGroup : Group.Group (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionGroup =
     { monoid = complexMatrixAdditionMonoid
-    , inverse = map ComplexNumbers.complexSumGroup.inverse
+    , inverse = map ComplexNumbers.sumGroup.inverse
     }
 
 
@@ -1108,7 +1108,7 @@ realMatrixSpace =
 complexMatrixSpace : MatrixSpace (ComplexNumbers.ComplexNumber Float)
 complexMatrixSpace =
     { abelianGroup = complexMatrixAdditionAbelianGroup
-    , matrixScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
+    , matrixScalarMultiplication = scalarMultiplication ComplexNumbers.field
     }
 
 

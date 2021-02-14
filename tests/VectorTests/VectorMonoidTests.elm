@@ -30,7 +30,7 @@ suite =
                                 )
                             ]
                 in
-                Vector.add ComplexNumbers.complexField (Vector.Vector [ ComplexNumbers.zero ]) w
+                Vector.add ComplexNumbers.field (Vector.Vector [ ComplexNumbers.zero ]) w
                     |> Expect.equal w
         , Test.fuzz2
             Fuzz.float

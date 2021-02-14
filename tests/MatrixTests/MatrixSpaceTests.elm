@@ -73,16 +73,16 @@ suite =
                             ]
 
                     c2V =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c2 v
+                        Matrix.scalarMultiplication ComplexNumbers.field c2 v
 
                     c2VThenc1 =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c1 c2V
+                        Matrix.scalarMultiplication ComplexNumbers.field c1 c2V
 
                     c1c2 =
                         ComplexNumbers.multiply c1 c2
 
                     c1c2ThenV =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c1c2 v
+                        Matrix.scalarMultiplication ComplexNumbers.field c1c2 v
                 in
                 c2VThenc1
                     |> Expect.equal c1c2ThenV
@@ -131,19 +131,19 @@ suite =
                             ]
 
                     vPlusW =
-                        Matrix.add ComplexNumbers.complexField v w
+                        Matrix.add ComplexNumbers.field v w
 
                     cvPlusW =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c vPlusW
+                        Matrix.scalarMultiplication ComplexNumbers.field c vPlusW
 
                     cW =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c w
+                        Matrix.scalarMultiplication ComplexNumbers.field c w
 
                     cV =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c v
+                        Matrix.scalarMultiplication ComplexNumbers.field c v
 
                     cVPluscW =
-                        Matrix.add ComplexNumbers.complexField cW cV
+                        Matrix.add ComplexNumbers.field cW cV
 
                     result =
                         (Matrix.equal ComplexNumbers.equal.eq).eq cvPlusW cVPluscW
@@ -194,19 +194,19 @@ suite =
                             ]
 
                     vPlusW =
-                        Matrix.add ComplexNumbers.complexField v w
+                        Matrix.add ComplexNumbers.field v w
 
                     cvPlusW =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c vPlusW
+                        Matrix.scalarMultiplication ComplexNumbers.field c vPlusW
 
                     cW =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c w
+                        Matrix.scalarMultiplication ComplexNumbers.field c w
 
                     cV =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c v
+                        Matrix.scalarMultiplication ComplexNumbers.field c v
 
                     cVPluscW =
-                        Matrix.add ComplexNumbers.complexField cW cV
+                        Matrix.add ComplexNumbers.field cW cV
 
                     result =
                         (Matrix.equal ComplexNumbers.equal.eq).eq cvPlusW cVPluscW

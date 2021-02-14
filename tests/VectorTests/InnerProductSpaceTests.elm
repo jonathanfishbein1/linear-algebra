@@ -226,7 +226,7 @@ suite =
                         Vector.Vector [ complexNumber ]
 
                     squareRootADotA =
-                        Vector.dotProduct ComplexNumbers.complexField a (Vector.conjugate a)
+                        Vector.dotProduct ComplexNumbers.field a (Vector.conjugate a)
                             |> ComplexNumbers.real
                             |> Basics.sqrt
 
@@ -273,7 +273,7 @@ suite =
 
                     absXDotY =
                         Vector.dotProduct
-                            ComplexNumbers.complexField
+                            ComplexNumbers.field
                             x
                             y
                             |> ComplexNumbers.real

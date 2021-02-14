@@ -55,8 +55,8 @@ suite =
                                 )
                             ]
                 in
-                Vector.add ComplexNumbers.complexField v w
-                    |> Expect.equal (Vector.add ComplexNumbers.complexField w v)
+                Vector.add ComplexNumbers.field v w
+                    |> Expect.equal (Vector.add ComplexNumbers.field w v)
         , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)
@@ -120,12 +120,12 @@ suite =
                             ]
 
                     vPlusWPlusX =
-                        Vector.add ComplexNumbers.complexField v w
-                            |> Vector.add ComplexNumbers.complexField x
+                        Vector.add ComplexNumbers.field v w
+                            |> Vector.add ComplexNumbers.field x
 
                     wPlusXPlusV =
-                        Vector.add ComplexNumbers.complexField w x
-                            |> Vector.add ComplexNumbers.complexField v
+                        Vector.add ComplexNumbers.field w x
+                            |> Vector.add ComplexNumbers.field v
                 in
                 Expect.true "vectors sums equal" ((Vector.equal ComplexNumbers.equal.eq).eq vPlusWPlusX wPlusXPlusV)
         ]

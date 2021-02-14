@@ -101,7 +101,7 @@ multiplyMatrixVector (HermitianMatrix matrix) vector =
 -}
 subtract : HermitianMatrix Float -> HermitianMatrix Float -> HermitianMatrix Float
 subtract (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
-    SymmetricMatrix.subtract ComplexNumbers.complexField matrixOne matrixTwo
+    SymmetricMatrix.subtract ComplexNumbers.field matrixOne matrixTwo
         |> HermitianMatrix
 
 
@@ -109,7 +109,7 @@ subtract (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
 -}
 identity : Int -> HermitianMatrix Float
 identity =
-    SymmetricMatrix.identity ComplexNumbers.complexField
+    SymmetricMatrix.identity ComplexNumbers.field
         >> HermitianMatrix
 
 
@@ -117,5 +117,5 @@ identity =
 -}
 scalarMultiplication : ComplexNumbers.ComplexNumber Float -> HermitianMatrix Float -> HermitianMatrix Float
 scalarMultiplication scalar (HermitianMatrix matrix) =
-    SymmetricMatrix.scalarMultiplication ComplexNumbers.complexField scalar matrix
+    SymmetricMatrix.scalarMultiplication ComplexNumbers.field scalar matrix
         |> HermitianMatrix

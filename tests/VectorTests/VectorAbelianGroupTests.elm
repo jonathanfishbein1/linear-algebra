@@ -40,6 +40,6 @@ suite =
                         Vector.Vector
                             [ ComplexNumbers.zero ]
                 in
-                Vector.subtract ComplexNumbers.complexField v w
+                Vector.subtract ComplexNumbers.field v w
                     |> Expect.equal zero
         ]

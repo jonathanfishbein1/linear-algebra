@@ -68,16 +68,16 @@ suite =
                             ]
 
                     c2V =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c2 v
+                        Vector.scalarMultiplication ComplexNumbers.field c2 v
 
                     c2VThenc1 =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c1 c2V
+                        Vector.scalarMultiplication ComplexNumbers.field c1 c2V
 
                     c1c2 =
                         ComplexNumbers.multiply c1 c2
 
                     c1c2ThenV =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c1c2 v
+                        Vector.scalarMultiplication ComplexNumbers.field c1c2 v
                 in
                 c2VThenc1
                     |> Expect.equal c1c2ThenV
@@ -120,19 +120,19 @@ suite =
                             ]
 
                     vPlusW =
-                        Vector.add ComplexNumbers.complexField v w
+                        Vector.add ComplexNumbers.field v w
 
                     cvPlusW =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c vPlusW
+                        Vector.scalarMultiplication ComplexNumbers.field c vPlusW
 
                     cW =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c w
+                        Vector.scalarMultiplication ComplexNumbers.field c w
 
                     cV =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c v
+                        Vector.scalarMultiplication ComplexNumbers.field c v
 
                     cVPluscW =
-                        Vector.add ComplexNumbers.complexField cW cV
+                        Vector.add ComplexNumbers.field cW cV
 
                     result =
                         (Vector.equal ComplexNumbers.equal.eq).eq cvPlusW cVPluscW
@@ -178,16 +178,16 @@ suite =
                         ComplexNumbers.add c1 c2
 
                     c1Plusc2V =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c1Plusc2 v
+                        Vector.scalarMultiplication ComplexNumbers.field c1Plusc2 v
 
                     c1V =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c1 v
+                        Vector.scalarMultiplication ComplexNumbers.field c1 v
 
                     c2V =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c2 v
+                        Vector.scalarMultiplication ComplexNumbers.field c2 v
 
                     c1VPlusc2V =
-                        Vector.add ComplexNumbers.complexField c1V c2V
+                        Vector.add ComplexNumbers.field c1V c2V
 
                     result =
                         (Vector.equal ComplexNumbers.equal.eq).eq c1VPlusc2V c1Plusc2V

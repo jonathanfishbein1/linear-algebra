@@ -213,7 +213,7 @@ realVectorSemigroup =
 -}
 complexVectorSemigroup : Semigroup.Semigroup (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorSemigroup =
-    add ComplexNumbers.complexField
+    add ComplexNumbers.field
 
 
 {-| Commutative Semigroup instance for a real valued Vector.
@@ -272,7 +272,7 @@ realVectorGroup =
 complexVectorGroup : Group.Group (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorGroup =
     { monoid = complexVectorMonoid
-    , inverse = map ComplexNumbers.complexSumGroup.inverse
+    , inverse = map ComplexNumbers.sumGroup.inverse
     }
 
 
@@ -311,8 +311,8 @@ realVectorSpace =
 complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumber Float)
 complexVectorSpace =
     { abelianGroup = complexVectorAbelianGroup
-    , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
-    , field = ComplexNumbers.complexField
+    , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.field
+    , field = ComplexNumbers.field
     }
 
 
@@ -332,7 +332,7 @@ realInnerProductSpace =
 complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumber Float)
 complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
-    , innerProduct = dotProduct ComplexNumbers.complexField
+    , innerProduct = dotProduct ComplexNumbers.field
     , length = lengthComplex
     , distance = distanceComplex
     }
@@ -365,7 +365,7 @@ lengthReal vector =
 -}
 lengthComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Float
 lengthComplex vector =
-    dotProduct ComplexNumbers.complexField (conjugate vector) vector
+    dotProduct ComplexNumbers.field (conjugate vector) vector
         |> ComplexNumbers.real
         |> Basics.sqrt
 
@@ -389,7 +389,7 @@ normaliseComplex v =
         v
 
     else
-        scalarMultiplication ComplexNumbers.complexField (ComplexNumbers.ComplexNumber (Real.Real (1 / lengthComplex v)) (Imaginary.Imaginary 0)) v
+        scalarMultiplication ComplexNumbers.field (ComplexNumbers.ComplexNumber (Real.Real (1 / lengthComplex v)) (Imaginary.Imaginary 0)) v
 
 
 {-| Add two Vectors

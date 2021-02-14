@@ -50,6 +50,6 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.add ComplexNumbers.complexField v w
+                Matrix.add ComplexNumbers.field v w
                     |> Expect.equal zero
         ]

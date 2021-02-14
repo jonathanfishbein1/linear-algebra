@@ -127,5 +127,5 @@ equal comparator =
 -}
 identity : Int -> UnitaryMatrix Float
 identity =
-    InvertableMatrix.identity ComplexNumbers.complexField
+    InvertableMatrix.identity ComplexNumbers.field
         >> UnitaryMatrix

@@ -15,9 +15,9 @@ module NormalMatrix exposing
     , getAt
     , appendHorizontal
     , equal
+    , equalImplementation
     , gaussJordan
     , upperTriangle
-    , equalImplementation
     )
 
 {-| A module for Normal Matrix
@@ -69,6 +69,7 @@ module NormalMatrix exposing
 # Equality
 
 @docs equal
+@docs equalImplementation
 
 
 # Matrix Forms

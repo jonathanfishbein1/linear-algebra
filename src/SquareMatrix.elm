@@ -26,9 +26,9 @@ module SquareMatrix exposing
     , getAt
     , appendHorizontal
     , equal
+    , equalImplementation
     , gaussJordan
     , upperTriangle
-    , equalImplementation
     )
 
 {-| A module for Square Matrix
@@ -95,6 +95,7 @@ module SquareMatrix exposing
 # Equality
 
 @docs equal
+@docs equalImplementation
 
 
 # Matrix Forms

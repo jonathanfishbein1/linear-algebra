@@ -54,6 +54,7 @@ module Matrix exposing
     , map2
     , foldl
     , equal
+    , equalImplementation
     , upperTriangle
     , gaussianReduce
     , jordanReduce
@@ -65,7 +66,6 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , equalImplementation
     )
 
 {-| A module for Matrix
@@ -156,6 +156,7 @@ module Matrix exposing
 # Equality
 
 @docs equal
+@docs equalImplementation
 
 
 # Matrix Forms

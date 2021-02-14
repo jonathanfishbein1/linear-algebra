@@ -42,6 +42,7 @@ module Vector exposing
     , andThen
     , foldl
     , equal
+    , equalImplementation
     , findIndex
     , getAt
     , setAt
@@ -52,7 +53,6 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
-    , equalImplementation
     )
 
 {-| A module for Vectors
@@ -131,6 +131,7 @@ module Vector exposing
 # Equality
 
 @docs equal
+@docs equalImplementation
 
 
 # Manipulation

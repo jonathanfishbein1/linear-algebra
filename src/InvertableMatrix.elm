@@ -9,8 +9,8 @@ module InvertableMatrix exposing
     , multiplyMatrixVector
     , getAt
     , equal
-    , projXOntoSubspace
     , equalImplementation
+    , projXOntoSubspace
     )
 
 {-| A module for Invertable Matrix
@@ -48,6 +48,7 @@ module InvertableMatrix exposing
 # Equality
 
 @docs equal
+@docs equalImplementation
 
 @docs projXOntoSubspace
 

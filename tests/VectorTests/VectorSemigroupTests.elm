@@ -127,5 +127,5 @@ suite =
                         Vector.add ComplexNumbers.complexField w x
                             |> Vector.add ComplexNumbers.complexField v
                 in
-                Expect.true "vectors sums equal" (Vector.equal ComplexNumbers.equal.eq vPlusWPlusX wPlusXPlusV)
+                Expect.true "vectors sums equal" ((Vector.equal ComplexNumbers.equal.eq).eq vPlusWPlusX wPlusXPlusV)
         ]

@@ -56,6 +56,7 @@ module ColumnVector exposing
 import ComplexNumbers
 import Field
 import Monoid
+import Typeclasses.Classes.Equality
 import Vector
 
 
@@ -103,11 +104,18 @@ foldl foldFunction acc (ColumnVector vector) =
     Vector.foldl foldFunction acc vector
 
 
-{-| Compare two vectors for equality using a comparator
+{-| Compare two Vectors for equality
 -}
-equal : (a -> a -> Bool) -> ColumnVector a -> ColumnVector a -> Bool
-equal comparator (ColumnVector vectorOne) (ColumnVector vectorTwo) =
-    Vector.equal comparator vectorOne vectorTwo
+equalImplementation : (a -> a -> Bool) -> ColumnVector a -> ColumnVector a -> Bool
+equalImplementation comparator (ColumnVector vectorOne) (ColumnVector vectorTwo) =
+    Vector.equalImplementation comparator vectorOne vectorTwo
+
+
+{-| `Equal` type for `Vector`.
+-}
+equal : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (ColumnVector a)
+equal comparator =
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
 
 
 {-| Get the value in a Vector at the specified index

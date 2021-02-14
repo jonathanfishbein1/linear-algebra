@@ -40,7 +40,7 @@ suite =
                             b
                             a
                 in
-                Expect.true "vectors equal" (Vector.equal (==) aHadamardB bhadamardA)
+                Expect.true "vectors equal" ((Vector.equal (==)).eq aHadamardB bhadamardA)
         , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)
@@ -70,7 +70,7 @@ suite =
                             a
                             (Vector.hadamardMultiplication Field.float b c)
                 in
-                Expect.true "vectors equal" (Vector.equal (Float.Extra.equalWithin 0.1) aHadamardBHadamardC bHadamardCHadamardA)
+                Expect.true "vectors equal" ((Vector.equal (Float.Extra.equalWithin 0.1)).eq aHadamardBHadamardC bHadamardCHadamardA)
         , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)
@@ -100,7 +100,7 @@ suite =
                             (Vector.hadamardMultiplication Field.float a b)
                             (Vector.hadamardMultiplication Field.float a c)
                 in
-                Expect.true "vectors equal" (Vector.equal (Float.Extra.equalWithin 0.1) aHadamardSumBC sumAHadamardBAHadamardC)
+                Expect.true "vectors equal" ((Vector.equal (Float.Extra.equalWithin 0.1)).eq aHadamardSumBC sumAHadamardBAHadamardC)
         , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)
@@ -433,7 +433,7 @@ suite =
                     vectorSumTensorProductIKJK =
                         Vector.add Field.float tensorProductIK tensorProductJK
                 in
-                Expect.true "vectors equal" (Vector.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK vectorSumTensorProductIKJK)
+                Expect.true "vectors equal" ((Vector.equal (Float.Extra.equalWithin 0.1)).eq tensorProductIJK vectorSumTensorProductIKJK)
         , Test.fuzz3
             (Fuzz.floatRange -10 10)
             (Fuzz.floatRange -10 10)
@@ -487,5 +487,5 @@ suite =
                     cScalarMultiplicationVectorJTensorProductVectorK =
                         Vector.tensorProduct ComplexNumbers.complexField cScalarMultiplicationVectorJ vectorK
                 in
-                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal.eq cScalarMultiplicationtensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
+                Expect.true "vectors equal" ((Vector.equal ComplexNumbers.equal.eq).eq cScalarMultiplicationtensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
         ]

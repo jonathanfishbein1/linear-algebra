@@ -50,7 +50,7 @@ suite =
                                 )
                             ]
                 in
-                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal.eq (Vector.concat.semigroup v Vector.concat.identity) v)
+                Expect.true "vectors equal" ((Vector.equal ComplexNumbers.equal.eq).eq (Vector.concat.semigroup v Vector.concat.identity) v)
         , Test.fuzz2
             Fuzz.float
             Fuzz.float
@@ -69,7 +69,7 @@ suite =
                                 )
                             ]
                 in
-                Expect.true "vectors equal" (Vector.equal ComplexNumbers.equal.eq (Vector.concat.semigroup Vector.concat.identity v) v)
+                Expect.true "vectors equal" ((Vector.equal ComplexNumbers.equal.eq).eq (Vector.concat.semigroup Vector.concat.identity v) v)
         , Test.fuzz3
             Fuzz.int
             Fuzz.int

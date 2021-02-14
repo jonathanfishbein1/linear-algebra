@@ -30,7 +30,7 @@ suite =
                                 )
                             ]
                 in
-                Expect.true "equal" (Vector.equal ComplexNumbers.equal.eq (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
+                Expect.true "equal" ((Vector.equal ComplexNumbers.equal.eq).eq (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
         , Test.fuzz2
             Fuzz.float
             Fuzz.float
@@ -135,7 +135,7 @@ suite =
                         Vector.add ComplexNumbers.complexField cW cV
 
                     result =
-                        Vector.equal ComplexNumbers.equal.eq cvPlusW cVPluscW
+                        (Vector.equal ComplexNumbers.equal.eq).eq cvPlusW cVPluscW
                 in
                 Expect.true "All elements equal" result
         , Test.fuzz2
@@ -190,7 +190,7 @@ suite =
                         Vector.add ComplexNumbers.complexField c1V c2V
 
                     result =
-                        Vector.equal ComplexNumbers.equal.eq c1VPlusc2V c1Plusc2V
+                        (Vector.equal ComplexNumbers.equal.eq).eq c1VPlusc2V c1Plusc2V
                 in
                 Expect.true "All elements equal" result
         ]

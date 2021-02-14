@@ -52,6 +52,7 @@ module Vector exposing
     , readComplexVector
     , vector3ToVector
     , negativeOrPositiveFloat
+    , equalImplementation
     )
 
 {-| A module for Vectors
@@ -638,16 +639,9 @@ equalImplementation comparator vectorOne vectorTwo =
 
 {-| `Equal` type for `Vector`.
 -}
-vectorEqual : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Vector a)
-vectorEqual comparator =
-    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
-
-
-{-| Compare two vectors for equality using a comparator
--}
-equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
+equal : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Vector a)
 equal comparator =
-    (vectorEqual comparator).eq
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
 
 
 {-| Get the value in a Vector at the specified index

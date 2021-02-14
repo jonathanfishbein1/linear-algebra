@@ -32,7 +32,7 @@ suite =
                                 )
                             ]
                 in
-                Expect.true "equal" (Vector.equal ComplexNumbers.equal.eq (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
+                Expect.true "equal" ((Vector.equal ComplexNumbers.equal.eq).eq (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
         , Test.fuzz2
             Fuzz.float
             Fuzz.float

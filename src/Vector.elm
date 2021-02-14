@@ -42,6 +42,7 @@ module Vector exposing
     , andThen
     , foldl
     , equal
+    , equalImplementation
     , findIndex
     , getAt
     , setAt
@@ -130,6 +131,7 @@ module Vector exposing
 # Equality
 
 @docs equal
+@docs equalImplementation
 
 
 # Manipulation
@@ -154,9 +156,11 @@ import CommutativeSemigroup
 import ComplexNumbers
 import Field
 import Group
+import Imaginary
 import List.Extra
 import Monoid
 import Parser exposing ((|.), (|=))
+import Real
 import Semigroup
 import Typeclasses.Classes.Equality
 
@@ -385,7 +389,7 @@ normaliseComplex v =
         v
 
     else
-        scalarMultiplication ComplexNumbers.complexField (ComplexNumbers.ComplexNumber (ComplexNumbers.Real (1 / lengthComplex v)) (ComplexNumbers.Imaginary 0)) v
+        scalarMultiplication ComplexNumbers.complexField (ComplexNumbers.ComplexNumber (Real.Real (1 / lengthComplex v)) (Imaginary.Imaginary 0)) v
 
 
 {-| Add two Vectors
@@ -636,16 +640,9 @@ equalImplementation comparator vectorOne vectorTwo =
 
 {-| `Equal` type for `Vector`.
 -}
-vectorEqual : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Vector a)
-vectorEqual comparator =
-    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
-
-
-{-| Compare two vectors for equality using a comparator
--}
-equal : (a -> a -> Bool) -> Vector a -> Vector a -> Bool
+equal : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Vector a)
 equal comparator =
-    (vectorEqual comparator).eq
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
 
 
 {-| Get the value in a Vector at the specified index

@@ -5,7 +5,9 @@ import ComplexNumbers
 import Expect
 import Field
 import Fuzz
+import Imaginary
 import Matrix
+import Real
 import RowVector
 import Test
 import Vector
@@ -363,18 +365,18 @@ suite =
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real one)
-                            (ComplexNumbers.Imaginary two)
+                            (Real.Real one)
+                            (Imaginary.Imaginary two)
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real three)
-                            (ComplexNumbers.Imaginary two)
+                            (Real.Real three)
+                            (Imaginary.Imaginary two)
 
                     complexNumberThree =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real two)
-                            (ComplexNumbers.Imaginary three)
+                            (Real.Real two)
+                            (Imaginary.Imaginary three)
 
                     v1 =
                         RowVector.RowVector <|
@@ -407,7 +409,7 @@ suite =
 
                     result =
                         Result.map2
-                            (Matrix.equal ComplexNumbers.equal)
+                            (Matrix.equal ComplexNumbers.equal.eq).eq
                             aTimebThenConjugate
                             cTimesm1ThenTimesm2
                 in
@@ -421,10 +423,10 @@ suite =
             \one two three ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real one) (ComplexNumbers.Imaginary two)
+                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary two)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumber (ComplexNumbers.Real three) (ComplexNumbers.Imaginary two)
+                        ComplexNumbers.ComplexNumber (Real.Real three) (Imaginary.Imaginary two)
 
                     v1 =
                         RowVector.RowVector <|
@@ -451,7 +453,7 @@ suite =
 
                     result =
                         Result.map2
-                            (Matrix.equal ComplexNumbers.equal)
+                            (Matrix.equal ComplexNumbers.equal.eq).eq
                             aTimebThenAdjoint
                             bAdjointTimesAAdjoint
                 in

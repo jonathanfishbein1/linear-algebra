@@ -54,12 +54,12 @@ module Matrix exposing
     , map2
     , foldl
     , equal
+    , equalImplementation
     , upperTriangle
     , gaussianReduce
     , jordanReduce
     , gaussJordan
     , solve
-    , solveMatrix
     , getAt
     , setAt
     , printRealMatrix
@@ -156,6 +156,7 @@ module Matrix exposing
 # Equality
 
 @docs equal
+@docs equalImplementation
 
 
 # Matrix Forms
@@ -169,7 +170,6 @@ module Matrix exposing
 # Solving
 
 @docs solve
-@docs solveMatrix
 
 
 # Manipulation
@@ -214,7 +214,7 @@ type Matrix a
 -}
 type Consistancy a
     = Consistant (Solution a)
-    | Inconsistant String
+    | Inconsistant String (Solution a)
 
 
 {-| Type to represent result of Gauss-Jordan reduction if system is consistant
@@ -455,8 +455,8 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 
 {-| Calculate the null space of a matrix
 -}
-nullSpace : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
-nullSpace innerProductSpace matrix =
+nullSpace : Typeclasses.Classes.Equality.Equality a -> Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+nullSpace eq innerProductSpace matrix =
     let
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             innerProductSpace.vectorSpace.field
@@ -469,14 +469,14 @@ nullSpace innerProductSpace matrix =
                 |> Vector.Vector
                 |> ColumnVector.ColumnVector
     in
-    solve innerProductSpace matrix b
+    solve eq innerProductSpace matrix b
 
 
 {-| Calculate the left nullspace of a Matrix
 -}
-leftNullSpace : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
-leftNullSpace innerProductSpace =
-    transpose >> nullSpace innerProductSpace
+leftNullSpace : Typeclasses.Classes.Equality.Equality a -> Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+leftNullSpace eq innerProductSpace =
+    transpose >> nullSpace eq innerProductSpace
 
 
 {-| Get the diagonal of a Matrix
@@ -765,13 +765,19 @@ coefficientMatrix matrix =
     subMatrix 0 (mDimension matrix) 0 (nDimension matrix - 1) matrix
 
 
-{-| Solve a system of linear equations using Gauss-Jordan elimination
+{-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
 -}
-solveMatrix : Vector.InnerProductSpace a -> Matrix a -> Consistancy a
-solveMatrix innerProductSpace (Matrix listOfRowVectors) =
+solve : Typeclasses.Classes.Equality.Equality a -> Vector.InnerProductSpace a -> Matrix a -> ColumnVector.ColumnVector a -> Consistancy a
+solve { eq } innerProductSpace matrix constants =
     let
+        matrixB =
+            createMatrixFromColumnVectors [ constants ]
+
+        augmentedMatrix =
+            concatHorizontal.semigroup.prepend matrix matrixB
+
         (Matrix listOfRowVectorsRREF) =
-            gaussJordan innerProductSpace.vectorSpace (Matrix listOfRowVectors)
+            gaussJordan innerProductSpace.vectorSpace augmentedMatrix
 
         (Matrix variableSide) =
             coefficientMatrix (Matrix listOfRowVectorsRREF)
@@ -798,7 +804,7 @@ solveMatrix innerProductSpace (Matrix listOfRowVectors) =
                 |> List.any
                     (\(RowVector.RowVector (Vector.Vector row)) ->
                         List.all
-                            ((==) additionGroup.monoid.identity)
+                            (eq additionGroup.monoid.identity)
                             (List.take (List.length row - 1) row)
                             && innerProductSpace.length (Vector.Vector row)
                             /= 0
@@ -811,7 +817,34 @@ solveMatrix innerProductSpace (Matrix listOfRowVectors) =
                 listOfRowVectorsRREF
     in
     if anyAllZeroExceptAugmentedSide then
-        Inconsistant "No Unique Solution"
+        let
+            matrixTransposeMatrix =
+                multiply innerProductSpace (transpose matrix) matrix
+
+            matrixTransposeB =
+                multiplyMatrixVector innerProductSpace (transpose matrix) constants
+                    |> Result.map (List.singleton >> createMatrixFromColumnVectors)
+
+            augmentedMatrixStar =
+                Result.map2 concatHorizontal.semigroup.prepend matrixTransposeMatrix matrixTransposeB
+
+            (Matrix listOfRowVectorsRREFStar) =
+                Result.map (gaussJordan innerProductSpace.vectorSpace) augmentedMatrixStar
+                    |> Result.withDefault empty
+
+            solutionStar =
+                List.foldl
+                    (\(RowVector.RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
+                    []
+                    listOfRowVectorsRREFStar
+        in
+        Inconsistant "No Unique Solution: Least Squares Solution Provided"
+            (UniqueSolution
+                (solutionStar
+                    |> Vector.Vector
+                    |> ColumnVector.ColumnVector
+                )
+            )
 
     else if notConstrainedEnough then
         let
@@ -831,22 +864,6 @@ solveMatrix innerProductSpace (Matrix listOfRowVectors) =
                 |> ColumnVector.ColumnVector
             )
             |> Consistant
-
-
-{-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
--}
-solve : Vector.InnerProductSpace a -> Matrix a -> ColumnVector.ColumnVector a -> Consistancy a
-solve innerProductSpace matrix (ColumnVector.ColumnVector (Vector.Vector constants)) =
-    let
-        matrixB =
-            constants
-                |> List.map (List.singleton >> Vector.Vector >> RowVector.RowVector)
-                |> Matrix
-
-        augmentedMatrix =
-            concatHorizontal.semigroup.prepend matrix matrixB
-    in
-    solveMatrix innerProductSpace augmentedMatrix
 
 
 {-| Predicate to determine if a list of Vectors are linearly independent
@@ -871,15 +888,8 @@ doesSetSpanSpace vSpace (VectorDimension vectorDimension) columnVectors =
         Err "Please input vectors of equal length as vector space"
 
     else
-        let
-            identityRowVectors =
-                identity vSpace.field vectorDimension
-
-            listOfRowVectorsRREF =
-                gaussJordan vSpace (createMatrixFromColumnVectors columnVectors)
-        in
-        identityRowVectors
-            == listOfRowVectorsRREF
+        identity vSpace.field vectorDimension
+            == gaussJordan vSpace (createMatrixFromColumnVectors columnVectors)
             |> Ok
 
 
@@ -999,16 +1009,9 @@ equalImplementation comparator matrixOne matrixTwo =
 
 {-| `Equal` type for `Matrix`.
 -}
-matrixEqual : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Matrix a)
-matrixEqual comparator =
-    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
-
-
-{-| Compare two matricies using comparator
--}
-equal : (a -> a -> Bool) -> Matrix a -> Matrix a -> Bool
+equal : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (Matrix a)
 equal comparator =
-    (matrixEqual comparator).eq
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
 
 
 {-| Get the value in a matrix at the specified row and column

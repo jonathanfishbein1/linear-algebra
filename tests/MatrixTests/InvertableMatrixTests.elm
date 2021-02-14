@@ -4,9 +4,11 @@ import ComplexNumbers
 import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import Field
+import Imaginary
 import InvertableMatrix
 import Matrix
 import NormalMatrix
+import Real
 import RowVector
 import SquareMatrix
 import Test
@@ -161,37 +163,37 @@ suite =
                 let
                     complexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 1
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 1
                             )
 
                     complexNumberR1C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 2
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
                     complexNumberR2C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 3
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
                     complexNumberR2C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 4
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
@@ -209,16 +211,16 @@ suite =
 
                     expectedDeterminant =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 -2
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 4
                             )
                 in
                 case determinantComplex of
                     Ok dComplex ->
-                        Expect.true "determinants are equal" (ComplexNumbers.equal dComplex expectedDeterminant)
+                        Expect.true "determinants are equal" (ComplexNumbers.equal.eq dComplex expectedDeterminant)
 
                     _ ->
                         Expect.fail "determinants not equal"
@@ -229,37 +231,37 @@ suite =
                 let
                     complexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 1
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 1
                             )
 
                     complexNumberR1C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 2
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
                     complexNumberR2C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 3
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
                     complexNumberR2C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 4
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
@@ -277,37 +279,37 @@ suite =
 
                     expectedComplexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 -(2 / 5)
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 -(4 / 5)
                             )
 
                     expectedComplexNumberR1C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 (1 / 5)
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 (2 / 5)
                             )
 
                     expectedComplexNumberR2C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 (3 / 10)
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 (3 / 5)
                             )
 
                     expectedComplexNumberR2C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 (1 / 10)
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 -(3 / 10)
                             )
 
@@ -322,7 +324,7 @@ suite =
                 in
                 case inverseComplex of
                     Ok result ->
-                        Expect.true "matrices are equal" (InvertableMatrix.equal ComplexNumbers.equal result expectedInverse)
+                        Expect.true "matrices are equal" ((InvertableMatrix.equal ComplexNumbers.equal.eq).eq result expectedInverse)
 
                     Err error ->
                         Expect.fail error

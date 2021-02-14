@@ -3,9 +3,11 @@ module MatrixTests.UnitaryMatrixTests exposing (suite)
 import ComplexNumbers
 import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
+import Imaginary
 import InvertableMatrix
 import Matrix
 import NormalMatrix
+import Real
 import RowVector
 import SquareMatrix
 import Test
@@ -23,82 +25,82 @@ suite =
                 let
                     complexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 (1 / 2)
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 (1 / 2)
                             )
 
                     complexNumberR1C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 0
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 (1 / Basics.sqrt 3)
                             )
 
                     complexNumberR1C3 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 (3 / (2 * Basics.sqrt 15))
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 (1 / (2 * Basics.sqrt 15))
                             )
 
                     complexNumberR2C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 (-1 / 2)
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
                     complexNumberR2C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 (1 / Basics.sqrt 3)
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
                     complexNumberR2C3 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 (4 / (2 * Basics.sqrt 15))
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 (3 / (2 * Basics.sqrt 15))
                             )
 
                     complexNumberR3C1 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 (1 / 2)
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0
                             )
 
                     complexNumberR3C2 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 0
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 (-1 / Basics.sqrt 3)
                             )
 
                     complexNumberR3C3 =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 0
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 (5 / (2 * Basics.sqrt 15))
                             )
 

@@ -6,11 +6,14 @@ import Expect
 import Field
 import Float.Extra
 import Fuzz
+import Imaginary
 import Matrix
 import Monoid
+import Real
 import RowVector
 import SquareMatrix
 import Test
+import Typeclasses.Classes.Equality
 import Vector
 
 
@@ -29,7 +32,7 @@ suite =
                             ]
 
                     nullSpace =
-                        Matrix.nullSpace Vector.realInnerProductSpace matrix
+                        Matrix.nullSpace (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6)) Vector.realInnerProductSpace matrix
 
                     expected =
                         ColumnVector.ColumnVector <| Vector.Vector [ 0, 0 ]
@@ -418,11 +421,14 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ 1, 1, 2, 3, 2 ]
-                            , RowVector.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 1, 2, 3 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 1, 3, 1 ]
                             ]
+
+                    b =
+                        ColumnVector.ColumnVector <| Vector.Vector [ 2, 4 ]
                 in
-                Expect.equal (Matrix.solveMatrix Vector.realInnerProductSpace matrix)
+                Expect.equal (Matrix.solve (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6)) Vector.realInnerProductSpace matrix b)
                     (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
         , Test.test
             "tests matrix fold"
@@ -537,10 +543,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -563,10 +569,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -577,10 +583,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             two
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             one
                                         )
                                     ]
@@ -604,10 +610,10 @@ suite =
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -616,10 +622,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -646,10 +652,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -672,10 +678,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -686,10 +692,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             two
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             one
                                         )
                                     ]
@@ -713,10 +719,10 @@ suite =
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -728,10 +734,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -758,10 +764,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -784,10 +790,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -798,10 +804,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             two
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             one
                                         )
                                     ]
@@ -825,10 +831,10 @@ suite =
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -840,10 +846,10 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (ComplexNumbers.Real
+                                        (Real.Real
                                             one
                                         )
-                                        (ComplexNumbers.Imaginary
+                                        (Imaginary.Imaginary
                                             two
                                         )
                                     ]
@@ -940,7 +946,7 @@ suite =
                     matrixSumTensorProductIKJK =
                         Matrix.add Field.float tensorProductIK tensorProductJK
                 in
-                Expect.true "matricies equal" (Matrix.equal (\valOne valTwo -> Float.Extra.equalWithin 0.1 valOne valTwo) tensorProductIJK matrixSumTensorProductIKJK)
+                Expect.true "matricies equal" ((Matrix.equal (Float.Extra.equalWithin 0.1)).eq tensorProductIJK matrixSumTensorProductIKJK)
         , Test.test
             "tests areRowEquivalent"
           <|

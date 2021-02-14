@@ -3,8 +3,10 @@ module MatrixTests.InternalMatrixTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
+import Imaginary
 import Internal.Matrix
 import List.Extra
+import Real
 import Test
 import Vector
 
@@ -66,19 +68,19 @@ suite =
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -106,19 +108,19 @@ suite =
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -169,19 +171,19 @@ suite =
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -196,7 +198,7 @@ suite =
                 in
                 case firstElement of
                     Just element ->
-                        Expect.true "ComplexNumber is equal to one " (ComplexNumbers.equal element ComplexNumbers.one)
+                        Expect.true "ComplexNumber is equal to one " (ComplexNumbers.equal.eq element ComplexNumbers.one)
 
                     Nothing ->
                         Expect.fail "error"
@@ -231,19 +233,19 @@ suite =
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 0.000001
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0.000001
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 0.000001
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 0.000001
                             )
 
@@ -313,19 +315,19 @@ suite =
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 
@@ -343,7 +345,7 @@ suite =
                 in
                 case firstElementSecondRow of
                     Just element ->
-                        Expect.true "equal" (ComplexNumbers.equal element ComplexNumbers.zero)
+                        Expect.true "equal" (ComplexNumbers.equal.eq element ComplexNumbers.zero)
 
                     Nothing ->
                         Expect.fail "error"

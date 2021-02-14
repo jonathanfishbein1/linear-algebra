@@ -3,6 +3,8 @@ module VectorTests.VectorAbelianGroupTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
+import Imaginary
+import Real
 import Test
 import Vector
 
@@ -19,10 +21,10 @@ suite =
                 let
                     complexNumber =
                         ComplexNumbers.ComplexNumber
-                            (ComplexNumbers.Real
+                            (Real.Real
                                 one
                             )
-                            (ComplexNumbers.Imaginary
+                            (Imaginary.Imaginary
                                 two
                             )
 

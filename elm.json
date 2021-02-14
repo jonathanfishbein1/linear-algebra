@@ -3,7 +3,7 @@
     "name": "jonathanfishbein1/linear-algebra",
     "summary": "linear algebra in elm",
     "license": "BSD-3-Clause",
-    "version": "22.1.0",
+    "version": "23.0.0",
     "exposed-modules": [
         "Vector",
         "ColumnVector",
@@ -24,7 +24,7 @@
         "elm-community/list-extra": "8.2.4 <= v < 9.0.0",
         "elm-community/maybe-extra": "5.2.0 <= v < 6.0.0",
         "ianmackenzie/elm-float-extra": "1.1.0 <= v < 2.0.0",
-        "jonathanfishbein1/complex-numbers": "10.3.5 <= v < 11.0.0",
+        "jonathanfishbein1/complex-numbers": "11.0.0 <= v < 12.0.0",
         "jonathanfishbein1/numeric-typeclasses": "4.0.0 <= v < 5.0.0",
         "nikita-volkov/typeclasses": "1.8.0 <= v < 2.0.0"
     },

@@ -3,6 +3,8 @@ module VectorTests.VectorSemigroupTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Fuzz
+import Imaginary
+import Real
 import Test
 import Vector
 
@@ -20,17 +22,17 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     one
                                 )
                             , ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     two
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
@@ -38,17 +40,17 @@ suite =
                     w =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     one
                                 )
                             , ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     two
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
@@ -66,17 +68,17 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     one
                                 )
                             , ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     two
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
@@ -84,17 +86,17 @@ suite =
                     w =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     one
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     one
                                 )
                             , ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     two
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     two
                                 )
                             ]
@@ -102,17 +104,17 @@ suite =
                     x =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     three
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     three
                                 )
                             , ComplexNumbers.ComplexNumber
-                                (ComplexNumbers.Real
+                                (Real.Real
                                     three
                                 )
-                                (ComplexNumbers.Imaginary
+                                (Imaginary.Imaginary
                                     three
                                 )
                             ]
@@ -125,5 +127,5 @@ suite =
                         Vector.add ComplexNumbers.complexField w x
                             |> Vector.add ComplexNumbers.complexField v
                 in
-                Expect.true "vectors sums equal" (Vector.equal ComplexNumbers.equal vPlusWPlusX wPlusXPlusV)
+                Expect.true "vectors sums equal" ((Vector.equal ComplexNumbers.equal.eq).eq vPlusWPlusX wPlusXPlusV)
         ]

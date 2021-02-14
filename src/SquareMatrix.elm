@@ -26,6 +26,7 @@ module SquareMatrix exposing
     , getAt
     , appendHorizontal
     , equal
+    , equalImplementation
     , gaussJordan
     , upperTriangle
     )
@@ -94,6 +95,7 @@ module SquareMatrix exposing
 # Equality
 
 @docs equal
+@docs equalImplementation
 
 
 # Matrix Forms
@@ -110,6 +112,7 @@ import Float.Extra
 import Matrix
 import Monoid
 import RowVector
+import Typeclasses.Classes.Equality
 import Vector
 
 
@@ -377,8 +380,15 @@ createMatrixFromColumnVectors =
         >> SquareMatrix
 
 
+{-| Compare two Matrices for equality
+-}
+equalImplementation : (a -> a -> Bool) -> SquareMatrix a -> SquareMatrix a -> Bool
+equalImplementation comparator (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.equalImplementation comparator matrixOne matrixTwo
+
+
 {-| Compare two matricies using comparator
 -}
-equal : (a -> a -> Bool) -> SquareMatrix a -> SquareMatrix a -> Bool
-equal comparator (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
-    Matrix.equal comparator matrixOne matrixTwo
+equal : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (SquareMatrix a)
+equal comparator =
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)

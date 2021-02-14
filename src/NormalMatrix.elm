@@ -15,6 +15,7 @@ module NormalMatrix exposing
     , getAt
     , appendHorizontal
     , equal
+    , equalImplementation
     , gaussJordan
     , upperTriangle
     )
@@ -68,6 +69,7 @@ module NormalMatrix exposing
 # Equality
 
 @docs equal
+@docs equalImplementation
 
 
 # Matrix Forms
@@ -82,6 +84,7 @@ import ComplexNumbers
 import Field
 import Matrix
 import SquareMatrix
+import Typeclasses.Classes.Equality
 import Vector
 
 
@@ -224,8 +227,15 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
         |> NormalMatrix
 
 
+{-| Compare two Matrices for equality
+-}
+equalImplementation : (a -> a -> Bool) -> NormalMatrix a -> NormalMatrix a -> Bool
+equalImplementation comparator (NormalMatrix matrixOne) (NormalMatrix matrixTwo) =
+    SquareMatrix.equalImplementation comparator matrixOne matrixTwo
+
+
 {-| Compare two matricies using comparator
 -}
-equal : (a -> a -> Bool) -> NormalMatrix a -> NormalMatrix a -> Bool
-equal comparator (NormalMatrix matrixOne) (NormalMatrix matrixTwo) =
-    SquareMatrix.equal comparator matrixOne matrixTwo
+equal : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (NormalMatrix a)
+equal comparator =
+    Typeclasses.Classes.Equality.eq (equalImplementation comparator)

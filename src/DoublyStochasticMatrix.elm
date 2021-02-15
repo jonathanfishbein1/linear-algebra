@@ -24,6 +24,7 @@ module DoublyStochasticMatrix exposing
 -}
 
 import Matrix
+import Real
 import SquareMatrix
 import Vector
 
@@ -31,7 +32,7 @@ import Vector
 {-| Doubly Stochastic Matrix type
 -}
 type DoublyStochasticMatrix
-    = DoublyStochasticMatrix (SquareMatrix.SquareMatrix Float)
+    = DoublyStochasticMatrix (SquareMatrix.SquareMatrix (Real.Real Float))
 
 
 {-| Predicate if matrix is doubly stochastic

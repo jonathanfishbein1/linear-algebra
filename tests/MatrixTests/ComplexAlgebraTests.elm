@@ -17,9 +17,9 @@ suite : Test.Test
 suite =
     Test.describe "Complex Algebra"
         [ Test.fuzz3
-            Fuzz.float
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests real Matrix multiplication is associative"
           <|
             \one two three ->
@@ -76,38 +76,41 @@ suite =
             \_ ->
                 let
                     v1 =
-                        RowVector.RowVector <|
-                            Vector.Vector
-                                [ 1
-                                , 0
-                                , 0
-                                ]
+                        Vector.Vector
+                            [ 1
+                            , 0
+                            , 0
+                            ]
+                            |> RowVector.RowVector
+                            |> RowVector.map Real.Real
 
                     v2 =
-                        RowVector.RowVector <|
-                            Vector.Vector
-                                [ 0
-                                , 1
-                                , 0
-                                ]
+                        Vector.Vector
+                            [ 0
+                            , 1
+                            , 0
+                            ]
+                            |> RowVector.RowVector
+                            |> RowVector.map Real.Real
 
                     v3 =
-                        RowVector.RowVector <|
-                            Vector.Vector
-                                [ 0
-                                , 0
-                                , 1
-                                ]
+                        Vector.Vector
+                            [ 0
+                            , 0
+                            , 1
+                            ]
+                            |> RowVector.RowVector
+                            |> RowVector.map Real.Real
 
                     m1 =
                         Matrix.Matrix
                             [ v1, v2, v3 ]
                 in
-                Expect.equal (Matrix.identity Field.float 3) m1
+                Expect.equal (Matrix.identity Real.field 3) m1
         , Test.fuzz3
-            Fuzz.float
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests In*A = A"
           <|
             \one two three ->
@@ -141,13 +144,13 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiply Vector.realInnerProductSpace (Matrix.identity Field.float 3) m1
+                        Matrix.multiply Vector.realInnerProductSpace (Matrix.identity Real.field 3) m1
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3
-            Fuzz.float
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests A*In = a"
           <|
             \one two three ->
@@ -181,13 +184,13 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiply Vector.realInnerProductSpace m1 (Matrix.identity Field.float 3)
+                        Matrix.multiply Vector.realInnerProductSpace m1 (Matrix.identity Real.field 3)
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3
-            Fuzz.float
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests real Matrix multiplication distributes over addition"
           <|
             \one two three ->
@@ -230,16 +233,16 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m1Timesm2Plus3 =
-                        Matrix.multiply Vector.realInnerProductSpace m1 (Matrix.add Field.float m2 m3)
+                        Matrix.multiply Vector.realInnerProductSpace m1 (Matrix.add Real.field m2 m3)
 
                     m1Timesm2Plusem1Timesm3 =
-                        Result.map2 (Matrix.add Field.float) (Matrix.multiply Vector.realInnerProductSpace m1 m2) (Matrix.multiply Vector.realInnerProductSpace m1 m3)
+                        Result.map2 (Matrix.add Real.field) (Matrix.multiply Vector.realInnerProductSpace m1 m2) (Matrix.multiply Vector.realInnerProductSpace m1 m3)
                 in
                 Expect.equal m1Timesm2Plus3 m1Timesm2Plusem1Timesm3
         , Test.fuzz3
-            Fuzz.float
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests real Matrix multiplication distributes over addition second test"
           <|
             \one two three ->
@@ -282,19 +285,19 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m2Plusm3Timesm1 =
-                        Matrix.multiply Vector.realInnerProductSpace (Matrix.add Field.float m2 m3) m1
+                        Matrix.multiply Vector.realInnerProductSpace (Matrix.add Real.field m2 m3) m1
 
                     m2Timesm1Plusm3Timesm1 =
                         Result.map2
-                            (Matrix.add Field.float)
+                            (Matrix.add Real.field)
                             (Matrix.multiply Vector.realInnerProductSpace m2 m1)
                             (Matrix.multiply Vector.realInnerProductSpace m3 m1)
                 in
                 Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
         , Test.fuzz3
-            Fuzz.float
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests matrix multiplication relates to the transpose"
           <|
             \one two three ->
@@ -335,6 +338,7 @@ suite =
                             , 3
                             ]
                             |> ColumnVector.ColumnVector
+                            |> ColumnVector.map Real.Real
 
                     m =
                         Matrix.Matrix
@@ -342,6 +346,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 4, 5, 6 ]
                             , RowVector.RowVector <| Vector.Vector [ 7, 8, 9 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     mTimesV =
                         Matrix.multiplyMatrixVector Vector.realInnerProductSpace m v
@@ -353,6 +358,7 @@ suite =
                             , 50
                             ]
                             |> ColumnVector.ColumnVector
+                            |> ColumnVector.map Real.Real
                 in
                 Expect.equal mTimesV (Ok expected)
         , Test.fuzz3

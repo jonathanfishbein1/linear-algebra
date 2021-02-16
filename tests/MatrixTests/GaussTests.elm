@@ -2,6 +2,7 @@ module MatrixTests.GaussTests exposing (suite)
 
 import ComplexNumbers
 import Expect
+import Float.Extra
 import Imaginary
 import Matrix
 import Real
@@ -24,18 +25,16 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
                             , RowVector.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
 
                     expected =
-                        Matrix.Matrix
+                        Matrix.Matrix <|
                             [ RowVector.RowVector <| Vector.Vector [ 1.0, 2.0, -1.0, -4.0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, -1.0, 3.0 ]
                             , RowVector.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
                             ]
-                            |> Matrix.map Real.Real
                 in
                 Expect.equal rowEchelonFormMatrix expected
         , Test.test
@@ -49,18 +48,16 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 1, 2, 3, 0 ]
                             , RowVector.RowVector <| Vector.Vector [ 1, 3, 4, -2 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
 
                     expected =
-                        Matrix.Matrix
+                        Matrix.Matrix <|
                             [ RowVector.RowVector <| Vector.Vector [ 1.0, 1.0, 1.0, 3.0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 2.0, -3.0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
                             ]
-                            |> Matrix.map Real.Real
                 in
                 Expect.equal rowEchelonFormMatrix expected
         , Test.test
@@ -74,15 +71,13 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 1, 2, 2, -1, 12 ]
                             , RowVector.RowVector <| Vector.Vector [ 2, 4, 0, 6, 4 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     expected =
-                        Matrix.Matrix
+                        Matrix.Matrix <|
                             [ RowVector.RowVector <| Vector.Vector [ 1.0, 2.0, 1.0, 1.0, 7 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -2.0, 5 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 0.0, 0.0, 0.0 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
@@ -98,14 +93,12 @@ suite =
                             [ RowVector.RowVector <| Vector.Vector [ 1, 1, 2, 3, 2 ]
                             , RowVector.RowVector <| Vector.Vector [ 1, 1, 3, 1, 4 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     expected =
                         Matrix.Matrix
                             [ RowVector.RowVector <| Vector.Vector [ 1, 1, 2, 3, 2 ]
                             , RowVector.RowVector <| Vector.Vector [ 0, 0, 1, -2, 2 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
@@ -122,7 +115,6 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 1, 2, 2, -1 ]
                             , RowVector.RowVector <| Vector.Vector [ 2, 4, 0, 6 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     expected =
                         Matrix.Matrix
@@ -130,7 +122,6 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 0, 0, 1, -2 ]
                             , RowVector.RowVector <| Vector.Vector [ 0, 0, 0, 0 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
@@ -147,7 +138,6 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 2, -1, 1, 8 ]
                             , RowVector.RowVector <| Vector.Vector [ 3, 0, -1, 3 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     expected =
                         Matrix.Matrix
@@ -155,12 +145,11 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 0, 1, 1, 2 ]
                             , RowVector.RowVector <| Vector.Vector [ 0, 0, 1, 3 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
                 in
-                Expect.true "matrices are equal" ((Matrix.equal Real.equal.eq).eq rowEchelonFormMatrix expected)
+                Expect.true "matrices are equal" ((Matrix.equal (Float.Extra.equalWithin 0.0001)).eq rowEchelonFormMatrix expected)
         , Test.test
             "tests matrix gaussianReduce put matrix into Row Echelon Form"
           <|
@@ -172,18 +161,16 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
                             , RowVector.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
                             ]
-                            |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
                         Matrix.gaussianReduce Vector.realVectorSpace matrix
 
                     expected =
-                        Matrix.Matrix
+                        Matrix.Matrix <|
                             [ RowVector.RowVector <| Vector.Vector [ 1.0, 2.0, -1.0, -4.0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, -1.0, 3.0 ]
                             , RowVector.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
                             ]
-                            |> Matrix.map Real.Real
                 in
                 Expect.equal rowEchelonFormMatrix expected
         , Test.test

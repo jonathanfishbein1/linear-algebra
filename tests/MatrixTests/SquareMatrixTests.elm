@@ -5,6 +5,7 @@ import Expect
 import Field
 import Fuzz
 import Matrix
+import Real
 import RowVector
 import SquareMatrix
 import Test
@@ -25,6 +26,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , RowVector.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
 
                     isRightStochastic =
@@ -42,6 +44,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , RowVector.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
 
                     isLeftStochastic =
@@ -57,22 +60,23 @@ suite =
                     a =
                         [ RowVector.RowVector <| Vector.Vector [ one ] ]
                             |> Matrix.Matrix
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
 
                     expected =
                         SquareMatrix.dotProduct Vector.realInnerProductSpace a a
                 in
                 case expected of
-                    Ok exp ->
+                    Ok (Real.Real exp) ->
                         exp
                             |> Expect.atLeast 0
 
                     Err err ->
                         Expect.fail err
         , Test.fuzz3
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map (toFloat >> Real.Real) (Fuzz.intRange -10 10))
+            (Fuzz.map (toFloat >> Real.Real) (Fuzz.intRange -10 10))
+            (Fuzz.map (toFloat >> Real.Real) (Fuzz.intRange -10 10))
             "tests dot product respects addition"
           <|
             \one two three ->
@@ -93,7 +97,7 @@ suite =
                             |> SquareMatrix.SquareMatrix
 
                     aPlusBDotc =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace (SquareMatrix.add Field.float a b) c
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace (SquareMatrix.add Real.field a b) c
 
                     aDotB =
                         SquareMatrix.dotProduct Vector.realInnerProductSpace a c
@@ -103,16 +107,16 @@ suite =
 
                     aDotBPlusbDotC =
                         Result.map2
-                            (+)
+                            Real.add
                             aDotB
                             bDotC
                 in
                 aPlusBDotc
                     |> Expect.equal aDotBPlusbDotC
         , Test.fuzz3
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map (toFloat >> Real.Real) (Fuzz.intRange -10 10))
+            (Fuzz.map (toFloat >> Real.Real) (Fuzz.intRange -10 10))
+            (Fuzz.map (toFloat >> Real.Real) (Fuzz.intRange -10 10))
             "tests dot product respects scalar multiplication"
           <|
             \one two three ->
@@ -128,19 +132,19 @@ suite =
                             |> SquareMatrix.SquareMatrix
 
                     threeTimesADotB =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace (SquareMatrix.scalarMultiplication Field.float three a) b
+                        SquareMatrix.dotProduct Vector.realInnerProductSpace (SquareMatrix.scalarMultiplication Real.field three a) b
 
                     aDotBTimesThree =
                         Result.map2
-                            (*)
+                            Real.multiply
                             (SquareMatrix.dotProduct Vector.realInnerProductSpace a b)
                             (Ok three)
                 in
                 threeTimesADotB
                     |> Expect.equal aDotBTimesThree
         , Test.fuzz2
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
-            (Fuzz.map toFloat (Fuzz.intRange -10 10))
+            (Fuzz.map (toFloat >> Real.Real) (Fuzz.intRange -10 10))
+            (Fuzz.map (toFloat >> Real.Real) (Fuzz.intRange -10 10))
             "tests dot product is symetric"
           <|
             \one two ->
@@ -172,13 +176,14 @@ suite =
                     a =
                         [ RowVector.RowVector <| Vector.Vector [ one ] ]
                             |> Matrix.Matrix
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
 
                     expected =
                         SquareMatrix.normReal a
                 in
                 case expected of
-                    Ok norm ->
+                    Ok (Real.Real norm) ->
                         Expect.atLeast 0 norm
 
                     Err err ->
@@ -193,26 +198,28 @@ suite =
                     a =
                         [ RowVector.RowVector <| Vector.Vector [ one ] ]
                             |> Matrix.Matrix
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
 
                     b =
                         [ RowVector.RowVector <| Vector.Vector [ two ] ]
                             |> Matrix.Matrix
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
 
                     aPlusBLength =
-                        SquareMatrix.normReal (SquareMatrix.add Field.float a b)
+                        SquareMatrix.normReal (SquareMatrix.add Real.field a b)
 
                     lengthAPlusLengthB =
                         Result.map2
-                            (+)
+                            Real.add
                             (SquareMatrix.normReal a)
                             (SquareMatrix.normReal b)
                 in
                 case aPlusBLength of
-                    Ok aBLength ->
+                    Ok (Real.Real aBLength) ->
                         case lengthAPlusLengthB of
-                            Ok otherLength ->
+                            Ok (Real.Real otherLength) ->
                                 Expect.atMost otherLength aBLength
 
                             Err err ->
@@ -221,8 +228,8 @@ suite =
                     Err err ->
                         Expect.fail err
         , Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests matrix norm respects scalar multiplication"
           <|
             \one two ->
@@ -233,11 +240,12 @@ suite =
                             |> SquareMatrix.SquareMatrix
 
                     legnthOfTwoTimesA =
-                        SquareMatrix.normReal (SquareMatrix.scalarMultiplication Field.float two a)
+                        SquareMatrix.normReal (SquareMatrix.scalarMultiplication Real.field two a)
+                            |> Result.map Real.real
 
                     lengthOfATimesTwo =
                         Result.map
-                            ((*) two >> Basics.abs)
+                            (Real.multiply two >> Real.real >> Basics.abs)
                             (SquareMatrix.normReal a)
                 in
                 case legnthOfTwoTimesA of

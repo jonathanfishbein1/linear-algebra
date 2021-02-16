@@ -3,6 +3,7 @@ module MatrixTests.DoublyStochasticMatrixTests exposing (suite)
 import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import Matrix
+import Real
 import RowVector
 import SquareMatrix
 import Test
@@ -23,6 +24,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , RowVector.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
 
                     isDoublyStochastic =

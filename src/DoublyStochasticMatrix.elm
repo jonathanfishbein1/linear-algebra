@@ -37,11 +37,11 @@ type DoublyStochasticMatrix
 
 {-| Predicate if matrix is doubly stochastic
 -}
-isDoublyStochastic : SquareMatrix.SquareMatrix Float -> Bool
+isDoublyStochastic : SquareMatrix.SquareMatrix (Real.Real Float) -> Bool
 isDoublyStochastic (SquareMatrix.SquareMatrix matrix) =
     if SquareMatrix.isRightStochastic (SquareMatrix.SquareMatrix matrix) && SquareMatrix.isLeftStochastic (SquareMatrix.SquareMatrix matrix) then
         Matrix.all
-            ((<=) 0)
+            (Real.greaterThan Real.zero)
             matrix
 
     else

@@ -4,7 +4,6 @@ import ColumnVector
 import ComplexNumbers
 import Expect
 import Field
-import Float.Extra
 import Fuzz
 import Imaginary
 import Matrix

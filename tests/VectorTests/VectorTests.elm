@@ -3,7 +3,6 @@ module VectorTests.VectorTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Field
-import Float.Extra
 import Fuzz
 import Imaginary
 import Real
@@ -123,14 +122,12 @@ suite =
 
                     aDotACrossB =
                         Vector.dotProduct Real.field (Vector.vector3ToVector a) aCrossB
-                            |> Real.real
 
                     bDotACrossB =
                         Vector.dotProduct Real.field (Vector.vector3ToVector b) aCrossB
-                            |> Real.real
 
                     result =
-                        Float.Extra.equalWithin 0.000000001 0 aDotACrossB && Float.Extra.equalWithin 0.000000001 0 bDotACrossB
+                        Real.equal.eq Real.zero aDotACrossB && Real.equal.eq Real.zero bDotACrossB
                 in
                 Expect.true "a X b is orthagonal to both a and b" result
         , Test.fuzz3

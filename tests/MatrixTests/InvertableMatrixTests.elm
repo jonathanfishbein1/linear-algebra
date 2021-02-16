@@ -28,6 +28,7 @@ suite =
                             [ RowVector.RowVector <| Vector.Vector [ 1, 2 ]
                             , RowVector.RowVector <| Vector.Vector [ 3, 4 ]
                             ]
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
@@ -35,7 +36,7 @@ suite =
                     determinant =
                         InvertableMatrix.determinant Vector.realVectorSpace matrix
                 in
-                Expect.equal determinant (Ok -2)
+                Expect.equal determinant (Ok (Real.Real -2))
         , Test.test
             "tests matrix determinant 3 x 3"
           <|
@@ -47,6 +48,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 2, -1, 3 ]
                             , RowVector.RowVector <| Vector.Vector [ 4, 0, 1 ]
                             ]
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
@@ -54,7 +56,7 @@ suite =
                     determinant =
                         InvertableMatrix.determinant Vector.realVectorSpace matrix
                 in
-                Expect.equal determinant (Ok 35)
+                Expect.equal determinant (Ok (Real.Real 35))
         , Test.test
             "tests matrix determinant 4 x 4"
           <|
@@ -67,6 +69,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 0, 1, 2, 3 ]
                             , RowVector.RowVector <| Vector.Vector [ 2, 3, 0, 0 ]
                             ]
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
@@ -74,7 +77,7 @@ suite =
                     determinant =
                         InvertableMatrix.determinant Vector.realVectorSpace matrix
                 in
-                Expect.equal determinant (Ok 7)
+                Expect.equal determinant (Ok (Real.Real 7))
         , Test.test
             "tests matrix invert"
           <|
@@ -86,6 +89,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ -1, 2, 3 ]
                             , RowVector.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
@@ -96,6 +100,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 7, 5, -2 ]
                             , RowVector.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix
                             |> InvertableMatrix.InvertableMatrix
@@ -115,6 +120,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ -1, 2, 3 ]
                             , RowVector.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     inverse =
                         Matrix.Matrix
@@ -122,9 +128,11 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 7, 5, -2 ]
                             , RowVector.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     identity =
                         Matrix.identity Field.float (Matrix.mDimension matrix)
+                            |> Matrix.map Real.Real
 
                     matrixInverseProduct =
                         Matrix.multiply Vector.realInnerProductSpace matrix inverse
@@ -141,6 +149,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ -1, 2, 3 ]
                             , RowVector.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     inverse =
                         Matrix.Matrix
@@ -148,9 +157,11 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 7, 5, -2 ]
                             , RowVector.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     identity =
                         Matrix.identity Field.float (Matrix.mDimension matrix)
+                            |> Matrix.map Real.Real
 
                     inverseMatrixProduct =
                         Matrix.multiply Vector.realInnerProductSpace inverse matrix
@@ -338,6 +349,7 @@ suite =
                             [ RowVector.RowVector <| Vector.Vector [ 2, 6 ]
                             , RowVector.RowVector <| Vector.Vector [ 1, 3 ]
                             ]
+                            |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix
 

@@ -24,16 +24,18 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 4, 6, 3 ]
                             , RowVector.RowVector <| Vector.Vector [ 1, 4, 4 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     upperTriangularFormMatrix =
                         Matrix.upperTriangle Vector.realVectorSpace matrix
 
                     expected =
-                        Matrix.Matrix <|
+                        Matrix.Matrix
                             [ RowVector.RowVector <| Vector.Vector [ 3.0, 2, 3 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 3.3333333333333335, -1 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 4 ]
                             ]
+                            |> Matrix.map Real.Real
                 in
                 Expect.equal upperTriangularFormMatrix expected
         , Test.test
@@ -48,17 +50,19 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 0, 0, -2, 1, 0 ]
                             , RowVector.RowVector <| Vector.Vector [ -2, 1, 0, 0, 0 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     upperTriangularFormMatrix =
                         Matrix.upperTriangle Vector.realVectorSpace matrix
 
                     expected =
-                        Matrix.Matrix <|
+                        Matrix.Matrix
                             [ RowVector.RowVector <| Vector.Vector [ -2, 1, 0, 0, 0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0, 1, 0, 0, 312 ]
                             , RowVector.RowVector <| Vector.Vector [ 0, 0, -2, 1, 0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0, 0, 0, 1, 184 ]
                             ]
+                            |> Matrix.map Real.Real
                 in
                 Expect.equal upperTriangularFormMatrix expected
         , Test.test

@@ -19,21 +19,23 @@ suite =
             \_ ->
                 let
                     rowEchelonFormMatrix =
-                        Matrix.Matrix <|
+                        Matrix.Matrix
                             [ RowVector.RowVector <| Vector.Vector [ 1.0, 2.0, -1.0, -4.0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, -1.0, 3.0 ]
                             , RowVector.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     reducedRowEchelonFormMatrix =
                         Matrix.jordanReduce Vector.realVectorSpace rowEchelonFormMatrix
 
                     expected =
-                        Matrix.Matrix <|
+                        Matrix.Matrix
                             [ RowVector.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
                             , RowVector.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
                             ]
+                            |> Matrix.map Real.Real
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
         , Test.test
@@ -42,21 +44,23 @@ suite =
             \_ ->
                 let
                     rowEchelonFormMatrix =
-                        Matrix.Matrix <|
+                        Matrix.Matrix
                             [ RowVector.RowVector <| Vector.Vector [ 1.0, 1.0, 1.0, 3.0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 2.0, -3.0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     reducedRowEchelonFormMatrix =
                         Matrix.jordanReduce Vector.realVectorSpace rowEchelonFormMatrix
 
                     expected =
-                        Matrix.Matrix <|
+                        Matrix.Matrix
                             [ RowVector.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, 5.0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, -1.0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
                             ]
+                            |> Matrix.map Real.Real
                 in
                 Expect.equal reducedRowEchelonFormMatrix expected
         , Test.test

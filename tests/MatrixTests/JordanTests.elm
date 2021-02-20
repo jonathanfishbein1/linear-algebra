@@ -69,40 +69,20 @@ suite =
             \_ ->
                 let
                     complexNumberR1C1 =
-                        ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                        ComplexNumbers.one
 
                     complexNumberR1C2 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
+                            Real.one
                             (Imaginary.Imaginary
-                                -1
+                                (Real.Real -1)
                             )
 
                     complexNumberR2C1 =
-                        ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                0
-                            )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                        ComplexNumbers.zero
 
                     complexNumberR2C2 =
-                        ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                        ComplexNumbers.one
 
                     matrix =
                         Matrix.Matrix

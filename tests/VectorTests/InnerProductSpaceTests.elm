@@ -218,13 +218,13 @@ suite =
                 in
                 Expect.equal legnthOfTwoTimesA lengthOfATimesTwo
         , Test.fuzz
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests complex vector length equals square root of dot product"
           <|
             \one ->
                 let
                     complexNumber =
-                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary one)
+                        ComplexNumbers.ComplexNumber one (Imaginary.Imaginary one)
 
                     a =
                         Vector.Vector [ complexNumber ]
@@ -239,13 +239,13 @@ suite =
                 in
                 Expect.equal squareRootADotA aLength
         , Test.fuzz
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
             "tests complex vector length is nondegenerative"
           <|
             \one ->
                 let
                     complexNumber =
-                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary one)
+                        ComplexNumbers.ComplexNumber one (Imaginary.Imaginary one)
 
                     a =
                         Vector.Vector [ complexNumber ]
@@ -257,17 +257,17 @@ suite =
                 expected
                     |> Expect.atLeast 0
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests complex vector dot product satisfies Cauchy-Shwartz inequality"
           <|
             \one two ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary one)
+                        ComplexNumbers.ComplexNumber one (Imaginary.Imaginary one)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumber (Real.Real two) (Imaginary.Imaginary two)
+                        ComplexNumbers.ComplexNumber two (Imaginary.Imaginary two)
 
                     x =
                         Vector.Vector [ complexNumberOne ]

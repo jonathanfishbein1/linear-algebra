@@ -2,7 +2,6 @@ module MatrixTests.SquareMatrixTests exposing (suite)
 
 import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
-import Field
 import Fuzz
 import Matrix
 import Real

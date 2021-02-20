@@ -174,11 +174,9 @@ suite =
                 let
                     complexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
+                            Real.one
                             (Imaginary.Imaginary
-                                1
+                                Real.one
                             )
 
                     complexNumberR1C2 =
@@ -187,7 +185,7 @@ suite =
                                 2
                             )
                             (Imaginary.Imaginary
-                                0
+                                Real.zero
                             )
 
                     complexNumberR2C1 =
@@ -196,7 +194,7 @@ suite =
                                 3
                             )
                             (Imaginary.Imaginary
-                                0
+                                Real.zero
                             )
 
                     complexNumberR2C2 =
@@ -205,7 +203,7 @@ suite =
                                 4
                             )
                             (Imaginary.Imaginary
-                                0
+                                Real.zero
                             )
 
                     matrix =
@@ -226,7 +224,7 @@ suite =
                                 -2
                             )
                             (Imaginary.Imaginary
-                                4
+                                (Real.Real 4)
                             )
                 in
                 case determinantComplex of
@@ -242,11 +240,9 @@ suite =
                 let
                     complexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
+                            Real.one
                             (Imaginary.Imaginary
-                                1
+                                Real.one
                             )
 
                     complexNumberR1C2 =
@@ -255,7 +251,7 @@ suite =
                                 2
                             )
                             (Imaginary.Imaginary
-                                0
+                                Real.zero
                             )
 
                     complexNumberR2C1 =
@@ -264,7 +260,7 @@ suite =
                                 3
                             )
                             (Imaginary.Imaginary
-                                0
+                                Real.zero
                             )
 
                     complexNumberR2C2 =
@@ -273,7 +269,7 @@ suite =
                                 4
                             )
                             (Imaginary.Imaginary
-                                0
+                                Real.zero
                             )
 
                     matrix =
@@ -294,7 +290,7 @@ suite =
                                 -(2 / 5)
                             )
                             (Imaginary.Imaginary
-                                -(4 / 5)
+                                (Real.Real -(4 / 5))
                             )
 
                     expectedComplexNumberR1C2 =
@@ -303,7 +299,7 @@ suite =
                                 (1 / 5)
                             )
                             (Imaginary.Imaginary
-                                (2 / 5)
+                                (Real.Real (2 / 5))
                             )
 
                     expectedComplexNumberR2C1 =
@@ -312,7 +308,7 @@ suite =
                                 (3 / 10)
                             )
                             (Imaginary.Imaginary
-                                (3 / 5)
+                                (Real.Real (3 / 5))
                             )
 
                     expectedComplexNumberR2C2 =
@@ -321,7 +317,7 @@ suite =
                                 (1 / 10)
                             )
                             (Imaginary.Imaginary
-                                -(3 / 10)
+                                (Real.Real -(3 / 10))
                             )
 
                     expectedInverse =

@@ -193,9 +193,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 2) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary 0) ]
-                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 6) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary 0) ]
-                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 1) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary 0) ]
+                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 2) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary Real.zero) ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 6) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary Real.zero) ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber Real.one (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary Real.zero) ]
                             ]
 
                     rowEchelonFormMatrix =
@@ -203,9 +203,9 @@ suite =
 
                     expected =
                         Matrix.Matrix <|
-                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 1.0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real <| 2.0 / 3) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 1) (Imaginary.Imaginary 0) ]
-                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 1) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real <| -1 / 3.3333333333333335) (Imaginary.Imaginary 0) ]
-                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 1) (Imaginary.Imaginary 0) ]
+                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber Real.one (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real <| 2.0 / 3) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber Real.one (Imaginary.Imaginary Real.zero) ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber Real.zero (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber Real.one (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real <| -1 / 3.3333333333333335) (Imaginary.Imaginary Real.zero) ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber Real.zero (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber Real.zero (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber Real.one (Imaginary.Imaginary Real.zero) ]
                             ]
                 in
                 Expect.true "matrics equal" ((Matrix.equal ComplexNumbers.equal.eq).eq rowEchelonFormMatrix expected)
@@ -216,11 +216,9 @@ suite =
                 let
                     complexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
+                            Real.one
                             (Imaginary.Imaginary
-                                1
+                                Real.one
                             )
 
                     complexNumberR1C2 =
@@ -228,9 +226,7 @@ suite =
                             (Real.Real
                                 2
                             )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                            Imaginary.zero
 
                     complexNumberR2C1 =
                         ComplexNumbers.ComplexNumber
@@ -238,7 +234,7 @@ suite =
                                 3
                             )
                             (Imaginary.Imaginary
-                                0
+                                Real.zero
                             )
 
                     complexNumberR2C2 =
@@ -247,7 +243,7 @@ suite =
                                 4
                             )
                             (Imaginary.Imaginary
-                                0
+                                Real.zero
                             )
 
                     matrix =
@@ -261,29 +257,25 @@ suite =
 
                     complexNumberExpectedR1C1 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
+                            Real.one
                             (Imaginary.Imaginary
-                                0
+                                Real.zero
                             )
 
                     complexNumberExpectedR1C2 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
+                            Real.one
                             (Imaginary.Imaginary
-                                -1
+                                (Real.Real
+                                    -1
+                                )
                             )
 
                     complexNumberExpectedR2C2 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
+                            Real.one
                             (Imaginary.Imaginary
-                                0
+                                Real.zero
                             )
 
                     expected =

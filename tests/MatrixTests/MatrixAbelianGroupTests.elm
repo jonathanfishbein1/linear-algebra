@@ -24,9 +24,7 @@ suite =
                                 Basics.negate
                                     1
                             )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                            Imaginary.zero
 
                     v =
                         Matrix.Matrix

@@ -3,7 +3,6 @@ module MatrixTests.MatrixTests exposing (suite)
 import ColumnVector
 import ComplexNumbers
 import Expect
-import Field
 import Fuzz
 import Imaginary
 import Matrix
@@ -571,8 +570,8 @@ suite =
                 in
                 Expect.true "matrix is square" (SquareMatrix.isSquareMatrix matrix)
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix transpose transpose is idempotent"
           <|
             \one two ->
@@ -582,9 +581,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -597,8 +594,8 @@ suite =
                 in
                 Expect.equal m mTransposeTranspose
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix transpose respects addition"
           <|
             \one two ->
@@ -608,9 +605,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -622,9 +617,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            two
-                                        )
+                                        two
                                         (Imaginary.Imaginary
                                             one
                                         )
@@ -641,17 +634,15 @@ suite =
                 in
                 Expect.equal m1Plusm2Transpose m1TransposePlusm2Transpose
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix transpose respects scalar multiplication"
           <|
             \one two ->
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -661,9 +652,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -680,8 +669,8 @@ suite =
                 in
                 Expect.equal cAThenTranspose cTransposeOfA
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix conjugate conjugate is idempotent"
           <|
             \one two ->
@@ -691,9 +680,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -706,8 +693,8 @@ suite =
                 in
                 Expect.equal m mConjugateConjugate
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix conjugate respects addition"
           <|
             \one two ->
@@ -717,9 +704,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -731,9 +716,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            two
-                                        )
+                                        two
                                         (Imaginary.Imaginary
                                             one
                                         )
@@ -750,17 +733,15 @@ suite =
                 in
                 Expect.equal m1Plusm2Conjugate m1ConjugatePlusm2Conjugate
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix conjugate respects scalar multiplication"
           <|
             \one two ->
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -773,9 +754,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -792,8 +771,8 @@ suite =
                 in
                 Expect.equal cAThenConjugate cConjugateOfA
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix adjoint is idempotent"
           <|
             \one two ->
@@ -803,9 +782,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -818,8 +795,8 @@ suite =
                 in
                 Expect.equal m mAdjoint
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix adjoint respects addition"
           <|
             \one two ->
@@ -829,9 +806,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -843,9 +818,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            two
-                                        )
+                                        two
                                         (Imaginary.Imaginary
                                             one
                                         )
@@ -862,17 +835,15 @@ suite =
                 in
                 Expect.equal m1Plusm2Adjoint m1ConjugatePlusm2Adjoint
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix adjoint respects scalar multiplication"
           <|
             \one two ->
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -885,9 +856,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )

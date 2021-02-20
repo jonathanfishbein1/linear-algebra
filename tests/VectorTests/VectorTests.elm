@@ -182,16 +182,14 @@ suite =
                 in
                 Expect.true "unit vector length is 1" (Real.equal.eq normalisedALength Real.one)
         , Test.fuzz
-            (Fuzz.floatRange 1 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
             "tests complex unit vector length is 1"
           <|
             \one ->
                 let
                     complexNumber =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 one
                             )
@@ -254,17 +252,15 @@ suite =
                 isSubspace
                     |> Expect.false "is not a subspace"
         , Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests complexVectorSubspace"
           <|
             \one two ->
                 let
                     complexNumber =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -286,17 +282,15 @@ suite =
                 isSubspace
                     |> Expect.true "is a subspace"
         , Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests complexVectorSubspace x > zero not a subspace"
           <|
             \one two ->
                 let
                     complexNumber =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -307,12 +301,8 @@ suite =
 
                     complexOne =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                            Real.one
+                            Imaginary.zero
 
                     predicates =
                         [ ComplexNumbers.equal.eq complexOne ]
@@ -430,36 +420,30 @@ suite =
                 in
                 Expect.true "tensor product respects addition" ((Vector.equal Real.equal.eq).eq tensorProductIJK vectorSumTensorProductIKJK)
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests vector tensor product respects scalar multiplication"
           <|
             \one two three ->
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberThree =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                three
-                            )
+                            three
                             (Imaginary.Imaginary
                                 two
                             )

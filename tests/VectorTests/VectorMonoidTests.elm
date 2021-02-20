@@ -13,8 +13,8 @@ suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
         [ Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests empty vector is additive identity"
           <|
             \one two ->
@@ -22,9 +22,7 @@ suite =
                     w =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     two
                                 )
@@ -33,8 +31,8 @@ suite =
                 Vector.add ComplexNumbers.field (Vector.Vector [ ComplexNumbers.zero ]) w
                     |> Expect.equal w
         , Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests Vector empty or identity value right"
           <|
             \one two ->
@@ -42,9 +40,7 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     two
                                 )
@@ -52,8 +48,8 @@ suite =
                 in
                 Expect.true "vectors equal" ((Vector.equal ComplexNumbers.equal.eq).eq (Vector.concat.semigroup v Vector.concat.identity) v)
         , Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests Vector empty or identity value left"
           <|
             \one two ->
@@ -61,9 +57,7 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     two
                                 )
@@ -71,26 +65,26 @@ suite =
                 in
                 Expect.true "vectors equal" ((Vector.equal ComplexNumbers.equal.eq).eq (Vector.concat.semigroup Vector.concat.identity v) v)
         , Test.fuzz3
-            Fuzz.int
-            Fuzz.int
-            Fuzz.int
+            (Fuzz.map Real.Real Fuzz.int)
+            (Fuzz.map Real.Real Fuzz.int)
+            (Fuzz.map Real.Real Fuzz.int)
             "tests monoidally concat complex vectors"
           <|
             \one two three ->
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real one)
+                            one
                             (Imaginary.Imaginary two)
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real two)
+                            two
                             (Imaginary.Imaginary three)
 
                     complexNumberThree =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real one)
+                            one
                             (Imaginary.Imaginary three)
 
                     a =

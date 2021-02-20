@@ -362,26 +362,26 @@ suite =
                 in
                 Expect.equal mTimesV (Ok expected)
         , Test.fuzz3
-            Fuzz.float
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests matrix multiplication respects the conjugate"
           <|
             \one two three ->
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real one)
+                            one
                             (Imaginary.Imaginary two)
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real three)
+                            three
                             (Imaginary.Imaginary two)
 
                     complexNumberThree =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real two)
+                            two
                             (Imaginary.Imaginary three)
 
                     v1 =
@@ -421,18 +421,18 @@ suite =
                 in
                 Expect.equal result (Ok True)
         , Test.fuzz3
-            Fuzz.float
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests matrix multiplication relates to the adjoint"
           <|
             \one two three ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary two)
+                        ComplexNumbers.ComplexNumber one (Imaginary.Imaginary two)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumber (Real.Real three) (Imaginary.Imaginary two)
+                        ComplexNumbers.ComplexNumber three (Imaginary.Imaginary two)
 
                     v1 =
                         RowVector.RowVector <|

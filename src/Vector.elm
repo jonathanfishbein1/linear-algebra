@@ -197,28 +197,28 @@ type alias VectorSpace a =
 type alias InnerProductSpace a =
     { vectorSpace : VectorSpace a
     , innerProduct : Vector a -> Vector a -> a
-    , length : Vector a -> Float
-    , distance : Vector a -> Vector a -> Float
+    , length : Vector a -> Real.Real Float
+    , distance : Vector a -> Vector a -> Real.Real Float
     }
 
 
 {-| Semigroup instance for a real valued Vector.
 -}
-realVectorSemigroup : Semigroup.Semigroup (Vector Float)
+realVectorSemigroup : Semigroup.Semigroup (Vector (Real.Real Float))
 realVectorSemigroup =
-    add Field.float
+    add Real.field
 
 
 {-| Semigroup instance for a complex valued Vector.
 -}
 complexVectorSemigroup : Semigroup.Semigroup (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorSemigroup =
-    add ComplexNumbers.complexField
+    add ComplexNumbers.field
 
 
 {-| Commutative Semigroup instance for a real valued Vector.
 -}
-realVectorCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector Float)
+realVectorCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector (Real.Real Float))
 realVectorCommutativeSemigroup =
     CommutativeSemigroup.CommutativeSemigroup realVectorSemigroup
 
@@ -232,7 +232,7 @@ complexVectorCommutativeSemigroup =
 
 {-| Monoid instance for a real valued Vector.
 -}
-realVectorMonoid : Monoid.Monoid (Vector Float)
+realVectorMonoid : Monoid.Monoid (Vector (Real.Real Float))
 realVectorMonoid =
     Monoid.semigroupAndIdentity realVectorSemigroup empty
 
@@ -246,7 +246,7 @@ complexVectorMonoid =
 
 {-| Commutative Monoid instance for a real valued Vector.
 -}
-realVectorCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector Float)
+realVectorCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector (Real.Real Float))
 realVectorCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid realVectorMonoid
 
@@ -260,10 +260,10 @@ complexVectorCommutativeMonoid =
 
 {-| Group instance for a real valued Vector.
 -}
-realVectorGroup : Group.Group (Vector Float)
+realVectorGroup : Group.Group (Vector (Real.Real Float))
 realVectorGroup =
     { monoid = realVectorMonoid
-    , inverse = map Group.numberSum.inverse
+    , inverse = map Real.sumGroup.inverse
     }
 
 
@@ -272,13 +272,13 @@ realVectorGroup =
 complexVectorGroup : Group.Group (Vector (ComplexNumbers.ComplexNumber Float))
 complexVectorGroup =
     { monoid = complexVectorMonoid
-    , inverse = map ComplexNumbers.complexSumGroup.inverse
+    , inverse = map ComplexNumbers.sumGroup.inverse
     }
 
 
 {-| Abelian Group instance for a real valued Vector.
 -}
-realVectorAbelianGroup : AbelianGroup.AbelianGroup (Vector Float)
+realVectorAbelianGroup : AbelianGroup.AbelianGroup (Vector (Real.Real Float))
 realVectorAbelianGroup =
     AbelianGroup.AbelianGroup
         { monoid = realVectorMonoid
@@ -298,11 +298,11 @@ complexVectorAbelianGroup =
 
 {-| Real Numbered Vector Space
 -}
-realVectorSpace : VectorSpace Float
+realVectorSpace : VectorSpace (Real.Real Float)
 realVectorSpace =
     { abelianGroup = realVectorAbelianGroup
-    , vectorScalarMultiplication = scalarMultiplication Field.float
-    , field = Field.float
+    , vectorScalarMultiplication = scalarMultiplication Real.field
+    , field = Real.field
     }
 
 
@@ -311,17 +311,17 @@ realVectorSpace =
 complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumber Float)
 complexVectorSpace =
     { abelianGroup = complexVectorAbelianGroup
-    , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
-    , field = ComplexNumbers.complexField
+    , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.field
+    , field = ComplexNumbers.field
     }
 
 
 {-| Real Numbered Inner Product Space
 -}
-realInnerProductSpace : InnerProductSpace Float
+realInnerProductSpace : InnerProductSpace (Real.Real Float)
 realInnerProductSpace =
     { vectorSpace = realVectorSpace
-    , innerProduct = dotProduct Field.float
+    , innerProduct = dotProduct Real.field
     , length = lengthReal
     , distance = distanceReal
     }
@@ -332,7 +332,7 @@ realInnerProductSpace =
 complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumber Float)
 complexInnerProductSpace =
     { vectorSpace = complexVectorSpace
-    , innerProduct = dotProduct ComplexNumbers.complexField
+    , innerProduct = dotProduct ComplexNumbers.field
     , length = lengthComplex
     , distance = distanceComplex
     }
@@ -355,41 +355,43 @@ scalarMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRi
 
 {-| Calculate the length of a Real valued Vector
 -}
-lengthReal : Vector Float -> Float
+lengthReal : Vector (Real.Real Float) -> Real.Real Float
 lengthReal vector =
-    dotProduct Field.float vector vector
+    dotProduct Real.field vector vector
+        |> Real.real
         |> Basics.sqrt
+        |> Real.Real
 
 
 {-| Calculate the length of a Complex valued Vector
 -}
-lengthComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Float
+lengthComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Real.Real Float
 lengthComplex vector =
-    dotProduct ComplexNumbers.complexField (conjugate vector) vector
+    dotProduct ComplexNumbers.field (conjugate vector) vector
         |> ComplexNumbers.real
-        |> Basics.sqrt
+        |> Real.map Basics.sqrt
 
 
 {-| Adjust a real valued vector so that its length is exactly one
 -}
-normaliseReal : Vector Float -> Vector Float
+normaliseReal : Vector (Real.Real Float) -> Vector (Real.Real Float)
 normaliseReal v =
-    if lengthReal v == 0 then
+    if lengthReal v == Real.zero then
         v
 
     else
-        scalarMultiplication Field.float (1 / lengthReal v) v
+        scalarMultiplication Real.field (Real.divide Real.one (lengthReal v)) v
 
 
 {-| Adjust a real valued vector so that its length is exactly one
 -}
 normaliseComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Vector (ComplexNumbers.ComplexNumber Float)
 normaliseComplex v =
-    if lengthComplex v == 0 then
+    if Real.equal.eq (lengthComplex v) Real.zero then
         v
 
     else
-        scalarMultiplication ComplexNumbers.complexField (ComplexNumbers.ComplexNumber (Real.Real (1 / lengthComplex v)) (Imaginary.Imaginary 0)) v
+        scalarMultiplication ComplexNumbers.field (ComplexNumbers.ComplexNumber (Real.divide Real.one (lengthComplex v)) Imaginary.zero) v
 
 
 {-| Add two Vectors
@@ -435,11 +437,11 @@ dotProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commuta
 
 {-| Calculate the angle between two vectors
 -}
-angleBetween : Vector Float -> Vector Float -> Float
+angleBetween : Vector (Real.Real Float) -> Vector (Real.Real Float) -> Real.Real Float
 angleBetween vectorOne vectorTwo =
-    dotProduct Field.float vectorOne vectorTwo
-        / (lengthReal vectorOne * lengthReal vectorTwo)
-        |> Basics.acos
+    Real.divide (dotProduct Real.field vectorOne vectorTwo)
+        (Real.multiply (lengthReal vectorOne) (lengthReal vectorTwo))
+        |> Real.map Basics.acos
 
 
 {-| Calculate the sum of a Vector
@@ -451,7 +453,7 @@ sum monoid (Vector vect) =
 
 {-| Calculate distance between two vectors
 -}
-distanceReal : Vector Float -> Vector Float -> Float
+distanceReal : Vector (Real.Real Float) -> Vector (Real.Real Float) -> Real.Real Float
 distanceReal vectorOne vectorTwo =
     realVectorGroup.monoid.semigroup vectorOne (realVectorGroup.inverse vectorTwo)
         |> lengthReal
@@ -459,7 +461,7 @@ distanceReal vectorOne vectorTwo =
 
 {-| Calculate distance between two vectors
 -}
-distanceComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Vector (ComplexNumbers.ComplexNumber Float) -> Float
+distanceComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Vector (ComplexNumbers.ComplexNumber Float) -> Real.Real Float
 distanceComplex vectorOne vectorTwo =
     complexVectorGroup.monoid.semigroup vectorOne (complexVectorGroup.inverse vectorTwo)
         |> lengthComplex

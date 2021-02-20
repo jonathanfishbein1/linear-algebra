@@ -15,9 +15,9 @@ suite : Test.Test
 suite =
     Test.describe "Matrix Semigroup Tests"
         [ Test.fuzz3
-            Fuzz.float
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests Matrix add is commutative"
           <|
             \one two three ->
@@ -26,16 +26,12 @@ suite =
                         RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
-                                    (Real.Real
-                                        three
-                                    )
+                                    three
                                     (Imaginary.Imaginary
                                         one
                                     )
                                 , ComplexNumbers.ComplexNumber
-                                    (Real.Real
-                                        three
-                                    )
+                                    three
                                     (Imaginary.Imaginary
                                         two
                                     )
@@ -45,16 +41,12 @@ suite =
                         RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
-                                    (Real.Real
-                                        two
-                                    )
+                                    two
                                     (Imaginary.Imaginary
                                         two
                                     )
                                 , ComplexNumbers.ComplexNumber
-                                    (Real.Real
-                                        one
-                                    )
+                                    one
                                     (Imaginary.Imaginary
                                         three
                                     )
@@ -66,12 +58,12 @@ suite =
                     m2 =
                         Matrix.Matrix [ w, v ]
                 in
-                Matrix.add ComplexNumbers.complexField m1 m2
-                    |> Expect.equal (Matrix.add ComplexNumbers.complexField m2 m1)
+                Matrix.add ComplexNumbers.field m1 m2
+                    |> Expect.equal (Matrix.add ComplexNumbers.field m2 m1)
         , Test.fuzz3
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map (toFloat >> Real.Real) Fuzz.int)
+            (Fuzz.map (toFloat >> Real.Real) Fuzz.int)
+            (Fuzz.map (toFloat >> Real.Real) Fuzz.int)
             "tests Matrix add is associative"
           <|
             \one two three ->
@@ -80,16 +72,12 @@ suite =
                         RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
-                                    (Real.Real
-                                        three
-                                    )
+                                    three
                                     (Imaginary.Imaginary
                                         one
                                     )
                                 , ComplexNumbers.ComplexNumber
-                                    (Real.Real
-                                        three
-                                    )
+                                    three
                                     (Imaginary.Imaginary
                                         two
                                     )
@@ -99,16 +87,12 @@ suite =
                         RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
-                                    (Real.Real
-                                        two
-                                    )
+                                    two
                                     (Imaginary.Imaginary
                                         two
                                     )
                                 , ComplexNumbers.ComplexNumber
-                                    (Real.Real
-                                        one
-                                    )
+                                    one
                                     (Imaginary.Imaginary
                                         three
                                     )
@@ -118,16 +102,12 @@ suite =
                         RowVector.RowVector <|
                             Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
-                                    (Real.Real
-                                        one
-                                    )
+                                    one
                                     (Imaginary.Imaginary
                                         two
                                     )
                                 , ComplexNumbers.ComplexNumber
-                                    (Real.Real
-                                        three
-                                    )
+                                    three
                                     (Imaginary.Imaginary
                                         one
                                     )
@@ -143,12 +123,12 @@ suite =
                         Matrix.Matrix [ x, w, v ]
 
                     m1Plusm2AndThenPlusm3 =
-                        Matrix.add ComplexNumbers.complexField m1 m2
-                            |> Matrix.add ComplexNumbers.complexField m3
+                        Matrix.add ComplexNumbers.field m1 m2
+                            |> Matrix.add ComplexNumbers.field m3
 
                     m2Plusm3AndThenm1 =
-                        Matrix.add ComplexNumbers.complexField m2 m3
-                            |> Matrix.add ComplexNumbers.complexField m1
+                        Matrix.add ComplexNumbers.field m2 m3
+                            |> Matrix.add ComplexNumbers.field m1
                 in
                 m1Plusm2AndThenPlusm3
                     |> Expect.equal m2Plusm3AndThenm1

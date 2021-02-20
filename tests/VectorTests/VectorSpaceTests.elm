@@ -13,8 +13,8 @@ suite : Test.Test
 suite =
     Test.describe "Vector Space Tests"
         [ Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10)) 
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests one is product identity"
           <|
             \one two ->
@@ -22,9 +22,7 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     two
                                 )
@@ -32,26 +30,22 @@ suite =
                 in
                 Expect.true "equal" ((Vector.equal ComplexNumbers.equal.eq).eq (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
         , Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests scalar multiplication respects complex multiplication"
           <|
             \one two ->
                 let
                     c1 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
 
                     c2 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                two
-                            )
+                            two
                             (Imaginary.Imaginary
                                 one
                             )
@@ -59,40 +53,36 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     two
                                 )
                             ]
 
                     c2V =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c2 v
+                        Vector.scalarMultiplication ComplexNumbers.field c2 v
 
                     c2VThenc1 =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c1 c2V
+                        Vector.scalarMultiplication ComplexNumbers.field c1 c2V
 
                     c1c2 =
                         ComplexNumbers.multiply c1 c2
 
                     c1c2ThenV =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c1c2 v
+                        Vector.scalarMultiplication ComplexNumbers.field c1c2 v
                 in
                 c2VThenc1
                     |> Expect.equal c1c2ThenV
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests scalar multiplication distributes over addition"
           <|
             \one two ->
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -100,9 +90,7 @@ suite =
                     w =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    two
-                                )
+                                two
                                 (Imaginary.Imaginary
                                     one
                                 )
@@ -111,54 +99,48 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     two
                                 )
                             ]
 
                     vPlusW =
-                        Vector.add ComplexNumbers.complexField v w
+                        Vector.add ComplexNumbers.field v w
 
                     cvPlusW =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c vPlusW
+                        Vector.scalarMultiplication ComplexNumbers.field c vPlusW
 
                     cW =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c w
+                        Vector.scalarMultiplication ComplexNumbers.field c w
 
                     cV =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c v
+                        Vector.scalarMultiplication ComplexNumbers.field c v
 
                     cVPluscW =
-                        Vector.add ComplexNumbers.complexField cW cV
+                        Vector.add ComplexNumbers.field cW cV
 
                     result =
                         (Vector.equal ComplexNumbers.equal.eq).eq cvPlusW cVPluscW
                 in
                 Expect.true "All elements equal" result
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests scalar multiplication distributes over complex addition"
           <|
             \one two ->
                 let
                     c1 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
 
                     c2 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                two
-                            )
+                            two
                             (Imaginary.Imaginary
                                 one
                             )
@@ -166,9 +148,7 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     two
                                 )
@@ -178,16 +158,16 @@ suite =
                         ComplexNumbers.add c1 c2
 
                     c1Plusc2V =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c1Plusc2 v
+                        Vector.scalarMultiplication ComplexNumbers.field c1Plusc2 v
 
                     c1V =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c1 v
+                        Vector.scalarMultiplication ComplexNumbers.field c1 v
 
                     c2V =
-                        Vector.scalarMultiplication ComplexNumbers.complexField c2 v
+                        Vector.scalarMultiplication ComplexNumbers.field c2 v
 
                     c1VPlusc2V =
-                        Vector.add ComplexNumbers.complexField c1V c2V
+                        Vector.add ComplexNumbers.field c1V c2V
 
                     result =
                         (Vector.equal ComplexNumbers.equal.eq).eq c1VPlusc2V c1Plusc2V

@@ -196,6 +196,7 @@ import List.Extra
 import Maybe.Extra
 import Monoid
 import Parser exposing ((|.), (|=))
+import Real
 import RowVector
 import Semigroup
 import Typeclasses.Classes.Equality
@@ -252,21 +253,21 @@ type alias MatrixAlgebra a =
 
 {-| Semigroup instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix Float)
+realMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix (Real.Real Float))
 realMatrixAdditionSemigroup =
-    add Field.float
+    add Real.field
 
 
 {-| Semigroup instance for Matrix under the addition operation with complex values.
 -}
 complexMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionSemigroup =
-    add ComplexNumbers.complexField
+    add ComplexNumbers.field
 
 
 {-| Commutative Semigroup instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix Float)
+realMatrixAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix (Real.Real Float))
 realMatrixAdditionCommutativeSemigroup =
     CommutativeSemigroup.CommutativeSemigroup realMatrixAdditionSemigroup
 
@@ -280,7 +281,7 @@ complexMatrixAdditionCommutativeSemigroup =
 
 {-| Monoid instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionMonoid : Monoid.Monoid (Matrix Float)
+realMatrixAdditionMonoid : Monoid.Monoid (Matrix (Real.Real Float))
 realMatrixAdditionMonoid =
     Monoid.semigroupAndIdentity realMatrixAdditionSemigroup empty
 
@@ -294,7 +295,7 @@ complexMatrixAdditionMonoid =
 
 {-| Commutative Monoid instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix Float)
+realMatrixAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix (Real.Real Float))
 realMatrixAdditionCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid realMatrixAdditionMonoid
 
@@ -308,10 +309,10 @@ complexMatrixAdditionCommutativeMonoid =
 
 {-| Group instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionGroup : Group.Group (Matrix Float)
+realMatrixAdditionGroup : Group.Group (Matrix (Real.Real Float))
 realMatrixAdditionGroup =
     { monoid = realMatrixAdditionMonoid
-    , inverse = map Group.numberSum.inverse
+    , inverse = map Real.sumGroup.inverse
     }
 
 
@@ -320,13 +321,13 @@ realMatrixAdditionGroup =
 complexMatrixAdditionGroup : Group.Group (Matrix (ComplexNumbers.ComplexNumber Float))
 complexMatrixAdditionGroup =
     { monoid = complexMatrixAdditionMonoid
-    , inverse = map ComplexNumbers.complexSumGroup.inverse
+    , inverse = map ComplexNumbers.sumGroup.inverse
     }
 
 
 {-| Abelian Group instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix Float)
+realMatrixAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix (Real.Real Float))
 realMatrixAdditionAbelianGroup =
     AbelianGroup.AbelianGroup
         { monoid = realMatrixAdditionMonoid
@@ -433,7 +434,7 @@ rank innerProductSpace matrix =
     listOfRowVectorsREF
         |> List.Extra.count
             (\(RowVector.RowVector vector) ->
-                innerProductSpace.length vector /= 0
+                innerProductSpace.length vector /= Real.zero
             )
 
 
@@ -807,7 +808,7 @@ solve { eq } innerProductSpace matrix constants =
                             (eq additionGroup.monoid.identity)
                             (List.take (List.length row - 1) row)
                             && innerProductSpace.length (Vector.Vector row)
-                            /= 0
+                            /= Real.zero
                     )
 
         solution =
@@ -1096,10 +1097,10 @@ parseMatrix matrixElementParser =
 
 {-| Real Numbered Vector Space for Matrix
 -}
-realMatrixSpace : MatrixSpace Float
+realMatrixSpace : MatrixSpace (Real.Real Float)
 realMatrixSpace =
     { abelianGroup = realMatrixAdditionAbelianGroup
-    , matrixScalarMultiplication = scalarMultiplication Field.float
+    , matrixScalarMultiplication = scalarMultiplication Real.field
     }
 
 
@@ -1108,13 +1109,13 @@ realMatrixSpace =
 complexMatrixSpace : MatrixSpace (ComplexNumbers.ComplexNumber Float)
 complexMatrixSpace =
     { abelianGroup = complexMatrixAdditionAbelianGroup
-    , matrixScalarMultiplication = scalarMultiplication ComplexNumbers.complexField
+    , matrixScalarMultiplication = scalarMultiplication ComplexNumbers.field
     }
 
 
 {-| Real Numbered Matrix Algebra
 -}
-realMatrixAlgebra : MatrixAlgebra Float
+realMatrixAlgebra : MatrixAlgebra (Real.Real Float)
 realMatrixAlgebra =
     { matrixSpace = realMatrixSpace
     , multiply = multiply

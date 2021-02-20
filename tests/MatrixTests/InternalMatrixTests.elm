@@ -15,14 +15,14 @@ suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
         [ Test.fuzz2
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix findPivot find row with pivot entry"
           <|
             \one two ->
                 let
                     m1 =
-                        [ Vector.Vector [ 0, 0 ]
+                        [ Vector.Vector [ Real.zero, Real.zero ]
                         , Vector.Vector [ one, two ]
                         , Vector.Vector [ two, two ]
                         ]
@@ -37,15 +37,15 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix findPivot find row with pivot entry two"
           <|
             \one two ->
                 let
                     m1 =
-                        [ Vector.Vector [ 0, 0 ]
-                        , Vector.Vector [ 0, 0 ]
+                        [ Vector.Vector [ Real.zero, Real.zero ]
+                        , Vector.Vector [ Real.zero, Real.zero ]
                         , Vector.Vector [ one, two ]
                         , Vector.Vector [ two, one ]
                         ]
@@ -60,26 +60,22 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix findPivotComplex find row with pivot entry"
           <|
             \one two ->
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -100,26 +96,22 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix findPivotComplex find row with pivot entry two"
           <|
             \one two ->
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -141,8 +133,8 @@ suite =
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix scale scales first element to one"
           <|
             \one two ->
@@ -158,31 +150,27 @@ suite =
                 in
                 case firstElement of
                     Just element ->
-                        Expect.within (Expect.Absolute 0.000000001) element 1
+                        Expect.true "matrix scale scales first element to one " (Real.equal.eq element Real.one)
 
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix complex scale scales first element to one"
           <|
             \one two ->
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -237,7 +225,7 @@ suite =
                                 0.000001
                             )
                             (Imaginary.Imaginary
-                                0.000001
+                                (Real.Real 0.000001)
                             )
 
                     complexNumberTwo =
@@ -246,7 +234,7 @@ suite =
                                 0.000001
                             )
                             (Imaginary.Imaginary
-                                0.000001
+                                (Real.Real 0.000001)
                             )
 
                     row =
@@ -260,8 +248,8 @@ suite =
                 in
                 Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [ ComplexNumbers.one, secondElement ])
         , Test.fuzz2
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix scale scales second element by first"
           <|
             \one two ->
@@ -277,13 +265,13 @@ suite =
                 in
                 case secondElement of
                     Just element ->
-                        Expect.within (Expect.Absolute 0.000000001) element (two / one)
+                        Expect.true "matrix scale scales second element by first" (Real.equal.eq element (Real.divide two one))
 
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix subrow has zero under pivot entry"
           <|
             \one two ->
@@ -302,31 +290,27 @@ suite =
                 in
                 case firstElementSecondRow of
                     Just element ->
-                        Expect.within (Expect.Absolute 0.1) element 0
+                        Expect.true "matrix subrow has zero under pivot entry" (Real.equal.eq element Real.zero)
 
                     Nothing ->
                         Expect.fail "error"
         , Test.fuzz2
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix subtractComplexRow has zero under pivot entry"
           <|
             \one two ->
                 let
                     complexNumberOne =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
 
                     complexNumberTwo =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )

@@ -28,8 +28,9 @@ suite =
                             (Real.Real
                                 (1 / 2)
                             )
-                            (Imaginary.Imaginary
-                                (1 / 2)
+                            ((1 / 2)
+                                |> Real.Real
+                                |> Imaginary.Imaginary
                             )
 
                     complexNumberR1C2 =
@@ -37,8 +38,9 @@ suite =
                             (Real.Real
                                 0
                             )
-                            (Imaginary.Imaginary
-                                (1 / Basics.sqrt 3)
+                            ((1 / Basics.sqrt 3)
+                                |> Real.Real
+                                |> Imaginary.Imaginary
                             )
 
                     complexNumberR1C3 =
@@ -46,8 +48,9 @@ suite =
                             (Real.Real
                                 (3 / (2 * Basics.sqrt 15))
                             )
-                            (Imaginary.Imaginary
-                                (1 / (2 * Basics.sqrt 15))
+                            ((1 / (2 * Basics.sqrt 15))
+                                |> Real.Real
+                                |> Imaginary.Imaginary
                             )
 
                     complexNumberR2C1 =
@@ -55,26 +58,23 @@ suite =
                             (Real.Real
                                 (-1 / 2)
                             )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                            Imaginary.zero
 
                     complexNumberR2C2 =
                         ComplexNumbers.ComplexNumber
                             (Real.Real
                                 (1 / Basics.sqrt 3)
                             )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                            Imaginary.zero
 
                     complexNumberR2C3 =
                         ComplexNumbers.ComplexNumber
                             (Real.Real
                                 (4 / (2 * Basics.sqrt 15))
                             )
-                            (Imaginary.Imaginary
-                                (3 / (2 * Basics.sqrt 15))
+                            ((3 / (2 * Basics.sqrt 15))
+                                |> Real.Real
+                                |> Imaginary.Imaginary
                             )
 
                     complexNumberR3C1 =
@@ -82,26 +82,22 @@ suite =
                             (Real.Real
                                 (1 / 2)
                             )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                            Imaginary.zero
 
                     complexNumberR3C2 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                0
-                            )
-                            (Imaginary.Imaginary
-                                (-1 / Basics.sqrt 3)
+                            Real.zero
+                            ((-1 / Basics.sqrt 3)
+                                |> Real.Real
+                                |> Imaginary.Imaginary
                             )
 
                     complexNumberR3C3 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                0
-                            )
-                            (Imaginary.Imaginary
-                                (5 / (2 * Basics.sqrt 15))
+                            Real.zero
+                            ((5 / (2 * Basics.sqrt 15))
+                                |> Real.Real
+                                |> Imaginary.Imaginary
                             )
 
                     matrix =

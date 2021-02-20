@@ -18,6 +18,7 @@ module SquareMatrix exposing
     , transpose
     , scalarMultiplication
     , adjoint
+    , map
     , dotProduct
     , multiply
     , multiplyMatrixVector
@@ -71,6 +72,7 @@ module SquareMatrix exposing
 
 @docs scalarMultiplication
 @docs adjoint
+@docs map
 
 
 # Binary Operations
@@ -108,9 +110,8 @@ module SquareMatrix exposing
 import ColumnVector
 import ComplexNumbers
 import Field
-import Float.Extra
 import Matrix
-import Monoid
+import Real
 import RowVector
 import Typeclasses.Classes.Equality
 import Vector
@@ -127,8 +128,8 @@ type SquareMatrix a
 type alias InnerProductSpace a =
     { matrixSpace : Matrix.MatrixSpace a
     , innerProduct : SquareMatrix a -> SquareMatrix a -> Result String a
-    , norm : SquareMatrix a -> Result String Float
-    , distance : SquareMatrix a -> SquareMatrix a -> Result String Float
+    , norm : SquareMatrix a -> Result String (Real.Real Float)
+    , distance : SquareMatrix a -> SquareMatrix a -> Result String (Real.Real Float)
     }
 
 
@@ -156,32 +157,32 @@ isSquareMatrix matrix =
 
 {-| Calculate the norm of a Matrix
 -}
-normReal : SquareMatrix Float -> Result String Float
+normReal : SquareMatrix (Real.Real Float) -> Result String (Real.Real Float)
 normReal matrix =
     dotProduct Vector.realInnerProductSpace matrix matrix
         |> Result.map
-            Basics.sqrt
+            (Real.map Basics.sqrt)
 
 
 {-| Calculate the norm of a Matrix
 -}
-normComplex : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String Float
+normComplex : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (Real.Real Float)
 normComplex matrix =
     dotProduct Vector.complexInnerProductSpace matrix matrix
         |> Result.map
-            (ComplexNumbers.real >> Basics.sqrt)
+            (ComplexNumbers.real >> Real.map Basics.sqrt)
 
 
 {-| Calculate distance between two vectors
 -}
-distanceReal : SquareMatrix Float -> SquareMatrix Float -> Result String Float
+distanceReal : SquareMatrix (Real.Real Float) -> SquareMatrix (Real.Real Float) -> Result String (Real.Real Float)
 distanceReal (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     Matrix.realMatrixAdditionSemigroup matrixOne (Matrix.realMatrixAdditionGroup.inverse matrixTwo)
         |> SquareMatrix
         |> normReal
 
 
-distanceComplex : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String Float
+distanceComplex : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (Real.Real Float)
 distanceComplex (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     Matrix.complexMatrixAdditionSemigroup matrixOne (Matrix.complexMatrixAdditionGroup.inverse matrixTwo)
         |> SquareMatrix
@@ -190,29 +191,29 @@ distanceComplex (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 
 {-| Predicate if matrix is right stochastic
 -}
-isRightStochastic : SquareMatrix Float -> Bool
+isRightStochastic : SquareMatrix (Real.Real Float) -> Bool
 isRightStochastic (SquareMatrix (Matrix.Matrix listOfRowVectors)) =
     List.all
-        (\(RowVector.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
+        (\(RowVector.RowVector vector) -> Real.equal.eq (Vector.sum Real.sumMonoid vector) Real.one)
         listOfRowVectors
 
 
 {-| Predicate if matrix is left stochastic
 -}
-isLeftStochastic : SquareMatrix Float -> Bool
+isLeftStochastic : SquareMatrix (Real.Real Float) -> Bool
 isLeftStochastic (SquareMatrix matrix) =
     let
         (Matrix.Matrix transposedListOfRowVectors) =
             Matrix.transpose matrix
     in
     List.all
-        (\(RowVector.RowVector vector) -> Float.Extra.equalWithin 1.0e-6 (Vector.sum Monoid.numberSum vector) 1)
+        (\(RowVector.RowVector vector) -> Real.equal.eq (Vector.sum Real.sumMonoid vector) Real.one)
         transposedListOfRowVectors
 
 
 {-| Real Numbered Inner Product Space for Matrix
 -}
-realMatrixInnerProductSpace : InnerProductSpace Float
+realMatrixInnerProductSpace : InnerProductSpace (Real.Real Float)
 realMatrixInnerProductSpace =
     { matrixSpace = Matrix.realMatrixSpace
     , innerProduct = dotProduct Vector.realInnerProductSpace
@@ -392,3 +393,11 @@ equalImplementation comparator (SquareMatrix matrixOne) (SquareMatrix matrixTwo)
 equal : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (SquareMatrix a)
 equal comparator =
     Typeclasses.Classes.Equality.eq (equalImplementation comparator)
+
+
+{-| Map over a Matrix
+-}
+map : (a -> b) -> SquareMatrix a -> SquareMatrix b
+map f (SquareMatrix matrix) =
+    Matrix.map f matrix
+        |> SquareMatrix

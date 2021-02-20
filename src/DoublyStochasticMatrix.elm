@@ -24,6 +24,7 @@ module DoublyStochasticMatrix exposing
 -}
 
 import Matrix
+import Real
 import SquareMatrix
 import Vector
 
@@ -31,16 +32,16 @@ import Vector
 {-| Doubly Stochastic Matrix type
 -}
 type DoublyStochasticMatrix
-    = DoublyStochasticMatrix (SquareMatrix.SquareMatrix Float)
+    = DoublyStochasticMatrix (SquareMatrix.SquareMatrix (Real.Real Float))
 
 
 {-| Predicate if matrix is doubly stochastic
 -}
-isDoublyStochastic : SquareMatrix.SquareMatrix Float -> Bool
+isDoublyStochastic : SquareMatrix.SquareMatrix (Real.Real Float) -> Bool
 isDoublyStochastic (SquareMatrix.SquareMatrix matrix) =
     if SquareMatrix.isRightStochastic (SquareMatrix.SquareMatrix matrix) && SquareMatrix.isLeftStochastic (SquareMatrix.SquareMatrix matrix) then
         Matrix.all
-            ((<=) 0)
+            (Real.greaterThan Real.zero)
             matrix
 
     else

@@ -2,7 +2,6 @@ module VectorTests.InnerProductSpaceTests exposing (suite)
 
 import ComplexNumbers
 import Expect
-import Field
 import Fuzz
 import Imaginary
 import Real
@@ -14,7 +13,7 @@ suite : Test.Test
 suite =
     Test.describe "Inner Product Vector Space"
         [ Test.fuzz
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
             "tests dot product is nondegenerative"
           <|
             \one ->
@@ -23,14 +22,15 @@ suite =
                         Vector.Vector [ one ]
 
                     expected =
-                        Vector.dotProduct Field.float a a
+                        Vector.dotProduct Real.field a a
+                            |> Real.real
                 in
                 expected
                     |> Expect.atLeast 0
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests dot product respects addition"
           <|
             \one two three ->
@@ -46,24 +46,24 @@ suite =
 
                     aPlusBDotc =
                         Vector.dotProduct
-                            Field.float
-                            (Vector.add Field.float a b)
+                            Real.field
+                            (Vector.add Real.field a b)
                             c
 
                     aDotC =
-                        Vector.dotProduct Field.float a c
+                        Vector.dotProduct Real.field a c
 
                     bDotC =
-                        Vector.dotProduct Field.float b c
+                        Vector.dotProduct Real.field b c
 
                     aDotCPlusBDotC =
-                        aDotC + bDotC
+                        Real.add aDotC bDotC
                 in
-                Expect.within (Expect.Absolute 0.000000001) aDotCPlusBDotC aPlusBDotc
+                Expect.true "dot product respects addition" (Real.equal.eq aDotCPlusBDotC aPlusBDotc)
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests dot product respects scalar multiplication"
           <|
             \one two three ->
@@ -76,17 +76,17 @@ suite =
 
                     threeTimesADotB =
                         Vector.dotProduct
-                            Field.float
-                            (Vector.scalarMultiplication Field.float three a)
+                            Real.field
+                            (Vector.scalarMultiplication Real.field three a)
                             b
 
                     aDotBTimesThree =
-                        Vector.dotProduct Field.float a b * three
+                        Real.multiply (Vector.dotProduct Real.field a b) three
                 in
-                Expect.within (Expect.Absolute 0.000000001) aDotBTimesThree threeTimesADotB
+                Expect.true "dot product respects scalar multiplication" (Real.equal.eq aDotBTimesThree threeTimesADotB)
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests dot product is symetric"
           <|
             \one two ->
@@ -98,14 +98,14 @@ suite =
                         Vector.Vector [ two ]
 
                     aDotB =
-                        Vector.dotProduct Field.float a b
+                        Vector.dotProduct Real.field a b
 
                     bDotA =
-                        Vector.dotProduct Field.float b a
+                        Vector.dotProduct Real.field b a
                 in
-                Expect.within (Expect.Absolute 0.000000001) bDotA aDotB
+                Expect.equal bDotA aDotB
         , Test.fuzz
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests vector length equals square root of dot product"
           <|
             \one ->
@@ -114,15 +114,14 @@ suite =
                         Vector.Vector [ one ]
 
                     squareRootADotA =
-                        Basics.sqrt (Vector.dotProduct Field.float a a)
+                        Real.map Basics.sqrt (Vector.dotProduct Real.field a a)
 
                     aLength =
                         Vector.lengthReal a
                 in
-                squareRootADotA
-                    |> Expect.within (Expect.Absolute 0.000000001) aLength
+                Expect.equal squareRootADotA aLength
         , Test.fuzz
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
             "tests vector length is nondegenerative"
           <|
             \one ->
@@ -132,12 +131,13 @@ suite =
 
                     expected =
                         Vector.lengthReal a
+                            |> Real.real
                 in
                 expected
                     |> Expect.atLeast 0
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests vector dot product satisfies Cauchy-Shwartz inequality"
           <|
             \one two ->
@@ -150,10 +150,11 @@ suite =
 
                     absXDotY =
                         Vector.dotProduct
-                            Field.float
+                            Real.field
                             x
                             y
-                            |> Basics.abs
+                            |> Real.map Basics.abs
+                            |> Real.real
 
                     lengthOfX =
                         Vector.lengthReal x
@@ -162,13 +163,14 @@ suite =
                         Vector.lengthReal y
 
                     lengthOfXTimesLengthOfY =
-                        lengthOfX * lengthOfY
+                        Real.multiply lengthOfX lengthOfY
+                            |> Real.real
                 in
                 absXDotY
                     |> Expect.atMost lengthOfXTimesLengthOfY
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests vector length satisfies triangle inequality"
           <|
             \one two ->
@@ -181,22 +183,23 @@ suite =
 
                     aPlusBLength =
                         Vector.add
-                            Field.float
+                            Real.field
                             a
                             b
                             |> Vector.lengthReal
+                            |> Real.real
 
                     lengthAPlusLengthB =
-                        Vector.lengthReal
-                            a
-                            + Vector.lengthReal
-                                b
+                        Real.add
+                            (Vector.lengthReal a)
+                            (Vector.lengthReal b)
+                            |> Real.real
                 in
                 aPlusBLength
                     |> Expect.atMost lengthAPlusLengthB
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests vector length respects scalar multiplication"
           <|
             \one two ->
@@ -206,64 +209,65 @@ suite =
 
                     legnthOfTwoTimesA =
                         Vector.lengthReal
-                            (Vector.scalarMultiplication Field.float two a)
+                            (Vector.scalarMultiplication Real.field two a)
 
                     lengthOfATimesTwo =
-                        Basics.abs two * Vector.lengthReal a
+                        Vector.lengthReal a
+                            |> Real.multiply two
+                            |> Real.map Basics.abs
                 in
-                legnthOfTwoTimesA
-                    |> Expect.within (Expect.Absolute 0.000000001) lengthOfATimesTwo
+                Expect.equal legnthOfTwoTimesA lengthOfATimesTwo
         , Test.fuzz
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests complex vector length equals square root of dot product"
           <|
             \one ->
                 let
                     complexNumber =
-                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary one)
+                        ComplexNumbers.ComplexNumber one (Imaginary.Imaginary one)
 
                     a =
                         Vector.Vector [ complexNumber ]
 
                     squareRootADotA =
-                        Vector.dotProduct ComplexNumbers.complexField a (Vector.conjugate a)
+                        Vector.dotProduct ComplexNumbers.field a (Vector.conjugate a)
                             |> ComplexNumbers.real
-                            |> Basics.sqrt
+                            |> Real.map Basics.sqrt
 
                     aLength =
                         Vector.lengthComplex a
                 in
-                squareRootADotA
-                    |> Expect.within (Expect.Absolute 0.000000001) aLength
+                Expect.equal squareRootADotA aLength
         , Test.fuzz
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
             "tests complex vector length is nondegenerative"
           <|
             \one ->
                 let
                     complexNumber =
-                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary one)
+                        ComplexNumbers.ComplexNumber one (Imaginary.Imaginary one)
 
                     a =
                         Vector.Vector [ complexNumber ]
 
                     expected =
                         Vector.lengthComplex a
+                            |> Real.real
                 in
                 expected
                     |> Expect.atLeast 0
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests complex vector dot product satisfies Cauchy-Shwartz inequality"
           <|
             \one two ->
                 let
                     complexNumberOne =
-                        ComplexNumbers.ComplexNumber (Real.Real one) (Imaginary.Imaginary one)
+                        ComplexNumbers.ComplexNumber one (Imaginary.Imaginary one)
 
                     complexNumberTwo =
-                        ComplexNumbers.ComplexNumber (Real.Real two) (Imaginary.Imaginary two)
+                        ComplexNumbers.ComplexNumber two (Imaginary.Imaginary two)
 
                     x =
                         Vector.Vector [ complexNumberOne ]
@@ -273,11 +277,12 @@ suite =
 
                     absXDotY =
                         Vector.dotProduct
-                            ComplexNumbers.complexField
+                            ComplexNumbers.field
                             x
                             y
                             |> ComplexNumbers.real
-                            |> Basics.abs
+                            |> Real.map Basics.abs
+                            |> Real.real
 
                     lengthOfX =
                         Vector.lengthComplex x
@@ -286,12 +291,13 @@ suite =
                         Vector.lengthComplex y
 
                     lengthOfXTimesLengthOfY =
-                        lengthOfX * lengthOfY
+                        Real.multiply lengthOfX lengthOfY
+                            |> Real.real
                 in
                 absXDotY
                     |> Expect.atMost lengthOfXTimesLengthOfY
         , Test.fuzz
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
             "tests distance is nondegenerative"
           <|
             \one ->
@@ -301,13 +307,14 @@ suite =
 
                     expected =
                         Vector.distanceReal a a
+                            |> Real.real
                 in
                 expected
                     |> Expect.atLeast 0
         , Test.fuzz3
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
-            (Fuzz.map toFloat Fuzz.int)
+            (Fuzz.map (toFloat >> Real.Real) Fuzz.int)
+            (Fuzz.map (toFloat >> Real.Real) Fuzz.int)
+            (Fuzz.map (toFloat >> Real.Real) Fuzz.int)
             "tests vector distance satisfies triangle inequality"
           <|
             \one two three ->
@@ -323,18 +330,21 @@ suite =
 
                     distanceAB =
                         Vector.distanceReal a b
+                            |> Real.real
 
                     distanceAC =
                         Vector.distanceReal a c
+                            |> Real.real
 
                     distanceCB =
                         Vector.distanceReal c b
+                            |> Real.real
                 in
                 distanceAB
                     |> Expect.atMost (distanceAC + distanceCB)
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests distance is symetric"
           <|
             \one two ->
@@ -347,64 +357,60 @@ suite =
 
                     distanceAB =
                         Vector.dotProduct
-                            Field.float
+                            Real.field
                             a
                             b
 
                     distanceBA =
                         Vector.dotProduct
-                            Field.float
+                            Real.field
                             b
                             a
                 in
-                distanceAB
-                    |> Expect.within (Expect.Absolute 0.000000001) distanceBA
+                Expect.equal distanceAB distanceBA
         , Test.test
             "tests angle between orthagonal vectors"
           <|
             \_ ->
                 let
                     a =
-                        Vector.Vector [ 1, 0 ]
+                        Vector.Vector [ Real.one, Real.zero ]
 
                     b =
-                        Vector.Vector [ 0, 1 ]
+                        Vector.Vector [ Real.zero, Real.one ]
 
                     angle =
                         Vector.angleBetween a b
                 in
-                angle
-                    |> Expect.within (Expect.Absolute 0.000000001) (Basics.pi / 2)
+                Expect.equal angle (Real.Real (Basics.pi / 2))
         , Test.test
             "tests angle between colinear vectors"
           <|
             \_ ->
                 let
                     a =
-                        Vector.Vector [ 1, 0 ]
+                        Vector.Vector [ Real.one, Real.zero ]
 
                     b =
-                        Vector.Vector [ 1, 0 ]
+                        Vector.Vector [ Real.one, Real.zero ]
 
                     angle =
                         Vector.angleBetween a b
                 in
-                angle
-                    |> Expect.within (Expect.Absolute 0.000000001) 0
+                Expect.equal angle Real.zero
         , Test.test
             "tests angle between colinear but opposite vectors"
           <|
             \_ ->
                 let
                     a =
-                        Vector.Vector [ 1, 0 ]
+                        Vector.Vector [ Real.one, Real.zero ]
 
                     b =
-                        Vector.Vector [ -1, 0 ]
+                        Vector.Vector [ Real.Real -1, Real.zero ]
 
                     angle =
                         Vector.angleBetween a b
                 in
-                angle
-                    |> Expect.within (Expect.Absolute 0.000000001) Basics.pi
+                Expect.equal angle (Real.Real Basics.pi)
         ]

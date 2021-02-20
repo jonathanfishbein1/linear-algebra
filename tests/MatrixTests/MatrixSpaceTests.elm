@@ -15,8 +15,8 @@ suite : Test.Test
 suite =
     Test.describe "Matrix Space Tests"
         [ Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests one is product identity"
           <|
             \one two ->
@@ -24,9 +24,7 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     two
                                 )
@@ -34,26 +32,22 @@ suite =
                 in
                 Expect.true "equal" ((Vector.equal ComplexNumbers.equal.eq).eq (Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
         , Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests scalar multiplication respects complex multiplication"
           <|
             \one two ->
                 let
                     c1 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
 
                     c2 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                two
-                            )
+                            two
                             (Imaginary.Imaginary
                                 one
                             )
@@ -63,9 +57,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -73,31 +65,29 @@ suite =
                             ]
 
                     c2V =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c2 v
+                        Matrix.scalarMultiplication ComplexNumbers.field c2 v
 
                     c2VThenc1 =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c1 c2V
+                        Matrix.scalarMultiplication ComplexNumbers.field c1 c2V
 
                     c1c2 =
                         ComplexNumbers.multiply c1 c2
 
                     c1c2ThenV =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c1c2 v
+                        Matrix.scalarMultiplication ComplexNumbers.field c1c2 v
                 in
                 c2VThenc1
                     |> Expect.equal c1c2ThenV
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix scalar multiplication distributes over addition"
           <|
             \one two ->
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -107,9 +97,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            two
-                                        )
+                                        two
                                         (Imaginary.Imaginary
                                             one
                                         )
@@ -121,9 +109,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -131,36 +117,34 @@ suite =
                             ]
 
                     vPlusW =
-                        Matrix.add ComplexNumbers.complexField v w
+                        Matrix.add ComplexNumbers.field v w
 
                     cvPlusW =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c vPlusW
+                        Matrix.scalarMultiplication ComplexNumbers.field c vPlusW
 
                     cW =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c w
+                        Matrix.scalarMultiplication ComplexNumbers.field c w
 
                     cV =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c v
+                        Matrix.scalarMultiplication ComplexNumbers.field c v
 
                     cVPluscW =
-                        Matrix.add ComplexNumbers.complexField cW cV
+                        Matrix.add ComplexNumbers.field cW cV
 
                     result =
                         (Matrix.equal ComplexNumbers.equal.eq).eq cvPlusW cVPluscW
                 in
                 Expect.true "All elements equal" result
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests scalar multiplication distributes over addition"
           <|
             \one two ->
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -170,9 +154,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            two
-                                        )
+                                        two
                                         (Imaginary.Imaginary
                                             one
                                         )
@@ -184,9 +166,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -194,19 +174,19 @@ suite =
                             ]
 
                     vPlusW =
-                        Matrix.add ComplexNumbers.complexField v w
+                        Matrix.add ComplexNumbers.field v w
 
                     cvPlusW =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c vPlusW
+                        Matrix.scalarMultiplication ComplexNumbers.field c vPlusW
 
                     cW =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c w
+                        Matrix.scalarMultiplication ComplexNumbers.field c w
 
                     cV =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c v
+                        Matrix.scalarMultiplication ComplexNumbers.field c v
 
                     cVPluscW =
-                        Matrix.add ComplexNumbers.complexField cW cV
+                        Matrix.add ComplexNumbers.field cW cV
 
                     result =
                         (Matrix.equal ComplexNumbers.equal.eq).eq cvPlusW cVPluscW

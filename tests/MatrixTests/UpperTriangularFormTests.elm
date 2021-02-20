@@ -24,16 +24,18 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 4, 6, 3 ]
                             , RowVector.RowVector <| Vector.Vector [ 1, 4, 4 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     upperTriangularFormMatrix =
                         Matrix.upperTriangle Vector.realVectorSpace matrix
 
                     expected =
-                        Matrix.Matrix <|
+                        Matrix.Matrix
                             [ RowVector.RowVector <| Vector.Vector [ 3.0, 2, 3 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 3.3333333333333335, -1 ]
                             , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 4 ]
                             ]
+                            |> Matrix.map Real.Real
                 in
                 Expect.equal upperTriangularFormMatrix expected
         , Test.test
@@ -48,17 +50,19 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 0, 0, -2, 1, 0 ]
                             , RowVector.RowVector <| Vector.Vector [ -2, 1, 0, 0, 0 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     upperTriangularFormMatrix =
                         Matrix.upperTriangle Vector.realVectorSpace matrix
 
                     expected =
-                        Matrix.Matrix <|
+                        Matrix.Matrix
                             [ RowVector.RowVector <| Vector.Vector [ -2, 1, 0, 0, 0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0, 1, 0, 0, 312 ]
                             , RowVector.RowVector <| Vector.Vector [ 0, 0, -2, 1, 0 ]
                             , RowVector.RowVector <| Vector.Vector [ 0, 0, 0, 1, 184 ]
                             ]
+                            |> Matrix.map Real.Real
                 in
                 Expect.equal upperTriangularFormMatrix expected
         , Test.test
@@ -68,9 +72,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 2) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary 0) ]
-                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 6) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary 0) ]
-                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 1) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary 0) ]
+                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 2) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary Real.zero) ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 6) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary Real.zero) ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber Real.one (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary Real.zero) ]
                             ]
 
                     upperTriangularFormMatrix =
@@ -78,9 +82,9 @@ suite =
 
                     expected =
                         Matrix.Matrix <|
-                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 3.0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 2.0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary 0) ]
-                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 3.3333333333333335) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real -1) (Imaginary.Imaginary 0) ]
-                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 0) (Imaginary.Imaginary 0), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary 0) ]
+                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber (Real.Real 3.0) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 2.0) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 3) (Imaginary.Imaginary Real.zero) ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber Real.zero (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 3.3333333333333335) (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real -1) (Imaginary.Imaginary Real.zero) ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.ComplexNumber Real.zero (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber Real.zero (Imaginary.Imaginary Real.zero), ComplexNumbers.ComplexNumber (Real.Real 4) (Imaginary.Imaginary Real.zero) ]
                             ]
                 in
                 Expect.true "matrices are equal" ((Matrix.equal ComplexNumbers.equal.eq).eq upperTriangularFormMatrix expected)
@@ -91,39 +95,29 @@ suite =
                 let
                     complexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
-                            (Imaginary.Imaginary
-                                1
-                            )
+                            Real.one
+                            (Imaginary.Imaginary Real.one)
 
                     complexNumberR1C2 =
                         ComplexNumbers.ComplexNumber
                             (Real.Real
                                 2
                             )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                            (Imaginary.Imaginary Real.zero)
 
                     complexNumberR2C1 =
                         ComplexNumbers.ComplexNumber
                             (Real.Real
                                 3
                             )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                            (Imaginary.Imaginary Real.zero)
 
                     complexNumberR2C2 =
                         ComplexNumbers.ComplexNumber
                             (Real.Real
                                 4
                             )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                            (Imaginary.Imaginary Real.zero)
 
                     matrix =
                         Matrix.Matrix
@@ -136,11 +130,9 @@ suite =
 
                     complexNumberExpectedR2C2 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                1
-                            )
+                            Real.one
                             (Imaginary.Imaginary
-                                3
+                                (Real.Real 3)
                             )
 
                     expected =

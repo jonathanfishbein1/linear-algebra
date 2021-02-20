@@ -3,8 +3,6 @@ module MatrixTests.MatrixTests exposing (suite)
 import ColumnVector
 import ComplexNumbers
 import Expect
-import Field
-import Float.Extra
 import Fuzz
 import Imaginary
 import Matrix
@@ -13,7 +11,6 @@ import Real
 import RowVector
 import SquareMatrix
 import Test
-import Typeclasses.Classes.Equality
 import Vector
 
 
@@ -30,12 +27,13 @@ suite =
                             [ RowVector.RowVector <| Vector.Vector [ 1, 2 ]
                             , RowVector.RowVector <| Vector.Vector [ 0, -3 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     nullSpace =
-                        Matrix.nullSpace (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6)) Vector.realInnerProductSpace matrix
+                        Matrix.nullSpace Real.equal Vector.realInnerProductSpace matrix
 
                     expected =
-                        ColumnVector.ColumnVector <| Vector.Vector [ 0, 0 ]
+                        ColumnVector.ColumnVector <| Vector.Vector [ Real.zero, Real.zero ]
                 in
                 Expect.equal nullSpace (Matrix.Consistant (Matrix.UniqueSolution expected))
         , Test.test
@@ -50,12 +48,14 @@ suite =
                                 , 2
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 0
                                 , -3
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         ]
                 in
                 Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent Vector.realInnerProductSpace listOfVectors)
@@ -71,12 +71,14 @@ suite =
                                 , 2
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 2
                                 , 4
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         ]
                 in
                 Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent Vector.realInnerProductSpace listOfVectors)
@@ -90,12 +92,14 @@ suite =
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 0
                                 , 1
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r2 =
@@ -113,8 +117,10 @@ suite =
                     listOfVectors =
                         [ ColumnVector.ColumnVector
                             (Vector.zeros Monoid.numberSum 2)
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.zeros Monoid.numberSum 2)
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r2 =
@@ -132,10 +138,13 @@ suite =
                     listOfVectors =
                         [ ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0, 0 ])
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector [ 0, 1, 0 ])
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector [ 0, 0, 1 ])
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r3 =
@@ -153,10 +162,13 @@ suite =
                     listOfVectors =
                         [ ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0, 0 ])
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0, 0 ])
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0, 0 ])
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r3 =
@@ -174,10 +186,13 @@ suite =
                     listOfVectors =
                         [ ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0 ])
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0 ])
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0 ])
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r2 =
@@ -195,8 +210,10 @@ suite =
                     listOfVectors =
                         [ ColumnVector.ColumnVector
                             (Vector.Vector [ 1, 0, 0 ])
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector [ 2, 0, 0 ])
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r2 =
@@ -218,12 +235,14 @@ suite =
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 0
                                 , 1
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r2 =
@@ -241,8 +260,10 @@ suite =
                     listOfVectors =
                         [ ColumnVector.ColumnVector
                             (Vector.zeros Monoid.numberSum 2)
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.zeros Monoid.numberSum 2)
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r2 =
@@ -264,18 +285,21 @@ suite =
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r3 =
@@ -298,6 +322,7 @@ suite =
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 0
@@ -305,6 +330,7 @@ suite =
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 0
@@ -312,6 +338,7 @@ suite =
                                 , 1
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r3 =
@@ -333,18 +360,21 @@ suite =
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r3 =
@@ -366,18 +396,21 @@ suite =
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 1
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r2 =
@@ -399,12 +432,14 @@ suite =
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         , ColumnVector.ColumnVector
                             (Vector.Vector
                                 [ 2
                                 , 0
                                 ]
                             )
+                            |> ColumnVector.map Real.Real
                         ]
 
                     r2 =
@@ -424,11 +459,14 @@ suite =
                             [ RowVector.RowVector <| Vector.Vector [ 1, 1, 2, 3 ]
                             , RowVector.RowVector <| Vector.Vector [ 1, 1, 3, 1 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     b =
-                        ColumnVector.ColumnVector <| Vector.Vector [ 2, 4 ]
+                        Vector.Vector [ 2, 4 ]
+                            |> ColumnVector.ColumnVector
+                            |> ColumnVector.map Real.Real
                 in
-                Expect.equal (Matrix.solve (Typeclasses.Classes.Equality.eq (Float.Extra.equalWithin 1.0e-6)) Vector.realInnerProductSpace matrix b)
+                Expect.equal (Matrix.solve Real.equal Vector.realInnerProductSpace matrix b)
                     (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
         , Test.test
             "tests matrix fold"
@@ -532,8 +570,8 @@ suite =
                 in
                 Expect.true "matrix is square" (SquareMatrix.isSquareMatrix matrix)
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix transpose transpose is idempotent"
           <|
             \one two ->
@@ -543,9 +581,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -558,8 +594,8 @@ suite =
                 in
                 Expect.equal m mTransposeTranspose
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix transpose respects addition"
           <|
             \one two ->
@@ -569,9 +605,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -583,9 +617,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            two
-                                        )
+                                        two
                                         (Imaginary.Imaginary
                                             one
                                         )
@@ -593,26 +625,24 @@ suite =
                             ]
 
                     m1Plusm2Transpose =
-                        Matrix.add ComplexNumbers.complexField m1 m2
+                        Matrix.add ComplexNumbers.field m1 m2
                             |> Matrix.transpose
 
                     m1TransposePlusm2Transpose =
                         Matrix.transpose m1
-                            |> Matrix.add ComplexNumbers.complexField (Matrix.transpose m2)
+                            |> Matrix.add ComplexNumbers.field (Matrix.transpose m2)
                 in
                 Expect.equal m1Plusm2Transpose m1TransposePlusm2Transpose
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix transpose respects scalar multiplication"
           <|
             \one two ->
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -622,9 +652,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -632,17 +660,17 @@ suite =
                             ]
 
                     cAThenTranspose =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c m1
+                        Matrix.scalarMultiplication ComplexNumbers.field c m1
                             |> Matrix.transpose
 
                     cTransposeOfA =
                         Matrix.transpose m1
-                            |> Matrix.scalarMultiplication ComplexNumbers.complexField c
+                            |> Matrix.scalarMultiplication ComplexNumbers.field c
                 in
                 Expect.equal cAThenTranspose cTransposeOfA
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix conjugate conjugate is idempotent"
           <|
             \one two ->
@@ -652,9 +680,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -667,8 +693,8 @@ suite =
                 in
                 Expect.equal m mConjugateConjugate
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix conjugate respects addition"
           <|
             \one two ->
@@ -678,9 +704,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -692,9 +716,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            two
-                                        )
+                                        two
                                         (Imaginary.Imaginary
                                             one
                                         )
@@ -702,26 +724,24 @@ suite =
                             ]
 
                     m1Plusm2Conjugate =
-                        Matrix.add ComplexNumbers.complexField m1 m2
+                        Matrix.add ComplexNumbers.field m1 m2
                             |> Matrix.conjugate
 
                     m1ConjugatePlusm2Conjugate =
                         Matrix.conjugate m1
-                            |> Matrix.add ComplexNumbers.complexField (Matrix.conjugate m2)
+                            |> Matrix.add ComplexNumbers.field (Matrix.conjugate m2)
                 in
                 Expect.equal m1Plusm2Conjugate m1ConjugatePlusm2Conjugate
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix conjugate respects scalar multiplication"
           <|
             \one two ->
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -734,9 +754,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -744,17 +762,17 @@ suite =
                             ]
 
                     cAThenConjugate =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c m1
+                        Matrix.scalarMultiplication ComplexNumbers.field c m1
                             |> Matrix.conjugate
 
                     cConjugateOfA =
                         Matrix.conjugate m1
-                            |> Matrix.scalarMultiplication ComplexNumbers.complexField cConjugate
+                            |> Matrix.scalarMultiplication ComplexNumbers.field cConjugate
                 in
                 Expect.equal cAThenConjugate cConjugateOfA
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix adjoint is idempotent"
           <|
             \one two ->
@@ -764,9 +782,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -779,8 +795,8 @@ suite =
                 in
                 Expect.equal m mAdjoint
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix adjoint respects addition"
           <|
             \one two ->
@@ -790,9 +806,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -804,9 +818,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            two
-                                        )
+                                        two
                                         (Imaginary.Imaginary
                                             one
                                         )
@@ -814,26 +826,24 @@ suite =
                             ]
 
                     m1Plusm2Adjoint =
-                        Matrix.add ComplexNumbers.complexField m1 m2
+                        Matrix.add ComplexNumbers.field m1 m2
                             |> Matrix.adjoint
 
                     m1ConjugatePlusm2Adjoint =
                         Matrix.adjoint m1
-                            |> Matrix.add ComplexNumbers.complexField (Matrix.conjugate m2)
+                            |> Matrix.add ComplexNumbers.field (Matrix.conjugate m2)
                 in
                 Expect.equal m1Plusm2Adjoint m1ConjugatePlusm2Adjoint
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix adjoint respects scalar multiplication"
           <|
             \one two ->
                 let
                     c =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -846,9 +856,7 @@ suite =
                             [ RowVector.RowVector <|
                                 Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
-                                        (Real.Real
-                                            one
-                                        )
+                                        one
                                         (Imaginary.Imaginary
                                             two
                                         )
@@ -856,39 +864,39 @@ suite =
                             ]
 
                     cAThenAdjoint =
-                        Matrix.scalarMultiplication ComplexNumbers.complexField c m1
+                        Matrix.scalarMultiplication ComplexNumbers.field c m1
                             |> Matrix.adjoint
 
                     cAdjointOfA =
                         Matrix.adjoint m1
-                            |> Matrix.scalarMultiplication ComplexNumbers.complexField cConjugate
+                            |> Matrix.scalarMultiplication ComplexNumbers.field cConjugate
                 in
                 Expect.equal cAThenAdjoint cAdjointOfA
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests real Matrix multiplication respects scalar multiplication"
           <|
             \one two three ->
                 let
                     v1 =
-                        RowVector.RowVector <|
-                            Vector.Vector
-                                [ three
-                                , one
-                                , three
-                                , two
-                                ]
+                        Vector.Vector
+                            [ three
+                            , one
+                            , three
+                            , two
+                            ]
+                            |> RowVector.RowVector
 
                     v2 =
-                        RowVector.RowVector <|
-                            Vector.Vector
-                                [ one
-                                , three
-                                , three
-                                , two
-                                ]
+                        Vector.Vector
+                            [ one
+                            , three
+                            , three
+                            , two
+                            ]
+                            |> RowVector.RowVector
 
                     m1 =
                         Matrix.Matrix
@@ -899,16 +907,16 @@ suite =
 
                     cTimesm1Timem2 =
                         Matrix.multiply Vector.realInnerProductSpace m1 m2
-                            |> Result.map (Matrix.scalarMultiplication Field.float one)
+                            |> Result.map (Matrix.scalarMultiplication Real.field one)
 
                     cTimesm1ThenTimesm2 =
-                        Matrix.multiply Vector.realInnerProductSpace (Matrix.scalarMultiplication Field.float one m1) m2
+                        Matrix.multiply Vector.realInnerProductSpace (Matrix.scalarMultiplication Real.field one m1) m2
                 in
                 Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix tensor product respects addition"
           <|
             \one two three ->
@@ -932,21 +940,21 @@ suite =
                             ]
 
                     matrixSumIJ =
-                        Matrix.add Field.float matrixI matrixJ
+                        Matrix.add Real.field matrixI matrixJ
 
                     tensorProductIJK =
-                        Matrix.tensorProduct Field.float matrixSumIJ matrixK
+                        Matrix.tensorProduct Real.field matrixSumIJ matrixK
 
                     tensorProductIK =
-                        Matrix.tensorProduct Field.float matrixI matrixK
+                        Matrix.tensorProduct Real.field matrixI matrixK
 
                     tensorProductJK =
-                        Matrix.tensorProduct Field.float matrixJ matrixK
+                        Matrix.tensorProduct Real.field matrixJ matrixK
 
                     matrixSumTensorProductIKJK =
-                        Matrix.add Field.float tensorProductIK tensorProductJK
+                        Matrix.add Real.field tensorProductIK tensorProductJK
                 in
-                Expect.true "matricies equal" ((Matrix.equal (Float.Extra.equalWithin 0.1)).eq tensorProductIJK matrixSumTensorProductIKJK)
+                Expect.true "matricies equal" ((Matrix.equal Real.equal.eq).eq tensorProductIJK matrixSumTensorProductIKJK)
         , Test.test
             "tests areRowEquivalent"
           <|
@@ -958,6 +966,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , RowVector.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
+                            |> Matrix.map Real.Real
 
                     matrixTwo =
                         Matrix.Matrix
@@ -965,22 +974,23 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
                             , RowVector.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
-                            |> Matrix.scalarMultiplication Field.float 2
+                            |> Matrix.map Real.Real
+                            |> Matrix.scalarMultiplication Real.field (Real.Real 2)
                 in
                 Expect.true "Are row equivalent" (Matrix.areRowEquivalent Vector.realVectorSpace matrixOne matrixTwo)
         , Test.fuzz3
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange 1 10)
-            (Fuzz.floatRange 1 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix rank"
           <|
             \one two three ->
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ one, 0, 0 ]
-                            , RowVector.RowVector <| Vector.Vector [ 0, two, 0 ]
-                            , RowVector.RowVector <| Vector.Vector [ 0, 0, three ]
+                            [ RowVector.RowVector <| Vector.Vector [ one, Real.zero, Real.zero ]
+                            , RowVector.RowVector <| Vector.Vector [ Real.zero, two, Real.zero ]
+                            , RowVector.RowVector <| Vector.Vector [ Real.zero, Real.zero, three ]
                             ]
 
                     rank =
@@ -999,6 +1009,7 @@ suite =
                             [ RowVector.RowVector <| Vector.Vector [ one, two ]
                             , RowVector.RowVector <| Vector.Vector [ one * 2, two * 2 ]
                             ]
+                            |> Matrix.map Real.Real
                 in
                 Expect.equal (Matrix.rank Vector.realInnerProductSpace matrix) 1
         , Test.fuzz2

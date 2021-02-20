@@ -13,8 +13,8 @@ suite : Test.Test
 suite =
     Test.describe "Vector Abelian Group Tests"
         [ Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests Vector add is commutative"
           <|
             \one two ->
@@ -22,16 +22,12 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     one
                                 )
                             , ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    two
-                                )
+                                two
                                 (Imaginary.Imaginary
                                     two
                                 )
@@ -40,27 +36,23 @@ suite =
                     w =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     one
                                 )
                             , ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    two
-                                )
+                                two
                                 (Imaginary.Imaginary
                                     two
                                 )
                             ]
                 in
-                Vector.add ComplexNumbers.complexField v w
-                    |> Expect.equal (Vector.add ComplexNumbers.complexField w v)
+                Vector.add ComplexNumbers.field v w
+                    |> Expect.equal (Vector.add ComplexNumbers.field w v)
         , Test.fuzz3
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests Vector add is associative"
           <|
             \one two three ->
@@ -68,16 +60,12 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     one
                                 )
                             , ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    two
-                                )
+                                two
                                 (Imaginary.Imaginary
                                     two
                                 )
@@ -86,16 +74,12 @@ suite =
                     w =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     one
                                 )
                             , ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    two
-                                )
+                                two
                                 (Imaginary.Imaginary
                                     two
                                 )
@@ -104,28 +88,24 @@ suite =
                     x =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    three
-                                )
+                                three
                                 (Imaginary.Imaginary
                                     three
                                 )
                             , ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    three
-                                )
+                                three
                                 (Imaginary.Imaginary
                                     three
                                 )
                             ]
 
                     vPlusWPlusX =
-                        Vector.add ComplexNumbers.complexField v w
-                            |> Vector.add ComplexNumbers.complexField x
+                        Vector.add ComplexNumbers.field v w
+                            |> Vector.add ComplexNumbers.field x
 
                     wPlusXPlusV =
-                        Vector.add ComplexNumbers.complexField w x
-                            |> Vector.add ComplexNumbers.complexField v
+                        Vector.add ComplexNumbers.field w x
+                            |> Vector.add ComplexNumbers.field v
                 in
                 Expect.true "vectors sums equal" ((Vector.equal ComplexNumbers.equal.eq).eq vPlusWPlusX wPlusXPlusV)
         ]

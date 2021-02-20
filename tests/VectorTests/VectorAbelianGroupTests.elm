@@ -13,17 +13,15 @@ suite : Test.Test
 suite =
     Test.describe "Vector Abelian Group Tests"
         [ Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "tests vector inverse"
           <|
             \one two ->
                 let
                     complexNumber =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
@@ -40,6 +38,6 @@ suite =
                         Vector.Vector
                             [ ComplexNumbers.zero ]
                 in
-                Vector.subtract ComplexNumbers.complexField v w
+                Vector.subtract ComplexNumbers.field v w
                     |> Expect.equal zero
         ]

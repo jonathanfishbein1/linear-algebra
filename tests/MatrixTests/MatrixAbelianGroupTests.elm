@@ -24,9 +24,7 @@ suite =
                                 Basics.negate
                                     1
                             )
-                            (Imaginary.Imaginary
-                                0
-                            )
+                            Imaginary.zero
 
                     v =
                         Matrix.Matrix
@@ -50,6 +48,6 @@ suite =
                                     ]
                             ]
                 in
-                Matrix.add ComplexNumbers.complexField v w
+                Matrix.add ComplexNumbers.field v w
                     |> Expect.equal zero
         ]

@@ -13,7 +13,7 @@ suite : Test.Test
 suite =
     Test.describe "Vector Space Tests"
         [ Test.fuzz2
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10)) 
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests one is product identity"
           <|
@@ -125,26 +125,22 @@ suite =
                 in
                 Expect.true "All elements equal" result
         , Test.fuzz2
-            (Fuzz.floatRange -10 10)
-            (Fuzz.floatRange -10 10)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests scalar multiplication distributes over complex addition"
           <|
             \one two ->
                 let
                     c1 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                one
-                            )
+                            one
                             (Imaginary.Imaginary
                                 two
                             )
 
                     c2 =
                         ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                two
-                            )
+                            two
                             (Imaginary.Imaginary
                                 one
                             )
@@ -152,9 +148,7 @@ suite =
                     v =
                         Vector.Vector
                             [ ComplexNumbers.ComplexNumber
-                                (Real.Real
-                                    one
-                                )
+                                one
                                 (Imaginary.Imaginary
                                     two
                                 )

@@ -177,14 +177,14 @@ normComplex matrix =
 -}
 distanceReal : SquareMatrix (Real.Real Float) -> SquareMatrix (Real.Real Float) -> Result String (Real.Real Float)
 distanceReal (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
-    Matrix.realMatrixAdditionSemigroup matrixOne (Matrix.realMatrixAdditionGroup.inverse matrixTwo)
+    Matrix.realAdditionSemigroup matrixOne (Matrix.realAdditionGroup.inverse matrixTwo)
         |> SquareMatrix
         |> normReal
 
 
 distanceComplex : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (Real.Real Float)
 distanceComplex (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
-    Matrix.complexMatrixAdditionSemigroup matrixOne (Matrix.complexMatrixAdditionGroup.inverse matrixTwo)
+    Matrix.complexAdditionSemigroup matrixOne (Matrix.complexAdditionGroup.inverse matrixTwo)
         |> SquareMatrix
         |> normComplex
 

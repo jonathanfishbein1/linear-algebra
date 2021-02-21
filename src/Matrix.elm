@@ -1037,64 +1037,6 @@ setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
         |> Matrix
 
 
-{-| Print a Real matrix to a string
--}
-printRealMatrix : Matrix Float -> String
-printRealMatrix (Matrix listOfRowVectors) =
-    "Matrix [ "
-        ++ List.foldl
-            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc)
-            ""
-            listOfRowVectors
-        ++ " ]"
-
-
-{-| Print a Complex matrix to a string
--}
-printComplexMatrix : Matrix (ComplexNumbers.ComplexNumber Float) -> String
-printComplexMatrix (Matrix listOfRowVectors) =
-    "Matrix [ "
-        ++ List.foldl
-            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc)
-            ""
-            listOfRowVectors
-        ++ " ]"
-
-
-{-| Try to read a string into a Matrix
--}
-readRealMatrix : String -> Result (List Parser.DeadEnd) (Matrix Float)
-readRealMatrix matrixString =
-    Parser.run (parseMatrix Vector.negativeOrPositiveFloat) matrixString
-
-
-{-| Try to read a string into a Matrix
--}
-readComplexMatrix : String -> Result (List Parser.DeadEnd) (Matrix (ComplexNumbers.ComplexNumber Float))
-readComplexMatrix matrixString =
-    Parser.run (parseMatrix ComplexNumbers.parseComplexNumber) matrixString
-
-
-listOfRowVectorParser : Parser.Parser (RowVector.RowVector a) -> Parser.Parser (List (RowVector.RowVector a))
-listOfRowVectorParser rowVectorParser =
-    Parser.sequence
-        { start = "["
-        , separator = ","
-        , end = "]"
-        , spaces = Parser.spaces
-        , item = rowVectorParser
-        , trailing = Parser.Forbidden
-        }
-
-
-parseMatrix : Parser.Parser a -> Parser.Parser (Matrix a)
-parseMatrix matrixElementParser =
-    Parser.succeed Matrix
-        |. Parser.keyword "Matrix"
-        |. Parser.spaces
-        |= listOfRowVectorParser (RowVector.parseRowVector matrixElementParser)
-
-
 {-| Real Numbered Vector Space for Matrix
 -}
 realMatrixSpace : MatrixSpace (Real.Real Float)
@@ -1138,3 +1080,61 @@ commuter innerProductSpace matrixOne matrixTwo =
     Result.map2 (subtract innerProductSpace.vectorSpace.field)
         (multiply innerProductSpace matrixOne matrixTwo)
         (multiply innerProductSpace matrixTwo matrixOne)
+
+
+{-| Print a Real matrix to a string
+-}
+printRealMatrix : Matrix (Real.Real Float) -> String
+printRealMatrix (Matrix listOfRowVectors) =
+    "Matrix [ "
+        ++ List.foldl
+            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc)
+            ""
+            listOfRowVectors
+        ++ " ]"
+
+
+{-| Print a Complex matrix to a string
+-}
+printComplexMatrix : Matrix (ComplexNumbers.ComplexNumber Float) -> String
+printComplexMatrix (Matrix listOfRowVectors) =
+    "Matrix [ "
+        ++ List.foldl
+            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc)
+            ""
+            listOfRowVectors
+        ++ " ]"
+
+
+{-| Try to read a string into a Matrix
+-}
+readRealMatrix : String -> Result (List Parser.DeadEnd) (Matrix (Real.Real Float))
+readRealMatrix matrixString =
+    Parser.run (parseMatrix Real.parseReal) matrixString
+
+
+{-| Try to read a string into a Matrix
+-}
+readComplexMatrix : String -> Result (List Parser.DeadEnd) (Matrix (ComplexNumbers.ComplexNumber Float))
+readComplexMatrix matrixString =
+    Parser.run (parseMatrix ComplexNumbers.parseComplexNumber) matrixString
+
+
+listOfRowVectorParser : Parser.Parser (RowVector.RowVector a) -> Parser.Parser (List (RowVector.RowVector a))
+listOfRowVectorParser rowVectorParser =
+    Parser.sequence
+        { start = "["
+        , separator = ","
+        , end = "]"
+        , spaces = Parser.spaces
+        , item = rowVectorParser
+        , trailing = Parser.Forbidden
+        }
+
+
+parseMatrix : Parser.Parser a -> Parser.Parser (Matrix a)
+parseMatrix matrixElementParser =
+    Parser.succeed Matrix
+        |. Parser.keyword "Matrix"
+        |. Parser.spaces
+        |= listOfRowVectorParser (RowVector.parseRowVector matrixElementParser)

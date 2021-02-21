@@ -511,15 +511,15 @@ suite =
             \_ ->
                 let
                     matrix =
-                        Matrix.Matrix <| [ RowVector.RowVector <| Vector.Vector [ 0, 1 ] ]
+                        Matrix.Matrix <| [ RowVector.RowVector <| Vector.Vector [ Real.zero, Real.one ] ]
 
                     printedMatrix =
                         Matrix.printRealMatrix matrix
                 in
-                Expect.equal printedMatrix "Matrix [ RowVector Vector [0, 1] ] ]"
+                Expect.equal printedMatrix "Matrix [ RowVector Vector [Real.Real 0, Real.Real 1] ] ]"
         , Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "read Matrix"
           <|
             \one two ->

@@ -338,8 +338,8 @@ suite =
                 in
                 Expect.equal (Vector.getAt 0 vector) (Just one)
         , Test.fuzz2
-            Fuzz.float
-            Fuzz.float
+            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.float)
             "read Vector"
           <|
             \one two ->

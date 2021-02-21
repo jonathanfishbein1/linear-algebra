@@ -52,7 +52,6 @@ module Vector exposing
     , readRealVector
     , readComplexVector
     , vector3ToVector
-    , negativeOrPositiveFloat
     )
 
 {-| A module for Vectors
@@ -145,7 +144,6 @@ module Vector exposing
 @docs readRealVector
 @docs readComplexVector
 @docs vector3ToVector
-@docs negativeOrPositiveFloat
 
 -}
 
@@ -662,12 +660,28 @@ setAt index element (Vector list) =
         |> Vector
 
 
+{-| Find index of a value in a Vector
+-}
+findIndex : (a -> Bool) -> Vector a -> Maybe Int
+findIndex predicate (Vector list) =
+    List.Extra.findIndex predicate list
+
+
+{-| Take the complex conjugate of a Complex Numbered Vector
+-}
+conjugate :
+    Vector (ComplexNumbers.ComplexNumber number)
+    -> Vector (ComplexNumbers.ComplexNumber number)
+conjugate =
+    map ComplexNumbers.conjugate
+
+
 {-| Print a Real Vector as a string
 -}
-printRealVector : Vector Float -> String
+printRealVector : Vector (Real.Real Float) -> String
 printRealVector vector =
     "Vector ["
-        ++ (map String.fromFloat vector
+        ++ (map Real.print vector
                 |> (\(Vector list) -> list)
                 |> String.join ", "
            )
@@ -684,29 +698,6 @@ printComplexVector vector =
                 |> String.join ", "
            )
         ++ "]"
-
-
-float : Parser.Parser Float
-float =
-    Parser.number
-        { int = Just toFloat
-        , hex = Nothing
-        , octal = Nothing
-        , binary = Nothing
-        , float = Just identity
-        }
-
-
-{-| Parse a Float that can be negative or positive
--}
-negativeOrPositiveFloat : Parser.Parser Float
-negativeOrPositiveFloat =
-    Parser.oneOf
-        [ Parser.succeed negate
-            |. Parser.symbol "-"
-            |= float
-        , float
-        ]
 
 
 listParser : Parser.Parser a -> Parser.Parser (List a)
@@ -733,9 +724,9 @@ parseVector vectorElementsParser =
 
 {-| Try to read a string into a Real Vector
 -}
-readRealVector : String -> Result (List Parser.DeadEnd) (Vector Float)
+readRealVector : String -> Result (List Parser.DeadEnd) (Vector (Real.Real Float))
 readRealVector =
-    Parser.run (parseVector negativeOrPositiveFloat)
+    Parser.run (parseVector Real.parseReal)
 
 
 {-| Try to read a string into a Complex Vector
@@ -745,19 +736,3 @@ readComplexVector :
     -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumber Float))
 readComplexVector =
     Parser.run (parseVector ComplexNumbers.parseComplexNumber)
-
-
-{-| Find index of a value in a Vector
--}
-findIndex : (a -> Bool) -> Vector a -> Maybe Int
-findIndex predicate (Vector list) =
-    List.Extra.findIndex predicate list
-
-
-{-| Take the complex conjugate of a Complex Numbered Vector
--}
-conjugate :
-    Vector (ComplexNumbers.ComplexNumber number)
-    -> Vector (ComplexNumbers.ComplexNumber number)
-conjugate =
-    map ComplexNumbers.conjugate

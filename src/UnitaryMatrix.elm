@@ -3,6 +3,7 @@ module UnitaryMatrix exposing
     , identity
     , isUnitary
     , dimension
+    , scalarMultiplication
     , multiply
     , multiplyMatrixVector
     , getAt
@@ -26,6 +27,11 @@ module UnitaryMatrix exposing
 
 @docs isUnitary
 @docs dimension
+
+
+# Unitary Operations
+
+@docs scalarMultiplication
 
 
 # Binary Operations
@@ -129,3 +135,11 @@ identity : Int -> UnitaryMatrix Float
 identity =
     InvertableMatrix.identity ComplexNumbers.field
         >> UnitaryMatrix
+
+
+{-| Scalar multiplication over an InvertableMatrix Matrix
+-}
+scalarMultiplication : ComplexNumbers.ComplexNumber number -> UnitaryMatrix number -> UnitaryMatrix number
+scalarMultiplication scalar (UnitaryMatrix matrix) =
+    InvertableMatrix.scalarMultiplication ComplexNumbers.field scalar matrix
+        |> UnitaryMatrix

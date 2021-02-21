@@ -23,7 +23,7 @@
         "elm/parser": "1.1.0 <= v < 2.0.0",
         "elm-community/list-extra": "8.2.4 <= v < 9.0.0",
         "elm-community/maybe-extra": "5.2.0 <= v < 6.0.0",
-        "jonathanfishbein1/elm-numbers": "3.0.0 <= v < 4.0.0",
+        "jonathanfishbein1/elm-numbers": "3.1.0 <= v < 4.0.0",
         "jonathanfishbein1/numeric-typeclasses": "4.0.0 <= v < 5.0.0",
         "nikita-volkov/typeclasses": "1.8.0 <= v < 2.0.0"
     },

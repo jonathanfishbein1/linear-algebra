@@ -139,7 +139,7 @@ identity =
 
 {-| Scalar multiplication over an InvertableMatrix Matrix
 -}
-scalarMultiplication : ComplexNumbers.ComplexNumber number -> UnitaryMatrix number -> UnitaryMatrix number
+scalarMultiplication : ComplexNumbers.ComplexNumber Float -> UnitaryMatrix Float -> UnitaryMatrix Float
 scalarMultiplication scalar (UnitaryMatrix matrix) =
     InvertableMatrix.scalarMultiplication ComplexNumbers.field scalar matrix
         |> UnitaryMatrix

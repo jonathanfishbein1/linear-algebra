@@ -67,7 +67,7 @@ isUnitary matrix =
         |> (\resultMatrix ->
                 case resultMatrix of
                     Ok resultM ->
-                        (equal ComplexNumbers.equal.eq).eq resultM (identity (dimension resultM))
+                        equal.eq resultM (identity (dimension resultM))
 
                     Err _ ->
                         False
@@ -111,16 +111,16 @@ multiplyMatrixVector (UnitaryMatrix matrix) vector =
 
 {-| Compare two Matrices for equality
 -}
-equalImplementation : (ComplexNumbers.ComplexNumber number -> ComplexNumbers.ComplexNumber number -> Bool) -> UnitaryMatrix number -> UnitaryMatrix number -> Bool
-equalImplementation comparator (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
-    InvertableMatrix.equalImplementation comparator matrixOne matrixTwo
+equalImplementation : UnitaryMatrix Float -> UnitaryMatrix Float -> Bool
+equalImplementation (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
+    InvertableMatrix.equalImplementation ComplexNumbers.equal.eq matrixOne matrixTwo
 
 
 {-| Compare two matricies using comparator
 -}
-equal : (ComplexNumbers.ComplexNumber number -> ComplexNumbers.ComplexNumber number -> Bool) -> Typeclasses.Classes.Equality.Equality (UnitaryMatrix number)
-equal comparator =
-    Typeclasses.Classes.Equality.eq (equalImplementation comparator)
+equal : Typeclasses.Classes.Equality.Equality (UnitaryMatrix Float)
+equal =
+    Typeclasses.Classes.Equality.eq equalImplementation
 
 
 {-| Create Square Identity Matrix with n dimension

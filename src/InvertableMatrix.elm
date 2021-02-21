@@ -4,6 +4,7 @@ module InvertableMatrix exposing
     , determinant
     , dimension
     , isInvertable
+    , scalarMultiplication
     , invert
     , multiply
     , multiplyMatrixVector
@@ -31,6 +32,11 @@ module InvertableMatrix exposing
 @docs determinant
 @docs dimension
 @docs isInvertable
+
+
+# Unitary Operations
+
+@docs scalarMultiplication
 
 
 # Binary Operations
@@ -206,3 +212,11 @@ identity : Field.Field a -> Int -> InvertableMatrix a
 identity field =
     NormalMatrix.identity field
         >> InvertableMatrix
+
+
+{-| Scalar multiplication over an InvertableMatrix Matrix
+-}
+scalarMultiplication : Field.Field a -> a -> InvertableMatrix a -> InvertableMatrix a
+scalarMultiplication field scalar (InvertableMatrix matrix) =
+    NormalMatrix.scalarMultiplication field scalar matrix
+        |> InvertableMatrix

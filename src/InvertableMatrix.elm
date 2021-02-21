@@ -6,6 +6,7 @@ module InvertableMatrix exposing
     , isInvertable
     , scalarMultiplication
     , invert
+    , add
     , multiply
     , multiplyMatrixVector
     , getAt
@@ -42,6 +43,7 @@ module InvertableMatrix exposing
 # Binary Operations
 
 @docs invert
+@docs add
 @docs multiply
 @docs multiplyMatrixVector
 
@@ -146,6 +148,14 @@ dimension (InvertableMatrix matrix) =
 getAt : ( Int, Int ) -> InvertableMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (InvertableMatrix matrix) =
     NormalMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Add two InvertableMatrix together
+-}
+add : Field.Field a -> InvertableMatrix a -> InvertableMatrix a -> InvertableMatrix a
+add field (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
+    NormalMatrix.add field matrixOne matrixTwo
+        |> InvertableMatrix
 
 
 {-| Invertable Matrix Invertable Matrix multiplication

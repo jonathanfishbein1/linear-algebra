@@ -9,6 +9,7 @@ module NormalMatrix exposing
     , transpose
     , scalarMultiplication
     , adjoint
+    , add
     , multiply
     , multiplyMatrixVector
     , subtract
@@ -51,6 +52,7 @@ module NormalMatrix exposing
 
 # Binary Operations
 
+@docs add
 @docs multiply
 @docs multiplyMatrixVector
 @docs subtract
@@ -109,6 +111,14 @@ adjoint (NormalMatrix matrix) =
 dimension : NormalMatrix a -> Int
 dimension (NormalMatrix matrix) =
     SquareMatrix.dimension matrix
+
+
+{-| Add two NormalMatrix together
+-}
+add : Field.Field a -> NormalMatrix a -> NormalMatrix a -> NormalMatrix a
+add field (NormalMatrix matrixOne) (NormalMatrix matrixTwo) =
+    SquareMatrix.add field matrixOne matrixTwo
+        |> NormalMatrix
 
 
 {-| Square Matrix Square Matrix multiplication

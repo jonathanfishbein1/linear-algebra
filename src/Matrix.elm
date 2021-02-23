@@ -40,6 +40,7 @@ module Matrix exposing
     , realMatrixAlgebra
     , complexAdditionAbelianGroup
     , appendHorizontal
+    , realAdditionGroup
     , realAdditionSemigroup
     , realMatrixSpace
     , complexMatrixSpace
@@ -65,7 +66,6 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , realAdditionGroup
     )
 
 {-| A module for Matrix
@@ -134,7 +134,7 @@ module Matrix exposing
 @docs realMatrixAlgebra
 @docs complexAdditionAbelianGroup
 @docs appendHorizontal
-@docs realMatrixAdditionGroup
+@docs realAdditionGroup
 @docs realAdditionSemigroup
 @docs realMatrixSpace
 @docs complexMatrixSpace

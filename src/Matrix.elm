@@ -35,17 +35,17 @@ module Matrix exposing
     , empty
     , concatHorizontal
     , concatVertical
-    , realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
-    , realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
+    , realAdditionCommutativeSemigroup, complexAdditionCommutativeSemigroup
+    , realAdditionCommutativeMonoid, complexAdditionCommutativeMonoid
     , realMatrixAlgebra
-    , complexMatrixAdditionAbelianGroup
+    , complexAdditionAbelianGroup
     , appendHorizontal
-    , realMatrixAdditionGroup
-    , realMatrixAdditionSemigroup
+    , realAdditionGroup
+    , realAdditionSemigroup
     , realMatrixSpace
     , complexMatrixSpace
-    , complexMatrixAdditionSemigroup
-    , complexMatrixAdditionGroup
+    , complexAdditionSemigroup
+    , complexAdditionGroup
     , complexMatrixAlgebra
     , map
     , pure
@@ -129,17 +129,17 @@ module Matrix exposing
 @docs empty
 @docs concatHorizontal
 @docs concatVertical
-@docs realMatrixAdditionCommutativeSemigroup, complexMatrixAdditionCommutativeSemigroup
-@docs realMatrixAdditionCommutativeMonoid, complexMatrixAdditionCommutativeMonoid
+@docs realAdditionCommutativeSemigroup, complexAdditionCommutativeSemigroup
+@docs realAdditionCommutativeMonoid, complexAdditionCommutativeMonoid
 @docs realMatrixAlgebra
-@docs complexMatrixAdditionAbelianGroup
+@docs complexAdditionAbelianGroup
 @docs appendHorizontal
-@docs realMatrixAdditionGroup
-@docs realMatrixAdditionSemigroup
+@docs realAdditionGroup
+@docs realAdditionSemigroup
 @docs realMatrixSpace
 @docs complexMatrixSpace
-@docs complexMatrixAdditionSemigroup
-@docs complexMatrixAdditionGroup
+@docs complexAdditionSemigroup
+@docs complexAdditionGroup
 @docs complexMatrixAlgebra
 
 
@@ -253,95 +253,95 @@ type alias MatrixAlgebra a =
 
 {-| Semigroup instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix (Real.Real Float))
-realMatrixAdditionSemigroup =
+realAdditionSemigroup : Semigroup.Semigroup (Matrix (Real.Real Float))
+realAdditionSemigroup =
     add Real.field
 
 
 {-| Semigroup instance for Matrix under the addition operation with complex values.
 -}
-complexMatrixAdditionSemigroup : Semigroup.Semigroup (Matrix (ComplexNumbers.ComplexNumber Float))
-complexMatrixAdditionSemigroup =
+complexAdditionSemigroup : Semigroup.Semigroup (Matrix (ComplexNumbers.ComplexNumber Float))
+complexAdditionSemigroup =
     add ComplexNumbers.field
 
 
 {-| Commutative Semigroup instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix (Real.Real Float))
-realMatrixAdditionCommutativeSemigroup =
-    CommutativeSemigroup.CommutativeSemigroup realMatrixAdditionSemigroup
+realAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix (Real.Real Float))
+realAdditionCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup realAdditionSemigroup
 
 
 {-| Commutative Semigroup instance for Matrix under the addition operation with complex values.
 -}
-complexMatrixAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix (ComplexNumbers.ComplexNumber Float))
-complexMatrixAdditionCommutativeSemigroup =
-    CommutativeSemigroup.CommutativeSemigroup complexMatrixAdditionSemigroup
+complexAdditionCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Matrix (ComplexNumbers.ComplexNumber Float))
+complexAdditionCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup complexAdditionSemigroup
 
 
 {-| Monoid instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionMonoid : Monoid.Monoid (Matrix (Real.Real Float))
-realMatrixAdditionMonoid =
-    Monoid.semigroupAndIdentity realMatrixAdditionSemigroup empty
+realAdditionMonoid : Monoid.Monoid (Matrix (Real.Real Float))
+realAdditionMonoid =
+    Monoid.semigroupAndIdentity realAdditionSemigroup empty
 
 
 {-| Monoid instance for Matrix under the addition operation with complex values.
 -}
-complexMatrixAdditionMonoid : Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumber Float))
-complexMatrixAdditionMonoid =
-    Monoid.semigroupAndIdentity complexMatrixAdditionSemigroup empty
+complexAdditionMonoid : Monoid.Monoid (Matrix (ComplexNumbers.ComplexNumber Float))
+complexAdditionMonoid =
+    Monoid.semigroupAndIdentity complexAdditionSemigroup empty
 
 
 {-| Commutative Monoid instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix (Real.Real Float))
-realMatrixAdditionCommutativeMonoid =
-    CommutativeMonoid.CommutativeMonoid realMatrixAdditionMonoid
+realAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix (Real.Real Float))
+realAdditionCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid realAdditionMonoid
 
 
 {-| Commutative Monoid instance for Matrix under the addition operation with complex values.
 -}
-complexMatrixAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix (ComplexNumbers.ComplexNumber Float))
-complexMatrixAdditionCommutativeMonoid =
-    CommutativeMonoid.CommutativeMonoid complexMatrixAdditionMonoid
+complexAdditionCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Matrix (ComplexNumbers.ComplexNumber Float))
+complexAdditionCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid complexAdditionMonoid
 
 
 {-| Group instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionGroup : Group.Group (Matrix (Real.Real Float))
-realMatrixAdditionGroup =
-    { monoid = realMatrixAdditionMonoid
+realAdditionGroup : Group.Group (Matrix (Real.Real Float))
+realAdditionGroup =
+    { monoid = realAdditionMonoid
     , inverse = map Real.sumGroup.inverse
     }
 
 
 {-| Group instance for Matrix under the addition operation with complex values.
 -}
-complexMatrixAdditionGroup : Group.Group (Matrix (ComplexNumbers.ComplexNumber Float))
-complexMatrixAdditionGroup =
-    { monoid = complexMatrixAdditionMonoid
+complexAdditionGroup : Group.Group (Matrix (ComplexNumbers.ComplexNumber Float))
+complexAdditionGroup =
+    { monoid = complexAdditionMonoid
     , inverse = map ComplexNumbers.sumGroup.inverse
     }
 
 
 {-| Abelian Group instance for Matrix under the addition operation with real values.
 -}
-realMatrixAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix (Real.Real Float))
-realMatrixAdditionAbelianGroup =
+realAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix (Real.Real Float))
+realAdditionAbelianGroup =
     AbelianGroup.AbelianGroup
-        { monoid = realMatrixAdditionMonoid
-        , inverse = realMatrixAdditionGroup.inverse
+        { monoid = realAdditionMonoid
+        , inverse = realAdditionGroup.inverse
         }
 
 
 {-| Abelian Group instance for Matrix under the addition operation with complex values.
 -}
-complexMatrixAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix (ComplexNumbers.ComplexNumber Float))
-complexMatrixAdditionAbelianGroup =
+complexAdditionAbelianGroup : AbelianGroup.AbelianGroup (Matrix (ComplexNumbers.ComplexNumber Float))
+complexAdditionAbelianGroup =
     AbelianGroup.AbelianGroup
-        { monoid = complexMatrixAdditionMonoid
-        , inverse = complexMatrixAdditionGroup.inverse
+        { monoid = complexAdditionMonoid
+        , inverse = complexAdditionGroup.inverse
         }
 
 
@@ -1037,69 +1037,11 @@ setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
         |> Matrix
 
 
-{-| Print a Real matrix to a string
--}
-printRealMatrix : Matrix Float -> String
-printRealMatrix (Matrix listOfRowVectors) =
-    "Matrix [ "
-        ++ List.foldl
-            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc)
-            ""
-            listOfRowVectors
-        ++ " ]"
-
-
-{-| Print a Complex matrix to a string
--}
-printComplexMatrix : Matrix (ComplexNumbers.ComplexNumber Float) -> String
-printComplexMatrix (Matrix listOfRowVectors) =
-    "Matrix [ "
-        ++ List.foldl
-            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc)
-            ""
-            listOfRowVectors
-        ++ " ]"
-
-
-{-| Try to read a string into a Matrix
--}
-readRealMatrix : String -> Result (List Parser.DeadEnd) (Matrix Float)
-readRealMatrix matrixString =
-    Parser.run (parseMatrix Vector.negativeOrPositiveFloat) matrixString
-
-
-{-| Try to read a string into a Matrix
--}
-readComplexMatrix : String -> Result (List Parser.DeadEnd) (Matrix (ComplexNumbers.ComplexNumber Float))
-readComplexMatrix matrixString =
-    Parser.run (parseMatrix ComplexNumbers.parseComplexNumber) matrixString
-
-
-listOfRowVectorParser : Parser.Parser (RowVector.RowVector a) -> Parser.Parser (List (RowVector.RowVector a))
-listOfRowVectorParser rowVectorParser =
-    Parser.sequence
-        { start = "["
-        , separator = ","
-        , end = "]"
-        , spaces = Parser.spaces
-        , item = rowVectorParser
-        , trailing = Parser.Forbidden
-        }
-
-
-parseMatrix : Parser.Parser a -> Parser.Parser (Matrix a)
-parseMatrix matrixElementParser =
-    Parser.succeed Matrix
-        |. Parser.keyword "Matrix"
-        |. Parser.spaces
-        |= listOfRowVectorParser (RowVector.parseRowVector matrixElementParser)
-
-
 {-| Real Numbered Vector Space for Matrix
 -}
 realMatrixSpace : MatrixSpace (Real.Real Float)
 realMatrixSpace =
-    { abelianGroup = realMatrixAdditionAbelianGroup
+    { abelianGroup = realAdditionAbelianGroup
     , matrixScalarMultiplication = scalarMultiplication Real.field
     }
 
@@ -1108,7 +1050,7 @@ realMatrixSpace =
 -}
 complexMatrixSpace : MatrixSpace (ComplexNumbers.ComplexNumber Float)
 complexMatrixSpace =
-    { abelianGroup = complexMatrixAdditionAbelianGroup
+    { abelianGroup = complexAdditionAbelianGroup
     , matrixScalarMultiplication = scalarMultiplication ComplexNumbers.field
     }
 
@@ -1138,3 +1080,61 @@ commuter innerProductSpace matrixOne matrixTwo =
     Result.map2 (subtract innerProductSpace.vectorSpace.field)
         (multiply innerProductSpace matrixOne matrixTwo)
         (multiply innerProductSpace matrixTwo matrixOne)
+
+
+{-| Print a Real matrix to a string
+-}
+printRealMatrix : Matrix (Real.Real Float) -> String
+printRealMatrix (Matrix listOfRowVectors) =
+    "Matrix [ "
+        ++ List.foldl
+            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc)
+            ""
+            listOfRowVectors
+        ++ " ]"
+
+
+{-| Print a Complex matrix to a string
+-}
+printComplexMatrix : Matrix (ComplexNumbers.ComplexNumber Float) -> String
+printComplexMatrix (Matrix listOfRowVectors) =
+    "Matrix [ "
+        ++ List.foldl
+            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc)
+            ""
+            listOfRowVectors
+        ++ " ]"
+
+
+{-| Try to read a string into a Matrix
+-}
+readRealMatrix : String -> Result (List Parser.DeadEnd) (Matrix (Real.Real Float))
+readRealMatrix matrixString =
+    Parser.run (parseMatrix Real.parseReal) matrixString
+
+
+{-| Try to read a string into a Matrix
+-}
+readComplexMatrix : String -> Result (List Parser.DeadEnd) (Matrix (ComplexNumbers.ComplexNumber Float))
+readComplexMatrix matrixString =
+    Parser.run (parseMatrix ComplexNumbers.parseComplexNumber) matrixString
+
+
+listOfRowVectorParser : Parser.Parser (RowVector.RowVector a) -> Parser.Parser (List (RowVector.RowVector a))
+listOfRowVectorParser rowVectorParser =
+    Parser.sequence
+        { start = "["
+        , separator = ","
+        , end = "]"
+        , spaces = Parser.spaces
+        , item = rowVectorParser
+        , trailing = Parser.Forbidden
+        }
+
+
+parseMatrix : Parser.Parser a -> Parser.Parser (Matrix a)
+parseMatrix matrixElementParser =
+    Parser.succeed Matrix
+        |. Parser.keyword "Matrix"
+        |. Parser.spaces
+        |= listOfRowVectorParser (RowVector.parseRowVector matrixElementParser)

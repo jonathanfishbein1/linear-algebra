@@ -3,7 +3,6 @@ module MatrixTests.ComplexAlgebraTests exposing (suite)
 import ColumnVector
 import ComplexNumbers
 import Expect
-import Field
 import Fuzz
 import Imaginary
 import Matrix

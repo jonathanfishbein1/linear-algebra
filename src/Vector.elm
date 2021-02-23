@@ -5,10 +5,10 @@ module Vector exposing
     , VectorSpace
     , InnerProductSpace
     , realVectorSpace
-    , realVectorAbelianGroup
+    , realAbelianGroup
     , realInnerProductSpace
     , complexVectorSpace
-    , complexVectorAbelianGroup
+    , complexAbelianGroup
     , complexInnerProductSpace
     , zeros
     , scalarMultiplication
@@ -33,8 +33,8 @@ module Vector exposing
     , empty
     , append
     , concat
-    , realVectorCommutativeSemigroup, complexVectorCommutativeSemigroup
-    , realVectorCommutativeMonoid, complexVectorCommutativeMonoid
+    , realCommutativeSemigroup, complexCommutativeSemigroup
+    , realCommutativeMonoid, complexCommutativeMonoid
     , map
     , pure
     , andMap
@@ -52,7 +52,6 @@ module Vector exposing
     , readRealVector
     , readComplexVector
     , vector3ToVector
-    , negativeOrPositiveFloat
     )
 
 {-| A module for Vectors
@@ -70,10 +69,10 @@ module Vector exposing
 # Values
 
 @docs realVectorSpace
-@docs realVectorAbelianGroup
+@docs realAbelianGroup
 @docs realInnerProductSpace
 @docs complexVectorSpace
-@docs complexVectorAbelianGroup
+@docs complexAbelianGroup
 @docs complexInnerProductSpace
 @docs zeros
 
@@ -114,8 +113,8 @@ module Vector exposing
 @docs empty
 @docs append
 @docs concat
-@docs realVectorCommutativeSemigroup, complexVectorCommutativeSemigroup
-@docs realVectorCommutativeMonoid, complexVectorCommutativeMonoid
+@docs realCommutativeSemigroup, complexCommutativeSemigroup
+@docs realCommutativeMonoid, complexCommutativeMonoid
 
 
 # Functor, Applicative, Monad, Foldable
@@ -145,7 +144,6 @@ module Vector exposing
 @docs readRealVector
 @docs readComplexVector
 @docs vector3ToVector
-@docs negativeOrPositiveFloat
 
 -}
 
@@ -204,95 +202,95 @@ type alias InnerProductSpace a =
 
 {-| Semigroup instance for a real valued Vector.
 -}
-realVectorSemigroup : Semigroup.Semigroup (Vector (Real.Real Float))
-realVectorSemigroup =
+realSemigroup : Semigroup.Semigroup (Vector (Real.Real Float))
+realSemigroup =
     add Real.field
 
 
 {-| Semigroup instance for a complex valued Vector.
 -}
-complexVectorSemigroup : Semigroup.Semigroup (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorSemigroup =
+complexSemigroup : Semigroup.Semigroup (Vector (ComplexNumbers.ComplexNumber Float))
+complexSemigroup =
     add ComplexNumbers.field
 
 
 {-| Commutative Semigroup instance for a real valued Vector.
 -}
-realVectorCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector (Real.Real Float))
-realVectorCommutativeSemigroup =
-    CommutativeSemigroup.CommutativeSemigroup realVectorSemigroup
+realCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector (Real.Real Float))
+realCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup realSemigroup
 
 
 {-| Commutative Semigroup instance for a complex valued Vector.
 -}
-complexVectorCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorCommutativeSemigroup =
-    CommutativeSemigroup.CommutativeSemigroup complexVectorSemigroup
+complexCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (Vector (ComplexNumbers.ComplexNumber Float))
+complexCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup complexSemigroup
 
 
 {-| Monoid instance for a real valued Vector.
 -}
-realVectorMonoid : Monoid.Monoid (Vector (Real.Real Float))
-realVectorMonoid =
-    Monoid.semigroupAndIdentity realVectorSemigroup empty
+realMonoid : Monoid.Monoid (Vector (Real.Real Float))
+realMonoid =
+    Monoid.semigroupAndIdentity realSemigroup empty
 
 
 {-| Monoid instance for a complex valued Vector.
 -}
-complexVectorMonoid : Monoid.Monoid (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorMonoid =
-    Monoid.semigroupAndIdentity complexVectorSemigroup empty
+complexMonoid : Monoid.Monoid (Vector (ComplexNumbers.ComplexNumber Float))
+complexMonoid =
+    Monoid.semigroupAndIdentity complexSemigroup empty
 
 
 {-| Commutative Monoid instance for a real valued Vector.
 -}
-realVectorCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector (Real.Real Float))
-realVectorCommutativeMonoid =
-    CommutativeMonoid.CommutativeMonoid realVectorMonoid
+realCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector (Real.Real Float))
+realCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid realMonoid
 
 
 {-| Commutative Monoid instance for a complex valued Vector.
 -}
-complexVectorCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorCommutativeMonoid =
-    CommutativeMonoid.CommutativeMonoid complexVectorMonoid
+complexCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (Vector (ComplexNumbers.ComplexNumber Float))
+complexCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid complexMonoid
 
 
 {-| Group instance for a real valued Vector.
 -}
-realVectorGroup : Group.Group (Vector (Real.Real Float))
-realVectorGroup =
-    { monoid = realVectorMonoid
+realGroup : Group.Group (Vector (Real.Real Float))
+realGroup =
+    { monoid = realMonoid
     , inverse = map Real.sumGroup.inverse
     }
 
 
 {-| Group instance for a complex valued Vector.
 -}
-complexVectorGroup : Group.Group (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorGroup =
-    { monoid = complexVectorMonoid
+complexGroup : Group.Group (Vector (ComplexNumbers.ComplexNumber Float))
+complexGroup =
+    { monoid = complexMonoid
     , inverse = map ComplexNumbers.sumGroup.inverse
     }
 
 
 {-| Abelian Group instance for a real valued Vector.
 -}
-realVectorAbelianGroup : AbelianGroup.AbelianGroup (Vector (Real.Real Float))
-realVectorAbelianGroup =
+realAbelianGroup : AbelianGroup.AbelianGroup (Vector (Real.Real Float))
+realAbelianGroup =
     AbelianGroup.AbelianGroup
-        { monoid = realVectorMonoid
-        , inverse = realVectorGroup.inverse
+        { monoid = realMonoid
+        , inverse = realGroup.inverse
         }
 
 
 {-| Group instance for a complex valued Vector.
 -}
-complexVectorAbelianGroup : AbelianGroup.AbelianGroup (Vector (ComplexNumbers.ComplexNumber Float))
-complexVectorAbelianGroup =
+complexAbelianGroup : AbelianGroup.AbelianGroup (Vector (ComplexNumbers.ComplexNumber Float))
+complexAbelianGroup =
     AbelianGroup.AbelianGroup
-        { monoid = complexVectorMonoid
-        , inverse = complexVectorGroup.inverse
+        { monoid = complexMonoid
+        , inverse = complexGroup.inverse
         }
 
 
@@ -300,7 +298,7 @@ complexVectorAbelianGroup =
 -}
 realVectorSpace : VectorSpace (Real.Real Float)
 realVectorSpace =
-    { abelianGroup = realVectorAbelianGroup
+    { abelianGroup = realAbelianGroup
     , vectorScalarMultiplication = scalarMultiplication Real.field
     , field = Real.field
     }
@@ -310,7 +308,7 @@ realVectorSpace =
 -}
 complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumber Float)
 complexVectorSpace =
-    { abelianGroup = complexVectorAbelianGroup
+    { abelianGroup = complexAbelianGroup
     , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.field
     , field = ComplexNumbers.field
     }
@@ -455,7 +453,7 @@ sum monoid (Vector vect) =
 -}
 distanceReal : Vector (Real.Real Float) -> Vector (Real.Real Float) -> Real.Real Float
 distanceReal vectorOne vectorTwo =
-    realVectorGroup.monoid.semigroup vectorOne (realVectorGroup.inverse vectorTwo)
+    realGroup.monoid.semigroup vectorOne (realGroup.inverse vectorTwo)
         |> lengthReal
 
 
@@ -463,7 +461,7 @@ distanceReal vectorOne vectorTwo =
 -}
 distanceComplex : Vector (ComplexNumbers.ComplexNumber Float) -> Vector (ComplexNumbers.ComplexNumber Float) -> Real.Real Float
 distanceComplex vectorOne vectorTwo =
-    complexVectorGroup.monoid.semigroup vectorOne (complexVectorGroup.inverse vectorTwo)
+    complexGroup.monoid.semigroup vectorOne (complexGroup.inverse vectorTwo)
         |> lengthComplex
 
 
@@ -662,12 +660,28 @@ setAt index element (Vector list) =
         |> Vector
 
 
+{-| Find index of a value in a Vector
+-}
+findIndex : (a -> Bool) -> Vector a -> Maybe Int
+findIndex predicate (Vector list) =
+    List.Extra.findIndex predicate list
+
+
+{-| Take the complex conjugate of a Complex Numbered Vector
+-}
+conjugate :
+    Vector (ComplexNumbers.ComplexNumber number)
+    -> Vector (ComplexNumbers.ComplexNumber number)
+conjugate =
+    map ComplexNumbers.conjugate
+
+
 {-| Print a Real Vector as a string
 -}
-printRealVector : Vector Float -> String
+printRealVector : Vector (Real.Real Float) -> String
 printRealVector vector =
     "Vector ["
-        ++ (map String.fromFloat vector
+        ++ (map Real.print vector
                 |> (\(Vector list) -> list)
                 |> String.join ", "
            )
@@ -684,29 +698,6 @@ printComplexVector vector =
                 |> String.join ", "
            )
         ++ "]"
-
-
-float : Parser.Parser Float
-float =
-    Parser.number
-        { int = Just toFloat
-        , hex = Nothing
-        , octal = Nothing
-        , binary = Nothing
-        , float = Just identity
-        }
-
-
-{-| Parse a Float that can be negative or positive
--}
-negativeOrPositiveFloat : Parser.Parser Float
-negativeOrPositiveFloat =
-    Parser.oneOf
-        [ Parser.succeed negate
-            |. Parser.symbol "-"
-            |= float
-        , float
-        ]
 
 
 listParser : Parser.Parser a -> Parser.Parser (List a)
@@ -733,9 +724,9 @@ parseVector vectorElementsParser =
 
 {-| Try to read a string into a Real Vector
 -}
-readRealVector : String -> Result (List Parser.DeadEnd) (Vector Float)
+readRealVector : String -> Result (List Parser.DeadEnd) (Vector (Real.Real Float))
 readRealVector =
-    Parser.run (parseVector negativeOrPositiveFloat)
+    Parser.run (parseVector Real.parseReal)
 
 
 {-| Try to read a string into a Complex Vector
@@ -745,19 +736,3 @@ readComplexVector :
     -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumber Float))
 readComplexVector =
     Parser.run (parseVector ComplexNumbers.parseComplexNumber)
-
-
-{-| Find index of a value in a Vector
--}
-findIndex : (a -> Bool) -> Vector a -> Maybe Int
-findIndex predicate (Vector list) =
-    List.Extra.findIndex predicate list
-
-
-{-| Take the complex conjugate of a Complex Numbered Vector
--}
-conjugate :
-    Vector (ComplexNumbers.ComplexNumber number)
-    -> Vector (ComplexNumbers.ComplexNumber number)
-conjugate =
-    map ComplexNumbers.conjugate

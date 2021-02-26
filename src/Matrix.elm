@@ -6,6 +6,8 @@ module Matrix exposing
     , MatrixSpace
     , identity
     , zeros
+    , empty
+    , createMatrixFromColumnVectors
     , scalarMultiplication
     , transpose
     , conjugate
@@ -16,7 +18,6 @@ module Matrix exposing
     , getDiagonal
     , getDiagonalProduct
     , rank
-    , createMatrixFromColumnVectors
     , add
     , subtract
     , multiplyMatrixVector
@@ -32,21 +33,22 @@ module Matrix exposing
     , all
     , isOneToOne
     , isOnto
-    , empty
-    , concatHorizontal
-    , concatVertical
-    , realAdditionCommutativeSemigroup, complexAdditionCommutativeSemigroup
-    , realAdditionCommutativeMonoid, complexAdditionCommutativeMonoid
-    , realMatrixAlgebra
-    , complexAdditionAbelianGroup
-    , appendHorizontal
-    , realAdditionGroup
     , realAdditionSemigroup
+    , complexAdditionSemigroup
+    , realAdditionCommutativeSemigroup
+    , complexAdditionCommutativeSemigroup
+    , realAdditionCommutativeMonoid
+    , complexAdditionCommutativeMonoid
+    , realMatrixAlgebra
+    , complexMatrixAlgebra
+    , realAdditionGroup
+    , complexAdditionGroup
+    , complexAdditionAbelianGroup
     , realMatrixSpace
     , complexMatrixSpace
-    , complexAdditionSemigroup
-    , complexAdditionGroup
-    , complexMatrixAlgebra
+    , concatHorizontal
+    , concatVertical
+    , appendHorizontal
     , map
     , pure
     , andMap
@@ -84,6 +86,12 @@ module Matrix exposing
 
 @docs identity
 @docs zeros
+@docs empty
+
+
+# Constructors
+
+@docs createMatrixFromColumnVectors
 
 
 # Unitary Operations
@@ -98,7 +106,6 @@ module Matrix exposing
 @docs getDiagonal
 @docs getDiagonalProduct
 @docs rank
-@docs createMatrixFromColumnVectors
 
 
 # Binary Operations
@@ -124,27 +131,29 @@ module Matrix exposing
 @docs isOnto
 
 
-# Semigroup, Monoid, Group, Ring, Field, VectorSpace
+# Semigroup, Monoid, Group, Ring, Field, VectorSpace instances
 
-@docs empty
-@docs concatHorizontal
-@docs concatVertical
-@docs realAdditionCommutativeSemigroup, complexAdditionCommutativeSemigroup
-@docs realAdditionCommutativeMonoid, complexAdditionCommutativeMonoid
-@docs realMatrixAlgebra
-@docs complexAdditionAbelianGroup
-@docs appendHorizontal
-@docs realAdditionGroup
 @docs realAdditionSemigroup
+@docs complexAdditionSemigroup
+@docs realAdditionCommutativeSemigroup
+@docs complexAdditionCommutativeSemigroup
+@docs realAdditionCommutativeMonoid
+@docs complexAdditionCommutativeMonoid
+@docs realMatrixAlgebra
+@docs complexMatrixAlgebra
+@docs realAdditionGroup
+@docs complexAdditionGroup
+@docs realAdditionAbelianGroup
+@docs complexAdditionAbelianGroup
 @docs realMatrixSpace
 @docs complexMatrixSpace
-@docs complexAdditionSemigroup
-@docs complexAdditionGroup
-@docs complexMatrixAlgebra
 
 
-# Functor, Applicative, Monad, Foldable
+# Monoid, Functor, Applicative, Monad, Foldable functions
 
+@docs concatHorizontal
+@docs concatVertical
+@docs appendHorizontal
 @docs map
 @docs pure
 @docs andMap

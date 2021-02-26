@@ -930,7 +930,7 @@ doesSetSpanSpace vSpace (VectorDimension vectorDimension) columnVectors =
     if List.length columnVectors /= vectorDimension then
         Err "Please input same number of vectors as vector space"
 
-    else if not <| List.all (\(ColumnVector.ColumnVector vector) -> Vector.dimension vector == vectorDimension) columnVectors then
+    else if not <| List.all (\columnVector -> ColumnVector.dimension columnVector == vectorDimension) columnVectors then
         Err "Please input vectors of equal length as vector space"
 
     else

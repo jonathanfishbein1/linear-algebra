@@ -57,9 +57,15 @@ module ColumnVector exposing
 
 -}
 
+import AbelianGroup
+import CommutativeMonoid
+import CommutativeSemigroup
 import ComplexNumbers
 import Field
+import Group
 import Monoid
+import Real
+import Semigroup
 import Typeclasses.Classes.Equality
 import Vector
 
@@ -68,6 +74,161 @@ import Vector
 -}
 type ColumnVector a
     = ColumnVector (Vector.Vector a)
+
+
+{-| Type to represent a Vector Space
+-}
+type alias VectorSpace a =
+    { abelianGroup : AbelianGroup.AbelianGroup (ColumnVector a)
+    , vectorScalarMultiplication : a -> ColumnVector a -> ColumnVector a
+    , field : Field.Field a
+    }
+
+
+{-| Type to represent an Inner Product Space
+-}
+type alias InnerProductSpace a =
+    { vectorSpace : VectorSpace a
+    , innerProduct : ColumnVector a -> ColumnVector a -> a
+    , length : ColumnVector a -> Real.Real Float
+    , distance : ColumnVector a -> ColumnVector a -> Real.Real Float
+    }
+
+
+{-| Semigroup instance for a real valued Vector.
+-}
+realSemigroup : Semigroup.Semigroup (ColumnVector (Real.Real Float))
+realSemigroup =
+    add Real.field
+
+
+{-| Semigroup instance for a complex valued Vector.
+-}
+complexSemigroup : Semigroup.Semigroup (ColumnVector (ComplexNumbers.ComplexNumber Float))
+complexSemigroup =
+    add ComplexNumbers.field
+
+
+{-| Commutative Semigroup instance for a real valued Vector.
+-}
+realCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (ColumnVector (Real.Real Float))
+realCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup realSemigroup
+
+
+{-| Commutative Semigroup instance for a complex valued Vector.
+-}
+complexCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (ColumnVector (ComplexNumbers.ComplexNumber Float))
+complexCommutativeSemigroup =
+    CommutativeSemigroup.CommutativeSemigroup complexSemigroup
+
+
+{-| Monoid instance for a real valued Vector.
+-}
+realMonoid : Monoid.Monoid (ColumnVector (Real.Real Float))
+realMonoid =
+    Monoid.semigroupAndIdentity realSemigroup empty
+
+
+{-| Monoid instance for a complex valued Vector.
+-}
+complexMonoid : Monoid.Monoid (ColumnVector (ComplexNumbers.ComplexNumber Float))
+complexMonoid =
+    Monoid.semigroupAndIdentity complexSemigroup empty
+
+
+{-| Commutative Monoid instance for a real valued Vector.
+-}
+realCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (ColumnVector (Real.Real Float))
+realCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid realMonoid
+
+
+{-| Commutative Monoid instance for a complex valued Vector.
+-}
+complexCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (ColumnVector (ComplexNumbers.ComplexNumber Float))
+complexCommutativeMonoid =
+    CommutativeMonoid.CommutativeMonoid complexMonoid
+
+
+{-| Group instance for a real valued Vector.
+-}
+realGroup : Group.Group (ColumnVector (Real.Real Float))
+realGroup =
+    { monoid = realMonoid
+    , inverse = map Real.sumGroup.inverse
+    }
+
+
+{-| Group instance for a complex valued Vector.
+-}
+complexGroup : Group.Group (ColumnVector (ComplexNumbers.ComplexNumber Float))
+complexGroup =
+    { monoid = complexMonoid
+    , inverse = map ComplexNumbers.sumGroup.inverse
+    }
+
+
+{-| Abelian Group instance for a real valued Vector.
+-}
+realAbelianGroup : AbelianGroup.AbelianGroup (ColumnVector (Real.Real Float))
+realAbelianGroup =
+    AbelianGroup.AbelianGroup
+        { monoid = realMonoid
+        , inverse = realGroup.inverse
+        }
+
+
+{-| Group instance for a complex valued Vector.
+-}
+complexAbelianGroup : AbelianGroup.AbelianGroup (ColumnVector (ComplexNumbers.ComplexNumber Float))
+complexAbelianGroup =
+    AbelianGroup.AbelianGroup
+        { monoid = complexMonoid
+        , inverse = complexGroup.inverse
+        }
+
+
+{-| Real Numbered Vector Space
+-}
+realVectorSpace : VectorSpace (Real.Real Float)
+realVectorSpace =
+    { abelianGroup = realAbelianGroup
+    , vectorScalarMultiplication = scalarMultiplication Real.field
+    , field = Real.field
+    }
+
+
+{-| Complex Numbered Vector Space
+-}
+complexVectorSpace : VectorSpace (ComplexNumbers.ComplexNumber Float)
+complexVectorSpace =
+    { abelianGroup = complexAbelianGroup
+    , vectorScalarMultiplication = scalarMultiplication ComplexNumbers.field
+    , field = ComplexNumbers.field
+    }
+
+
+{-| Real Numbered Inner Product Space
+-}
+realInnerProductSpace : InnerProductSpace (Real.Real Float)
+realInnerProductSpace =
+    { vectorSpace = realVectorSpace
+    , innerProduct = dotProduct Real.field
+    , length = lengthReal
+    , distance = distanceReal
+    }
+
+
+{-| Complex Numbered Inner Product Space
+-}
+complexInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumber Float)
+complexInnerProductSpace =
+    { vectorSpace = complexVectorSpace
+    , innerProduct = dotProduct ComplexNumbers.field
+    , length = lengthComplex
+    , distance = distanceComplex
+    }
 
 
 {-| Monoid empty for Vector
@@ -93,12 +254,47 @@ add field (ColumnVector vectorOne) (ColumnVector vectorTwo) =
         |> ColumnVector
 
 
+{-| Calculate the dot product of two Vectors
+-}
+dotProduct : Field.Field a -> ColumnVector a -> ColumnVector a -> a
+dotProduct field (ColumnVector vectorOne) (ColumnVector vectorTwo) =
+    Vector.dotProduct field vectorOne vectorTwo
+
+
 {-| Scalar multiplication over a ColumnVector
 -}
 scalarMultiplication : Field.Field a -> a -> ColumnVector a -> ColumnVector a
 scalarMultiplication field scalar (ColumnVector vector) =
     Vector.scalarMultiplication field scalar vector
         |> ColumnVector
+
+
+{-| Calculate distance between two vectors
+-}
+distanceReal : ColumnVector (Real.Real Float) -> ColumnVector (Real.Real Float) -> Real.Real Float
+distanceReal (ColumnVector vectorOne) (ColumnVector vectorTwo) =
+    Vector.distanceReal vectorOne vectorTwo
+
+
+{-| Calculate distance between two vectors
+-}
+distanceComplex : ColumnVector (ComplexNumbers.ComplexNumber Float) -> ColumnVector (ComplexNumbers.ComplexNumber Float) -> Real.Real Float
+distanceComplex (ColumnVector vectorOne) (ColumnVector vectorTwo) =
+    Vector.distanceComplex vectorOne vectorTwo
+
+
+{-| Calculate the length of a Real valued Vector
+-}
+lengthReal : ColumnVector (Real.Real Float) -> Real.Real Float
+lengthReal (ColumnVector vector) =
+    Vector.lengthReal vector
+
+
+{-| Calculate the length of a Complex valued Vector
+-}
+lengthComplex : ColumnVector (ComplexNumbers.ComplexNumber Float) -> Real.Real Float
+lengthComplex (ColumnVector vector) =
+    Vector.lengthComplex vector
 
 
 {-| map over a RowVector

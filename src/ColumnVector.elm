@@ -10,6 +10,7 @@ module ColumnVector exposing
     , foldl
     , equal
     , getAt
+    , setAt
     )
 
 {-| A module for Column Vector
@@ -52,6 +53,7 @@ module ColumnVector exposing
 # Manipulation
 
 @docs getAt
+@docs setAt
 
 -}
 
@@ -128,11 +130,19 @@ equal comparator =
     Typeclasses.Classes.Equality.eq (equalImplementation comparator)
 
 
-{-| Get the value in a Vector at the specified index
+{-| Get the value in a Column Vector at the specified index
 -}
 getAt : Int -> ColumnVector a -> Maybe a
 getAt index (ColumnVector list) =
     Vector.getAt index list
+
+
+{-| Set the value in a Column Vector at the specified index
+-}
+setAt : Int -> a -> ColumnVector a -> ColumnVector a
+setAt index element (ColumnVector list) =
+    Vector.setAt index element list
+        |> ColumnVector
 
 
 {-| Count of number of elements in a Ket

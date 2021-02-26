@@ -2,6 +2,7 @@ module DoublyStochasticMatrix exposing
     ( DoublyStochasticMatrix(..)
     , isDoublyStochastic
     , multiply
+    , setAt
     )
 
 {-| A module for Doubly Stochastic Matrix
@@ -20,6 +21,11 @@ module DoublyStochasticMatrix exposing
 # Binary Operations
 
 @docs multiply
+
+
+# Manipulation
+
+@docs setAt
 
 -}
 
@@ -57,3 +63,11 @@ multiply :
 multiply (DoublyStochasticMatrix matrixOne) (DoublyStochasticMatrix matrixTwo) =
     SquareMatrix.multiply Vector.realInnerProductSpace matrixOne matrixTwo
         |> Result.map DoublyStochasticMatrix
+
+
+{-| Set the value in a Doubly Stochastic Matrix at the specified row and column
+-}
+setAt : ( Int, Int ) -> Real.Real Float -> DoublyStochasticMatrix -> DoublyStochasticMatrix
+setAt tup element (DoublyStochasticMatrix matrix) =
+    SquareMatrix.setAt tup element matrix
+        |> DoublyStochasticMatrix

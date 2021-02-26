@@ -345,6 +345,42 @@ complexAdditionAbelianGroup =
         }
 
 
+{-| Real Numbered Vector Space for Matrix
+-}
+realMatrixSpace : MatrixSpace (Real.Real Float)
+realMatrixSpace =
+    { abelianGroup = realAdditionAbelianGroup
+    , matrixScalarMultiplication = scalarMultiplication Real.field
+    }
+
+
+{-| Complex Numbered Vector Space for Matrix
+-}
+complexMatrixSpace : MatrixSpace (ComplexNumbers.ComplexNumber Float)
+complexMatrixSpace =
+    { abelianGroup = complexAdditionAbelianGroup
+    , matrixScalarMultiplication = scalarMultiplication ComplexNumbers.field
+    }
+
+
+{-| Real Numbered Matrix Algebra
+-}
+realMatrixAlgebra : MatrixAlgebra (Real.Real Float)
+realMatrixAlgebra =
+    { matrixSpace = realMatrixSpace
+    , multiply = multiply
+    }
+
+
+{-| Complex Numbered Matrix Algebra
+-}
+complexMatrixAlgebra : MatrixAlgebra (ComplexNumbers.ComplexNumber Float)
+complexMatrixAlgebra =
+    { matrixSpace = complexMatrixSpace
+    , multiply = multiply
+    }
+
+
 {-| Create a Matrix from a list of Column Vectors
 -}
 createMatrixFromColumnVectors : List (ColumnVector.ColumnVector a) -> Matrix a
@@ -1035,42 +1071,6 @@ setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
             )
         |> Maybe.withDefault listOfRowVectors
         |> Matrix
-
-
-{-| Real Numbered Vector Space for Matrix
--}
-realMatrixSpace : MatrixSpace (Real.Real Float)
-realMatrixSpace =
-    { abelianGroup = realAdditionAbelianGroup
-    , matrixScalarMultiplication = scalarMultiplication Real.field
-    }
-
-
-{-| Complex Numbered Vector Space for Matrix
--}
-complexMatrixSpace : MatrixSpace (ComplexNumbers.ComplexNumber Float)
-complexMatrixSpace =
-    { abelianGroup = complexAdditionAbelianGroup
-    , matrixScalarMultiplication = scalarMultiplication ComplexNumbers.field
-    }
-
-
-{-| Real Numbered Matrix Algebra
--}
-realMatrixAlgebra : MatrixAlgebra (Real.Real Float)
-realMatrixAlgebra =
-    { matrixSpace = realMatrixSpace
-    , multiply = multiply
-    }
-
-
-{-| Complex Numbered Matrix Algebra
--}
-complexMatrixAlgebra : MatrixAlgebra (ComplexNumbers.ComplexNumber Float)
-complexMatrixAlgebra =
-    { matrixSpace = complexMatrixSpace
-    , multiply = multiply
-    }
 
 
 {-| Calculate the commuter of two Hermitian Matricies

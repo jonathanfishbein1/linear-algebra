@@ -13,7 +13,7 @@ module ColumnVector exposing
     , setAt
     )
 
-{-| A module for Column Vector
+{-| A module for Column Vectors
 
 
 # Types
@@ -38,7 +38,7 @@ module ColumnVector exposing
 @docs dimension
 
 
-# Functor, Applicative, Monad, Foldable
+# Semigroup, Functor, Applicative, Monad, Foldable
 
 @docs empty
 @docs map

@@ -14,6 +14,7 @@ module NormalMatrix exposing
     , multiplyMatrixVector
     , subtract
     , getAt
+    , setAt
     , appendHorizontal
     , equal
     , equalImplementation
@@ -61,6 +62,7 @@ module NormalMatrix exposing
 # Manipulation
 
 @docs getAt
+@docs setAt
 
 
 # Monoid
@@ -138,6 +140,14 @@ multiply innerProductSpace (NormalMatrix matrixOne) (NormalMatrix matrixTwo) =
 getAt : ( Int, Int ) -> NormalMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (NormalMatrix matrix) =
     SquareMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Set the value in a Normal Matrix at the specified row and column
+-}
+setAt : ( Int, Int ) -> a -> NormalMatrix a -> NormalMatrix a
+setAt tup element (NormalMatrix matrix) =
+    SquareMatrix.setAt tup element matrix
+        |> NormalMatrix
 
 
 {-| Multiply a Vector by a Matrix

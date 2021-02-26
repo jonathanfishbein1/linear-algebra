@@ -25,6 +25,7 @@ module SquareMatrix exposing
     , add
     , subtract
     , getAt
+    , setAt
     , appendHorizontal
     , equal
     , equalImplementation
@@ -87,6 +88,7 @@ module SquareMatrix exposing
 # Manipulation
 
 @docs getAt
+@docs setAt
 
 
 # Monoid
@@ -259,6 +261,14 @@ dotProduct vectorInnerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrix
 getAt : ( Int, Int ) -> SquareMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (SquareMatrix matrix) =
     Matrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Set the value in a Square Matrix at the specified row and column
+-}
+setAt : ( Int, Int ) -> a -> SquareMatrix a -> SquareMatrix a
+setAt tup element (SquareMatrix matrix) =
+    Matrix.setAt tup element matrix
+        |> SquareMatrix
 
 
 {-| Add two Square Matrices together

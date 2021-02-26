@@ -1,6 +1,5 @@
 module Vector exposing
     ( Vector(..)
-    , Vector3(..)
     , Scalar(..)
     , VectorSpace
     , InnerProductSpace
@@ -23,7 +22,6 @@ module Vector exposing
     , hadamardMultiplication
     , dotProduct
     , angleBetween
-    , cross
     , tensorProduct
     , distanceComplex
     , distanceReal
@@ -51,7 +49,6 @@ module Vector exposing
     , printComplexVector
     , readRealVector
     , readComplexVector
-    , vector3ToVector
     )
 
 {-| A module for Vectors
@@ -173,12 +170,6 @@ type Scalar a
 -}
 type Vector a
     = Vector (List a)
-
-
-{-| 3 Dimensional Vector type
--}
-type Vector3 a
-    = Vector3 a a a
 
 
 {-| Type to represent a Vector Space
@@ -465,20 +456,6 @@ distanceComplex vectorOne vectorTwo =
         |> lengthComplex
 
 
-{-| Take the cross product of two 3D vectors
--}
-cross : CommutativeDivisionRing.CommutativeDivisionRing a -> Vector3 a -> Vector3 a -> Vector3 a
-cross (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
-    let
-        (AbelianGroup.AbelianGroup groupAddition) =
-            commutativeDivisionRing.addition
-    in
-    Vector3
-        ((\x y -> groupAddition.monoid.semigroup x (groupAddition.inverse y)) (commutativeDivisionRing.multiplication.monoid.semigroup y1 z2) (commutativeDivisionRing.multiplication.monoid.semigroup y2 z1))
-        ((\x y -> groupAddition.monoid.semigroup x (groupAddition.inverse y)) (commutativeDivisionRing.multiplication.monoid.semigroup z1 x2) (commutativeDivisionRing.multiplication.monoid.semigroup z2 x1))
-        ((\x y -> groupAddition.monoid.semigroup x (groupAddition.inverse y)) (commutativeDivisionRing.multiplication.monoid.semigroup x1 y2) (commutativeDivisionRing.multiplication.monoid.semigroup x2 y1))
-
-
 {-| Calculate the tensor product of two vectors
 -}
 tensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
@@ -565,13 +542,6 @@ concat =
     Monoid.semigroupAndIdentity
         append
         empty
-
-
-{-| Convert a Vector3 type to a Vector type
--}
-vector3ToVector : Vector3 a -> Vector a
-vector3ToVector (Vector3 x y z) =
-    Vector [ x, y, z ]
 
 
 {-| Count of number of elements in a vector

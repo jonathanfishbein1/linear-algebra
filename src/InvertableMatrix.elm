@@ -13,6 +13,7 @@ module InvertableMatrix exposing
     , equal
     , equalImplementation
     , projXOntoSubspace
+    , setAt
     )
 
 {-| A module for Invertable Matrix
@@ -148,6 +149,14 @@ dimension (InvertableMatrix matrix) =
 getAt : ( Int, Int ) -> InvertableMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (InvertableMatrix matrix) =
     NormalMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Set the value in a Normal Matrix at the specified row and column
+-}
+setAt : ( Int, Int ) -> a -> InvertableMatrix a -> InvertableMatrix a
+setAt tup element (InvertableMatrix matrix) =
+    NormalMatrix.setAt tup element matrix
+        |> InvertableMatrix
 
 
 {-| Add two InvertableMatrix together

@@ -7,6 +7,7 @@ module UnitaryMatrix exposing
     , multiply
     , multiplyMatrixVector
     , getAt
+    , setAt
     , equal
     )
 
@@ -43,6 +44,7 @@ module UnitaryMatrix exposing
 # Manipulation
 
 @docs getAt
+@docs setAt
 
 
 # Equality
@@ -92,6 +94,14 @@ dimension (UnitaryMatrix matrix) =
 getAt : ( Int, Int ) -> UnitaryMatrix number -> Maybe (ComplexNumbers.ComplexNumber number)
 getAt ( rowIndex, columnIndex ) (UnitaryMatrix matrix) =
     InvertableMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Set the value in a Normal Matrix at the specified row and column
+-}
+setAt : ( Int, Int ) -> ComplexNumbers.ComplexNumber number -> UnitaryMatrix number -> UnitaryMatrix number
+setAt tup element (UnitaryMatrix matrix) =
+    InvertableMatrix.setAt tup element matrix
+        |> UnitaryMatrix
 
 
 {-| Unitary Matrix Unitary Matrix multiplication

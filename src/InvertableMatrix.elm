@@ -1,5 +1,6 @@
 module InvertableMatrix exposing
     ( InvertableMatrix(..)
+    , empty
     , identity
     , determinant
     , dimension
@@ -22,6 +23,11 @@ module InvertableMatrix exposing
 # Types
 
 @docs InvertableMatrix
+
+
+# Values
+
+@docs empty
 
 
 # Constructors
@@ -66,7 +72,7 @@ module InvertableMatrix exposing
 
 import ColumnVector
 import Field
-import Matrix
+import Matrix exposing (empty)
 import NormalMatrix
 import SquareMatrix
 import Typeclasses.Classes.Equality
@@ -239,4 +245,12 @@ identity field =
 scalarMultiplication : Field.Field a -> a -> InvertableMatrix a -> InvertableMatrix a
 scalarMultiplication field scalar (InvertableMatrix matrix) =
     NormalMatrix.scalarMultiplication field scalar matrix
+        |> InvertableMatrix
+
+
+{-| Monoid empty for InvertableMatrix
+-}
+empty : InvertableMatrix a
+empty =
+    NormalMatrix.empty
         |> InvertableMatrix

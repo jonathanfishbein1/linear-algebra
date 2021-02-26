@@ -1,5 +1,6 @@
 module UnitaryMatrix exposing
     ( UnitaryMatrix(..)
+    , empty
     , identity
     , isUnitary
     , dimension
@@ -17,6 +18,11 @@ module UnitaryMatrix exposing
 # Types
 
 @docs UnitaryMatrix
+
+
+# Values
+
+@docs empty
 
 
 # Constructors
@@ -152,4 +158,12 @@ identity =
 scalarMultiplication : ComplexNumbers.ComplexNumber Float -> UnitaryMatrix Float -> UnitaryMatrix Float
 scalarMultiplication scalar (UnitaryMatrix matrix) =
     InvertableMatrix.scalarMultiplication ComplexNumbers.field scalar matrix
+        |> UnitaryMatrix
+
+
+{-| Monoid empty for UnitaryMatrix
+-}
+empty : UnitaryMatrix Float
+empty =
+    InvertableMatrix.empty
         |> UnitaryMatrix

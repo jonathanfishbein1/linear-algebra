@@ -1,5 +1,6 @@
 module NormalMatrix exposing
     ( NormalMatrix(..)
+    , empty
     , createMatrixFromColumnVectors
     , identity
     , dimension
@@ -28,6 +29,11 @@ module NormalMatrix exposing
 # Types
 
 @docs NormalMatrix
+
+
+# Values
+
+@docs empty
 
 
 # Constructors
@@ -259,3 +265,11 @@ equalImplementation comparator (NormalMatrix matrixOne) (NormalMatrix matrixTwo)
 equal : (a -> a -> Bool) -> Typeclasses.Classes.Equality.Equality (NormalMatrix a)
 equal comparator =
     Typeclasses.Classes.Equality.eq (equalImplementation comparator)
+
+
+{-| Monoid empty for NormalMatrix
+-}
+empty : NormalMatrix a
+empty =
+    SquareMatrix.empty
+        |> NormalMatrix

@@ -4,6 +4,7 @@ module SquareMatrix exposing
     , zeroSquareMatrix
     , realMatrixInnerProductSpace
     , complexMatrixInnerProductSpace
+    , empty
     , createMatrixFromColumnVectors
     , identity
     , dimension
@@ -47,6 +48,7 @@ module SquareMatrix exposing
 @docs zeroSquareMatrix
 @docs realMatrixInnerProductSpace
 @docs complexMatrixInnerProductSpace
+@docs empty
 
 
 # Constructors
@@ -410,4 +412,12 @@ equal comparator =
 map : (a -> b) -> SquareMatrix a -> SquareMatrix b
 map f (SquareMatrix matrix) =
     Matrix.map f matrix
+        |> SquareMatrix
+
+
+{-| Monoid empty for SquareMatrix
+-}
+empty : SquareMatrix a
+empty =
+    Matrix.empty
         |> SquareMatrix

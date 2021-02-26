@@ -932,7 +932,7 @@ foldl foldFunction acc (Matrix listOfRowVectors) =
         listOfRowVectors
 
 
-{-| Monoid empty for Vector
+{-| Monoid empty for Matrix
 -}
 empty : Matrix a
 empty =

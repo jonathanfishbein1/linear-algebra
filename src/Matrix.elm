@@ -6,7 +6,6 @@ module Matrix exposing
     , MatrixSpace
     , identity
     , zeros
-    , empty
     , createMatrixFromColumnVectors
     , scalarMultiplication
     , transpose
@@ -46,6 +45,7 @@ module Matrix exposing
     , complexAdditionAbelianGroup
     , realMatrixSpace
     , complexMatrixSpace
+    , empty
     , concatHorizontal
     , concatVertical
     , appendHorizontal
@@ -86,7 +86,6 @@ module Matrix exposing
 
 @docs identity
 @docs zeros
-@docs empty
 
 
 # Constructors
@@ -151,6 +150,7 @@ module Matrix exposing
 
 # Monoid, Functor, Applicative, Monad, Foldable functions
 
+@docs empty
 @docs concatHorizontal
 @docs concatVertical
 @docs appendHorizontal

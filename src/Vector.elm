@@ -3,12 +3,6 @@ module Vector exposing
     , Scalar(..)
     , VectorSpace
     , InnerProductSpace
-    , realVectorSpace
-    , realAbelianGroup
-    , realInnerProductSpace
-    , complexVectorSpace
-    , complexAbelianGroup
-    , complexInnerProductSpace
     , zeros
     , scalarMultiplication
     , lengthReal
@@ -28,11 +22,19 @@ module Vector exposing
     , dimension
     , vectorSubspace
     , all
+    , realCommutativeSemigroup
+    , complexCommutativeSemigroup
+    , realCommutativeMonoid
+    , complexCommutativeMonoid
+    , realVectorSpace
+    , complexVectorSpace
+    , realAbelianGroup
+    , complexAbelianGroup
+    , realInnerProductSpace
+    , complexInnerProductSpace
     , empty
     , append
     , concat
-    , realCommutativeSemigroup, complexCommutativeSemigroup
-    , realCommutativeMonoid, complexCommutativeMonoid
     , map
     , pure
     , andMap
@@ -57,7 +59,6 @@ module Vector exposing
 # Types
 
 @docs Vector
-@docs Vector3
 @docs Scalar
 @docs VectorSpace
 @docs InnerProductSpace
@@ -65,12 +66,6 @@ module Vector exposing
 
 # Values
 
-@docs realVectorSpace
-@docs realAbelianGroup
-@docs realInnerProductSpace
-@docs complexVectorSpace
-@docs complexAbelianGroup
-@docs complexInnerProductSpace
 @docs zeros
 
 
@@ -92,30 +87,37 @@ module Vector exposing
 @docs hadamardMultiplication
 @docs dotProduct
 @docs angleBetween
-@docs cross
 @docs tensorProduct
 @docs distanceComplex
 @docs distanceReal
 
 
-# Vector Properties
+# Vector Predicates and Properties
 
 @docs dimension
 @docs vectorSubspace
 @docs all
 
 
-# SemiGroup, Monoid, Group, Ring, Field
+# SemiGroup, Monoid, Group, Ring, Field instances
+
+@docs realCommutativeSemigroup
+@docs complexCommutativeSemigroup
+@docs realCommutativeMonoid
+@docs complexCommutativeMonoid
+@docs realVectorSpace
+@docs complexVectorSpace
+@docs realAbelianGroup
+@docs complexAbelianGroup
+@docs realInnerProductSpace
+@docs complexInnerProductSpace
+
+
+# Monoid Functor, Applicative, Monad, Foldable functions
 
 @docs empty
 @docs append
 @docs concat
-@docs realCommutativeSemigroup, complexCommutativeSemigroup
-@docs realCommutativeMonoid, complexCommutativeMonoid
-
-
-# Functor, Applicative, Monad, Foldable
-
 @docs map
 @docs pure
 @docs andMap

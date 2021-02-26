@@ -10,10 +10,10 @@ module InvertableMatrix exposing
     , multiply
     , multiplyMatrixVector
     , getAt
+    , setAt
     , equal
     , equalImplementation
     , projXOntoSubspace
-    , setAt
     )
 
 {-| A module for Invertable Matrix
@@ -52,6 +52,7 @@ module InvertableMatrix exposing
 # Manipulation
 
 @docs getAt
+@docs setAt
 
 
 # Equality

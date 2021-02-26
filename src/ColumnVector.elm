@@ -5,6 +5,7 @@ module ColumnVector exposing
     , conjugate
     , add
     , dimension
+    , empty
     , map
     , foldl
     , equal
@@ -38,6 +39,7 @@ module ColumnVector exposing
 
 # Functor, Applicative, Monad, Foldable
 
+@docs empty
 @docs map
 @docs foldl
 
@@ -64,6 +66,14 @@ import Vector
 -}
 type ColumnVector a
     = ColumnVector (Vector.Vector a)
+
+
+{-| Monoid empty for Vector
+-}
+empty : ColumnVector a
+empty =
+    Vector.Vector []
+        |> ColumnVector
 
 
 {-| Calculate the sum of a Vector

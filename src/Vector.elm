@@ -51,6 +51,7 @@ module Vector exposing
     , printComplexVector
     , readRealVector
     , readComplexVector
+    , count
     )
 
 {-| A module for Vectors
@@ -708,3 +709,8 @@ readComplexVector :
     -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumber Float))
 readComplexVector =
     Parser.run (parseVector ComplexNumbers.parseComplexNumber)
+
+
+count : (a -> Bool) -> Vector a -> Int
+count condition (Vector list) =
+    List.Extra.count condition list

@@ -809,12 +809,8 @@ solve { eq } innerProductSpace matrix constants =
         notConstrainedEnough =
             variableSide
                 |> List.any
-                    (\(RowVector.RowVector (Vector.Vector row)) ->
-                        let
-                            countOfOnes =
-                                List.Extra.count ((/=) additionGroup.monoid.identity) row
-                        in
-                        countOfOnes > 1
+                    (\row ->
+                        RowVector.count ((/=) additionGroup.monoid.identity) row > 1
                     )
 
         anyAllZeroExceptAugmentedSide =

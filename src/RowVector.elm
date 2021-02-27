@@ -5,7 +5,7 @@ module RowVector exposing
     , map2
     , foldl
     , parseRowVector
-    , InnerProductSpace, VectorSpace, append, complexInnerProductSpace, complexVectorSpace, count, dimension, empty, findIndex, getAt, printComplexRowVectorList, printRealRowVectorList, realInnerProductSpace, realVectorSpace, scalarMultiplication, setAt
+    , InnerProductSpace, VectorSpace, append, complexInnerProductSpace, complexVectorSpace, count, dimension, empty, findIndex, getAt, printComplexRowVectorList, printRealRowVectorList, pure, realInnerProductSpace, realVectorSpace, scalarMultiplication, setAt
     )
 
 {-| A module for Row Vector
@@ -377,3 +377,11 @@ printComplexRowVectorList listOfRowVectors =
 count : (a -> Bool) -> RowVector a -> Int
 count condition (RowVector vector) =
     Vector.count condition vector
+
+
+{-| Place a value in minimal RowVector context
+-}
+pure : a -> RowVector a
+pure a =
+    Vector.pure a
+        |> RowVector

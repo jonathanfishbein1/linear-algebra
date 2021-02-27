@@ -659,7 +659,7 @@ map2 f (Matrix listOfRowVectorsOne) (Matrix listOfRowVectorsTwo) =
 -}
 pure : a -> Matrix a
 pure a =
-    Matrix [ RowVector.RowVector <| Vector.Vector <| [ a ] ]
+    Matrix [ RowVector.pure a ]
 
 
 {-| Apply for Matrix
@@ -745,10 +745,10 @@ upperTriangle vectorSpace (Matrix listOfRowVectors) =
 {-| Gaussian Elimination
 -}
 gaussianReduce : RowVector.VectorSpace a -> Matrix a -> Matrix a
-gaussianReduce vectorSpace (Matrix listOfRowVectors) =
+gaussianReduce vectorSpace matrix =
     let
         (Matrix upperTriangularFormRectangle) =
-            upperTriangle vectorSpace (Matrix listOfRowVectors)
+            upperTriangle vectorSpace matrix
 
         rowEchelonForm =
             List.indexedMap

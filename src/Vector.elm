@@ -1,8 +1,16 @@
 module Vector exposing (Vector(..))
 
-{-| Vector type
+{-| A module for Vector
+
+
+# Types
+
+@docs Vector
+
 -}
 
 
+{-| Vector type
+-}
 type Vector a
     = Vector (List a)

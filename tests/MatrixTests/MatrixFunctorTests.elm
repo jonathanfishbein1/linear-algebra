@@ -2,10 +2,10 @@ module MatrixTests.MatrixFunctorTests exposing (suite)
 
 import Expect
 import Fuzz
+import Internal.Vector
 import Matrix
 import RowVector
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -18,7 +18,7 @@ suite =
             \one ->
                 let
                     m =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
                             |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix
@@ -34,7 +34,7 @@ suite =
             \one ->
                 let
                     m =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
                             |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix

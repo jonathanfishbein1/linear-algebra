@@ -1,4 +1,4 @@
-module Vector exposing
+module Internal.Vector exposing
     ( Vector(..)
     , Scalar(..)
     , VectorSpace

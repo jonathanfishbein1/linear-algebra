@@ -4,9 +4,9 @@ import ComplexNumbers
 import Expect
 import Fuzz
 import Imaginary
+import Internal.Vector
 import Real
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -20,7 +20,7 @@ suite =
             \one two ->
                 let
                     v =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -34,7 +34,7 @@ suite =
                             ]
 
                     w =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -47,8 +47,8 @@ suite =
                                 )
                             ]
                 in
-                Vector.add ComplexNumbers.field v w
-                    |> Expect.equal (Vector.add ComplexNumbers.field w v)
+                Internal.Vector.add ComplexNumbers.field v w
+                    |> Expect.equal (Internal.Vector.add ComplexNumbers.field w v)
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -58,7 +58,7 @@ suite =
             \one two three ->
                 let
                     v =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -72,7 +72,7 @@ suite =
                             ]
 
                     w =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -86,7 +86,7 @@ suite =
                             ]
 
                     x =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 three
                                 (Imaginary.Imaginary
@@ -100,12 +100,12 @@ suite =
                             ]
 
                     vPlusWPlusX =
-                        Vector.add ComplexNumbers.field v w
-                            |> Vector.add ComplexNumbers.field x
+                        Internal.Vector.add ComplexNumbers.field v w
+                            |> Internal.Vector.add ComplexNumbers.field x
 
                     wPlusXPlusV =
-                        Vector.add ComplexNumbers.field w x
-                            |> Vector.add ComplexNumbers.field v
+                        Internal.Vector.add ComplexNumbers.field w x
+                            |> Internal.Vector.add ComplexNumbers.field v
                 in
-                Expect.true "vectors sums equal" ((Vector.equal ComplexNumbers.equal.eq).eq vPlusWPlusX wPlusXPlusV)
+                Expect.true "vectors sums equal" ((Internal.Vector.equal ComplexNumbers.equal.eq).eq vPlusWPlusX wPlusXPlusV)
         ]

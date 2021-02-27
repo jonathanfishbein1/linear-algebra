@@ -4,9 +4,9 @@ import ComplexNumbers
 import Expect
 import Fuzz
 import Imaginary
+import Internal.Vector
 import Real
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -19,10 +19,10 @@ suite =
             \one ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     expected =
-                        Vector.dotProduct Real.field a a
+                        Internal.Vector.dotProduct Real.field a a
                             |> Real.real
                 in
                 expected
@@ -36,25 +36,25 @@ suite =
             \one two three ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     b =
-                        Vector.Vector [ two ]
+                        Internal.Vector.Vector [ two ]
 
                     c =
-                        Vector.Vector [ three ]
+                        Internal.Vector.Vector [ three ]
 
                     aPlusBDotc =
-                        Vector.dotProduct
+                        Internal.Vector.dotProduct
                             Real.field
-                            (Vector.add Real.field a b)
+                            (Internal.Vector.add Real.field a b)
                             c
 
                     aDotC =
-                        Vector.dotProduct Real.field a c
+                        Internal.Vector.dotProduct Real.field a c
 
                     bDotC =
-                        Vector.dotProduct Real.field b c
+                        Internal.Vector.dotProduct Real.field b c
 
                     aDotCPlusBDotC =
                         Real.add aDotC bDotC
@@ -69,19 +69,19 @@ suite =
             \one two three ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     b =
-                        Vector.Vector [ two ]
+                        Internal.Vector.Vector [ two ]
 
                     threeTimesADotB =
-                        Vector.dotProduct
+                        Internal.Vector.dotProduct
                             Real.field
-                            (Vector.scalarMultiplication Real.field three a)
+                            (Internal.Vector.scalarMultiplication Real.field three a)
                             b
 
                     aDotBTimesThree =
-                        Real.multiply (Vector.dotProduct Real.field a b) three
+                        Real.multiply (Internal.Vector.dotProduct Real.field a b) three
                 in
                 Expect.true "dot product respects scalar multiplication" (Real.equal.eq aDotBTimesThree threeTimesADotB)
         , Test.fuzz2
@@ -92,16 +92,16 @@ suite =
             \one two ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     b =
-                        Vector.Vector [ two ]
+                        Internal.Vector.Vector [ two ]
 
                     aDotB =
-                        Vector.dotProduct Real.field a b
+                        Internal.Vector.dotProduct Real.field a b
 
                     bDotA =
-                        Vector.dotProduct Real.field b a
+                        Internal.Vector.dotProduct Real.field b a
                 in
                 Expect.equal bDotA aDotB
         , Test.fuzz
@@ -111,13 +111,13 @@ suite =
             \one ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     squareRootADotA =
-                        Real.map Basics.sqrt (Vector.dotProduct Real.field a a)
+                        Real.map Basics.sqrt (Internal.Vector.dotProduct Real.field a a)
 
                     aLength =
-                        Vector.lengthReal a
+                        Internal.Vector.lengthReal a
                 in
                 Expect.equal squareRootADotA aLength
         , Test.fuzz
@@ -127,10 +127,10 @@ suite =
             \one ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     expected =
-                        Vector.lengthReal a
+                        Internal.Vector.lengthReal a
                             |> Real.real
                 in
                 expected
@@ -143,13 +143,13 @@ suite =
             \one two ->
                 let
                     x =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     y =
-                        Vector.Vector [ two ]
+                        Internal.Vector.Vector [ two ]
 
                     absXDotY =
-                        Vector.dotProduct
+                        Internal.Vector.dotProduct
                             Real.field
                             x
                             y
@@ -157,10 +157,10 @@ suite =
                             |> Real.real
 
                     lengthOfX =
-                        Vector.lengthReal x
+                        Internal.Vector.lengthReal x
 
                     lengthOfY =
-                        Vector.lengthReal y
+                        Internal.Vector.lengthReal y
 
                     lengthOfXTimesLengthOfY =
                         Real.multiply lengthOfX lengthOfY
@@ -176,23 +176,23 @@ suite =
             \one two ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     b =
-                        Vector.Vector [ two ]
+                        Internal.Vector.Vector [ two ]
 
                     aPlusBLength =
-                        Vector.add
+                        Internal.Vector.add
                             Real.field
                             a
                             b
-                            |> Vector.lengthReal
+                            |> Internal.Vector.lengthReal
                             |> Real.real
 
                     lengthAPlusLengthB =
                         Real.add
-                            (Vector.lengthReal a)
-                            (Vector.lengthReal b)
+                            (Internal.Vector.lengthReal a)
+                            (Internal.Vector.lengthReal b)
                             |> Real.real
                 in
                 aPlusBLength
@@ -205,14 +205,14 @@ suite =
             \one two ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     legnthOfTwoTimesA =
-                        Vector.lengthReal
-                            (Vector.scalarMultiplication Real.field two a)
+                        Internal.Vector.lengthReal
+                            (Internal.Vector.scalarMultiplication Real.field two a)
 
                     lengthOfATimesTwo =
-                        Vector.lengthReal a
+                        Internal.Vector.lengthReal a
                             |> Real.multiply two
                             |> Real.map Basics.abs
                 in
@@ -227,15 +227,15 @@ suite =
                         ComplexNumbers.ComplexNumber one (Imaginary.Imaginary one)
 
                     a =
-                        Vector.Vector [ complexNumber ]
+                        Internal.Vector.Vector [ complexNumber ]
 
                     squareRootADotA =
-                        Vector.dotProduct ComplexNumbers.field a (Vector.conjugate a)
+                        Internal.Vector.dotProduct ComplexNumbers.field a (Internal.Vector.conjugate a)
                             |> ComplexNumbers.real
                             |> Real.map Basics.sqrt
 
                     aLength =
-                        Vector.lengthComplex a
+                        Internal.Vector.lengthComplex a
                 in
                 Expect.equal squareRootADotA aLength
         , Test.fuzz
@@ -248,10 +248,10 @@ suite =
                         ComplexNumbers.ComplexNumber one (Imaginary.Imaginary one)
 
                     a =
-                        Vector.Vector [ complexNumber ]
+                        Internal.Vector.Vector [ complexNumber ]
 
                     expected =
-                        Vector.lengthComplex a
+                        Internal.Vector.lengthComplex a
                             |> Real.real
                 in
                 expected
@@ -270,13 +270,13 @@ suite =
                         ComplexNumbers.ComplexNumber two (Imaginary.Imaginary two)
 
                     x =
-                        Vector.Vector [ complexNumberOne ]
+                        Internal.Vector.Vector [ complexNumberOne ]
 
                     y =
-                        Vector.Vector [ complexNumberTwo ]
+                        Internal.Vector.Vector [ complexNumberTwo ]
 
                     absXDotY =
-                        Vector.dotProduct
+                        Internal.Vector.dotProduct
                             ComplexNumbers.field
                             x
                             y
@@ -285,10 +285,10 @@ suite =
                             |> Real.real
 
                     lengthOfX =
-                        Vector.lengthComplex x
+                        Internal.Vector.lengthComplex x
 
                     lengthOfY =
-                        Vector.lengthComplex y
+                        Internal.Vector.lengthComplex y
 
                     lengthOfXTimesLengthOfY =
                         Real.multiply lengthOfX lengthOfY
@@ -303,10 +303,10 @@ suite =
             \one ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     expected =
-                        Vector.distanceReal a a
+                        Internal.Vector.distanceReal a a
                             |> Real.real
                 in
                 expected
@@ -320,24 +320,24 @@ suite =
             \one two three ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     b =
-                        Vector.Vector [ two ]
+                        Internal.Vector.Vector [ two ]
 
                     c =
-                        Vector.Vector [ three ]
+                        Internal.Vector.Vector [ three ]
 
                     distanceAB =
-                        Vector.distanceReal a b
+                        Internal.Vector.distanceReal a b
                             |> Real.real
 
                     distanceAC =
-                        Vector.distanceReal a c
+                        Internal.Vector.distanceReal a c
                             |> Real.real
 
                     distanceCB =
-                        Vector.distanceReal c b
+                        Internal.Vector.distanceReal c b
                             |> Real.real
                 in
                 distanceAB
@@ -350,19 +350,19 @@ suite =
             \one two ->
                 let
                     a =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     b =
-                        Vector.Vector [ two ]
+                        Internal.Vector.Vector [ two ]
 
                     distanceAB =
-                        Vector.dotProduct
+                        Internal.Vector.dotProduct
                             Real.field
                             a
                             b
 
                     distanceBA =
-                        Vector.dotProduct
+                        Internal.Vector.dotProduct
                             Real.field
                             b
                             a
@@ -374,13 +374,13 @@ suite =
             \_ ->
                 let
                     a =
-                        Vector.Vector [ Real.one, Real.zero ]
+                        Internal.Vector.Vector [ Real.one, Real.zero ]
 
                     b =
-                        Vector.Vector [ Real.zero, Real.one ]
+                        Internal.Vector.Vector [ Real.zero, Real.one ]
 
                     angle =
-                        Vector.angleBetween a b
+                        Internal.Vector.angleBetween a b
                 in
                 Expect.equal angle (Real.Real (Basics.pi / 2))
         , Test.test
@@ -389,13 +389,13 @@ suite =
             \_ ->
                 let
                     a =
-                        Vector.Vector [ Real.one, Real.zero ]
+                        Internal.Vector.Vector [ Real.one, Real.zero ]
 
                     b =
-                        Vector.Vector [ Real.one, Real.zero ]
+                        Internal.Vector.Vector [ Real.one, Real.zero ]
 
                     angle =
-                        Vector.angleBetween a b
+                        Internal.Vector.angleBetween a b
                 in
                 Expect.equal angle Real.zero
         , Test.test
@@ -404,13 +404,13 @@ suite =
             \_ ->
                 let
                     a =
-                        Vector.Vector [ Real.one, Real.zero ]
+                        Internal.Vector.Vector [ Real.one, Real.zero ]
 
                     b =
-                        Vector.Vector [ Real.Real -1, Real.zero ]
+                        Internal.Vector.Vector [ Real.Real -1, Real.zero ]
 
                     angle =
-                        Vector.angleBetween a b
+                        Internal.Vector.angleBetween a b
                 in
                 Expect.equal angle (Real.Real Basics.pi)
         ]

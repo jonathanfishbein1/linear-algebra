@@ -83,17 +83,17 @@ import CommutativeSemigroup
 import ComplexNumbers
 import Field
 import Group
+import Internal.Vector
 import Monoid
 import Parser exposing ((|.), (|=))
 import Real
 import Semigroup
-import Vector
 
 
 {-| Row Vector
 -}
 type RowVector a
-    = RowVector (Vector.Vector a)
+    = RowVector (Internal.Vector.Vector a)
 
 
 {-| Type to represent a Vector Space
@@ -115,63 +115,63 @@ type alias InnerProductSpace a =
     }
 
 
-{-| Semigroup instance for a real valued Vector.
+{-| Semigroup instance for a real valued Internal.Vector.
 -}
 realSemigroup : Semigroup.Semigroup (RowVector (Real.Real Float))
 realSemigroup =
     add Real.field
 
 
-{-| Semigroup instance for a complex valued Vector.
+{-| Semigroup instance for a complex valued Internal.Vector.
 -}
 complexSemigroup : Semigroup.Semigroup (RowVector (ComplexNumbers.ComplexNumber Float))
 complexSemigroup =
     add ComplexNumbers.field
 
 
-{-| Commutative Semigroup instance for a real valued Vector.
+{-| Commutative Semigroup instance for a real valued Internal.Vector.
 -}
 realCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (RowVector (Real.Real Float))
 realCommutativeSemigroup =
     CommutativeSemigroup.CommutativeSemigroup realSemigroup
 
 
-{-| Commutative Semigroup instance for a complex valued Vector.
+{-| Commutative Semigroup instance for a complex valued Internal.Vector.
 -}
 complexCommutativeSemigroup : CommutativeSemigroup.CommutativeSemigroup (RowVector (ComplexNumbers.ComplexNumber Float))
 complexCommutativeSemigroup =
     CommutativeSemigroup.CommutativeSemigroup complexSemigroup
 
 
-{-| Monoid instance for a real valued Vector.
+{-| Monoid instance for a real valued Internal.Vector.
 -}
 realMonoid : Monoid.Monoid (RowVector (Real.Real Float))
 realMonoid =
     Monoid.semigroupAndIdentity realSemigroup empty
 
 
-{-| Monoid instance for a complex valued Vector.
+{-| Monoid instance for a complex valued Internal.Vector.
 -}
 complexMonoid : Monoid.Monoid (RowVector (ComplexNumbers.ComplexNumber Float))
 complexMonoid =
     Monoid.semigroupAndIdentity complexSemigroup empty
 
 
-{-| Commutative Monoid instance for a real valued Vector.
+{-| Commutative Monoid instance for a real valued Internal.Vector.
 -}
 realCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (RowVector (Real.Real Float))
 realCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid realMonoid
 
 
-{-| Commutative Monoid instance for a complex valued Vector.
+{-| Commutative Monoid instance for a complex valued Internal.Vector.
 -}
 complexCommutativeMonoid : CommutativeMonoid.CommutativeMonoid (RowVector (ComplexNumbers.ComplexNumber Float))
 complexCommutativeMonoid =
     CommutativeMonoid.CommutativeMonoid complexMonoid
 
 
-{-| Group instance for a real valued Vector.
+{-| Group instance for a real valued Internal.Vector.
 -}
 realGroup : Group.Group (RowVector (Real.Real Float))
 realGroup =
@@ -180,7 +180,7 @@ realGroup =
     }
 
 
-{-| Group instance for a complex valued Vector.
+{-| Group instance for a complex valued Internal.Vector.
 -}
 complexGroup : Group.Group (RowVector (ComplexNumbers.ComplexNumber Float))
 complexGroup =
@@ -189,7 +189,7 @@ complexGroup =
     }
 
 
-{-| Abelian Group instance for a real valued Vector.
+{-| Abelian Group instance for a real valued Internal.Vector.
 -}
 realAbelianGroup : AbelianGroup.AbelianGroup (RowVector (Real.Real Float))
 realAbelianGroup =
@@ -199,7 +199,7 @@ realAbelianGroup =
         }
 
 
-{-| Group instance for a complex valued Vector.
+{-| Group instance for a complex valued Internal.Vector.
 -}
 complexAbelianGroup : AbelianGroup.AbelianGroup (RowVector (ComplexNumbers.ComplexNumber Float))
 complexAbelianGroup =
@@ -255,7 +255,7 @@ complexInnerProductSpace =
 -}
 add : Field.Field a -> RowVector a -> RowVector a -> RowVector a
 add field (RowVector vectorOne) (RowVector vectorTwo) =
-    Vector.add field vectorOne vectorTwo
+    Internal.Vector.add field vectorOne vectorTwo
         |> RowVector
 
 
@@ -263,14 +263,14 @@ add field (RowVector vectorOne) (RowVector vectorTwo) =
 -}
 dotProduct : Field.Field a -> RowVector a -> RowVector a -> a
 dotProduct field (RowVector vectorOne) (RowVector vectorTwo) =
-    Vector.dotProduct field vectorOne vectorTwo
+    Internal.Vector.dotProduct field vectorOne vectorTwo
 
 
 {-| map over a RowVector
 -}
 map : (a -> b) -> RowVector a -> RowVector b
 map f (RowVector vector) =
-    Vector.map f vector
+    Internal.Vector.map f vector
         |> RowVector
 
 
@@ -278,7 +278,7 @@ map f (RowVector vector) =
 -}
 map2 : (a -> b -> c) -> RowVector a -> RowVector b -> RowVector c
 map2 f (RowVector vectorOne) (RowVector vectorTwo) =
-    Vector.map2 f vectorOne vectorTwo
+    Internal.Vector.map2 f vectorOne vectorTwo
         |> RowVector
 
 
@@ -286,14 +286,14 @@ map2 f (RowVector vectorOne) (RowVector vectorTwo) =
 -}
 foldl : (a -> b -> b) -> b -> RowVector a -> b
 foldl foldFunction acc (RowVector vector) =
-    Vector.foldl foldFunction acc vector
+    Internal.Vector.foldl foldFunction acc vector
 
 
 {-| Predicate to determine if all values in the RowVector satisfy the given predicate
 -}
 all : (a -> Bool) -> RowVector a -> Bool
 all predicate (RowVector vector) =
-    Vector.all predicate vector
+    Internal.Vector.all predicate vector
 
 
 {-| Parse a RowVector
@@ -303,21 +303,21 @@ parseRowVector rowVectorElementsParser =
     Parser.succeed RowVector
         |. Parser.keyword "RowVector"
         |. Parser.spaces
-        |= Vector.parseVector rowVectorElementsParser
+        |= Internal.Vector.parseVector rowVectorElementsParser
 
 
 {-| Get the value in a Vector at the specified index
 -}
 getAt : Int -> RowVector a -> Maybe a
 getAt index (RowVector list) =
-    Vector.getAt index list
+    Internal.Vector.getAt index list
 
 
 {-| Monoid empty for RowVector
 -}
 empty : RowVector a
 empty =
-    Vector.empty
+    Internal.Vector.empty
         |> RowVector
 
 
@@ -325,14 +325,14 @@ empty =
 -}
 findIndex : (a -> Bool) -> RowVector a -> Maybe Int
 findIndex predicate (RowVector list) =
-    Vector.findIndex predicate list
+    Internal.Vector.findIndex predicate list
 
 
 {-| Scalar multiplication over a RowVector
 -}
 scalarMultiplication : Field.Field a -> a -> RowVector a -> RowVector a
 scalarMultiplication field scalar (RowVector vector) =
-    Vector.scalarMultiplication field scalar vector
+    Internal.Vector.scalarMultiplication field scalar vector
         |> RowVector
 
 
@@ -340,42 +340,42 @@ scalarMultiplication field scalar (RowVector vector) =
 -}
 lengthReal : RowVector (Real.Real Float) -> Real.Real Float
 lengthReal (RowVector vector) =
-    Vector.lengthReal vector
+    Internal.Vector.lengthReal vector
 
 
 {-| Calculate the length of a Complex valued Vector
 -}
 lengthComplex : RowVector (ComplexNumbers.ComplexNumber Float) -> Real.Real Float
 lengthComplex (RowVector vector) =
-    Vector.lengthComplex vector
+    Internal.Vector.lengthComplex vector
 
 
 {-| Calculate distance between two vectors
 -}
 distanceReal : RowVector (Real.Real Float) -> RowVector (Real.Real Float) -> Real.Real Float
 distanceReal (RowVector vectorOne) (RowVector vectorTwo) =
-    Vector.distanceReal vectorOne vectorTwo
+    Internal.Vector.distanceReal vectorOne vectorTwo
 
 
 {-| Calculate distance between two vectors
 -}
 distanceComplex : RowVector (ComplexNumbers.ComplexNumber Float) -> RowVector (ComplexNumbers.ComplexNumber Float) -> Real.Real Float
 distanceComplex (RowVector vectorOne) (RowVector vectorTwo) =
-    Vector.distanceComplex vectorOne vectorTwo
+    Internal.Vector.distanceComplex vectorOne vectorTwo
 
 
 {-| Count of number of elements in a vector
 -}
 dimension : RowVector a -> Int
 dimension (RowVector vector) =
-    Vector.dimension vector
+    Internal.Vector.dimension vector
 
 
 {-| Append Vectors together
 -}
 append : RowVector a -> RowVector a -> RowVector a
 append (RowVector vectorOne) (RowVector vectorTwo) =
-    Vector.append vectorOne vectorTwo
+    Internal.Vector.append vectorOne vectorTwo
         |> RowVector
 
 
@@ -383,7 +383,7 @@ append (RowVector vectorOne) (RowVector vectorTwo) =
 -}
 setAt : Int -> a -> RowVector a -> RowVector a
 setAt index element (RowVector vector) =
-    Vector.setAt index element vector
+    Internal.Vector.setAt index element vector
         |> RowVector
 
 
@@ -391,14 +391,14 @@ setAt index element (RowVector vector) =
 -}
 printRealRowVector : RowVector (Real.Real Float) -> String
 printRealRowVector (RowVector vector) =
-    "RowVector " ++ Vector.printRealVector vector ++ " ]"
+    "RowVector " ++ Internal.Vector.printRealVector vector ++ " ]"
 
 
 {-| Print a Complex RowVector to a string
 -}
 printComplexRowVector : RowVector (ComplexNumbers.ComplexNumber Float) -> String
 printComplexRowVector (RowVector vector) =
-    "RowVector " ++ Vector.printComplexVector vector ++ " ]"
+    "RowVector " ++ Internal.Vector.printComplexVector vector ++ " ]"
 
 
 {-| Print a Real RowVector List to a string
@@ -425,14 +425,14 @@ printComplexRowVectorList listOfRowVectors =
 -}
 count : (a -> Bool) -> RowVector a -> Int
 count condition (RowVector vector) =
-    Vector.count condition vector
+    Internal.Vector.count condition vector
 
 
 {-| Place a value in minimal RowVector context
 -}
 pure : a -> RowVector a
 pure a =
-    Vector.pure a
+    Internal.Vector.pure a
         |> RowVector
 
 
@@ -440,4 +440,4 @@ pure a =
 -}
 sum : Monoid.Monoid a -> RowVector a -> a
 sum monoid (RowVector vect) =
-    Vector.sum monoid vect
+    Internal.Vector.sum monoid vect

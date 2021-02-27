@@ -4,9 +4,9 @@ import ComplexNumbers
 import Expect
 import Fuzz
 import Imaginary
+import Internal.Vector
 import Real
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -27,17 +27,17 @@ suite =
                             )
 
                     v =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ complexNumber ]
 
                     w =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ complexNumber ]
 
                     zero =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ ComplexNumbers.zero ]
                 in
-                Vector.subtract ComplexNumbers.field v w
+                Internal.Vector.subtract ComplexNumbers.field v w
                     |> Expect.equal zero
         ]

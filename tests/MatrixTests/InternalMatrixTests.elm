@@ -5,10 +5,10 @@ import Expect
 import Fuzz
 import Imaginary
 import Internal.Matrix
+import Internal.Vector
 import Real
 import RowVector
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -23,13 +23,13 @@ suite =
                 let
                     m1 =
                         [ [ Real.zero, Real.zero ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         , [ one, two ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         , [ two, two ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         ]
 
@@ -51,16 +51,16 @@ suite =
                 let
                     m1 =
                         [ [ Real.zero, Real.zero ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         , [ Real.zero, Real.zero ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         , [ one, two ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         , [ two, one ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         ]
 
@@ -96,13 +96,13 @@ suite =
 
                     m1 =
                         [ [ ComplexNumbers.zero, ComplexNumbers.zero ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         , [ complexNumberOne, complexNumberTwo ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         , [ complexNumberTwo, complexNumberTwo ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         ]
 
@@ -138,16 +138,16 @@ suite =
 
                     m1 =
                         [ [ ComplexNumbers.zero, ComplexNumbers.zero ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         , [ ComplexNumbers.zero, ComplexNumbers.zero ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         , [ complexNumberOne, complexNumberTwo ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         , [ complexNumberTwo, complexNumberTwo ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
                         ]
 
@@ -169,7 +169,7 @@ suite =
                 let
                     row =
                         [ one, two ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
 
                     scaledRow =
@@ -207,7 +207,7 @@ suite =
 
                     row =
                         [ complexNumberOne, complexNumberTwo ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
 
                     scaledComplexRow =
@@ -271,7 +271,7 @@ suite =
 
                     row =
                         [ complexNumberOne, complexNumberTwo ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
 
                     scaledComplexRow =
@@ -280,7 +280,7 @@ suite =
                     secondElement =
                         ComplexNumbers.divide complexNumberTwo complexNumberOne
                 in
-                Expect.equal scaledComplexRow (RowVector.RowVector (Vector.Vector [ ComplexNumbers.one, secondElement ]))
+                Expect.equal scaledComplexRow (RowVector.RowVector (Internal.Vector.Vector [ ComplexNumbers.one, secondElement ]))
         , Test.fuzz2
             (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -290,7 +290,7 @@ suite =
                 let
                     row =
                         [ one, two ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
 
                     scaledRow =
@@ -314,12 +314,12 @@ suite =
                 let
                     currentRow =
                         [ one, two ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
 
                     nextRow =
                         [ two, two ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
 
                     subRow =
@@ -357,12 +357,12 @@ suite =
 
                     currentRow =
                         [ complexNumberOne, complexNumberTwo ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
 
                     nextRow =
                         [ complexNumberTwo, complexNumberTwo ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
                             |> RowVector.RowVector
 
                     subRow =

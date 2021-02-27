@@ -4,6 +4,7 @@ import ComplexNumbers
 import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import Imaginary
+import Internal.Vector
 import InvertableMatrix
 import Matrix
 import NormalMatrix
@@ -12,7 +13,6 @@ import RowVector
 import SquareMatrix
 import Test
 import UnitaryMatrix
-import Vector
 
 
 suite : Test.Test
@@ -102,9 +102,9 @@ suite =
 
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2, complexNumberR1C3 ]
-                            , RowVector.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2, complexNumberR2C3 ]
-                            , RowVector.RowVector <| Vector.Vector [ complexNumberR3C1, complexNumberR3C2, complexNumberR3C3 ]
+                            [ RowVector.RowVector <| Internal.Vector.Vector [ complexNumberR1C1, complexNumberR1C2, complexNumberR1C3 ]
+                            , RowVector.RowVector <| Internal.Vector.Vector [ complexNumberR2C1, complexNumberR2C2, complexNumberR2C3 ]
+                            , RowVector.RowVector <| Internal.Vector.Vector [ complexNumberR3C1, complexNumberR3C2, complexNumberR3C3 ]
                             ]
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix

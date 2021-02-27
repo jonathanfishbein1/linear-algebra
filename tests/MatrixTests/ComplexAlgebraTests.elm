@@ -61,12 +61,12 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m1Timesm2AndThenTimesm3 =
-                        Result.andThen (Matrix.multiply Vector.realInnerProductSpace m3)
-                            (Matrix.multiply Vector.realInnerProductSpace m1 m2)
+                        Result.andThen (Matrix.multiply RowVector.realInnerProductSpace m3)
+                            (Matrix.multiply RowVector.realInnerProductSpace m1 m2)
 
                     m2Timesm3AndThenTimesm1 =
-                        Result.andThen (Matrix.multiply Vector.realInnerProductSpace m1)
-                            (Matrix.multiply Vector.realInnerProductSpace m2 m3)
+                        Result.andThen (Matrix.multiply RowVector.realInnerProductSpace m1)
+                            (Matrix.multiply RowVector.realInnerProductSpace m2 m3)
                 in
                 Expect.equal m1Timesm2AndThenTimesm3 m2Timesm3AndThenTimesm1
         , Test.test
@@ -143,7 +143,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiply Vector.realInnerProductSpace (Matrix.identity Real.field 3) m1
+                        Matrix.multiply RowVector.realInnerProductSpace (Matrix.identity Real.field 3) m1
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3
@@ -183,7 +183,7 @@ suite =
                             [ v1, v2, v3 ]
 
                     m1TimeI =
-                        Matrix.multiply Vector.realInnerProductSpace m1 (Matrix.identity Real.field 3)
+                        Matrix.multiply RowVector.realInnerProductSpace m1 (Matrix.identity Real.field 3)
                 in
                 Expect.equal m1TimeI (Ok m1)
         , Test.fuzz3
@@ -232,10 +232,10 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m1Timesm2Plus3 =
-                        Matrix.multiply Vector.realInnerProductSpace m1 (Matrix.add Real.field m2 m3)
+                        Matrix.multiply RowVector.realInnerProductSpace m1 (Matrix.add Real.field m2 m3)
 
                     m1Timesm2Plusem1Timesm3 =
-                        Result.map2 (Matrix.add Real.field) (Matrix.multiply Vector.realInnerProductSpace m1 m2) (Matrix.multiply Vector.realInnerProductSpace m1 m3)
+                        Result.map2 (Matrix.add Real.field) (Matrix.multiply RowVector.realInnerProductSpace m1 m2) (Matrix.multiply RowVector.realInnerProductSpace m1 m3)
                 in
                 Expect.equal m1Timesm2Plus3 m1Timesm2Plusem1Timesm3
         , Test.fuzz3
@@ -284,13 +284,13 @@ suite =
                         Matrix.Matrix [ v3 ]
 
                     m2Plusm3Timesm1 =
-                        Matrix.multiply Vector.realInnerProductSpace (Matrix.add Real.field m2 m3) m1
+                        Matrix.multiply RowVector.realInnerProductSpace (Matrix.add Real.field m2 m3) m1
 
                     m2Timesm1Plusm3Timesm1 =
                         Result.map2
                             (Matrix.add Real.field)
-                            (Matrix.multiply Vector.realInnerProductSpace m2 m1)
-                            (Matrix.multiply Vector.realInnerProductSpace m3 m1)
+                            (Matrix.multiply RowVector.realInnerProductSpace m2 m1)
+                            (Matrix.multiply RowVector.realInnerProductSpace m3 m1)
                 in
                 Expect.equal m2Plusm3Timesm1 m2Timesm1Plusm3Timesm1
         , Test.fuzz3
@@ -318,11 +318,11 @@ suite =
                         Matrix.Matrix [ v2 ]
 
                     aTimebThenTranspose =
-                        Matrix.multiply Vector.realInnerProductSpace a b
+                        Matrix.multiply RowVector.realInnerProductSpace a b
                             |> Result.map Matrix.transpose
 
                     cTimesm1ThenTimesm2 =
-                        Matrix.multiply Vector.realInnerProductSpace (Matrix.transpose b) (Matrix.transpose a)
+                        Matrix.multiply RowVector.realInnerProductSpace (Matrix.transpose b) (Matrix.transpose a)
                 in
                 Expect.equal aTimebThenTranspose cTimesm1ThenTimesm2
         , Test.test
@@ -348,7 +348,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     mTimesV =
-                        Matrix.multiplyMatrixVector Vector.realInnerProductSpace m v
+                        Matrix.multiplyMatrixVector RowVector.realInnerProductSpace m v
 
                     expected =
                         Vector.Vector
@@ -406,11 +406,11 @@ suite =
                             ]
 
                     aTimebThenConjugate =
-                        Matrix.multiply Vector.complexInnerProductSpace a b
+                        Matrix.multiply RowVector.complexInnerProductSpace a b
                             |> Result.map Matrix.conjugate
 
                     cTimesm1ThenTimesm2 =
-                        Matrix.multiply Vector.complexInnerProductSpace (Matrix.conjugate a) (Matrix.conjugate b)
+                        Matrix.multiply RowVector.complexInnerProductSpace (Matrix.conjugate a) (Matrix.conjugate b)
 
                     result =
                         Result.map2
@@ -450,11 +450,11 @@ suite =
                         Matrix.Matrix [ v2 ]
 
                     aTimebThenAdjoint =
-                        Matrix.multiply Vector.complexInnerProductSpace a b
+                        Matrix.multiply RowVector.complexInnerProductSpace a b
                             |> Result.map Matrix.adjoint
 
                     bAdjointTimesAAdjoint =
-                        Matrix.multiply Vector.complexInnerProductSpace (Matrix.adjoint a) (Matrix.adjoint b)
+                        Matrix.multiply RowVector.complexInnerProductSpace (Matrix.adjoint a) (Matrix.adjoint b)
 
                     result =
                         Result.map2

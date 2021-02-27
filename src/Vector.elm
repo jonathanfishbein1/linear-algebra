@@ -1,15 +1,8 @@
 module Vector exposing
     ( Vector(..)
-    , Vector3(..)
     , Scalar(..)
     , VectorSpace
     , InnerProductSpace
-    , realVectorSpace
-    , realAbelianGroup
-    , realInnerProductSpace
-    , complexVectorSpace
-    , complexAbelianGroup
-    , complexInnerProductSpace
     , zeros
     , scalarMultiplication
     , lengthReal
@@ -23,18 +16,26 @@ module Vector exposing
     , hadamardMultiplication
     , dotProduct
     , angleBetween
-    , cross
     , tensorProduct
     , distanceComplex
     , distanceReal
     , dimension
     , vectorSubspace
     , all
+    , count
+    , realCommutativeSemigroup
+    , complexCommutativeSemigroup
+    , realCommutativeMonoid
+    , complexCommutativeMonoid
+    , realVectorSpace
+    , complexVectorSpace
+    , realAbelianGroup
+    , complexAbelianGroup
+    , realInnerProductSpace
+    , complexInnerProductSpace
     , empty
     , append
     , concat
-    , realCommutativeSemigroup, complexCommutativeSemigroup
-    , realCommutativeMonoid, complexCommutativeMonoid
     , map
     , pure
     , andMap
@@ -51,7 +52,6 @@ module Vector exposing
     , printComplexVector
     , readRealVector
     , readComplexVector
-    , vector3ToVector
     )
 
 {-| A module for Vectors
@@ -60,7 +60,6 @@ module Vector exposing
 # Types
 
 @docs Vector
-@docs Vector3
 @docs Scalar
 @docs VectorSpace
 @docs InnerProductSpace
@@ -68,12 +67,6 @@ module Vector exposing
 
 # Values
 
-@docs realVectorSpace
-@docs realAbelianGroup
-@docs realInnerProductSpace
-@docs complexVectorSpace
-@docs complexAbelianGroup
-@docs complexInnerProductSpace
 @docs zeros
 
 
@@ -95,30 +88,38 @@ module Vector exposing
 @docs hadamardMultiplication
 @docs dotProduct
 @docs angleBetween
-@docs cross
 @docs tensorProduct
 @docs distanceComplex
 @docs distanceReal
 
 
-# Vector Properties
+# Vector Predicates and Properties
 
 @docs dimension
 @docs vectorSubspace
 @docs all
+@docs count
 
 
-# SemiGroup, Monoid, Group, Ring, Field
+# SemiGroup, Monoid, Group, Ring, Field instances
+
+@docs realCommutativeSemigroup
+@docs complexCommutativeSemigroup
+@docs realCommutativeMonoid
+@docs complexCommutativeMonoid
+@docs realVectorSpace
+@docs complexVectorSpace
+@docs realAbelianGroup
+@docs complexAbelianGroup
+@docs realInnerProductSpace
+@docs complexInnerProductSpace
+
+
+# Monoid, Functor, Applicative, Monad, Foldable functions
 
 @docs empty
 @docs append
 @docs concat
-@docs realCommutativeSemigroup, complexCommutativeSemigroup
-@docs realCommutativeMonoid, complexCommutativeMonoid
-
-
-# Functor, Applicative, Monad, Foldable
-
 @docs map
 @docs pure
 @docs andMap
@@ -143,7 +144,6 @@ module Vector exposing
 @docs printComplexVector
 @docs readRealVector
 @docs readComplexVector
-@docs vector3ToVector
 
 -}
 
@@ -173,12 +173,6 @@ type Scalar a
 -}
 type Vector a
     = Vector (List a)
-
-
-{-| 3 Dimensional Vector type
--}
-type Vector3 a
-    = Vector3 a a a
 
 
 {-| Type to represent a Vector Space
@@ -465,20 +459,6 @@ distanceComplex vectorOne vectorTwo =
         |> lengthComplex
 
 
-{-| Take the cross product of two 3D vectors
--}
-cross : CommutativeDivisionRing.CommutativeDivisionRing a -> Vector3 a -> Vector3 a -> Vector3 a
-cross (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) (Vector3 x1 y1 z1) (Vector3 x2 y2 z2) =
-    let
-        (AbelianGroup.AbelianGroup groupAddition) =
-            commutativeDivisionRing.addition
-    in
-    Vector3
-        ((\x y -> groupAddition.monoid.semigroup x (groupAddition.inverse y)) (commutativeDivisionRing.multiplication.monoid.semigroup y1 z2) (commutativeDivisionRing.multiplication.monoid.semigroup y2 z1))
-        ((\x y -> groupAddition.monoid.semigroup x (groupAddition.inverse y)) (commutativeDivisionRing.multiplication.monoid.semigroup z1 x2) (commutativeDivisionRing.multiplication.monoid.semigroup z2 x1))
-        ((\x y -> groupAddition.monoid.semigroup x (groupAddition.inverse y)) (commutativeDivisionRing.multiplication.monoid.semigroup x1 y2) (commutativeDivisionRing.multiplication.monoid.semigroup x2 y1))
-
-
 {-| Calculate the tensor product of two vectors
 -}
 tensorProduct : Field.Field a -> Vector a -> Vector a -> Vector a
@@ -565,13 +545,6 @@ concat =
     Monoid.semigroupAndIdentity
         append
         empty
-
-
-{-| Convert a Vector3 type to a Vector type
--}
-vector3ToVector : Vector3 a -> Vector a
-vector3ToVector (Vector3 x y z) =
-    Vector [ x, y, z ]
 
 
 {-| Count of number of elements in a vector
@@ -736,3 +709,10 @@ readComplexVector :
     -> Result (List Parser.DeadEnd) (Vector (ComplexNumbers.ComplexNumber Float))
 readComplexVector =
     Parser.run (parseVector ComplexNumbers.parseComplexNumber)
+
+
+{-| Count the number of elements in a Vector that satisfy the given condition
+-}
+count : (a -> Bool) -> Vector a -> Int
+count condition (Vector list) =
+    List.Extra.count condition list

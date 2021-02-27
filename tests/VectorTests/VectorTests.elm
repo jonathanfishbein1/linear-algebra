@@ -2,7 +2,6 @@ module VectorTests.VectorTests exposing (suite)
 
 import ComplexNumbers
 import Expect
-import Field
 import Fuzz
 import Imaginary
 import Real
@@ -99,74 +98,6 @@ suite =
                             (Vector.hadamardMultiplication Real.field a c)
                 in
                 Expect.true "hadamard vector multiplication is distributative over addition" ((Vector.equal Real.equal.eq).eq aHadamardSumBC sumAHadamardBAHadamardC)
-        , Test.fuzz3
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            "tests cross product is orthagonal to both vectors"
-          <|
-            \one two three ->
-                let
-                    a =
-                        Vector.Vector3 one two three
-
-                    b =
-                        Vector.Vector3 two three one
-
-                    (Field.Field commutativeDivisionRing) =
-                        Real.field
-
-                    aCrossB =
-                        Vector.cross commutativeDivisionRing a b
-                            |> Vector.vector3ToVector
-
-                    aDotACrossB =
-                        Vector.dotProduct Real.field (Vector.vector3ToVector a) aCrossB
-
-                    bDotACrossB =
-                        Vector.dotProduct Real.field (Vector.vector3ToVector b) aCrossB
-
-                    result =
-                        Real.equal.eq Real.zero aDotACrossB && Real.equal.eq Real.zero bDotACrossB
-                in
-                Expect.true "a X b is orthagonal to both a and b" result
-        , Test.fuzz3
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            "tests length of cross product is the length of the two vectors times the sin of the angle between them"
-          <|
-            \one two three ->
-                let
-                    a =
-                        Vector.Vector3 one two three
-
-                    b =
-                        Vector.Vector3 two three one
-
-                    aCrossB =
-                        Vector.cross Real.commutativeDivisionRing a b
-                            |> Vector.vector3ToVector
-
-                    aVector =
-                        Vector.vector3ToVector a
-
-                    bVector =
-                        Vector.vector3ToVector b
-
-                    aLength =
-                        Vector.lengthReal aVector
-
-                    bLength =
-                        Vector.lengthReal bVector
-
-                    aCrossBLength =
-                        Vector.lengthReal aCrossB
-
-                    angle =
-                        Vector.angleBetween aVector bVector
-                in
-                Expect.true "length of cross product is the length of the two vectors times the sin of the angle between them" (Real.equal.eq aCrossBLength (Real.multiply (Real.multiply aLength bLength) (Real.map Basics.sin angle)))
         , Test.fuzz
             (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
             "tests unit vector length is 1"

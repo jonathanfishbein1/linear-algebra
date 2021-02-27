@@ -5,8 +5,8 @@ import Expect
 import Fuzz
 import Imaginary
 import Internal.Matrix
-import List.Extra
 import Real
+import RowVector
 import Test
 import Vector
 
@@ -22,13 +22,19 @@ suite =
             \one two ->
                 let
                     m1 =
-                        [ Vector.Vector [ Real.zero, Real.zero ]
-                        , Vector.Vector [ one, two ]
-                        , Vector.Vector [ two, two ]
+                        [ [ Real.zero, Real.zero ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
+                        , [ one, two ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
+                        , [ two, two ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
                         ]
 
                     pivotLocation =
-                        Internal.Matrix.findPivot Vector.realVectorSpace m1 0
+                        Internal.Matrix.findPivot RowVector.realVectorSpace m1 0
                 in
                 case pivotLocation of
                     Just location ->
@@ -44,14 +50,22 @@ suite =
             \one two ->
                 let
                     m1 =
-                        [ Vector.Vector [ Real.zero, Real.zero ]
-                        , Vector.Vector [ Real.zero, Real.zero ]
-                        , Vector.Vector [ one, two ]
-                        , Vector.Vector [ two, one ]
+                        [ [ Real.zero, Real.zero ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
+                        , [ Real.zero, Real.zero ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
+                        , [ one, two ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
+                        , [ two, one ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
                         ]
 
                     pivotLocation =
-                        Internal.Matrix.findPivot Vector.realVectorSpace m1 0
+                        Internal.Matrix.findPivot RowVector.realVectorSpace m1 0
                 in
                 case pivotLocation of
                     Just location ->
@@ -81,13 +95,19 @@ suite =
                             )
 
                     m1 =
-                        [ Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
-                        , Vector.Vector [ complexNumberOne, complexNumberTwo ]
-                        , Vector.Vector [ complexNumberTwo, complexNumberTwo ]
+                        [ [ ComplexNumbers.zero, ComplexNumbers.zero ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
+                        , [ complexNumberOne, complexNumberTwo ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
+                        , [ complexNumberTwo, complexNumberTwo ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
                         ]
 
                     pivotLocation =
-                        Internal.Matrix.findPivot Vector.complexVectorSpace m1 0
+                        Internal.Matrix.findPivot RowVector.complexVectorSpace m1 0
                 in
                 case pivotLocation of
                     Just location ->
@@ -117,14 +137,22 @@ suite =
                             )
 
                     m1 =
-                        [ Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
-                        , Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
-                        , Vector.Vector [ complexNumberOne, complexNumberTwo ]
-                        , Vector.Vector [ complexNumberTwo, complexNumberTwo ]
+                        [ [ ComplexNumbers.zero, ComplexNumbers.zero ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
+                        , [ ComplexNumbers.zero, ComplexNumbers.zero ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
+                        , [ complexNumberOne, complexNumberTwo ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
+                        , [ complexNumberTwo, complexNumberTwo ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
                         ]
 
                     pivotLocation =
-                        Internal.Matrix.findPivot Vector.complexVectorSpace m1 0
+                        Internal.Matrix.findPivot RowVector.complexVectorSpace m1 0
                 in
                 case pivotLocation of
                     Just location ->
@@ -140,13 +168,15 @@ suite =
             \one two ->
                 let
                     row =
-                        Vector.Vector [ one, two ]
+                        [ one, two ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
 
-                    (Vector.Vector scaledRow) =
-                        Internal.Matrix.scale Vector.realVectorSpace 0 row
+                    scaledRow =
+                        Internal.Matrix.scale RowVector.realVectorSpace 0 row
 
                     firstElement =
-                        List.Extra.getAt 0 scaledRow
+                        RowVector.getAt 0 scaledRow
                 in
                 case firstElement of
                     Just element ->
@@ -176,13 +206,15 @@ suite =
                             )
 
                     row =
-                        Vector.Vector [ complexNumberOne, complexNumberTwo ]
+                        [ complexNumberOne, complexNumberTwo ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
 
-                    (Vector.Vector scaledComplexRow) =
-                        Internal.Matrix.scale Vector.complexVectorSpace 0 row
+                    scaledComplexRow =
+                        Internal.Matrix.scale RowVector.complexVectorSpace 0 row
 
                     firstElement =
-                        List.Extra.getAt 0 scaledComplexRow
+                        RowVector.getAt 0 scaledComplexRow
                 in
                 case firstElement of
                     Just element ->
@@ -196,24 +228,24 @@ suite =
             \_ ->
                 let
                     row =
-                        Vector.Vector []
+                        RowVector.empty
 
-                    (Vector.Vector scaledRow) =
-                        Internal.Matrix.scale Vector.realVectorSpace 0 row
+                    scaledRow =
+                        Internal.Matrix.scale RowVector.realVectorSpace 0 row
                 in
-                Expect.equal (Vector.Vector scaledRow) Vector.empty
+                Expect.equal scaledRow RowVector.empty
         , Test.test
             "tests matrix complex scale scales empty Vector"
           <|
             \_ ->
                 let
                     row =
-                        Vector.Vector []
+                        RowVector.empty
 
-                    (Vector.Vector scaledComplexRow) =
-                        Internal.Matrix.scale Vector.complexVectorSpace 0 row
+                    scaledComplexRow =
+                        Internal.Matrix.scale RowVector.complexVectorSpace 0 row
                 in
-                Expect.equal (Vector.Vector scaledComplexRow) Vector.empty
+                Expect.equal scaledComplexRow RowVector.empty
         , Test.test
             "tests matrix complex scale scales Vector"
           <|
@@ -238,15 +270,17 @@ suite =
                             )
 
                     row =
-                        Vector.Vector [ complexNumberOne, complexNumberTwo ]
+                        [ complexNumberOne, complexNumberTwo ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
 
-                    (Vector.Vector scaledComplexRow) =
-                        Internal.Matrix.scale Vector.complexVectorSpace 0 row
+                    scaledComplexRow =
+                        Internal.Matrix.scale RowVector.complexVectorSpace 0 row
 
                     secondElement =
                         ComplexNumbers.divide complexNumberTwo complexNumberOne
                 in
-                Expect.equal (Vector.Vector scaledComplexRow) (Vector.Vector [ ComplexNumbers.one, secondElement ])
+                Expect.equal scaledComplexRow (RowVector.RowVector (Vector.Vector [ ComplexNumbers.one, secondElement ]))
         , Test.fuzz2
             (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -255,13 +289,15 @@ suite =
             \one two ->
                 let
                     row =
-                        Vector.Vector [ one, two ]
+                        [ one, two ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
 
-                    (Vector.Vector scaledRow) =
-                        Internal.Matrix.scale Vector.realVectorSpace 0 row
+                    scaledRow =
+                        Internal.Matrix.scale RowVector.realVectorSpace 0 row
 
                     secondElement =
-                        List.Extra.getAt 1 scaledRow
+                        RowVector.getAt 1 scaledRow
                 in
                 case secondElement of
                     Just element ->
@@ -277,16 +313,20 @@ suite =
             \one two ->
                 let
                     currentRow =
-                        Vector.Vector [ one, two ]
+                        [ one, two ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
 
                     nextRow =
-                        Vector.Vector [ two, two ]
+                        [ two, two ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
 
-                    (Vector.Vector subRow) =
-                        Internal.Matrix.subtractRow Vector.realVectorSpace 0 (Internal.Matrix.scale Vector.realVectorSpace 0 currentRow) nextRow
+                    subRow =
+                        Internal.Matrix.subtractRow RowVector.realVectorSpace 0 (Internal.Matrix.scale RowVector.realVectorSpace 0 currentRow) nextRow
 
                     firstElementSecondRow =
-                        List.Extra.getAt 0 subRow
+                        RowVector.getAt 0 subRow
                 in
                 case firstElementSecondRow of
                     Just element ->
@@ -316,16 +356,20 @@ suite =
                             )
 
                     currentRow =
-                        Vector.Vector [ complexNumberOne, complexNumberTwo ]
+                        [ complexNumberOne, complexNumberTwo ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
 
                     nextRow =
-                        Vector.Vector [ complexNumberTwo, complexNumberTwo ]
+                        [ complexNumberTwo, complexNumberTwo ]
+                            |> Vector.Vector
+                            |> RowVector.RowVector
 
-                    (Vector.Vector subRow) =
-                        Internal.Matrix.subtractRow Vector.complexVectorSpace 0 (Internal.Matrix.scale Vector.complexVectorSpace 0 currentRow) nextRow
+                    subRow =
+                        Internal.Matrix.subtractRow RowVector.complexVectorSpace 0 (Internal.Matrix.scale RowVector.complexVectorSpace 0 currentRow) nextRow
 
                     firstElementSecondRow =
-                        List.Extra.getAt 0 subRow
+                        RowVector.getAt 0 subRow
                 in
                 case firstElementSecondRow of
                     Just element ->

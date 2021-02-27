@@ -27,7 +27,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce Vector.realVectorSpace matrix
+                        Matrix.gaussianReduce RowVector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix
@@ -52,7 +52,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce Vector.realVectorSpace matrix
+                        Matrix.gaussianReduce RowVector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix
@@ -85,7 +85,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce Vector.realVectorSpace matrix
+                        Matrix.gaussianReduce RowVector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
         , Test.test
@@ -108,7 +108,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce Vector.realVectorSpace matrix
+                        Matrix.gaussianReduce RowVector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
         , Test.test
@@ -133,7 +133,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce Vector.realVectorSpace matrix
+                        Matrix.gaussianReduce RowVector.realVectorSpace matrix
                 in
                 Expect.equal rowEchelonFormMatrix expected
         , Test.test
@@ -158,7 +158,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce Vector.realVectorSpace matrix
+                        Matrix.gaussianReduce RowVector.realVectorSpace matrix
                 in
                 Expect.true "matrices are equal" ((Matrix.equal Real.equal.eq).eq rowEchelonFormMatrix expected)
         , Test.test
@@ -175,7 +175,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce Vector.realVectorSpace matrix
+                        Matrix.gaussianReduce RowVector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix
@@ -199,7 +199,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce Vector.complexVectorSpace matrix
+                        Matrix.gaussianReduce RowVector.complexVectorSpace matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -253,7 +253,7 @@ suite =
                             ]
 
                     rowEchelonFormMatrix =
-                        Matrix.gaussianReduce Vector.complexVectorSpace matrix
+                        Matrix.gaussianReduce RowVector.complexVectorSpace matrix
 
                     complexNumberExpectedR1C1 =
                         ComplexNumbers.ComplexNumber

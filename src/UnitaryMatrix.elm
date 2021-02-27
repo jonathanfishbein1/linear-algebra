@@ -1,5 +1,6 @@
 module UnitaryMatrix exposing
     ( UnitaryMatrix(..)
+    , empty
     , identity
     , isUnitary
     , dimension
@@ -17,6 +18,11 @@ module UnitaryMatrix exposing
 # Types
 
 @docs UnitaryMatrix
+
+
+# Values
+
+@docs empty
 
 
 # Constructors
@@ -56,8 +62,8 @@ module UnitaryMatrix exposing
 import ColumnVector
 import ComplexNumbers
 import InvertableMatrix
+import RowVector
 import Typeclasses.Classes.Equality
-import Vector
 
 
 {-| Unitary Matrix type
@@ -70,7 +76,7 @@ type UnitaryMatrix number
 -}
 isUnitary : InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
 isUnitary matrix =
-    InvertableMatrix.invert Vector.complexInnerProductSpace matrix
+    InvertableMatrix.invert RowVector.complexInnerProductSpace matrix
         |> Result.andThen (\inverse -> multiply (UnitaryMatrix inverse) (UnitaryMatrix matrix))
         |> (\resultMatrix ->
                 case resultMatrix of
@@ -111,18 +117,18 @@ multiply :
     -> UnitaryMatrix Float
     -> Result String (UnitaryMatrix Float)
 multiply (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
-    InvertableMatrix.multiply Vector.complexInnerProductSpace matrixOne matrixTwo
+    InvertableMatrix.multiply RowVector.complexInnerProductSpace matrixOne matrixTwo
         |> Result.map UnitaryMatrix
 
 
-{-| Multiply a Vector by a Unitary Matrix
+{-| Multiply a ColumnVector by a Unitary Matrix
 -}
 multiplyMatrixVector :
     UnitaryMatrix Float
     -> ColumnVector.ColumnVector (ComplexNumbers.ComplexNumber Float)
     -> Result String (ColumnVector.ColumnVector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (UnitaryMatrix matrix) vector =
-    InvertableMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector
+    InvertableMatrix.multiplyMatrixVector RowVector.complexInnerProductSpace matrix vector
 
 
 {-| Compare two Matrices for equality
@@ -152,4 +158,12 @@ identity =
 scalarMultiplication : ComplexNumbers.ComplexNumber Float -> UnitaryMatrix Float -> UnitaryMatrix Float
 scalarMultiplication scalar (UnitaryMatrix matrix) =
     InvertableMatrix.scalarMultiplication ComplexNumbers.field scalar matrix
+        |> UnitaryMatrix
+
+
+{-| Monoid empty for UnitaryMatrix
+-}
+empty : UnitaryMatrix Float
+empty =
+    InvertableMatrix.empty
         |> UnitaryMatrix

@@ -27,7 +27,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     upperTriangularFormMatrix =
-                        Matrix.upperTriangle Vector.realVectorSpace matrix
+                        Matrix.upperTriangle RowVector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix
@@ -53,7 +53,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     upperTriangularFormMatrix =
-                        Matrix.upperTriangle Vector.realVectorSpace matrix
+                        Matrix.upperTriangle RowVector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix
@@ -78,7 +78,7 @@ suite =
                             ]
 
                     upperTriangularFormMatrix =
-                        Matrix.upperTriangle Vector.complexVectorSpace matrix
+                        Matrix.upperTriangle RowVector.complexVectorSpace matrix
 
                     expected =
                         Matrix.Matrix <|
@@ -126,7 +126,7 @@ suite =
                             ]
 
                     upperTriangularFormMatrix =
-                        Matrix.upperTriangle Vector.complexVectorSpace matrix
+                        Matrix.upperTriangle RowVector.complexVectorSpace matrix
 
                     complexNumberExpectedR2C2 =
                         ComplexNumbers.ComplexNumber

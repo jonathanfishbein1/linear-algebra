@@ -63,7 +63,7 @@ suite =
                             |> SquareMatrix.SquareMatrix
 
                     expected =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace a a
+                        SquareMatrix.dotProduct RowVector.realInnerProductSpace a a
                 in
                 case expected of
                     Ok (Real.Real exp) ->
@@ -96,13 +96,13 @@ suite =
                             |> SquareMatrix.SquareMatrix
 
                     aPlusBDotc =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace (SquareMatrix.add Real.field a b) c
+                        SquareMatrix.dotProduct RowVector.realInnerProductSpace (SquareMatrix.add Real.field a b) c
 
                     aDotB =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace a c
+                        SquareMatrix.dotProduct RowVector.realInnerProductSpace a c
 
                     bDotC =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace b c
+                        SquareMatrix.dotProduct RowVector.realInnerProductSpace b c
 
                     aDotBPlusbDotC =
                         Result.map2
@@ -131,12 +131,12 @@ suite =
                             |> SquareMatrix.SquareMatrix
 
                     threeTimesADotB =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace (SquareMatrix.scalarMultiplication Real.field three a) b
+                        SquareMatrix.dotProduct RowVector.realInnerProductSpace (SquareMatrix.scalarMultiplication Real.field three a) b
 
                     aDotBTimesThree =
                         Result.map2
                             Real.multiply
-                            (SquareMatrix.dotProduct Vector.realInnerProductSpace a b)
+                            (SquareMatrix.dotProduct RowVector.realInnerProductSpace a b)
                             (Ok three)
                 in
                 threeTimesADotB
@@ -159,10 +159,10 @@ suite =
                             |> SquareMatrix.SquareMatrix
 
                     aDotB =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace a b
+                        SquareMatrix.dotProduct RowVector.realInnerProductSpace a b
 
                     bDotA =
-                        SquareMatrix.dotProduct Vector.realInnerProductSpace b a
+                        SquareMatrix.dotProduct RowVector.realInnerProductSpace b a
                 in
                 aDotB
                     |> Expect.equal bDotA

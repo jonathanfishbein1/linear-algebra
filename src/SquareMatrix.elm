@@ -4,6 +4,7 @@ module SquareMatrix exposing
     , zeroSquareMatrix
     , realMatrixInnerProductSpace
     , complexMatrixInnerProductSpace
+    , empty
     , createMatrixFromColumnVectors
     , identity
     , dimension
@@ -47,6 +48,7 @@ module SquareMatrix exposing
 @docs zeroSquareMatrix
 @docs realMatrixInnerProductSpace
 @docs complexMatrixInnerProductSpace
+@docs empty
 
 
 # Constructors
@@ -116,7 +118,6 @@ import Matrix
 import Real
 import RowVector
 import Typeclasses.Classes.Equality
-import Vector
 
 
 {-| Square Matrix type
@@ -161,7 +162,7 @@ isSquareMatrix matrix =
 -}
 normReal : SquareMatrix (Real.Real Float) -> Result String (Real.Real Float)
 normReal matrix =
-    dotProduct Vector.realInnerProductSpace matrix matrix
+    dotProduct RowVector.realInnerProductSpace matrix matrix
         |> Result.map
             (Real.map Basics.sqrt)
 
@@ -170,7 +171,7 @@ normReal matrix =
 -}
 normComplex : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (Real.Real Float)
 normComplex matrix =
-    dotProduct Vector.complexInnerProductSpace matrix matrix
+    dotProduct RowVector.complexInnerProductSpace matrix matrix
         |> Result.map
             (ComplexNumbers.real >> Real.map Basics.sqrt)
 
@@ -196,7 +197,7 @@ distanceComplex (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 isRightStochastic : SquareMatrix (Real.Real Float) -> Bool
 isRightStochastic (SquareMatrix (Matrix.Matrix listOfRowVectors)) =
     List.all
-        (\(RowVector.RowVector vector) -> Real.equal.eq (Vector.sum Real.sumMonoid vector) Real.one)
+        (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
         listOfRowVectors
 
 
@@ -209,7 +210,7 @@ isLeftStochastic (SquareMatrix matrix) =
             Matrix.transpose matrix
     in
     List.all
-        (\(RowVector.RowVector vector) -> Real.equal.eq (Vector.sum Real.sumMonoid vector) Real.one)
+        (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
         transposedListOfRowVectors
 
 
@@ -218,7 +219,7 @@ isLeftStochastic (SquareMatrix matrix) =
 realMatrixInnerProductSpace : InnerProductSpace (Real.Real Float)
 realMatrixInnerProductSpace =
     { matrixSpace = Matrix.realMatrixSpace
-    , innerProduct = dotProduct Vector.realInnerProductSpace
+    , innerProduct = dotProduct RowVector.realInnerProductSpace
     , norm = normReal
     , distance = distanceReal
     }
@@ -229,7 +230,7 @@ realMatrixInnerProductSpace =
 complexMatrixInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumber Float)
 complexMatrixInnerProductSpace =
     { matrixSpace = Matrix.complexMatrixSpace
-    , innerProduct = dotProduct Vector.complexInnerProductSpace
+    , innerProduct = dotProduct RowVector.complexInnerProductSpace
     , norm = normComplex
     , distance = distanceComplex
     }
@@ -237,7 +238,7 @@ complexMatrixInnerProductSpace =
 
 {-| Calculate the dot product of two Matricies
 -}
-dotProduct : Vector.InnerProductSpace a -> SquareMatrix a -> SquareMatrix a -> Result String a
+dotProduct : RowVector.InnerProductSpace a -> SquareMatrix a -> SquareMatrix a -> Result String a
 dotProduct vectorInnerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     let
         productMatrix =
@@ -290,7 +291,7 @@ scalarMultiplication field scalar (SquareMatrix matrix) =
 {-| Square Matrix Square Matrix multiplication
 -}
 multiply :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> SquareMatrix a
     -> SquareMatrix a
     -> Result String (SquareMatrix a)
@@ -299,10 +300,10 @@ multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
         |> Result.map SquareMatrix
 
 
-{-| Multiply a Vector by a Matrix
+{-| Multiply a ColumnVector by a Matrix
 -}
 multiplyMatrixVector :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> SquareMatrix a
     -> ColumnVector.ColumnVector a
     -> Result String (ColumnVector.ColumnVector a)
@@ -346,7 +347,7 @@ transpose (SquareMatrix matrix) =
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Vector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
+upperTriangle : RowVector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
 upperTriangle vectorSpace (SquareMatrix matrix) =
     Matrix.upperTriangle vectorSpace matrix
         |> SquareMatrix
@@ -369,7 +370,7 @@ appendHorizontal (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 
 {-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
-gaussJordan : Vector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
+gaussJordan : RowVector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
 gaussJordan vectorSpace (SquareMatrix matrix) =
     Matrix.gaussJordan vectorSpace matrix
         |> SquareMatrix
@@ -410,4 +411,12 @@ equal comparator =
 map : (a -> b) -> SquareMatrix a -> SquareMatrix b
 map f (SquareMatrix matrix) =
     Matrix.map f matrix
+        |> SquareMatrix
+
+
+{-| Monoid empty for SquareMatrix
+-}
+empty : SquareMatrix a
+empty =
+    Matrix.empty
         |> SquareMatrix

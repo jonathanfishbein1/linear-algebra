@@ -53,8 +53,8 @@ import ColumnVector
 import ComplexNumbers
 import Field
 import NormalMatrix
+import RowVector
 import SquareMatrix
-import Vector
 
 
 {-| Symmetric Matrix type
@@ -90,7 +90,7 @@ dimension (SymmetricMatrix matrix) =
 {-| Square Matrix Square Matrix multiplication
 -}
 multiply :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> SymmetricMatrix a
     -> SymmetricMatrix a
     -> Result String (SymmetricMatrix a)
@@ -106,10 +106,10 @@ getAt ( rowIndex, columnIndex ) (SymmetricMatrix matrix) =
     NormalMatrix.getAt ( rowIndex, columnIndex ) matrix
 
 
-{-| Multiply a Vector by a Matrix
+{-| Multiply a ColumnVector by a Matrix
 -}
 multiplyMatrixVector :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> SymmetricMatrix a
     -> ColumnVector.ColumnVector a
     -> Result String (ColumnVector.ColumnVector a)

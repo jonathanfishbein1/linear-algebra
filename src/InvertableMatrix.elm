@@ -1,5 +1,6 @@
 module InvertableMatrix exposing
     ( InvertableMatrix(..)
+    , empty
     , identity
     , determinant
     , dimension
@@ -22,6 +23,11 @@ module InvertableMatrix exposing
 # Types
 
 @docs InvertableMatrix
+
+
+# Values
+
+@docs empty
 
 
 # Constructors
@@ -68,9 +74,9 @@ import ColumnVector
 import Field
 import Matrix
 import NormalMatrix
+import RowVector
 import SquareMatrix
 import Typeclasses.Classes.Equality
-import Vector
 
 
 {-| Invertable Matrix type
@@ -81,7 +87,7 @@ type InvertableMatrix a
 
 {-| Try to calculate the determinant
 -}
-determinant : Vector.VectorSpace a -> InvertableMatrix a -> Result String a
+determinant : RowVector.VectorSpace a -> InvertableMatrix a -> Result String a
 determinant vectorSpace (InvertableMatrix matrix) =
     NormalMatrix.upperTriangle vectorSpace matrix
         |> NormalMatrix.getDiagonalProduct vectorSpace.field
@@ -90,7 +96,7 @@ determinant vectorSpace (InvertableMatrix matrix) =
 
 {-| Try to calculate the inverse of a matrix
 -}
-invert : Vector.InnerProductSpace a -> InvertableMatrix a -> Result String (InvertableMatrix a)
+invert : RowVector.InnerProductSpace a -> InvertableMatrix a -> Result String (InvertableMatrix a)
 invert innerProductSpace (InvertableMatrix matrix) =
     case isInvertable innerProductSpace matrix of
         Ok invMatrix ->
@@ -123,7 +129,7 @@ invert innerProductSpace (InvertableMatrix matrix) =
 
 {-| Determine whether a matirx is invertable
 -}
-isInvertable : Vector.InnerProductSpace a -> NormalMatrix.NormalMatrix a -> Result String (NormalMatrix.NormalMatrix a)
+isInvertable : RowVector.InnerProductSpace a -> NormalMatrix.NormalMatrix a -> Result String (NormalMatrix.NormalMatrix a)
 isInvertable innerProductSpace (NormalMatrix.NormalMatrix (SquareMatrix.SquareMatrix matrix)) =
     case Matrix.isOnto innerProductSpace matrix of
         Ok ontoMatrix ->
@@ -171,7 +177,7 @@ add field (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
 {-| Invertable Matrix Invertable Matrix multiplication
 -}
 multiply :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> InvertableMatrix a
     -> InvertableMatrix a
     -> Result String (InvertableMatrix a)
@@ -180,10 +186,10 @@ multiply innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrix
         |> Result.map InvertableMatrix
 
 
-{-| Multiply a Vector by a Matrix
+{-| Multiply a ColumnVector by a Matrix
 -}
 multiplyMatrixVector :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> InvertableMatrix a
     -> ColumnVector.ColumnVector a
     -> Result String (ColumnVector.ColumnVector a)
@@ -193,7 +199,7 @@ multiplyMatrixVector innerProductSpace (InvertableMatrix matrix) vector =
 
 {-| Calculate the projection of a vector onto a subspace given by a list of basis vectors as column vectors
 -}
-projXOntoSubspace : Vector.InnerProductSpace a -> List (ColumnVector.ColumnVector a) -> ColumnVector.ColumnVector a -> Result String (ColumnVector.ColumnVector a)
+projXOntoSubspace : RowVector.InnerProductSpace a -> List (ColumnVector.ColumnVector a) -> ColumnVector.ColumnVector a -> Result String (ColumnVector.ColumnVector a)
 projXOntoSubspace innerProductSpace columnVectorBasis x =
     let
         matrix =
@@ -239,4 +245,12 @@ identity field =
 scalarMultiplication : Field.Field a -> a -> InvertableMatrix a -> InvertableMatrix a
 scalarMultiplication field scalar (InvertableMatrix matrix) =
     NormalMatrix.scalarMultiplication field scalar matrix
+        |> InvertableMatrix
+
+
+{-| Monoid empty for InvertableMatrix
+-}
+empty : InvertableMatrix a
+empty =
+    NormalMatrix.empty
         |> InvertableMatrix

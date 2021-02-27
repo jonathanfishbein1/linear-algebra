@@ -31,8 +31,8 @@ module DoublyStochasticMatrix exposing
 
 import Matrix
 import Real
+import RowVector
 import SquareMatrix
-import Vector
 
 
 {-| Doubly Stochastic Matrix type
@@ -61,7 +61,7 @@ multiply :
     -> DoublyStochasticMatrix
     -> Result String DoublyStochasticMatrix
 multiply (DoublyStochasticMatrix matrixOne) (DoublyStochasticMatrix matrixTwo) =
-    SquareMatrix.multiply Vector.realInnerProductSpace matrixOne matrixTwo
+    SquareMatrix.multiply RowVector.realInnerProductSpace matrixOne matrixTwo
         |> Result.map DoublyStochasticMatrix
 
 

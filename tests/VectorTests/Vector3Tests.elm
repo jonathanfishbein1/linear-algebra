@@ -1,10 +1,8 @@
 module VectorTests.Vector3Tests exposing (suite)
 
-import ComplexNumbers
 import Expect
 import Field
 import Fuzz
-import Imaginary
 import Real
 import Test
 import Vector

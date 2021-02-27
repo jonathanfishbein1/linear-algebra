@@ -34,7 +34,7 @@ suite =
                             |> InvertableMatrix.InvertableMatrix
 
                     determinant =
-                        InvertableMatrix.determinant Vector.realVectorSpace matrix
+                        InvertableMatrix.determinant RowVector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok (Real.Real -2))
         , Test.test
@@ -54,7 +54,7 @@ suite =
                             |> InvertableMatrix.InvertableMatrix
 
                     determinant =
-                        InvertableMatrix.determinant Vector.realVectorSpace matrix
+                        InvertableMatrix.determinant RowVector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok (Real.Real 35))
         , Test.test
@@ -75,7 +75,7 @@ suite =
                             |> InvertableMatrix.InvertableMatrix
 
                     determinant =
-                        InvertableMatrix.determinant Vector.realVectorSpace matrix
+                        InvertableMatrix.determinant RowVector.realVectorSpace matrix
                 in
                 Expect.equal determinant (Ok (Real.Real 7))
         , Test.test
@@ -106,7 +106,7 @@ suite =
                             |> InvertableMatrix.InvertableMatrix
 
                     inverse =
-                        InvertableMatrix.invert Vector.realInnerProductSpace matrix
+                        InvertableMatrix.invert RowVector.realInnerProductSpace matrix
                 in
                 Expect.equal inverse (Ok expectedInverse)
         , Test.test
@@ -135,7 +135,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     matrixInverseProduct =
-                        Matrix.multiply Vector.realInnerProductSpace matrix inverse
+                        Matrix.multiply RowVector.realInnerProductSpace matrix inverse
                 in
                 Expect.equal matrixInverseProduct (Ok identity)
         , Test.test
@@ -164,7 +164,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     inverseMatrixProduct =
-                        Matrix.multiply Vector.realInnerProductSpace inverse matrix
+                        Matrix.multiply RowVector.realInnerProductSpace inverse matrix
                 in
                 Expect.equal inverseMatrixProduct (Ok identity)
         , Test.test
@@ -216,7 +216,7 @@ suite =
                             |> InvertableMatrix.InvertableMatrix
 
                     determinantComplex =
-                        InvertableMatrix.determinant Vector.complexVectorSpace matrix
+                        InvertableMatrix.determinant RowVector.complexVectorSpace matrix
 
                     expectedDeterminant =
                         ComplexNumbers.ComplexNumber
@@ -282,7 +282,7 @@ suite =
                             |> InvertableMatrix.InvertableMatrix
 
                     inverseComplex =
-                        InvertableMatrix.invert Vector.complexInnerProductSpace matrix
+                        InvertableMatrix.invert RowVector.complexInnerProductSpace matrix
 
                     expectedComplexNumberR1C1 =
                         ComplexNumbers.ComplexNumber
@@ -350,7 +350,7 @@ suite =
                             |> NormalMatrix.NormalMatrix
 
                     isInvertable =
-                        InvertableMatrix.isInvertable Vector.realInnerProductSpace matrix
+                        InvertableMatrix.isInvertable RowVector.realInnerProductSpace matrix
                 in
                 Expect.equal isInvertable (Err "Matrix not onto Matrix is not invertable")
         , Test.test
@@ -367,7 +367,7 @@ suite =
                             |> NormalMatrix.NormalMatrix
 
                     isInvertable =
-                        InvertableMatrix.isInvertable Vector.complexInnerProductSpace matrix
+                        InvertableMatrix.isInvertable RowVector.complexInnerProductSpace matrix
                 in
                 Expect.equal isInvertable (Err "Matrix not onto Matrix is not invertable")
         ]

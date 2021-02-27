@@ -26,7 +26,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.gaussJordan Vector.realVectorSpace matrix
+                        Matrix.gaussJordan RowVector.realVectorSpace matrix
 
                     expected =
                         Matrix.Matrix
@@ -56,7 +56,7 @@ suite =
                             |> ColumnVector.map Real.Real
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Real.equal Vector.realInnerProductSpace matrix b
+                        Matrix.solve Real.equal RowVector.realInnerProductSpace matrix b
 
                     expected =
                         Vector.Vector [ -8.0, 1.0, -2.0 ]
@@ -83,7 +83,7 @@ suite =
                             |> ColumnVector.map Real.Real
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Real.equal Vector.realInnerProductSpace matrix b
+                        Matrix.solve Real.equal RowVector.realInnerProductSpace matrix b
 
                     expected =
                         Vector.Vector [ 5, -1.0, -1.0 ]
@@ -112,7 +112,7 @@ suite =
                     reducedRowEchelonFormMatrix =
                         Matrix.solve
                             Real.equal
-                            Vector.realInnerProductSpace
+                            RowVector.realInnerProductSpace
                             matrix
                             b
 
@@ -141,7 +141,7 @@ suite =
                             |> ColumnVector.map Real.Real
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Real.equal Vector.realInnerProductSpace matrix b
+                        Matrix.solve Real.equal RowVector.realInnerProductSpace matrix b
                 in
                 Expect.equal reducedRowEchelonFormMatrix
                     (Matrix.Consistant (Matrix.InfiniteSolutions { nullity = 3, rank = 2 }))
@@ -165,7 +165,7 @@ suite =
                             |> ColumnVector.map Real.Real
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.solve Real.equal Vector.realInnerProductSpace matrix b
+                        Matrix.solve Real.equal RowVector.realInnerProductSpace matrix b
                 in
                 Expect.equal reducedRowEchelonFormMatrix
                     (Matrix.Consistant (Matrix.UniqueSolution (ColumnVector.ColumnVector (Vector.Vector [ Real.Real 156, Real.Real 312, Real.Real 92, Real.Real 184 ]))))

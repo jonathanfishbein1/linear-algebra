@@ -62,8 +62,8 @@ module UnitaryMatrix exposing
 import ColumnVector
 import ComplexNumbers
 import InvertableMatrix
+import RowVector
 import Typeclasses.Classes.Equality
-import Vector
 
 
 {-| Unitary Matrix type
@@ -76,7 +76,7 @@ type UnitaryMatrix number
 -}
 isUnitary : InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
 isUnitary matrix =
-    InvertableMatrix.invert Vector.complexInnerProductSpace matrix
+    InvertableMatrix.invert RowVector.complexInnerProductSpace matrix
         |> Result.andThen (\inverse -> multiply (UnitaryMatrix inverse) (UnitaryMatrix matrix))
         |> (\resultMatrix ->
                 case resultMatrix of
@@ -117,7 +117,7 @@ multiply :
     -> UnitaryMatrix Float
     -> Result String (UnitaryMatrix Float)
 multiply (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
-    InvertableMatrix.multiply Vector.complexInnerProductSpace matrixOne matrixTwo
+    InvertableMatrix.multiply RowVector.complexInnerProductSpace matrixOne matrixTwo
         |> Result.map UnitaryMatrix
 
 
@@ -128,7 +128,7 @@ multiplyMatrixVector :
     -> ColumnVector.ColumnVector (ComplexNumbers.ComplexNumber Float)
     -> Result String (ColumnVector.ColumnVector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (UnitaryMatrix matrix) vector =
-    InvertableMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector
+    InvertableMatrix.multiplyMatrixVector RowVector.complexInnerProductSpace matrix vector
 
 
 {-| Compare two Matrices for equality

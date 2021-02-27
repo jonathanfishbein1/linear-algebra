@@ -14,18 +14,7 @@ module Vector3 exposing
 
 import AbelianGroup
 import CommutativeDivisionRing
-import CommutativeMonoid
-import CommutativeSemigroup
-import ComplexNumbers
-import Field
-import Group
-import Imaginary
-import List.Extra
-import Monoid
 import Parser exposing ((|.), (|=))
-import Real
-import Semigroup
-import Typeclasses.Classes.Equality
 import Vector
 
 

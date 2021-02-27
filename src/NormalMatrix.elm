@@ -93,9 +93,9 @@ import ColumnVector
 import ComplexNumbers
 import Field
 import Matrix
+import RowVector
 import SquareMatrix
 import Typeclasses.Classes.Equality
-import Vector
 
 
 {-| Symmetric Matrix type
@@ -132,7 +132,7 @@ add field (NormalMatrix matrixOne) (NormalMatrix matrixTwo) =
 {-| Square Matrix Square Matrix multiplication
 -}
 multiply :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> NormalMatrix a
     -> NormalMatrix a
     -> Result String (NormalMatrix a)
@@ -159,7 +159,7 @@ setAt tup element (NormalMatrix matrix) =
 {-| Multiply a Vector by a Matrix
 -}
 multiplyMatrixVector :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> NormalMatrix a
     -> ColumnVector.ColumnVector a
     -> Result String (ColumnVector.ColumnVector a)
@@ -193,14 +193,14 @@ scalarMultiplication field scalar (NormalMatrix matrix) =
 
 {-| Predicate to determine if Matrix is normal
 -}
-isNormalMatrix : Vector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
+isNormalMatrix : RowVector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
 isNormalMatrix innerProductSpace (SquareMatrix.SquareMatrix matrix) =
     Matrix.multiply innerProductSpace (Matrix.transpose matrix) matrix == Matrix.multiply innerProductSpace matrix (Matrix.transpose matrix)
 
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Vector.VectorSpace a -> NormalMatrix a -> NormalMatrix a
+upperTriangle : RowVector.VectorSpace a -> NormalMatrix a -> NormalMatrix a
 upperTriangle vectorSpace (NormalMatrix matrix) =
     SquareMatrix.upperTriangle vectorSpace matrix
         |> NormalMatrix
@@ -239,7 +239,7 @@ appendHorizontal (NormalMatrix matrixOne) (NormalMatrix matrixTwo) =
 
 {-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
-gaussJordan : Vector.VectorSpace a -> NormalMatrix a -> NormalMatrix a
+gaussJordan : RowVector.VectorSpace a -> NormalMatrix a -> NormalMatrix a
 gaussJordan vectorSpace (NormalMatrix matrix) =
     SquareMatrix.gaussJordan vectorSpace matrix
         |> NormalMatrix

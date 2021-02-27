@@ -253,7 +253,7 @@ type alias MatrixSpace a =
 type alias MatrixAlgebra a =
     { matrixSpace : MatrixSpace a
     , multiply :
-        Vector.InnerProductSpace a
+        RowVector.InnerProductSpace a
         -> Matrix a
         -> Matrix a
         -> Result String (Matrix a)
@@ -470,7 +470,7 @@ adjoint =
 
 {-| Calculate the rank of a Matrix
 -}
-rank : Vector.InnerProductSpace a -> Matrix a -> Int
+rank : RowVector.InnerProductSpace a -> Matrix a -> Int
 rank innerProductSpace matrix =
     let
         (Matrix listOfRowVectorsREF) =
@@ -478,8 +478,8 @@ rank innerProductSpace matrix =
     in
     listOfRowVectorsREF
         |> List.Extra.count
-            (\(RowVector.RowVector vector) ->
-                innerProductSpace.length vector /= Real.zero
+            (\rowVector ->
+                innerProductSpace.length rowVector /= Real.zero
             )
 
 
@@ -501,7 +501,7 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
 
 {-| Calculate the null space of a matrix
 -}
-nullSpace : Typeclasses.Classes.Equality.Equality a -> Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+nullSpace : Typeclasses.Classes.Equality.Equality a -> RowVector.InnerProductSpace a -> Matrix a -> Consistancy a
 nullSpace eq innerProductSpace matrix =
     let
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
@@ -520,7 +520,7 @@ nullSpace eq innerProductSpace matrix =
 
 {-| Calculate the left nullspace of a Matrix
 -}
-leftNullSpace : Typeclasses.Classes.Equality.Equality a -> Vector.InnerProductSpace a -> Matrix a -> Consistancy a
+leftNullSpace : Typeclasses.Classes.Equality.Equality a -> RowVector.InnerProductSpace a -> Matrix a -> Consistancy a
 leftNullSpace eq innerProductSpace =
     transpose >> nullSpace eq innerProductSpace
 
@@ -579,7 +579,7 @@ subtract (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutati
 {-| Multiply a Vector by a Matrix
 -}
 multiplyMatrixVector :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> Matrix a
     -> ColumnVector.ColumnVector a
     -> Result String (ColumnVector.ColumnVector a)
@@ -588,11 +588,10 @@ multiplyMatrixVector innerProductSpace (Matrix matrix) (ColumnVector.ColumnVecto
         let
             listOfVectors =
                 matrix
-                    |> List.map (\(RowVector.RowVector vec) -> vec)
         in
-        Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ vector ]
+        Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ RowVector.RowVector vector ]
             |> List.foldl
-                (\(Vector.Vector elem) acc -> acc ++ elem)
+                (\(RowVector.RowVector (Vector.Vector elem)) acc -> acc ++ elem)
                 []
             |> Vector.Vector
             |> ColumnVector.ColumnVector
@@ -605,7 +604,7 @@ multiplyMatrixVector innerProductSpace (Matrix matrix) (ColumnVector.ColumnVecto
 {-| Matrix Matrix multiplication
 -}
 multiply :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> Matrix a
     -> Matrix a
     -> Result String (Matrix a)
@@ -617,17 +616,14 @@ multiply innerProductSpace (Matrix matrixOne) matrixTwo =
 
             listOfVectors =
                 matrixTranspose
-                    |> List.map (\(RowVector.RowVector vector) -> vector)
 
             listOfVectorsOne =
                 matrixOne
-                    |> List.map (\(RowVector.RowVector vector) -> vector)
         in
         Internal.Matrix.map2VectorCartesian
             innerProductSpace
             listOfVectorsOne
             listOfVectors
-            |> List.map RowVector.RowVector
             |> Matrix
             |> Ok
 
@@ -704,7 +700,7 @@ andThen fMatrix (Matrix listOfRowVectors) =
 
 {-| Determine whether a matirx is onto
 -}
-isOnto : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
+isOnto : RowVector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
 isOnto innerProductSpace matrix =
     if rank innerProductSpace matrix == mDimension matrix then
         Ok matrix
@@ -715,7 +711,7 @@ isOnto innerProductSpace matrix =
 
 {-| Determine whether a matirx is one to one
 -}
-isOneToOne : Vector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
+isOneToOne : RowVector.InnerProductSpace a -> Matrix a -> Result String (Matrix a)
 isOneToOne innerProductSpace matrix =
     if rank innerProductSpace matrix == nDimension matrix then
         Ok matrix
@@ -726,7 +722,7 @@ isOneToOne innerProductSpace matrix =
 
 {-| Predicate to determine if two matricies are row equivalent
 -}
-areRowEquivalent : Vector.VectorSpace a -> Matrix a -> Matrix a -> Bool
+areRowEquivalent : RowVector.VectorSpace a -> Matrix a -> Matrix a -> Bool
 areRowEquivalent vectorSpace matrixOne matrixTwo =
     gaussJordan vectorSpace matrixOne == gaussJordan vectorSpace matrixTwo
 
@@ -741,66 +737,46 @@ all predicate (Matrix listOfRowVectors) =
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Vector.VectorSpace a -> Matrix a -> Matrix a
-upperTriangle vectorSpace (Matrix matrix) =
-    let
-        listOfVectors =
-            List.map
-                (\(RowVector.RowVector vector) -> vector)
-                matrix
-    in
+upperTriangle : RowVector.VectorSpace a -> Matrix a -> Matrix a
+upperTriangle vectorSpace (Matrix listOfRowVectors) =
     List.foldl
         (Internal.Matrix.calculateUpperTriangularFormRectangle vectorSpace)
-        listOfVectors
-        (List.range 0 (List.length matrix - 1))
-        |> List.map RowVector.RowVector
+        listOfRowVectors
+        (List.range 0 (List.length listOfRowVectors - 1))
         |> Matrix
 
 
 {-| Gaussian Elimination
 -}
-gaussianReduce : Vector.VectorSpace a -> Matrix a -> Matrix a
-gaussianReduce vectorSpace (Matrix matrix) =
+gaussianReduce : RowVector.VectorSpace a -> Matrix a -> Matrix a
+gaussianReduce vectorSpace (Matrix listOfRowVectors) =
     let
         (Matrix upperTriangularFormRectangle) =
-            upperTriangle vectorSpace (Matrix matrix)
-
-        listOfVectorsUpperTriangularFormRectangle =
-            List.map
-                (\(RowVector.RowVector vector) -> vector)
-                upperTriangularFormRectangle
+            upperTriangle vectorSpace (Matrix listOfRowVectors)
 
         rowEchelonForm =
             List.indexedMap
                 (Internal.Matrix.scale vectorSpace)
-                listOfVectorsUpperTriangularFormRectangle
+                upperTriangularFormRectangle
     in
     rowEchelonForm
-        |> List.map RowVector.RowVector
         |> Matrix
 
 
 {-| Internal function for Jordan Elimination
 -}
-jordanReduce : Vector.VectorSpace a -> Matrix a -> Matrix a
-jordanReduce vectorSpace (Matrix matrix) =
-    let
-        listOfVectors =
-            List.map
-                (\(RowVector.RowVector vector) -> vector)
-                matrix
-    in
+jordanReduce : RowVector.VectorSpace a -> Matrix a -> Matrix a
+jordanReduce vectorSpace (Matrix listOfRowVectors) =
     List.foldl
         (Internal.Matrix.reduceRowBackwards vectorSpace)
-        listOfVectors
-        (List.reverse (List.range 0 (List.length matrix - 1)))
-        |> List.map RowVector.RowVector
+        listOfRowVectors
+        (List.reverse (List.range 0 (List.length listOfRowVectors - 1)))
         |> Matrix
 
 
 {-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
-gaussJordan : Vector.VectorSpace a -> Matrix a -> Matrix a
+gaussJordan : RowVector.VectorSpace a -> Matrix a -> Matrix a
 gaussJordan vectorSpace =
     gaussianReduce vectorSpace
         >> jordanReduce vectorSpace
@@ -813,7 +789,7 @@ coefficientMatrix matrix =
 
 {-| Solve a system of linear equations using Gauss-Jordan elimination with explict column vector of constants
 -}
-solve : Typeclasses.Classes.Equality.Equality a -> Vector.InnerProductSpace a -> Matrix a -> ColumnVector.ColumnVector a -> Consistancy a
+solve : Typeclasses.Classes.Equality.Equality a -> RowVector.InnerProductSpace a -> Matrix a -> ColumnVector.ColumnVector a -> Consistancy a
 solve { eq } innerProductSpace matrix constants =
     let
         matrixB =
@@ -852,7 +828,7 @@ solve { eq } innerProductSpace matrix constants =
                         List.all
                             (eq additionGroup.monoid.identity)
                             (List.take (List.length row - 1) row)
-                            && innerProductSpace.length (Vector.Vector row)
+                            && innerProductSpace.length (RowVector.RowVector (Vector.Vector row))
                             /= Real.zero
                     )
 
@@ -914,7 +890,7 @@ solve { eq } innerProductSpace matrix constants =
 
 {-| Predicate to determine if a list of Vectors are linearly independent
 -}
-areLinearlyIndependent : Vector.InnerProductSpace a -> List (ColumnVector.ColumnVector a) -> Bool
+areLinearlyIndependent : RowVector.InnerProductSpace a -> List (ColumnVector.ColumnVector a) -> Bool
 areLinearlyIndependent innerProductSpace columnVectors =
     let
         matrix =
@@ -925,7 +901,7 @@ areLinearlyIndependent innerProductSpace columnVectors =
 
 {-| Determine whether list of vectors spans a space
 -}
-doesSetSpanSpace : Vector.VectorSpace a -> VectorDimension -> List (ColumnVector.ColumnVector a) -> Result String Bool
+doesSetSpanSpace : RowVector.VectorSpace a -> VectorDimension -> List (ColumnVector.ColumnVector a) -> Result String Bool
 doesSetSpanSpace vSpace (VectorDimension vectorDimension) columnVectors =
     if List.length columnVectors /= vectorDimension then
         Err "Please input same number of vectors as vector space"
@@ -960,7 +936,7 @@ mDimension (Matrix listOfRowVectors) =
 
 {-| Determine whether list of vectors are a basis for a space
 -}
-areBasis : Vector.InnerProductSpace a -> VectorDimension -> List (ColumnVector.ColumnVector a) -> Bool
+areBasis : RowVector.InnerProductSpace a -> VectorDimension -> List (ColumnVector.ColumnVector a) -> Bool
 areBasis innerProductSpace vectorDimension vectors =
     doesSetSpanSpace innerProductSpace.vectorSpace vectorDimension vectors
         == Ok True
@@ -1084,7 +1060,7 @@ setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
 
 {-| Calculate the commuter of two Hermitian Matricies
 -}
-commuter : Vector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String (Matrix a)
+commuter : RowVector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String (Matrix a)
 commuter innerProductSpace matrixOne matrixTwo =
     Result.map2 (subtract innerProductSpace.vectorSpace.field)
         (multiply innerProductSpace matrixOne matrixTwo)

@@ -27,7 +27,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.jordanReduce Vector.realVectorSpace rowEchelonFormMatrix
+                        Matrix.jordanReduce RowVector.realVectorSpace rowEchelonFormMatrix
 
                     expected =
                         Matrix.Matrix
@@ -52,7 +52,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.jordanReduce Vector.realVectorSpace rowEchelonFormMatrix
+                        Matrix.jordanReduce RowVector.realVectorSpace rowEchelonFormMatrix
 
                     expected =
                         Matrix.Matrix
@@ -91,7 +91,7 @@ suite =
                             ]
 
                     reducedRowEchelonFormMatrix =
-                        Matrix.jordanReduce Vector.complexVectorSpace matrix
+                        Matrix.jordanReduce RowVector.complexVectorSpace matrix
 
                     expected =
                         Matrix.Matrix

@@ -2,7 +2,6 @@ module VectorTests.VectorTests exposing (suite)
 
 import ComplexNumbers
 import Expect
-import Field
 import Fuzz
 import Imaginary
 import Real

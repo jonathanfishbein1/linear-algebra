@@ -163,7 +163,7 @@ isSquareMatrix matrix =
 -}
 normReal : SquareMatrix (Real.Real Float) -> Result String (Real.Real Float)
 normReal matrix =
-    dotProduct Vector.realInnerProductSpace matrix matrix
+    dotProduct RowVector.realInnerProductSpace matrix matrix
         |> Result.map
             (Real.map Basics.sqrt)
 
@@ -172,7 +172,7 @@ normReal matrix =
 -}
 normComplex : SquareMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (Real.Real Float)
 normComplex matrix =
-    dotProduct Vector.complexInnerProductSpace matrix matrix
+    dotProduct RowVector.complexInnerProductSpace matrix matrix
         |> Result.map
             (ComplexNumbers.real >> Real.map Basics.sqrt)
 
@@ -220,7 +220,7 @@ isLeftStochastic (SquareMatrix matrix) =
 realMatrixInnerProductSpace : InnerProductSpace (Real.Real Float)
 realMatrixInnerProductSpace =
     { matrixSpace = Matrix.realMatrixSpace
-    , innerProduct = dotProduct Vector.realInnerProductSpace
+    , innerProduct = dotProduct RowVector.realInnerProductSpace
     , norm = normReal
     , distance = distanceReal
     }
@@ -231,7 +231,7 @@ realMatrixInnerProductSpace =
 complexMatrixInnerProductSpace : InnerProductSpace (ComplexNumbers.ComplexNumber Float)
 complexMatrixInnerProductSpace =
     { matrixSpace = Matrix.complexMatrixSpace
-    , innerProduct = dotProduct Vector.complexInnerProductSpace
+    , innerProduct = dotProduct RowVector.complexInnerProductSpace
     , norm = normComplex
     , distance = distanceComplex
     }
@@ -239,7 +239,7 @@ complexMatrixInnerProductSpace =
 
 {-| Calculate the dot product of two Matricies
 -}
-dotProduct : Vector.InnerProductSpace a -> SquareMatrix a -> SquareMatrix a -> Result String a
+dotProduct : RowVector.InnerProductSpace a -> SquareMatrix a -> SquareMatrix a -> Result String a
 dotProduct vectorInnerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     let
         productMatrix =
@@ -292,7 +292,7 @@ scalarMultiplication field scalar (SquareMatrix matrix) =
 {-| Square Matrix Square Matrix multiplication
 -}
 multiply :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> SquareMatrix a
     -> SquareMatrix a
     -> Result String (SquareMatrix a)
@@ -304,7 +304,7 @@ multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 {-| Multiply a Vector by a Matrix
 -}
 multiplyMatrixVector :
-    Vector.InnerProductSpace a
+    RowVector.InnerProductSpace a
     -> SquareMatrix a
     -> ColumnVector.ColumnVector a
     -> Result String (ColumnVector.ColumnVector a)
@@ -348,7 +348,7 @@ transpose (SquareMatrix matrix) =
 
 {-| Put a matrix into Upper Triangular Form
 -}
-upperTriangle : Vector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
+upperTriangle : RowVector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
 upperTriangle vectorSpace (SquareMatrix matrix) =
     Matrix.upperTriangle vectorSpace matrix
         |> SquareMatrix
@@ -371,7 +371,7 @@ appendHorizontal (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 
 {-| Function composition of Gaussian Elimination and Jordan Elimination
 -}
-gaussJordan : Vector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
+gaussJordan : RowVector.VectorSpace a -> SquareMatrix a -> SquareMatrix a
 gaussJordan vectorSpace (SquareMatrix matrix) =
     Matrix.gaussJordan vectorSpace matrix
         |> SquareMatrix

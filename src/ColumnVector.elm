@@ -68,12 +68,13 @@ import Monoid
 import Real
 import Semigroup
 import Typeclasses.Classes.Equality
+import Vector
 
 
 {-| Column Vector
 -}
 type ColumnVector a
-    = ColumnVector (Internal.Vector.Vector a)
+    = ColumnVector (Vector.Vector a)
 
 
 {-| Type to represent a Vector Space
@@ -235,7 +236,7 @@ complexInnerProductSpace =
 -}
 empty : ColumnVector a
 empty =
-    Internal.Vector.Vector []
+    Vector.Vector []
         |> ColumnVector
 
 

@@ -7,6 +7,7 @@ import Imaginary
 import Internal.Vector
 import Real
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -20,7 +21,7 @@ suite =
             \one two ->
                 let
                     w =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -28,7 +29,7 @@ suite =
                                 )
                             ]
                 in
-                Internal.Vector.add ComplexNumbers.field (Internal.Vector.Vector [ ComplexNumbers.zero ]) w
+                Internal.Vector.add ComplexNumbers.field (Vector.Vector [ ComplexNumbers.zero ]) w
                     |> Expect.equal w
         , Test.fuzz2
             (Fuzz.map Real.Real Fuzz.float)
@@ -38,7 +39,7 @@ suite =
             \one two ->
                 let
                     v =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -55,7 +56,7 @@ suite =
             \one two ->
                 let
                     v =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -88,16 +89,16 @@ suite =
                             (Imaginary.Imaginary three)
 
                     a =
-                        Internal.Vector.Vector [ complexNumberOne ]
+                        Vector.Vector [ complexNumberOne ]
 
                     b =
-                        Internal.Vector.Vector [ complexNumberTwo ]
+                        Vector.Vector [ complexNumberTwo ]
 
                     c =
-                        Internal.Vector.Vector [ complexNumberThree ]
+                        Vector.Vector [ complexNumberThree ]
 
                     expected =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ complexNumberOne
                             , complexNumberTwo
                             , complexNumberThree

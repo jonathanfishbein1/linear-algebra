@@ -8,6 +8,7 @@ import Matrix
 import Real
 import RowVector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -20,9 +21,9 @@ suite =
                 let
                     rowEchelonFormMatrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1.0, 2.0, -1.0, -4.0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 0.0, 1.0, -1.0, 3.0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1.0, 2.0, -1.0, -4.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, -1.0, 3.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
                             ]
                             |> Matrix.map Real.Real
 
@@ -31,9 +32,9 @@ suite =
 
                     expected =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ -0.0, 0.0, 1.0, -2.0 ]
                             ]
                             |> Matrix.map Real.Real
                 in
@@ -45,9 +46,9 @@ suite =
                 let
                     rowEchelonFormMatrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1.0, 1.0, 1.0, 3.0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 0.0, 1.0, 2.0, -3.0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1.0, 1.0, 1.0, 3.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 2.0, -3.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
                             ]
                             |> Matrix.map Real.Real
 
@@ -56,9 +57,9 @@ suite =
 
                     expected =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1.0, 0.0, 0.0, 5.0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 0.0, 1.0, 0.0, -1.0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, 5.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, -1.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -1.0 ]
                             ]
                             |> Matrix.map Real.Real
                 in
@@ -86,8 +87,8 @@ suite =
 
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
+                            [ RowVector.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , RowVector.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
 
                     reducedRowEchelonFormMatrix =
@@ -95,8 +96,8 @@ suite =
 
                     expected =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ ComplexNumbers.one, ComplexNumbers.zero ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.one ]
+                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.one, ComplexNumbers.zero ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.one ]
                             ]
                 in
                 Expect.true "matricies equal" ((Matrix.equal ComplexNumbers.equal.eq).eq reducedRowEchelonFormMatrix expected)

@@ -6,6 +6,7 @@ import Internal.Vector
 import Matrix
 import RowVector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -18,7 +19,7 @@ suite =
             \one ->
                 let
                     m =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
                             |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix
@@ -34,7 +35,7 @@ suite =
             \one ->
                 let
                     m =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
                             |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix

@@ -6,6 +6,7 @@ import Internal.Vector
 import Matrix
 import RowVector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -19,7 +20,7 @@ suite =
                 let
                     f a =
                         [ a * 2 ]
-                            |> Internal.Vector.Vector
+                            |> Vector.Vector
                             |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix
@@ -55,14 +56,14 @@ suite =
 
                     f a =
                         [ a * 2 ]
-                            |> Internal.Vector.Vector
+                            |> Vector.Vector
                             |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix
 
                     g a =
                         [ a * 3 ]
-                            |> Internal.Vector.Vector
+                            |> Vector.Vector
                             |> RowVector.RowVector
                             |> List.singleton
                             |> Matrix.Matrix

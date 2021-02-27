@@ -7,6 +7,7 @@ import Imaginary
 import Internal.Vector
 import Real
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -255,7 +256,7 @@ suite =
             \one two three ->
                 let
                     vector =
-                        Internal.Vector.Vector [ one, two, three ]
+                        Vector.Vector [ one, two, three ]
                 in
                 Expect.equal (Internal.Vector.getAt 0 vector) (Just one)
         , Test.fuzz
@@ -265,7 +266,7 @@ suite =
             \one ->
                 let
                     vector =
-                        Internal.Vector.setAt 0 one (Internal.Vector.Vector [ 0 ])
+                        Internal.Vector.setAt 0 one (Vector.Vector [ 0 ])
                 in
                 Expect.equal (Internal.Vector.getAt 0 vector) (Just one)
         , Test.fuzz2
@@ -276,7 +277,7 @@ suite =
             \one two ->
                 let
                     vector =
-                        Internal.Vector.Vector [ one, two ]
+                        Vector.Vector [ one, two ]
 
                     printedVector =
                         Internal.Vector.printRealVector vector
@@ -293,30 +294,30 @@ suite =
             \one two ->
                 let
                     vectorOne =
-                        Internal.Vector.Vector [ one, two ]
+                        Vector.Vector [ one, two ]
 
                     vectorTwo =
-                        Internal.Vector.Vector [ one, two ]
+                        Vector.Vector [ one, two ]
 
                     result =
                         Internal.Vector.subtract Real.field vectorOne vectorTwo
                 in
-                Expect.equal result (Internal.Vector.Vector [ Real.zero, Real.zero ])
+                Expect.equal result (Vector.Vector [ Real.zero, Real.zero ])
         , Test.test
             "tests vector tensor product"
           <|
             \_ ->
                 let
                     vectorOne =
-                        Internal.Vector.Vector [ Real.one, Real.Real 2 ]
+                        Vector.Vector [ Real.one, Real.Real 2 ]
 
                     vectorTwo =
-                        Internal.Vector.Vector [ Real.Real 3, Real.Real 4 ]
+                        Vector.Vector [ Real.Real 3, Real.Real 4 ]
 
                     tensorProduct =
                         Internal.Vector.tensorProduct Real.field vectorOne vectorTwo
                 in
-                Expect.equal tensorProduct (Internal.Vector.Vector [ Real.Real 3, Real.Real 4, Real.Real 6, Real.Real 8 ])
+                Expect.equal tensorProduct (Vector.Vector [ Real.Real 3, Real.Real 4, Real.Real 6, Real.Real 8 ])
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -326,13 +327,13 @@ suite =
             \one two three ->
                 let
                     vectorI =
-                        Internal.Vector.Vector [ one, two ]
+                        Vector.Vector [ one, two ]
 
                     vectorJ =
-                        Internal.Vector.Vector [ three, one ]
+                        Vector.Vector [ three, one ]
 
                     vectorK =
-                        Internal.Vector.Vector [ two, three ]
+                        Vector.Vector [ two, three ]
 
                     vectorSumIJ =
                         Internal.Vector.add Real.field vectorI vectorJ
@@ -380,10 +381,10 @@ suite =
                             )
 
                     vectorJ =
-                        Internal.Vector.Vector [ complexNumberTwo, complexNumberThree ]
+                        Vector.Vector [ complexNumberTwo, complexNumberThree ]
 
                     vectorK =
-                        Internal.Vector.Vector [ complexNumberThree, complexNumberTwo ]
+                        Vector.Vector [ complexNumberThree, complexNumberTwo ]
 
                     tensorProductJK =
                         Internal.Vector.tensorProduct ComplexNumbers.field vectorJ vectorK

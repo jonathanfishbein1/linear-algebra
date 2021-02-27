@@ -213,6 +213,7 @@ import Semigroup
 import Typeclasses.Classes.Equality
 import Typeclasses.Classes.Monoid
 import Typeclasses.Classes.Semigroup
+import Vector
 
 
 {-| Matrix type
@@ -410,7 +411,7 @@ identity (Field.Field field) dimension =
                 List.Extra.initialize
                     dimension
                     (Internal.Matrix.diagonal field columnIndex)
-                    |> Internal.Vector.Vector
+                    |> Vector.Vector
                     |> RowVector.RowVector
             )
         )
@@ -444,9 +445,9 @@ scalarMultiplication (Field.Field (CommutativeDivisionRing.CommutativeDivisionRi
 transpose : Matrix a -> Matrix a
 transpose (Matrix listOfRowVectors) =
     listOfRowVectors
-        |> List.map (\(RowVector.RowVector (Internal.Vector.Vector x)) -> x)
+        |> List.map (\(RowVector.RowVector (Vector.Vector x)) -> x)
         |> List.Extra.transpose
-        |> List.map (Internal.Vector.Vector >> RowVector.RowVector)
+        |> List.map (Vector.Vector >> RowVector.RowVector)
         |> Matrix
 
 
@@ -491,10 +492,10 @@ subMatrix startingRowIndex endingRowIndex startingColumnIndex endingColumnIndex 
     List.take endingRowIndex listOfRowVectors
         |> List.drop startingRowIndex
         |> List.map
-            (\(RowVector.RowVector (Internal.Vector.Vector row)) ->
+            (\(RowVector.RowVector (Vector.Vector row)) ->
                 List.take endingColumnIndex row
                     |> List.drop startingColumnIndex
-                    |> Internal.Vector.Vector
+                    |> Vector.Vector
                     |> RowVector.RowVector
             )
         |> Matrix
@@ -513,7 +514,7 @@ nullSpace eq innerProductSpace matrix =
 
         b =
             List.repeat (mDimension matrix) additionGroup.monoid.identity
-                |> Internal.Vector.Vector
+                |> Vector.Vector
                 |> ColumnVector.ColumnVector
     in
     solve eq innerProductSpace matrix b
@@ -588,9 +589,9 @@ multiplyMatrixVector innerProductSpace (Matrix listOfRowVector) (ColumnVector.Co
     if nDimension (Matrix listOfRowVector) == Internal.Vector.dimension columnVector then
         Internal.Matrix.map2VectorCartesian innerProductSpace listOfRowVector [ RowVector.RowVector columnVector ]
             |> List.foldl
-                (\(RowVector.RowVector (Internal.Vector.Vector elem)) acc -> acc ++ elem)
+                (\(RowVector.RowVector (Vector.Vector elem)) acc -> acc ++ elem)
                 []
-            |> Internal.Vector.Vector
+            |> Vector.Vector
             |> ColumnVector.ColumnVector
             |> Ok
 
@@ -675,7 +676,7 @@ andMap fMatrix matrix =
 andThen : (a -> Matrix b) -> Matrix a -> Matrix b
 andThen fMatrix (Matrix listOfRowVectors) =
     List.concatMap
-        (\(RowVector.RowVector (Internal.Vector.Vector listOfElements)) ->
+        (\(RowVector.RowVector (Vector.Vector listOfElements)) ->
             let
                 (Matrix result) =
                     List.concatMap
@@ -817,17 +818,17 @@ solve { eq } innerProductSpace matrix constants =
         anyAllZeroExceptAugmentedSide =
             listOfRowVectorsRREF
                 |> List.any
-                    (\(RowVector.RowVector (Internal.Vector.Vector row)) ->
+                    (\(RowVector.RowVector (Vector.Vector row)) ->
                         List.all
                             (eq additionGroup.monoid.identity)
                             (List.take (List.length row - 1) row)
-                            && innerProductSpace.length (RowVector.RowVector (Internal.Vector.Vector row))
+                            && innerProductSpace.length (RowVector.RowVector (Vector.Vector row))
                             /= Real.zero
                     )
 
         solution =
             List.foldl
-                (\(RowVector.RowVector (Internal.Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
+                (\(RowVector.RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
                 []
                 listOfRowVectorsRREF
     in
@@ -849,14 +850,14 @@ solve { eq } innerProductSpace matrix constants =
 
             solutionStar =
                 List.foldl
-                    (\(RowVector.RowVector (Internal.Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
+                    (\(RowVector.RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
                     []
                     listOfRowVectorsRREFStar
         in
         Inconsistant "No Unique Solution: Least Squares Solution Provided"
             (UniqueSolution
                 (solutionStar
-                    |> Internal.Vector.Vector
+                    |> Vector.Vector
                     |> ColumnVector.ColumnVector
                 )
             )
@@ -875,7 +876,7 @@ solve { eq } innerProductSpace matrix constants =
     else
         UniqueSolution
             (solution
-                |> Internal.Vector.Vector
+                |> Vector.Vector
                 |> ColumnVector.ColumnVector
             )
             |> Consistant

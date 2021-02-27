@@ -8,6 +8,7 @@ import Matrix
 import Real
 import RowVector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -29,21 +30,21 @@ suite =
                     v =
                         Matrix.Matrix
                             [ RowVector.RowVector <|
-                                Internal.Vector.Vector
+                                Vector.Vector
                                     [ ComplexNumbers.one ]
                             ]
 
                     w =
                         Matrix.Matrix
                             [ RowVector.RowVector <|
-                                Internal.Vector.Vector
+                                Vector.Vector
                                     [ complexOneNegative ]
                             ]
 
                     zero =
                         Matrix.Matrix
                             [ RowVector.RowVector <|
-                                Internal.Vector.Vector
+                                Vector.Vector
                                     [ ComplexNumbers.zero
                                     ]
                             ]

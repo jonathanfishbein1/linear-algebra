@@ -9,6 +9,7 @@ import Matrix
 import Real
 import RowVector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -24,7 +25,7 @@ suite =
                 let
                     v =
                         RowVector.RowVector <|
-                            Internal.Vector.Vector
+                            Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     three
                                     (Imaginary.Imaginary
@@ -39,7 +40,7 @@ suite =
 
                     w =
                         RowVector.RowVector <|
-                            Internal.Vector.Vector
+                            Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     two
                                     (Imaginary.Imaginary
@@ -70,7 +71,7 @@ suite =
                 let
                     v =
                         RowVector.RowVector <|
-                            Internal.Vector.Vector
+                            Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     three
                                     (Imaginary.Imaginary
@@ -85,7 +86,7 @@ suite =
 
                     w =
                         RowVector.RowVector <|
-                            Internal.Vector.Vector
+                            Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     two
                                     (Imaginary.Imaginary
@@ -100,7 +101,7 @@ suite =
 
                     x =
                         RowVector.RowVector <|
-                            Internal.Vector.Vector
+                            Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     one
                                     (Imaginary.Imaginary

@@ -4,6 +4,7 @@ import Expect
 import Fuzz
 import Internal.Vector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -44,7 +45,7 @@ suite =
                         Internal.Vector.pure identity
 
                     w =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     leftSide =
                         Internal.Vector.andMap w (Internal.Vector.andMap v (Internal.Vector.andMap u fPure))

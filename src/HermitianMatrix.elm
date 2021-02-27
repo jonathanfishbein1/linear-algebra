@@ -45,6 +45,7 @@ module HermitianMatrix exposing
 
 import ColumnVector
 import ComplexNumbers
+import RowVector exposing (RowVector)
 import SymmetricMatrix
 import Vector
 
@@ -83,7 +84,7 @@ multiply :
     -> HermitianMatrix Float
     -> Result String (HermitianMatrix Float)
 multiply (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
-    SymmetricMatrix.multiply Vector.complexInnerProductSpace matrixOne matrixTwo
+    SymmetricMatrix.multiply RowVector.complexInnerProductSpace matrixOne matrixTwo
         |> Result.map HermitianMatrix
 
 
@@ -94,7 +95,7 @@ multiplyMatrixVector :
     -> ColumnVector.ColumnVector (ComplexNumbers.ComplexNumber Float)
     -> Result String (ColumnVector.ColumnVector (ComplexNumbers.ComplexNumber Float))
 multiplyMatrixVector (HermitianMatrix matrix) vector =
-    SymmetricMatrix.multiplyMatrixVector Vector.complexInnerProductSpace matrix vector
+    SymmetricMatrix.multiplyMatrixVector RowVector.complexInnerProductSpace matrix vector
 
 
 {-| Subtract two Hermitian Matrices

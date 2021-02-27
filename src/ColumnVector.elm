@@ -3,7 +3,12 @@ module ColumnVector exposing
     , sum
     , scalarMultiplication
     , conjugate
+    , lengthReal
+    , lengthComplex
     , add
+    , dotProduct
+    , distanceReal
+    , distanceComplex
     , dimension
     , empty
     , map
@@ -26,11 +31,16 @@ module ColumnVector exposing
 @docs sum
 @docs scalarMultiplication
 @docs conjugate
+@docs lengthReal
+@docs lengthComplex
 
 
 # Binary Operations
 
 @docs add
+@docs dotProduct
+@docs distanceReal
+@docs distanceComplex
 
 
 # ColumnVector Properties

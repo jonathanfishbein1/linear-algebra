@@ -4,11 +4,11 @@ import ComplexNumbers
 import Expect
 import Fuzz
 import Imaginary
+import Internal.Vector
 import Matrix
 import Real
 import RowVector
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -24,7 +24,7 @@ suite =
                 let
                     v =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     three
                                     (Imaginary.Imaginary
@@ -39,7 +39,7 @@ suite =
 
                     w =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     two
                                     (Imaginary.Imaginary
@@ -70,7 +70,7 @@ suite =
                 let
                     v =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     three
                                     (Imaginary.Imaginary
@@ -85,7 +85,7 @@ suite =
 
                     w =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     two
                                     (Imaginary.Imaginary
@@ -100,7 +100,7 @@ suite =
 
                     x =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ ComplexNumbers.ComplexNumber
                                     one
                                     (Imaginary.Imaginary

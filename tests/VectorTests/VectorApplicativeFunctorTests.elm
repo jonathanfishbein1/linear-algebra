@@ -2,8 +2,8 @@ module VectorTests.VectorApplicativeFunctorTests exposing (suite)
 
 import Expect
 import Fuzz
+import Internal.Vector
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -16,13 +16,13 @@ suite =
             \one ->
                 let
                     vIdentity =
-                        Vector.pure identity
+                        Internal.Vector.pure identity
 
                     v =
-                        Vector.pure one
+                        Internal.Vector.pure one
 
                     vApplied =
-                        Vector.andMap v vIdentity
+                        Internal.Vector.andMap v vIdentity
                 in
                 Expect.equal vApplied v
         , Test.fuzz
@@ -35,22 +35,22 @@ suite =
                         (<<)
 
                     fPure =
-                        Vector.pure f
+                        Internal.Vector.pure f
 
                     u =
-                        Vector.pure identity
+                        Internal.Vector.pure identity
 
                     v =
-                        Vector.pure identity
+                        Internal.Vector.pure identity
 
                     w =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     leftSide =
-                        Vector.andMap w (Vector.andMap v (Vector.andMap u fPure))
+                        Internal.Vector.andMap w (Internal.Vector.andMap v (Internal.Vector.andMap u fPure))
 
                     rightSide =
-                        Vector.andMap (Vector.andMap w v) u
+                        Internal.Vector.andMap (Internal.Vector.andMap w v) u
                 in
                 Expect.equal leftSide rightSide
         , Test.fuzz
@@ -63,15 +63,15 @@ suite =
                         (*) 2
 
                     pureF =
-                        Vector.pure f
+                        Internal.Vector.pure f
 
                     pureOne =
-                        Vector.pure one
+                        Internal.Vector.pure one
 
                     vApplied =
-                        Vector.andMap pureOne pureF
+                        Internal.Vector.andMap pureOne pureF
                 in
-                Expect.equal vApplied (Vector.pure <| f one)
+                Expect.equal vApplied (Internal.Vector.pure <| f one)
         , Test.fuzz
             Fuzz.int
             "tests fourth applicative law for Vector"
@@ -79,16 +79,16 @@ suite =
             \one ->
                 let
                     pureOne =
-                        Vector.pure identity
+                        Internal.Vector.pure identity
 
                     pureTwo =
-                        Vector.pure one
+                        Internal.Vector.pure one
 
                     leftSide =
-                        Vector.andMap pureTwo pureOne
+                        Internal.Vector.andMap pureTwo pureOne
 
                     rightSide =
-                        Vector.andMap pureOne (Vector.pure <| Basics.always one)
+                        Internal.Vector.andMap pureOne (Internal.Vector.pure <| Basics.always one)
                 in
                 Expect.equal leftSide rightSide
         ]

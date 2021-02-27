@@ -2,8 +2,8 @@ module VectorTests.VectorFunctorTests exposing (suite)
 
 import Expect
 import Fuzz
+import Internal.Vector
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -16,10 +16,10 @@ suite =
             \one ->
                 let
                     v =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     vPrime =
-                        Vector.map identity v
+                        Internal.Vector.map identity v
                 in
                 Expect.equal v vPrime
         , Test.fuzz
@@ -29,7 +29,7 @@ suite =
             \one ->
                 let
                     v =
-                        Vector.Vector [ one ]
+                        Internal.Vector.Vector [ one ]
 
                     f =
                         (*) 2
@@ -41,8 +41,8 @@ suite =
                         f << g
 
                     mapResult =
-                        Vector.map fdotG v
+                        Internal.Vector.map fdotG v
                 in
                 mapResult
-                    |> Expect.equal (Vector.map f (Vector.map g v))
+                    |> Expect.equal (Internal.Vector.map f (Internal.Vector.map g v))
         ]

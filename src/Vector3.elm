@@ -14,8 +14,8 @@ module Vector3 exposing
 
 import AbelianGroup
 import CommutativeDivisionRing
+import Internal.Vector
 import Parser exposing ((|.), (|=))
-import Vector
 
 
 {-| 3 Dimensional Vector type
@@ -40,6 +40,6 @@ cross (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) 
 
 {-| Convert a Vector3 type to a Vector type
 -}
-vector3ToVector : Vector3 a -> Vector.Vector a
+vector3ToVector : Vector3 a -> Internal.Vector.Vector a
 vector3ToVector (Vector3 x y z) =
-    Vector.Vector [ x, y, z ]
+    Internal.Vector.Vector [ x, y, z ]

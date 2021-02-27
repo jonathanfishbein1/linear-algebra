@@ -4,9 +4,9 @@ import ComplexNumbers
 import Expect
 import Fuzz
 import Imaginary
+import Internal.Vector
 import Real
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -20,24 +20,24 @@ suite =
             \one two ->
                 let
                     a =
-                        Vector.pure one
+                        Internal.Vector.pure one
 
                     b =
-                        Vector.pure two
+                        Internal.Vector.pure two
 
                     aHadamardB =
-                        Vector.hadamardMultiplication
+                        Internal.Vector.hadamardMultiplication
                             Real.field
                             a
                             b
 
                     bhadamardA =
-                        Vector.hadamardMultiplication
+                        Internal.Vector.hadamardMultiplication
                             Real.field
                             b
                             a
                 in
-                Expect.true "hadamard vector multiplication is commutative" ((Vector.equal Real.equal.eq).eq aHadamardB bhadamardA)
+                Expect.true "hadamard vector multiplication is commutative" ((Internal.Vector.equal Real.equal.eq).eq aHadamardB bhadamardA)
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -47,27 +47,27 @@ suite =
             \one two three ->
                 let
                     a =
-                        Vector.pure one
+                        Internal.Vector.pure one
 
                     b =
-                        Vector.pure two
+                        Internal.Vector.pure two
 
                     c =
-                        Vector.pure three
+                        Internal.Vector.pure three
 
                     aHadamardBHadamardC =
-                        Vector.hadamardMultiplication
+                        Internal.Vector.hadamardMultiplication
                             Real.field
-                            (Vector.hadamardMultiplication Real.field a b)
+                            (Internal.Vector.hadamardMultiplication Real.field a b)
                             c
 
                     bHadamardCHadamardA =
-                        Vector.hadamardMultiplication
+                        Internal.Vector.hadamardMultiplication
                             Real.field
                             a
-                            (Vector.hadamardMultiplication Real.field b c)
+                            (Internal.Vector.hadamardMultiplication Real.field b c)
                 in
-                Expect.true "hadamard vector multiplication is associative" ((Vector.equal Real.equal.eq).eq aHadamardBHadamardC bHadamardCHadamardA)
+                Expect.true "hadamard vector multiplication is associative" ((Internal.Vector.equal Real.equal.eq).eq aHadamardBHadamardC bHadamardCHadamardA)
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -77,27 +77,27 @@ suite =
             \one two three ->
                 let
                     a =
-                        Vector.pure one
+                        Internal.Vector.pure one
 
                     b =
-                        Vector.pure two
+                        Internal.Vector.pure two
 
                     c =
-                        Vector.pure three
+                        Internal.Vector.pure three
 
                     aHadamardSumBC =
-                        Vector.hadamardMultiplication
+                        Internal.Vector.hadamardMultiplication
                             Real.field
                             a
-                            (Vector.add Real.field b c)
+                            (Internal.Vector.add Real.field b c)
 
                     sumAHadamardBAHadamardC =
-                        Vector.add
+                        Internal.Vector.add
                             Real.field
-                            (Vector.hadamardMultiplication Real.field a b)
-                            (Vector.hadamardMultiplication Real.field a c)
+                            (Internal.Vector.hadamardMultiplication Real.field a b)
+                            (Internal.Vector.hadamardMultiplication Real.field a c)
                 in
-                Expect.true "hadamard vector multiplication is distributative over addition" ((Vector.equal Real.equal.eq).eq aHadamardSumBC sumAHadamardBAHadamardC)
+                Expect.true "hadamard vector multiplication is distributative over addition" ((Internal.Vector.equal Real.equal.eq).eq aHadamardSumBC sumAHadamardBAHadamardC)
         , Test.fuzz
             (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
             "tests unit vector length is 1"
@@ -105,11 +105,11 @@ suite =
             \one ->
                 let
                     a =
-                        Vector.pure one
+                        Internal.Vector.pure one
 
                     normalisedALength =
-                        Vector.normaliseReal a
-                            |> Vector.lengthReal
+                        Internal.Vector.normaliseReal a
+                            |> Internal.Vector.lengthReal
                 in
                 Expect.true "unit vector length is 1" (Real.equal.eq normalisedALength Real.one)
         , Test.fuzz
@@ -126,11 +126,11 @@ suite =
                             )
 
                     a =
-                        Vector.pure complexNumber
+                        Internal.Vector.pure complexNumber
 
                     normalisedALength =
-                        Vector.normaliseComplex a
-                            |> Vector.lengthComplex
+                        Internal.Vector.normaliseComplex a
+                            |> Internal.Vector.lengthComplex
                 in
                 Expect.true "complex unit vector length is 1"
                     (Real.equal.eq normalisedALength Real.one)
@@ -142,9 +142,9 @@ suite =
             \one two ->
                 let
                     vectors =
-                        [ Vector.pure
+                        [ Internal.Vector.pure
                             one
-                        , Vector.pure
+                        , Internal.Vector.pure
                             two
                         ]
 
@@ -152,10 +152,10 @@ suite =
                         [ \_ -> True ]
 
                     scalar =
-                        Vector.Scalar one
+                        Internal.Vector.Scalar one
 
                     isSubspace =
-                        Vector.vectorSubspace Real.field Vector.realAbelianGroup scalar vectors predicates
+                        Internal.Vector.vectorSubspace Real.field Internal.Vector.realAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
@@ -167,18 +167,18 @@ suite =
             \one two ->
                 let
                     vectors =
-                        [ Vector.pure one
-                        , Vector.pure two
+                        [ Internal.Vector.pure one
+                        , Internal.Vector.pure two
                         ]
 
                     predicates =
                         [ \(Real.Real real) -> real > 0 ]
 
                     scalar =
-                        Vector.Scalar one
+                        Internal.Vector.Scalar one
 
                     isSubspace =
-                        Vector.vectorSubspace Real.field Vector.realAbelianGroup scalar vectors predicates
+                        Internal.Vector.vectorSubspace Real.field Internal.Vector.realAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
@@ -197,7 +197,7 @@ suite =
                             )
 
                     vectors =
-                        [ Vector.pure
+                        [ Internal.Vector.pure
                             complexNumber
                         ]
 
@@ -205,10 +205,10 @@ suite =
                         [ \_ -> True ]
 
                     scalar =
-                        Vector.Scalar complexNumber
+                        Internal.Vector.Scalar complexNumber
 
                     isSubspace =
-                        Vector.vectorSubspace ComplexNumbers.field Vector.complexAbelianGroup scalar vectors predicates
+                        Internal.Vector.vectorSubspace ComplexNumbers.field Internal.Vector.complexAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.true "is a subspace"
@@ -227,7 +227,7 @@ suite =
                             )
 
                     vectors =
-                        [ Vector.pure complexNumber
+                        [ Internal.Vector.pure complexNumber
                         ]
 
                     complexOne =
@@ -239,10 +239,10 @@ suite =
                         [ ComplexNumbers.equal.eq complexOne ]
 
                     scalar =
-                        Vector.Scalar complexNumber
+                        Internal.Vector.Scalar complexNumber
 
                     isSubspace =
-                        Vector.vectorSubspace ComplexNumbers.field Vector.complexAbelianGroup scalar vectors predicates
+                        Internal.Vector.vectorSubspace ComplexNumbers.field Internal.Vector.complexAbelianGroup scalar vectors predicates
                 in
                 isSubspace
                     |> Expect.false "is not a subspace"
@@ -255,9 +255,9 @@ suite =
             \one two three ->
                 let
                     vector =
-                        Vector.Vector [ one, two, three ]
+                        Internal.Vector.Vector [ one, two, three ]
                 in
-                Expect.equal (Vector.getAt 0 vector) (Just one)
+                Expect.equal (Internal.Vector.getAt 0 vector) (Just one)
         , Test.fuzz
             Fuzz.int
             "setAt getAt index"
@@ -265,9 +265,9 @@ suite =
             \one ->
                 let
                     vector =
-                        Vector.setAt 0 one (Vector.Vector [ 0 ])
+                        Internal.Vector.setAt 0 one (Internal.Vector.Vector [ 0 ])
                 in
-                Expect.equal (Vector.getAt 0 vector) (Just one)
+                Expect.equal (Internal.Vector.getAt 0 vector) (Just one)
         , Test.fuzz2
             (Fuzz.map Real.Real Fuzz.float)
             (Fuzz.map Real.Real Fuzz.float)
@@ -276,13 +276,13 @@ suite =
             \one two ->
                 let
                     vector =
-                        Vector.Vector [ one, two ]
+                        Internal.Vector.Vector [ one, two ]
 
                     printedVector =
-                        Vector.printRealVector vector
+                        Internal.Vector.printRealVector vector
 
                     readVector =
-                        Vector.readRealVector printedVector
+                        Internal.Vector.readRealVector printedVector
                 in
                 Expect.equal readVector (Ok vector)
         , Test.fuzz2
@@ -293,30 +293,30 @@ suite =
             \one two ->
                 let
                     vectorOne =
-                        Vector.Vector [ one, two ]
+                        Internal.Vector.Vector [ one, two ]
 
                     vectorTwo =
-                        Vector.Vector [ one, two ]
+                        Internal.Vector.Vector [ one, two ]
 
                     result =
-                        Vector.subtract Real.field vectorOne vectorTwo
+                        Internal.Vector.subtract Real.field vectorOne vectorTwo
                 in
-                Expect.equal result (Vector.Vector [ Real.zero, Real.zero ])
+                Expect.equal result (Internal.Vector.Vector [ Real.zero, Real.zero ])
         , Test.test
             "tests vector tensor product"
           <|
             \_ ->
                 let
                     vectorOne =
-                        Vector.Vector [ Real.one, Real.Real 2 ]
+                        Internal.Vector.Vector [ Real.one, Real.Real 2 ]
 
                     vectorTwo =
-                        Vector.Vector [ Real.Real 3, Real.Real 4 ]
+                        Internal.Vector.Vector [ Real.Real 3, Real.Real 4 ]
 
                     tensorProduct =
-                        Vector.tensorProduct Real.field vectorOne vectorTwo
+                        Internal.Vector.tensorProduct Real.field vectorOne vectorTwo
                 in
-                Expect.equal tensorProduct (Vector.Vector [ Real.Real 3, Real.Real 4, Real.Real 6, Real.Real 8 ])
+                Expect.equal tensorProduct (Internal.Vector.Vector [ Real.Real 3, Real.Real 4, Real.Real 6, Real.Real 8 ])
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -326,30 +326,30 @@ suite =
             \one two three ->
                 let
                     vectorI =
-                        Vector.Vector [ one, two ]
+                        Internal.Vector.Vector [ one, two ]
 
                     vectorJ =
-                        Vector.Vector [ three, one ]
+                        Internal.Vector.Vector [ three, one ]
 
                     vectorK =
-                        Vector.Vector [ two, three ]
+                        Internal.Vector.Vector [ two, three ]
 
                     vectorSumIJ =
-                        Vector.add Real.field vectorI vectorJ
+                        Internal.Vector.add Real.field vectorI vectorJ
 
                     tensorProductIJK =
-                        Vector.tensorProduct Real.field vectorSumIJ vectorK
+                        Internal.Vector.tensorProduct Real.field vectorSumIJ vectorK
 
                     tensorProductIK =
-                        Vector.tensorProduct Real.field vectorI vectorK
+                        Internal.Vector.tensorProduct Real.field vectorI vectorK
 
                     tensorProductJK =
-                        Vector.tensorProduct Real.field vectorJ vectorK
+                        Internal.Vector.tensorProduct Real.field vectorJ vectorK
 
                     vectorSumTensorProductIKJK =
-                        Vector.add Real.field tensorProductIK tensorProductJK
+                        Internal.Vector.add Real.field tensorProductIK tensorProductJK
                 in
-                Expect.true "tensor product respects addition" ((Vector.equal Real.equal.eq).eq tensorProductIJK vectorSumTensorProductIKJK)
+                Expect.true "tensor product respects addition" ((Internal.Vector.equal Real.equal.eq).eq tensorProductIJK vectorSumTensorProductIKJK)
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -380,22 +380,22 @@ suite =
                             )
 
                     vectorJ =
-                        Vector.Vector [ complexNumberTwo, complexNumberThree ]
+                        Internal.Vector.Vector [ complexNumberTwo, complexNumberThree ]
 
                     vectorK =
-                        Vector.Vector [ complexNumberThree, complexNumberTwo ]
+                        Internal.Vector.Vector [ complexNumberThree, complexNumberTwo ]
 
                     tensorProductJK =
-                        Vector.tensorProduct ComplexNumbers.field vectorJ vectorK
+                        Internal.Vector.tensorProduct ComplexNumbers.field vectorJ vectorK
 
                     cScalarMultiplicationtensorProductJK =
-                        Vector.scalarMultiplication ComplexNumbers.field complexNumberOne tensorProductJK
+                        Internal.Vector.scalarMultiplication ComplexNumbers.field complexNumberOne tensorProductJK
 
                     cScalarMultiplicationVectorJ =
-                        Vector.scalarMultiplication ComplexNumbers.field complexNumberOne vectorJ
+                        Internal.Vector.scalarMultiplication ComplexNumbers.field complexNumberOne vectorJ
 
                     cScalarMultiplicationVectorJTensorProductVectorK =
-                        Vector.tensorProduct ComplexNumbers.field cScalarMultiplicationVectorJ vectorK
+                        Internal.Vector.tensorProduct ComplexNumbers.field cScalarMultiplicationVectorJ vectorK
                 in
-                Expect.true "vectors equal" ((Vector.equal ComplexNumbers.equal.eq).eq cScalarMultiplicationtensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
+                Expect.true "vectors equal" ((Internal.Vector.equal ComplexNumbers.equal.eq).eq cScalarMultiplicationtensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
         ]

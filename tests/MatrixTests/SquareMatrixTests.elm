@@ -3,12 +3,12 @@ module MatrixTests.SquareMatrixTests exposing (suite)
 import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import Fuzz
+import Internal.Vector
 import Matrix
 import Real
 import RowVector
 import SquareMatrix
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -21,9 +21,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ 0, 1 / 6, 5 / 6 ]
-                            , RowVector.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
-                            , RowVector.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
+                            [ RowVector.RowVector <| Internal.Vector.Vector [ 0, 1 / 6, 5 / 6 ]
+                            , RowVector.RowVector <| Internal.Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
+                            , RowVector.RowVector <| Internal.Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -39,9 +39,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ 0, 1 / 6, 5 / 6 ]
-                            , RowVector.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
-                            , RowVector.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
+                            [ RowVector.RowVector <| Internal.Vector.Vector [ 0, 1 / 6, 5 / 6 ]
+                            , RowVector.RowVector <| Internal.Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
+                            , RowVector.RowVector <| Internal.Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -57,7 +57,7 @@ suite =
             \one ->
                 let
                     a =
-                        [ RowVector.RowVector <| Vector.Vector [ one ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ one ] ]
                             |> Matrix.Matrix
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -81,17 +81,17 @@ suite =
             \one two three ->
                 let
                     a =
-                        [ RowVector.RowVector <| Vector.Vector [ one ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ one ] ]
                             |> Matrix.Matrix
                             |> SquareMatrix.SquareMatrix
 
                     b =
-                        [ RowVector.RowVector <| Vector.Vector [ two ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ two ] ]
                             |> Matrix.Matrix
                             |> SquareMatrix.SquareMatrix
 
                     c =
-                        [ RowVector.RowVector <| Vector.Vector [ three ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ three ] ]
                             |> Matrix.Matrix
                             |> SquareMatrix.SquareMatrix
 
@@ -121,12 +121,12 @@ suite =
             \one two three ->
                 let
                     a =
-                        [ RowVector.RowVector <| Vector.Vector [ one ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ one ] ]
                             |> Matrix.Matrix
                             |> SquareMatrix.SquareMatrix
 
                     b =
-                        [ RowVector.RowVector <| Vector.Vector [ two ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ two ] ]
                             |> Matrix.Matrix
                             |> SquareMatrix.SquareMatrix
 
@@ -149,12 +149,12 @@ suite =
             \one two ->
                 let
                     a =
-                        [ RowVector.RowVector <| Vector.Vector [ one ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ one ] ]
                             |> Matrix.Matrix
                             |> SquareMatrix.SquareMatrix
 
                     b =
-                        [ RowVector.RowVector <| Vector.Vector [ two ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ two ] ]
                             |> Matrix.Matrix
                             |> SquareMatrix.SquareMatrix
 
@@ -173,7 +173,7 @@ suite =
             \one ->
                 let
                     a =
-                        [ RowVector.RowVector <| Vector.Vector [ one ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ one ] ]
                             |> Matrix.Matrix
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -195,13 +195,13 @@ suite =
             \one two ->
                 let
                     a =
-                        [ RowVector.RowVector <| Vector.Vector [ one ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ one ] ]
                             |> Matrix.Matrix
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
 
                     b =
-                        [ RowVector.RowVector <| Vector.Vector [ two ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ two ] ]
                             |> Matrix.Matrix
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -234,7 +234,7 @@ suite =
             \one two ->
                 let
                     a =
-                        [ RowVector.RowVector <| Vector.Vector [ one ] ]
+                        [ RowVector.RowVector <| Internal.Vector.Vector [ one ] ]
                             |> Matrix.Matrix
                             |> SquareMatrix.SquareMatrix
 

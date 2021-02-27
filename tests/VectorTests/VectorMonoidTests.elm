@@ -4,9 +4,9 @@ import ComplexNumbers
 import Expect
 import Fuzz
 import Imaginary
+import Internal.Vector
 import Real
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -20,7 +20,7 @@ suite =
             \one two ->
                 let
                     w =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -28,7 +28,7 @@ suite =
                                 )
                             ]
                 in
-                Vector.add ComplexNumbers.field (Vector.Vector [ ComplexNumbers.zero ]) w
+                Internal.Vector.add ComplexNumbers.field (Internal.Vector.Vector [ ComplexNumbers.zero ]) w
                     |> Expect.equal w
         , Test.fuzz2
             (Fuzz.map Real.Real Fuzz.float)
@@ -38,7 +38,7 @@ suite =
             \one two ->
                 let
                     v =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -46,7 +46,7 @@ suite =
                                 )
                             ]
                 in
-                Expect.true "vectors equal" ((Vector.equal ComplexNumbers.equal.eq).eq (Vector.concat.semigroup v Vector.concat.identity) v)
+                Expect.true "vectors equal" ((Internal.Vector.equal ComplexNumbers.equal.eq).eq (Internal.Vector.concat.semigroup v Internal.Vector.concat.identity) v)
         , Test.fuzz2
             (Fuzz.map Real.Real Fuzz.float)
             (Fuzz.map Real.Real Fuzz.float)
@@ -55,7 +55,7 @@ suite =
             \one two ->
                 let
                     v =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -63,7 +63,7 @@ suite =
                                 )
                             ]
                 in
-                Expect.true "vectors equal" ((Vector.equal ComplexNumbers.equal.eq).eq (Vector.concat.semigroup Vector.concat.identity v) v)
+                Expect.true "vectors equal" ((Internal.Vector.equal ComplexNumbers.equal.eq).eq (Internal.Vector.concat.semigroup Internal.Vector.concat.identity v) v)
         , Test.fuzz3
             (Fuzz.map Real.Real Fuzz.int)
             (Fuzz.map Real.Real Fuzz.int)
@@ -88,16 +88,16 @@ suite =
                             (Imaginary.Imaginary three)
 
                     a =
-                        Vector.Vector [ complexNumberOne ]
+                        Internal.Vector.Vector [ complexNumberOne ]
 
                     b =
-                        Vector.Vector [ complexNumberTwo ]
+                        Internal.Vector.Vector [ complexNumberTwo ]
 
                     c =
-                        Vector.Vector [ complexNumberThree ]
+                        Internal.Vector.Vector [ complexNumberThree ]
 
                     expected =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ complexNumberOne
                             , complexNumberTwo
                             , complexNumberThree
@@ -106,6 +106,6 @@ suite =
                     listOfMonoids =
                         [ c, b, a ]
                 in
-                Vector.concat.concat listOfMonoids
+                Internal.Vector.concat.concat listOfMonoids
                     |> Expect.equal expected
         ]

@@ -2,8 +2,8 @@ module VectorTests.VectorMonadTests exposing (suite)
 
 import Expect
 import Fuzz
+import Internal.Vector
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -17,10 +17,10 @@ suite =
                 let
                     f a =
                         [ a * 2 ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
 
                     leftSide =
-                        Vector.andThen f (Vector.pure one)
+                        Internal.Vector.andThen f (Internal.Vector.pure one)
 
                     rightSide =
                         f one
@@ -33,10 +33,10 @@ suite =
             \one ->
                 let
                     m =
-                        Vector.pure one
+                        Internal.Vector.pure one
 
                     leftSide =
-                        Vector.andThen Vector.pure m
+                        Internal.Vector.andThen Internal.Vector.pure m
                 in
                 Expect.equal leftSide m
         , Test.fuzz
@@ -46,21 +46,21 @@ suite =
             \one ->
                 let
                     m =
-                        Vector.pure one
+                        Internal.Vector.pure one
 
                     f a =
                         [ a * 2 ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
 
                     g a =
                         [ a * 3 ]
-                            |> Vector.Vector
+                            |> Internal.Vector.Vector
 
                     leftSide =
-                        Vector.andThen g (Vector.andThen f m)
+                        Internal.Vector.andThen g (Internal.Vector.andThen f m)
 
                     rightSide =
-                        Vector.andThen (\x -> Vector.andThen g (f x)) m
+                        Internal.Vector.andThen (\x -> Internal.Vector.andThen g (f x)) m
                 in
                 Expect.equal leftSide rightSide
         ]

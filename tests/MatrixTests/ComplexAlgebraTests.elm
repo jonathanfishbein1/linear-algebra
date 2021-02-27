@@ -5,11 +5,11 @@ import ComplexNumbers
 import Expect
 import Fuzz
 import Imaginary
+import Internal.Vector
 import Matrix
 import Real
 import RowVector
 import Test
-import Vector
 
 
 suite : Test.Test
@@ -25,7 +25,7 @@ suite =
                 let
                     v1 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ three
                                 , one
                                 , three
@@ -34,7 +34,7 @@ suite =
 
                     v2 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ one
                                 , three
                                 , three
@@ -43,7 +43,7 @@ suite =
 
                     v3 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ two
                                 , three
                                 , one
@@ -75,7 +75,7 @@ suite =
             \_ ->
                 let
                     v1 =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ 1
                             , 0
                             , 0
@@ -84,7 +84,7 @@ suite =
                             |> RowVector.map Real.Real
 
                     v2 =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ 0
                             , 1
                             , 0
@@ -93,7 +93,7 @@ suite =
                             |> RowVector.map Real.Real
 
                     v3 =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ 0
                             , 0
                             , 1
@@ -116,7 +116,7 @@ suite =
                 let
                     v1 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ three
                                 , one
                                 , three
@@ -124,7 +124,7 @@ suite =
 
                     v2 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ one
                                 , three
                                 , three
@@ -132,7 +132,7 @@ suite =
 
                     v3 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ two
                                 , three
                                 , one
@@ -156,7 +156,7 @@ suite =
                 let
                     v1 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ three
                                 , one
                                 , three
@@ -164,7 +164,7 @@ suite =
 
                     v2 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ one
                                 , three
                                 , three
@@ -172,7 +172,7 @@ suite =
 
                     v3 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ two
                                 , three
                                 , one
@@ -196,7 +196,7 @@ suite =
                 let
                     v1 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ three
                                 , one
                                 , three
@@ -205,7 +205,7 @@ suite =
 
                     v2 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ one
                                 , three
                                 , three
@@ -214,7 +214,7 @@ suite =
 
                     v3 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ two
                                 , three
                                 , one
@@ -248,7 +248,7 @@ suite =
                 let
                     v1 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ three
                                 , one
                                 , three
@@ -257,7 +257,7 @@ suite =
 
                     v2 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ one
                                 , three
                                 , three
@@ -266,7 +266,7 @@ suite =
 
                     v3 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ two
                                 , three
                                 , one
@@ -303,12 +303,12 @@ suite =
                 let
                     v1 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ three, one ]
 
                     v2 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ one, two ]
 
                     a =
@@ -331,7 +331,7 @@ suite =
             \_ ->
                 let
                     v =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ 1
                             , 2
                             , 3
@@ -341,9 +341,9 @@ suite =
 
                     m =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, 3 ]
-                            , RowVector.RowVector <| Vector.Vector [ 4, 5, 6 ]
-                            , RowVector.RowVector <| Vector.Vector [ 7, 8, 9 ]
+                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, 2, 3 ]
+                            , RowVector.RowVector <| Internal.Vector.Vector [ 4, 5, 6 ]
+                            , RowVector.RowVector <| Internal.Vector.Vector [ 7, 8, 9 ]
                             ]
                             |> Matrix.map Real.Real
 
@@ -351,7 +351,7 @@ suite =
                         Matrix.multiplyMatrixVector RowVector.realInnerProductSpace m v
 
                     expected =
-                        Vector.Vector
+                        Internal.Vector.Vector
                             [ 14
                             , 32
                             , 50
@@ -385,12 +385,12 @@ suite =
 
                     v1 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ complexNumberThree, complexNumberOne ]
 
                     v2 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ complexNumberOne, complexNumberTwo ]
 
                     a =
@@ -435,12 +435,12 @@ suite =
 
                     v1 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ complexNumberOne ]
 
                     v2 =
                         RowVector.RowVector <|
-                            Vector.Vector
+                            Internal.Vector.Vector
                                 [ complexNumberTwo ]
 
                     a =

@@ -3,9 +3,9 @@ module VectorTests.Vector3Tests exposing (suite)
 import Expect
 import Field
 import Fuzz
+import Internal.Vector
 import Real
 import Test
-import Vector
 import Vector3
 
 
@@ -34,10 +34,10 @@ suite =
                             |> Vector3.vector3ToVector
 
                     aDotACrossB =
-                        Vector.dotProduct Real.field (Vector3.vector3ToVector a) aCrossB
+                        Internal.Vector.dotProduct Real.field (Vector3.vector3ToVector a) aCrossB
 
                     bDotACrossB =
-                        Vector.dotProduct Real.field (Vector3.vector3ToVector b) aCrossB
+                        Internal.Vector.dotProduct Real.field (Vector3.vector3ToVector b) aCrossB
 
                     result =
                         Real.equal.eq Real.zero aDotACrossB && Real.equal.eq Real.zero bDotACrossB
@@ -68,16 +68,16 @@ suite =
                         Vector3.vector3ToVector b
 
                     aLength =
-                        Vector.lengthReal aVector
+                        Internal.Vector.lengthReal aVector
 
                     bLength =
-                        Vector.lengthReal bVector
+                        Internal.Vector.lengthReal bVector
 
                     aCrossBLength =
-                        Vector.lengthReal aCrossB
+                        Internal.Vector.lengthReal aCrossB
 
                     angle =
-                        Vector.angleBetween aVector bVector
+                        Internal.Vector.angleBetween aVector bVector
                 in
                 Expect.true "length of cross product is the length of the two vectors times the sin of the angle between them" (Real.equal.eq aCrossBLength (Real.multiply (Real.multiply aLength bLength) (Real.map Basics.sin angle)))
         ]

@@ -11,9 +11,9 @@ module Internal.Matrix exposing
 import AbelianGroup
 import CommutativeDivisionRing
 import Field
+import Internal.Vector
 import List.Extra
 import RowVector
-import Vector
 
 
 {-| Internal function for finding pivot entry in Gaussian elimination
@@ -162,7 +162,7 @@ map2VectorCartesian { innerProduct } left right =
                         (\rightVector intermediateAcc -> intermediateAcc ++ [ innerProduct leftVector rightVector ])
                         []
                         right
-                        |> Vector.Vector
+                        |> Internal.Vector.Vector
                         |> RowVector.RowVector
                    ]
         )

@@ -583,13 +583,9 @@ multiplyMatrixVector :
     -> Matrix a
     -> ColumnVector.ColumnVector a
     -> Result String (ColumnVector.ColumnVector a)
-multiplyMatrixVector innerProductSpace (Matrix matrix) (ColumnVector.ColumnVector vector) =
-    if nDimension (Matrix matrix) == Vector.dimension vector then
-        let
-            listOfVectors =
-                matrix
-        in
-        Internal.Matrix.map2VectorCartesian innerProductSpace listOfVectors [ RowVector.RowVector vector ]
+multiplyMatrixVector innerProductSpace (Matrix listOfRowVector) (ColumnVector.ColumnVector columnVector) =
+    if nDimension (Matrix listOfRowVector) == Vector.dimension columnVector then
+        Internal.Matrix.map2VectorCartesian innerProductSpace listOfRowVector [ RowVector.RowVector columnVector ]
             |> List.foldl
                 (\(RowVector.RowVector (Vector.Vector elem)) acc -> acc ++ elem)
                 []
@@ -923,8 +919,8 @@ nDimension (Matrix listOfRowVectors) =
         [] ->
             0
 
-        (RowVector.RowVector x) :: _ ->
-            Vector.dimension x
+        x :: _ ->
+            RowVector.dimension x
 
 
 {-| Number of rows in Matrix
@@ -988,22 +984,22 @@ appendHorizontal (Matrix listOne) (Matrix listTwo) =
     in
     if difference == 0 then
         List.map2
-            (\(RowVector.RowVector rowOne) (RowVector.RowVector rowTwo) -> RowVector.RowVector <| Vector.append rowOne rowTwo)
+            RowVector.append
             listOne
             listTwo
             |> Matrix
 
     else if difference > 0 then
         List.map2
-            (\(RowVector.RowVector rowOne) (RowVector.RowVector rowTwo) -> RowVector.RowVector <| Vector.append rowOne rowTwo)
+            RowVector.append
             listOne
-            (listTwo ++ List.repeat difference (RowVector.RowVector <| Vector.Vector []))
+            (listTwo ++ List.repeat difference RowVector.empty)
             |> Matrix
 
     else
         List.map2
-            (\(RowVector.RowVector rowOne) (RowVector.RowVector rowTwo) -> RowVector.RowVector <| Vector.append rowOne rowTwo)
-            (listOne ++ List.repeat (Basics.abs difference) (RowVector.RowVector <| Vector.Vector []))
+            RowVector.append
+            (listOne ++ List.repeat (Basics.abs difference) RowVector.empty)
             listTwo
             |> Matrix
 
@@ -1041,7 +1037,7 @@ equal comparator =
 getAt : ( Int, Int ) -> Matrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (Matrix listOfRowVectors) =
     List.Extra.getAt rowIndex listOfRowVectors
-        |> Maybe.andThen (\(RowVector.RowVector list) -> Vector.getAt columnIndex list)
+        |> Maybe.andThen (RowVector.getAt columnIndex)
 
 
 {-| Set the value in a Matrix at the specified row and column
@@ -1049,7 +1045,7 @@ getAt ( rowIndex, columnIndex ) (Matrix listOfRowVectors) =
 setAt : ( Int, Int ) -> a -> Matrix a -> Matrix a
 setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
     List.Extra.getAt rowIndex listOfRowVectors
-        |> Maybe.map (\(RowVector.RowVector list) -> RowVector.RowVector <| Vector.setAt columnIndex element list)
+        |> Maybe.map (RowVector.setAt columnIndex element)
         |> Maybe.map
             (\newRow ->
                 List.Extra.setAt rowIndex newRow listOfRowVectors
@@ -1072,10 +1068,7 @@ commuter innerProductSpace matrixOne matrixTwo =
 printRealMatrix : Matrix (Real.Real Float) -> String
 printRealMatrix (Matrix listOfRowVectors) =
     "Matrix [ "
-        ++ List.foldl
-            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printRealVector row ++ " ]" ++ acc)
-            ""
-            listOfRowVectors
+        ++ RowVector.printRealRowVectorList listOfRowVectors
         ++ " ]"
 
 
@@ -1084,10 +1077,7 @@ printRealMatrix (Matrix listOfRowVectors) =
 printComplexMatrix : Matrix (ComplexNumbers.ComplexNumber Float) -> String
 printComplexMatrix (Matrix listOfRowVectors) =
     "Matrix [ "
-        ++ List.foldl
-            (\(RowVector.RowVector row) acc -> "RowVector " ++ Vector.printComplexVector row ++ " ]" ++ acc)
-            ""
-            listOfRowVectors
+        ++ RowVector.printComplexRowVectorList listOfRowVectors
         ++ " ]"
 
 

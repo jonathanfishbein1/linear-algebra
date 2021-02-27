@@ -5,7 +5,7 @@ module RowVector exposing
     , map2
     , foldl
     , parseRowVector
-    , InnerProductSpace, VectorSpace, complexInnerProductSpace, complexVectorSpace, empty, findIndex, getAt, realInnerProductSpace, realVectorSpace, scalarMultiplication
+    , InnerProductSpace, VectorSpace, append, complexInnerProductSpace, complexVectorSpace, dimension, empty, findIndex, getAt, printComplexRowVectorList, printRealRowVectorList, realInnerProductSpace, realVectorSpace, scalarMultiplication, setAt
     )
 
 {-| A module for Row Vector
@@ -319,3 +319,56 @@ distanceReal (RowVector vectorOne) (RowVector vectorTwo) =
 distanceComplex : RowVector (ComplexNumbers.ComplexNumber Float) -> RowVector (ComplexNumbers.ComplexNumber Float) -> Real.Real Float
 distanceComplex (RowVector vectorOne) (RowVector vectorTwo) =
     Vector.distanceComplex vectorOne vectorTwo
+
+
+{-| Count of number of elements in a vector
+-}
+dimension : RowVector a -> Int
+dimension (RowVector vector) =
+    Vector.dimension vector
+
+
+{-| Append Vectors together
+-}
+append : RowVector a -> RowVector a -> RowVector a
+append (RowVector vectorOne) (RowVector vectorTwo) =
+    Vector.append vectorOne vectorTwo
+        |> RowVector
+
+
+{-| Set the value in a Vector at the specified index
+-}
+setAt : Int -> a -> RowVector a -> RowVector a
+setAt index element (RowVector vector) =
+    Vector.setAt index element vector
+        |> RowVector
+
+
+{-| Print a Real matrix to a string
+-}
+printRealRowVector : RowVector (Real.Real Float) -> String
+printRealRowVector (RowVector vector) =
+    "RowVector " ++ Vector.printRealVector vector ++ " ]"
+
+
+{-| Print a Complex matrix to a string
+-}
+printComplexRowVector : RowVector (ComplexNumbers.ComplexNumber Float) -> String
+printComplexRowVector (RowVector vector) =
+    "RowVector " ++ Vector.printComplexVector vector ++ " ]"
+
+
+printRealRowVectorList : List (RowVector (Real.Real Float)) -> String
+printRealRowVectorList listOfRowVectors =
+    List.foldl
+        (\row acc -> printRealRowVector row ++ acc)
+        ""
+        listOfRowVectors
+
+
+printComplexRowVectorList : List (RowVector (ComplexNumbers.ComplexNumber Float)) -> String
+printComplexRowVectorList listOfRowVectors =
+    List.foldl
+        (\row acc -> printComplexRowVector row ++ acc)
+        ""
+        listOfRowVectors

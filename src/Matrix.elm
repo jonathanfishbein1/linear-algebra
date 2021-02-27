@@ -42,6 +42,7 @@ module Matrix exposing
     , complexMatrixAlgebra
     , realAdditionGroup
     , complexAdditionGroup
+    , realAdditionAbelianGroup
     , complexAdditionAbelianGroup
     , realMatrixSpace
     , complexMatrixSpace

@@ -1,11 +1,28 @@
 module RowVector exposing
     ( RowVector(..)
+    , VectorSpace
+    , InnerProductSpace
+    , scalarMultiplication
+    , sum
+    , dimension
     , all
+    , count
+    , realVectorSpace
+    , complexVectorSpace
+    , realInnerProductSpace
+    , complexInnerProductSpace
+    , empty
+    , append
+    , pure
     , map
     , map2
     , foldl
+    , findIndex
+    , getAt
+    , setAt
     , parseRowVector
-    , InnerProductSpace, VectorSpace, append, complexInnerProductSpace, complexVectorSpace, count, dimension, empty, findIndex, getAt, printComplexRowVectorList, printRealRowVectorList, pure, realInnerProductSpace, realVectorSpace, scalarMultiplication, setAt, sum
+    , printRealRowVectorList
+    , printComplexRowVectorList
     )
 
 {-| A module for Row Vector
@@ -14,15 +31,36 @@ module RowVector exposing
 # Types
 
 @docs RowVector
+@docs VectorSpace
+@docs InnerProductSpace
 
 
-# Vector Properties
+# Unitary Operations
 
+@docs scalarMultiplication
+@docs sum
+
+
+# RowVector Predicates and Properties
+
+@docs dimension
 @docs all
+@docs count
 
 
-# Functor, Applicative, Monad, Foldable
+# SemiGroup, Monoid, Group, Ring, Field instances
 
+@docs realVectorSpace
+@docs complexVectorSpace
+@docs realInnerProductSpace
+@docs complexInnerProductSpace
+
+
+# Monoid, Functor, Applicative, Monad, Foldable
+
+@docs empty
+@docs append
+@docs pure
 @docs map
 @docs map2
 @docs foldl
@@ -30,7 +68,12 @@ module RowVector exposing
 
 # Manipulation
 
+@docs findIndex
+@docs getAt
+@docs setAt
 @docs parseRowVector
+@docs printRealRowVectorList
+@docs printComplexRowVectorList
 
 -}
 
@@ -344,20 +387,22 @@ setAt index element (RowVector vector) =
         |> RowVector
 
 
-{-| Print a Real matrix to a string
+{-| Print a Real RowVector to a string
 -}
 printRealRowVector : RowVector (Real.Real Float) -> String
 printRealRowVector (RowVector vector) =
     "RowVector " ++ Vector.printRealVector vector ++ " ]"
 
 
-{-| Print a Complex matrix to a string
+{-| Print a Complex RowVector to a string
 -}
 printComplexRowVector : RowVector (ComplexNumbers.ComplexNumber Float) -> String
 printComplexRowVector (RowVector vector) =
     "RowVector " ++ Vector.printComplexVector vector ++ " ]"
 
 
+{-| Print a Real RowVector List to a string
+-}
 printRealRowVectorList : List (RowVector (Real.Real Float)) -> String
 printRealRowVectorList listOfRowVectors =
     List.foldl
@@ -366,6 +411,8 @@ printRealRowVectorList listOfRowVectors =
         listOfRowVectors
 
 
+{-| Print a Complex RowVector List to a string
+-}
 printComplexRowVectorList : List (RowVector (ComplexNumbers.ComplexNumber Float)) -> String
 printComplexRowVectorList listOfRowVectors =
     List.foldl
@@ -374,6 +421,8 @@ printComplexRowVectorList listOfRowVectors =
         listOfRowVectors
 
 
+{-| Count the number of elements in a RowVector that satisfy the given condition
+-}
 count : (a -> Bool) -> RowVector a -> Int
 count condition (RowVector vector) =
     Vector.count condition vector

@@ -22,6 +22,7 @@ module Vector exposing
     , dimension
     , vectorSubspace
     , all
+    , count
     , realCommutativeSemigroup
     , complexCommutativeSemigroup
     , realCommutativeMonoid
@@ -51,7 +52,6 @@ module Vector exposing
     , printComplexVector
     , readRealVector
     , readComplexVector
-    , count
     )
 
 {-| A module for Vectors
@@ -98,6 +98,7 @@ module Vector exposing
 @docs dimension
 @docs vectorSubspace
 @docs all
+@docs count
 
 
 # SemiGroup, Monoid, Group, Ring, Field instances
@@ -114,7 +115,7 @@ module Vector exposing
 @docs complexInnerProductSpace
 
 
-# Monoid Functor, Applicative, Monad, Foldable functions
+# Monoid, Functor, Applicative, Monad, Foldable functions
 
 @docs empty
 @docs append
@@ -143,7 +144,6 @@ module Vector exposing
 @docs printComplexVector
 @docs readRealVector
 @docs readComplexVector
-@docs vector3ToVector
 
 -}
 
@@ -711,6 +711,8 @@ readComplexVector =
     Parser.run (parseVector ComplexNumbers.parseComplexNumber)
 
 
+{-| Count the number of elements in a Vector that satisfy the given condition
+-}
 count : (a -> Bool) -> Vector a -> Int
 count condition (Vector list) =
     List.Extra.count condition list

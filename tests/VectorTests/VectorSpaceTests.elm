@@ -7,6 +7,7 @@ import Imaginary
 import Internal.Vector
 import Real
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -20,7 +21,7 @@ suite =
             \one two ->
                 let
                     v =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -51,7 +52,7 @@ suite =
                             )
 
                     v =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -88,7 +89,7 @@ suite =
                             )
 
                     w =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 two
                                 (Imaginary.Imaginary
@@ -97,7 +98,7 @@ suite =
                             ]
 
                     v =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -146,7 +147,7 @@ suite =
                             )
 
                     v =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary

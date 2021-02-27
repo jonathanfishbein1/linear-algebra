@@ -8,6 +8,7 @@ import Real
 import RowVector
 import SquareMatrix
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -20,9 +21,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 0, 1 / 6, 5 / 6 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 2 / 3, 1 / 3, 0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 0, 1 / 6, 5 / 6 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1 / 3, 1 / 2, 1 / 6 ]
+                            , RowVector.RowVector <| Vector.Vector [ 2 / 3, 1 / 3, 0 ]
                             ]
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix

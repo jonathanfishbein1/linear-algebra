@@ -7,6 +7,7 @@ import Imaginary
 import Internal.Vector
 import Real
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -19,7 +20,7 @@ suite =
             \one ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     expected =
                         Internal.Vector.dotProduct Real.field a a
@@ -36,13 +37,13 @@ suite =
             \one two three ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     b =
-                        Internal.Vector.Vector [ two ]
+                        Vector.Vector [ two ]
 
                     c =
-                        Internal.Vector.Vector [ three ]
+                        Vector.Vector [ three ]
 
                     aPlusBDotc =
                         Internal.Vector.dotProduct
@@ -69,10 +70,10 @@ suite =
             \one two three ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     b =
-                        Internal.Vector.Vector [ two ]
+                        Vector.Vector [ two ]
 
                     threeTimesADotB =
                         Internal.Vector.dotProduct
@@ -92,10 +93,10 @@ suite =
             \one two ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     b =
-                        Internal.Vector.Vector [ two ]
+                        Vector.Vector [ two ]
 
                     aDotB =
                         Internal.Vector.dotProduct Real.field a b
@@ -111,7 +112,7 @@ suite =
             \one ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     squareRootADotA =
                         Real.map Basics.sqrt (Internal.Vector.dotProduct Real.field a a)
@@ -127,7 +128,7 @@ suite =
             \one ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     expected =
                         Internal.Vector.lengthReal a
@@ -143,10 +144,10 @@ suite =
             \one two ->
                 let
                     x =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     y =
-                        Internal.Vector.Vector [ two ]
+                        Vector.Vector [ two ]
 
                     absXDotY =
                         Internal.Vector.dotProduct
@@ -176,10 +177,10 @@ suite =
             \one two ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     b =
-                        Internal.Vector.Vector [ two ]
+                        Vector.Vector [ two ]
 
                     aPlusBLength =
                         Internal.Vector.add
@@ -205,7 +206,7 @@ suite =
             \one two ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     legnthOfTwoTimesA =
                         Internal.Vector.lengthReal
@@ -227,7 +228,7 @@ suite =
                         ComplexNumbers.ComplexNumber one (Imaginary.Imaginary one)
 
                     a =
-                        Internal.Vector.Vector [ complexNumber ]
+                        Vector.Vector [ complexNumber ]
 
                     squareRootADotA =
                         Internal.Vector.dotProduct ComplexNumbers.field a (Internal.Vector.conjugate a)
@@ -248,7 +249,7 @@ suite =
                         ComplexNumbers.ComplexNumber one (Imaginary.Imaginary one)
 
                     a =
-                        Internal.Vector.Vector [ complexNumber ]
+                        Vector.Vector [ complexNumber ]
 
                     expected =
                         Internal.Vector.lengthComplex a
@@ -270,10 +271,10 @@ suite =
                         ComplexNumbers.ComplexNumber two (Imaginary.Imaginary two)
 
                     x =
-                        Internal.Vector.Vector [ complexNumberOne ]
+                        Vector.Vector [ complexNumberOne ]
 
                     y =
-                        Internal.Vector.Vector [ complexNumberTwo ]
+                        Vector.Vector [ complexNumberTwo ]
 
                     absXDotY =
                         Internal.Vector.dotProduct
@@ -303,7 +304,7 @@ suite =
             \one ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     expected =
                         Internal.Vector.distanceReal a a
@@ -320,13 +321,13 @@ suite =
             \one two three ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     b =
-                        Internal.Vector.Vector [ two ]
+                        Vector.Vector [ two ]
 
                     c =
-                        Internal.Vector.Vector [ three ]
+                        Vector.Vector [ three ]
 
                     distanceAB =
                         Internal.Vector.distanceReal a b
@@ -350,10 +351,10 @@ suite =
             \one two ->
                 let
                     a =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     b =
-                        Internal.Vector.Vector [ two ]
+                        Vector.Vector [ two ]
 
                     distanceAB =
                         Internal.Vector.dotProduct
@@ -374,10 +375,10 @@ suite =
             \_ ->
                 let
                     a =
-                        Internal.Vector.Vector [ Real.one, Real.zero ]
+                        Vector.Vector [ Real.one, Real.zero ]
 
                     b =
-                        Internal.Vector.Vector [ Real.zero, Real.one ]
+                        Vector.Vector [ Real.zero, Real.one ]
 
                     angle =
                         Internal.Vector.angleBetween a b
@@ -389,10 +390,10 @@ suite =
             \_ ->
                 let
                     a =
-                        Internal.Vector.Vector [ Real.one, Real.zero ]
+                        Vector.Vector [ Real.one, Real.zero ]
 
                     b =
-                        Internal.Vector.Vector [ Real.one, Real.zero ]
+                        Vector.Vector [ Real.one, Real.zero ]
 
                     angle =
                         Internal.Vector.angleBetween a b
@@ -404,10 +405,10 @@ suite =
             \_ ->
                 let
                     a =
-                        Internal.Vector.Vector [ Real.one, Real.zero ]
+                        Vector.Vector [ Real.one, Real.zero ]
 
                     b =
-                        Internal.Vector.Vector [ Real.Real -1, Real.zero ]
+                        Vector.Vector [ Real.Real -1, Real.zero ]
 
                     angle =
                         Internal.Vector.angleBetween a b

@@ -4,6 +4,7 @@ import Expect
 import Fuzz
 import Internal.Vector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -17,7 +18,7 @@ suite =
                 let
                     f a =
                         [ a * 2 ]
-                            |> Internal.Vector.Vector
+                            |> Vector.Vector
 
                     leftSide =
                         Internal.Vector.andThen f (Internal.Vector.pure one)
@@ -50,11 +51,11 @@ suite =
 
                     f a =
                         [ a * 2 ]
-                            |> Internal.Vector.Vector
+                            |> Vector.Vector
 
                     g a =
                         [ a * 3 ]
-                            |> Internal.Vector.Vector
+                            |> Vector.Vector
 
                     leftSide =
                         Internal.Vector.andThen g (Internal.Vector.andThen f m)

@@ -7,6 +7,7 @@ import Matrix
 import Real
 import RowVector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -19,9 +20,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, 2, -1, -4 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 2, 3, -1, -11 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ -2, 0, -3, 22 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, -1, -4 ]
+                            , RowVector.RowVector <| Vector.Vector [ 2, 3, -1, -11 ]
+                            , RowVector.RowVector <| Vector.Vector [ -2, 0, -3, 22 ]
                             ]
                             |> Matrix.map Real.Real
 
@@ -30,9 +31,9 @@ suite =
 
                     expected =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 0.0, 0.0, 1.0, -2.0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1.0, 0.0, 0.0, -8.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 1.0, 0.0, 1.0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0.0, 0.0, 1.0, -2.0 ]
                             ]
                             |> Matrix.map Real.Real
                 in
@@ -44,14 +45,14 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, 2, -1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 2, 3, -1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ -2, 0, -3 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 2, 3, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ -2, 0, -3 ]
                             ]
                             |> Matrix.map Real.Real
 
                     b =
-                        Internal.Vector.Vector [ -4, -11, 22 ]
+                        Vector.Vector [ -4, -11, 22 ]
                             |> ColumnVector.ColumnVector
                             |> ColumnVector.map Real.Real
 
@@ -59,7 +60,7 @@ suite =
                         Matrix.solve Real.equal RowVector.realInnerProductSpace matrix b
 
                     expected =
-                        Internal.Vector.Vector [ -8.0, 1.0, -2.0 ]
+                        Vector.Vector [ -8.0, 1.0, -2.0 ]
                             |> ColumnVector.ColumnVector
                             |> ColumnVector.map Real.Real
                 in
@@ -71,14 +72,14 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, 1, 1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1, 2, 3 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1, 3, 4 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 1, 1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 2, 3 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 3, 4 ]
                             ]
                             |> Matrix.map Real.Real
 
                     b =
-                        Internal.Vector.Vector [ 3, 0, -2 ]
+                        Vector.Vector [ 3, 0, -2 ]
                             |> ColumnVector.ColumnVector
                             |> ColumnVector.map Real.Real
 
@@ -86,7 +87,7 @@ suite =
                         Matrix.solve Real.equal RowVector.realInnerProductSpace matrix b
 
                     expected =
-                        Internal.Vector.Vector [ 5, -1.0, -1.0 ]
+                        Vector.Vector [ 5, -1.0, -1.0 ]
                             |> ColumnVector.ColumnVector
                             |> ColumnVector.map Real.Real
                 in
@@ -98,14 +99,14 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 2, -1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1, 2 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1, 1 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 2, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 2 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 1 ]
                             ]
                             |> Matrix.map Real.Real
 
                     b =
-                        Internal.Vector.Vector [ 2, 1, 4 ]
+                        Vector.Vector [ 2, 1, 4 ]
                             |> ColumnVector.ColumnVector
                             |> ColumnVector.map Real.Real
 
@@ -117,7 +118,7 @@ suite =
                             b
 
                     expected =
-                        Internal.Vector.Vector [ 1.4285714285714286, 0.4285714285714286 ]
+                        Vector.Vector [ 1.4285714285714286, 0.4285714285714286 ]
                             |> ColumnVector.ColumnVector
                             |> ColumnVector.map Real.Real
                 in
@@ -129,14 +130,14 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, 2, 1, 1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1, 2, 2, -1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 2, 4, 0, 6 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, 1, 1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 2, 2, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 2, 4, 0, 6 ]
                             ]
                             |> Matrix.map Real.Real
 
                     b =
-                        Internal.Vector.Vector [ 7, 12, 4 ]
+                        Vector.Vector [ 7, 12, 4 ]
                             |> ColumnVector.ColumnVector
                             |> ColumnVector.map Real.Real
 
@@ -152,15 +153,15 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector (Internal.Vector.Vector [ 0, 1, 0, 0 ])
-                            , RowVector.RowVector (Internal.Vector.Vector [ 0, 0, 0, 1 ])
-                            , RowVector.RowVector (Internal.Vector.Vector [ 0, 0, -2, 1 ])
-                            , RowVector.RowVector (Internal.Vector.Vector [ -2, 1, 0, 0 ])
+                            [ RowVector.RowVector (Vector.Vector [ 0, 1, 0, 0 ])
+                            , RowVector.RowVector (Vector.Vector [ 0, 0, 0, 1 ])
+                            , RowVector.RowVector (Vector.Vector [ 0, 0, -2, 1 ])
+                            , RowVector.RowVector (Vector.Vector [ -2, 1, 0, 0 ])
                             ]
                             |> Matrix.map Real.Real
 
                     b =
-                        Internal.Vector.Vector [ 312, 184, 0, 0 ]
+                        Vector.Vector [ 312, 184, 0, 0 ]
                             |> ColumnVector.ColumnVector
                             |> ColumnVector.map Real.Real
 
@@ -168,5 +169,5 @@ suite =
                         Matrix.solve Real.equal RowVector.realInnerProductSpace matrix b
                 in
                 Expect.equal reducedRowEchelonFormMatrix
-                    (Matrix.Consistant (Matrix.UniqueSolution (ColumnVector.ColumnVector (Internal.Vector.Vector [ Real.Real 156, Real.Real 312, Real.Real 92, Real.Real 184 ]))))
+                    (Matrix.Consistant (Matrix.UniqueSolution (ColumnVector.ColumnVector (Vector.Vector [ Real.Real 156, Real.Real 312, Real.Real 92, Real.Real 184 ]))))
         ]

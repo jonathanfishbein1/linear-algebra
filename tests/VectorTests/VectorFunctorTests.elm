@@ -4,6 +4,7 @@ import Expect
 import Fuzz
 import Internal.Vector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -16,7 +17,7 @@ suite =
             \one ->
                 let
                     v =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     vPrime =
                         Internal.Vector.map identity v
@@ -29,7 +30,7 @@ suite =
             \one ->
                 let
                     v =
-                        Internal.Vector.Vector [ one ]
+                        Vector.Vector [ one ]
 
                     f =
                         (*) 2

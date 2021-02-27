@@ -9,6 +9,7 @@ import Matrix
 import Real
 import RowVector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -22,7 +23,7 @@ suite =
             \one two ->
                 let
                     v =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ ComplexNumbers.ComplexNumber
                                 one
                                 (Imaginary.Imaginary
@@ -55,7 +56,7 @@ suite =
                     v =
                         Matrix.Matrix <|
                             [ RowVector.RowVector <|
-                                Internal.Vector.Vector
+                                Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
                                         one
                                         (Imaginary.Imaginary
@@ -95,7 +96,7 @@ suite =
                     w =
                         Matrix.Matrix
                             [ RowVector.RowVector <|
-                                Internal.Vector.Vector
+                                Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
                                         two
                                         (Imaginary.Imaginary
@@ -107,7 +108,7 @@ suite =
                     v =
                         Matrix.Matrix
                             [ RowVector.RowVector <|
-                                Internal.Vector.Vector
+                                Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
                                         one
                                         (Imaginary.Imaginary
@@ -152,7 +153,7 @@ suite =
                     w =
                         Matrix.Matrix <|
                             [ RowVector.RowVector <|
-                                Internal.Vector.Vector
+                                Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
                                         two
                                         (Imaginary.Imaginary
@@ -164,7 +165,7 @@ suite =
                     v =
                         Matrix.Matrix <|
                             [ RowVector.RowVector <|
-                                Internal.Vector.Vector
+                                Vector.Vector
                                     [ ComplexNumbers.ComplexNumber
                                         one
                                         (Imaginary.Imaginary

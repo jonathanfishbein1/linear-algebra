@@ -88,12 +88,13 @@ import Monoid
 import Parser exposing ((|.), (|=))
 import Real
 import Semigroup
+import Vector
 
 
 {-| Row Vector
 -}
 type RowVector a
-    = RowVector (Internal.Vector.Vector a)
+    = RowVector (Vector.Vector a)
 
 
 {-| Type to represent a Vector Space

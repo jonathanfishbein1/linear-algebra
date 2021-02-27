@@ -13,6 +13,7 @@ import Real
 import RowVector
 import SquareMatrix
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -25,8 +26,8 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, 2 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 3, 4 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2 ]
+                            , RowVector.RowVector <| Vector.Vector [ 3, 4 ]
                             ]
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -44,9 +45,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, 2, 4 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 2, -1, 3 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 4, 0, 1 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, 4 ]
+                            , RowVector.RowVector <| Vector.Vector [ 2, -1, 3 ]
+                            , RowVector.RowVector <| Vector.Vector [ 4, 0, 1 ]
                             ]
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -64,10 +65,10 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, 2, 3, 4 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1, 0, 2, 0 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 0, 1, 2, 3 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 2, 3, 0, 0 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, 2, 3, 4 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 0, 2, 0 ]
+                            , RowVector.RowVector <| Vector.Vector [ 0, 1, 2, 3 ]
+                            , RowVector.RowVector <| Vector.Vector [ 2, 3, 0, 0 ]
                             ]
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -85,9 +86,9 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, -1, -1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ -1, 2, 3 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1, 1, 4 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, -1, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ -1, 2, 3 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -96,9 +97,9 @@ suite =
 
                     expectedInverse =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 5, 3, -1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 7, 5, -2 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ -3, -2, 1 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 5, 3, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 7, 5, -2 ]
+                            , RowVector.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -116,17 +117,17 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, -1, -1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ -1, 2, 3 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1, 1, 4 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, -1, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ -1, 2, 3 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
                             |> Matrix.map Real.Real
 
                     inverse =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 5, 3, -1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 7, 5, -2 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ -3, -2, 1 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 5, 3, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 7, 5, -2 ]
+                            , RowVector.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
                             |> Matrix.map Real.Real
 
@@ -145,17 +146,17 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 1, -1, -1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ -1, 2, 3 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1, 1, 4 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 1, -1, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ -1, 2, 3 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 1, 4 ]
                             ]
                             |> Matrix.map Real.Real
 
                     inverse =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 5, 3, -1 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 7, 5, -2 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ -3, -2, 1 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 5, 3, -1 ]
+                            , RowVector.RowVector <| Vector.Vector [ 7, 5, -2 ]
+                            , RowVector.RowVector <| Vector.Vector [ -3, -2, 1 ]
                             ]
                             |> Matrix.map Real.Real
 
@@ -208,8 +209,8 @@ suite =
 
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
+                            [ RowVector.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , RowVector.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix
@@ -274,8 +275,8 @@ suite =
 
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
+                            [ RowVector.RowVector <| Vector.Vector [ complexNumberR1C1, complexNumberR1C2 ]
+                            , RowVector.RowVector <| Vector.Vector [ complexNumberR2C1, complexNumberR2C2 ]
                             ]
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix
@@ -322,8 +323,8 @@ suite =
 
                     expectedInverse =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ expectedComplexNumberR1C1, expectedComplexNumberR1C2 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ expectedComplexNumberR2C1, expectedComplexNumberR2C2 ]
+                            [ RowVector.RowVector <| Vector.Vector [ expectedComplexNumberR1C1, expectedComplexNumberR1C2 ]
+                            , RowVector.RowVector <| Vector.Vector [ expectedComplexNumberR2C1, expectedComplexNumberR2C2 ]
                             ]
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix
@@ -342,8 +343,8 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ 2, 6 ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ 1, 3 ]
+                            [ RowVector.RowVector <| Vector.Vector [ 2, 6 ]
+                            , RowVector.RowVector <| Vector.Vector [ 1, 3 ]
                             ]
                             |> Matrix.map Real.Real
                             |> SquareMatrix.SquareMatrix
@@ -360,8 +361,8 @@ suite =
                 let
                     matrix =
                         Matrix.Matrix
-                            [ RowVector.RowVector <| Internal.Vector.Vector [ ComplexNumbers.one, ComplexNumbers.zero ]
-                            , RowVector.RowVector <| Internal.Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
+                            [ RowVector.RowVector <| Vector.Vector [ ComplexNumbers.one, ComplexNumbers.zero ]
+                            , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.zero ]
                             ]
                             |> SquareMatrix.SquareMatrix
                             |> NormalMatrix.NormalMatrix

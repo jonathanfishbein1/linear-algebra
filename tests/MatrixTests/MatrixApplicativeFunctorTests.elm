@@ -6,6 +6,7 @@ import Internal.Vector
 import Matrix
 import RowVector
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -46,7 +47,7 @@ suite =
                         Matrix.pure identity
 
                     w =
-                        Matrix.Matrix [ RowVector.RowVector <| Internal.Vector.Vector [ one ] ]
+                        Matrix.Matrix [ RowVector.RowVector <| Vector.Vector [ one ] ]
 
                     leftSide =
                         Matrix.andMap w (Matrix.andMap v (Matrix.andMap u fPure))

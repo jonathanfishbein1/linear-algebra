@@ -7,6 +7,7 @@ import Imaginary
 import Internal.Vector
 import Real
 import Test
+import Vector
 
 
 suite : Test.Test
@@ -27,15 +28,15 @@ suite =
                             )
 
                     v =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ complexNumber ]
 
                     w =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ complexNumber ]
 
                     zero =
-                        Internal.Vector.Vector
+                        Vector.Vector
                             [ ComplexNumbers.zero ]
                 in
                 Internal.Vector.subtract ComplexNumbers.field v w

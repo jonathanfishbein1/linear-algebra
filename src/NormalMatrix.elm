@@ -156,7 +156,7 @@ setAt tup element (NormalMatrix matrix) =
         |> NormalMatrix
 
 
-{-| Multiply a Vector by a Matrix
+{-| Multiply a ColumnVector by a Matrix
 -}
 multiplyMatrixVector :
     RowVector.InnerProductSpace a

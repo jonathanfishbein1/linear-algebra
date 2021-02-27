@@ -186,7 +186,7 @@ multiply innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrix
         |> Result.map InvertableMatrix
 
 
-{-| Multiply a Vector by a Matrix
+{-| Multiply a ColumnVector by a Matrix
 -}
 multiplyMatrixVector :
     RowVector.InnerProductSpace a

@@ -118,7 +118,6 @@ import Matrix
 import Real
 import RowVector
 import Typeclasses.Classes.Equality
-import Vector
 
 
 {-| Square Matrix type
@@ -198,7 +197,7 @@ distanceComplex (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 isRightStochastic : SquareMatrix (Real.Real Float) -> Bool
 isRightStochastic (SquareMatrix (Matrix.Matrix listOfRowVectors)) =
     List.all
-        (\(RowVector.RowVector vector) -> Real.equal.eq (Vector.sum Real.sumMonoid vector) Real.one)
+        (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
         listOfRowVectors
 
 
@@ -211,7 +210,7 @@ isLeftStochastic (SquareMatrix matrix) =
             Matrix.transpose matrix
     in
     List.all
-        (\(RowVector.RowVector vector) -> Real.equal.eq (Vector.sum Real.sumMonoid vector) Real.one)
+        (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
         transposedListOfRowVectors
 
 
@@ -301,7 +300,7 @@ multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
         |> Result.map SquareMatrix
 
 
-{-| Multiply a Vector by a Matrix
+{-| Multiply a ColumnVector by a Matrix
 -}
 multiplyMatrixVector :
     RowVector.InnerProductSpace a

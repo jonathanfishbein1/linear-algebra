@@ -5,7 +5,7 @@ module RowVector exposing
     , map2
     , foldl
     , parseRowVector
-    , InnerProductSpace, VectorSpace, append, complexInnerProductSpace, complexVectorSpace, count, dimension, empty, findIndex, getAt, printComplexRowVectorList, printRealRowVectorList, pure, realInnerProductSpace, realVectorSpace, scalarMultiplication, setAt
+    , InnerProductSpace, VectorSpace, append, complexInnerProductSpace, complexVectorSpace, count, dimension, empty, findIndex, getAt, printComplexRowVectorList, printRealRowVectorList, pure, realInnerProductSpace, realVectorSpace, scalarMultiplication, setAt, sum
     )
 
 {-| A module for Row Vector
@@ -385,3 +385,10 @@ pure : a -> RowVector a
 pure a =
     Vector.pure a
         |> RowVector
+
+
+{-| Calculate the sum of a RowVector
+-}
+sum : Monoid.Monoid a -> RowVector a -> a
+sum monoid (RowVector vect) =
+    Vector.sum monoid vect

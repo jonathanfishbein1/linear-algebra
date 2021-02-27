@@ -121,7 +121,7 @@ multiply (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
         |> Result.map UnitaryMatrix
 
 
-{-| Multiply a Vector by a Unitary Matrix
+{-| Multiply a ColumnVector by a Unitary Matrix
 -}
 multiplyMatrixVector :
     UnitaryMatrix Float

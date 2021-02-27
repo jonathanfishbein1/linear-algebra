@@ -106,7 +106,7 @@ getAt ( rowIndex, columnIndex ) (SymmetricMatrix matrix) =
     NormalMatrix.getAt ( rowIndex, columnIndex ) matrix
 
 
-{-| Multiply a Vector by a Matrix
+{-| Multiply a ColumnVector by a Matrix
 -}
 multiplyMatrixVector :
     RowVector.InnerProductSpace a

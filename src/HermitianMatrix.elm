@@ -45,9 +45,8 @@ module HermitianMatrix exposing
 
 import ColumnVector
 import ComplexNumbers
-import RowVector exposing (RowVector)
+import RowVector
 import SymmetricMatrix
-import Vector
 
 
 {-| Hermitian Matrix type
@@ -88,7 +87,7 @@ multiply (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
         |> Result.map HermitianMatrix
 
 
-{-| Multiply a Vector by a Hermitian Matrix
+{-| Multiply a ColumnVector by a Hermitian Matrix
 -}
 multiplyMatrixVector :
     HermitianMatrix Float

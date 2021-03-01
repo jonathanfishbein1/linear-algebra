@@ -31,5 +31,5 @@ suite =
                     isDoublyStochastic =
                         DoublyStochasticMatrix.isDoublyStochastic matrix
                 in
-                Expect.true "Is Doubly Stochastic" isDoublyStochastic
+                Expect.equal (Ok matrix) isDoublyStochastic
         ]

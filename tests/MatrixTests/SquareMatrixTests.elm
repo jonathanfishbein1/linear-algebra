@@ -32,7 +32,7 @@ suite =
                     isRightStochastic =
                         SquareMatrix.isRightStochastic matrix
                 in
-                Expect.true "Is Right Stochastic" isRightStochastic
+                Expect.equal (Ok matrix) isRightStochastic
         , Test.test
             "tests left stochastic"
           <|
@@ -50,7 +50,7 @@ suite =
                     isLeftStochastic =
                         SquareMatrix.isLeftStochastic matrix
                 in
-                Expect.true "Is Left Stochastic" isLeftStochastic
+                Expect.equal (Ok matrix) isLeftStochastic
         , Test.fuzz
             (Fuzz.map Basics.toFloat Fuzz.int)
             "tests dot product is nondegenerative"

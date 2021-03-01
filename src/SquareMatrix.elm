@@ -32,6 +32,7 @@ module SquareMatrix exposing
     , equalImplementation
     , gaussJordan
     , upperTriangle
+    , all
     )
 
 {-| A module for Square Matrix
@@ -198,24 +199,36 @@ distanceComplex (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 
 {-| Predicate if matrix is right stochastic
 -}
-isRightStochastic : SquareMatrix (Real.Real Float) -> Bool
+isRightStochastic : SquareMatrix (Real.Real Float) -> Result String (SquareMatrix (Real.Real Float))
 isRightStochastic (SquareMatrix (Matrix.Matrix listOfRowVectors)) =
-    List.all
-        (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
-        listOfRowVectors
+    if
+        List.all
+            (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
+            listOfRowVectors
+    then
+        Ok (SquareMatrix (Matrix.Matrix listOfRowVectors))
+
+    else
+        Err "Matrix is not Right Stochastic"
 
 
 {-| Predicate if matrix is left stochastic
 -}
-isLeftStochastic : SquareMatrix (Real.Real Float) -> Bool
-isLeftStochastic (SquareMatrix matrix) =
+isLeftStochastic : SquareMatrix (Real.Real Float) -> Result String (SquareMatrix (Real.Real Float))
+isLeftStochastic matrix =
     let
-        (Matrix.Matrix transposedListOfRowVectors) =
-            Matrix.transpose matrix
+        (SquareMatrix (Matrix.Matrix transposedListOfRowVectors)) =
+            transpose matrix
     in
-    List.all
-        (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
-        transposedListOfRowVectors
+    if
+        List.all
+            (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
+            transposedListOfRowVectors
+    then
+        Ok matrix
+
+    else
+        Err "Matrix is not Left Stochastic"
 
 
 {-| Real Numbered Inner Product Space for Matrix
@@ -427,3 +440,10 @@ empty : SquareMatrix a
 empty =
     Matrix.empty
         |> SquareMatrix
+
+
+{-| Predicate to determine if all values in the matric satisfy the given predicate
+-}
+all : (a -> Bool) -> SquareMatrix a -> Bool
+all predicate (SquareMatrix matrix) =
+    Matrix.all predicate matrix

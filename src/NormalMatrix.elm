@@ -4,7 +4,7 @@ module NormalMatrix exposing
     , createMatrixFromColumnVectors
     , identity
     , dimension
-    , isNormalMatrix
+    , isNormal
     , getDiagonalProduct
     , subMatrix
     , transpose
@@ -45,7 +45,7 @@ module NormalMatrix exposing
 # Matrix Predicates and Properties
 
 @docs dimension
-@docs isNormalMatrix
+@docs isNormal
 @docs getDiagonalProduct
 @docs subMatrix
 @docs transpose
@@ -193,8 +193,8 @@ scalarMultiplication field scalar (NormalMatrix matrix) =
 
 {-| Predicate to determine if Matrix is normal
 -}
-isNormalMatrix : RowVector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
-isNormalMatrix innerProductSpace (SquareMatrix.SquareMatrix matrix) =
+isNormal : RowVector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
+isNormal innerProductSpace (SquareMatrix.SquareMatrix matrix) =
     Matrix.multiply innerProductSpace (Matrix.transpose matrix) matrix == Matrix.multiply innerProductSpace matrix (Matrix.transpose matrix)
 
 

@@ -8,7 +8,7 @@ module SquareMatrix exposing
     , createMatrixFromColumnVectors
     , identity
     , dimension
-    , isSquareMatrix
+    , isSquare
     , normReal
     , normComplex
     , distanceReal
@@ -60,7 +60,7 @@ module SquareMatrix exposing
 # Matrix Predicates and Properties
 
 @docs dimension
-@docs isSquareMatrix
+@docs isSquare
 @docs normReal
 @docs normComplex
 @docs distanceReal
@@ -153,8 +153,8 @@ dimension (SquareMatrix matrix) =
 
 {-| Determine whether a matirx is square
 -}
-isSquareMatrix : Matrix.Matrix a -> Bool
-isSquareMatrix matrix =
+isSquare : Matrix.Matrix a -> Bool
+isSquare matrix =
     Matrix.mDimension matrix == Matrix.nDimension matrix
 
 
@@ -246,7 +246,7 @@ dotProduct vectorInnerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrix
     in
     case productMatrix of
         Ok pMatrix ->
-            if isSquareMatrix pMatrix then
+            if isSquare pMatrix then
                 Matrix.getDiagonalProduct vectorInnerProductSpace.vectorSpace.field pMatrix
                     |> Result.fromMaybe "Index out of range"
 

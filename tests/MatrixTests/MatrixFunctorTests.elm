@@ -2,7 +2,6 @@ module MatrixTests.MatrixFunctorTests exposing (suite)
 
 import Expect
 import Fuzz
-import Internal.Vector
 import Matrix
 import RowVector
 import Test

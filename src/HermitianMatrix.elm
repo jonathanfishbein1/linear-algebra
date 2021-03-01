@@ -57,9 +57,13 @@ type HermitianMatrix number
 
 {-| Predicate to determine if Matrix is Hermitian
 -}
-isHermitian : SymmetricMatrix.SymmetricMatrix (ComplexNumbers.ComplexNumber number) -> Bool
+isHermitian : SymmetricMatrix.SymmetricMatrix (ComplexNumbers.ComplexNumber number) -> Result String (SymmetricMatrix.SymmetricMatrix (ComplexNumbers.ComplexNumber number))
 isHermitian matrix =
-    SymmetricMatrix.adjoint matrix == matrix
+    if SymmetricMatrix.adjoint matrix == matrix then
+        Ok matrix
+
+    else
+        Err "Adjoint of A not equal to A"
 
 
 {-| Dimension of the matrix

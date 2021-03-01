@@ -4,7 +4,7 @@ module NormalMatrix exposing
     , createMatrixFromColumnVectors
     , identity
     , dimension
-    , isNormalMatrix
+    , isNormal
     , getDiagonalProduct
     , subMatrix
     , transpose
@@ -45,7 +45,7 @@ module NormalMatrix exposing
 # Matrix Predicates and Properties
 
 @docs dimension
-@docs isNormalMatrix
+@docs isNormal
 @docs getDiagonalProduct
 @docs subMatrix
 @docs transpose
@@ -92,7 +92,6 @@ module NormalMatrix exposing
 import ColumnVector
 import ComplexNumbers
 import Field
-import Matrix
 import RowVector
 import SquareMatrix
 import Typeclasses.Classes.Equality
@@ -193,9 +192,16 @@ scalarMultiplication field scalar (NormalMatrix matrix) =
 
 {-| Predicate to determine if Matrix is normal
 -}
-isNormalMatrix : RowVector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
-isNormalMatrix innerProductSpace (SquareMatrix.SquareMatrix matrix) =
-    Matrix.multiply innerProductSpace (Matrix.transpose matrix) matrix == Matrix.multiply innerProductSpace matrix (Matrix.transpose matrix)
+isNormal : RowVector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Result String (SquareMatrix.SquareMatrix a)
+isNormal innerProductSpace squareMatrix =
+    if
+        SquareMatrix.multiply innerProductSpace (SquareMatrix.transpose squareMatrix) squareMatrix
+            == SquareMatrix.multiply innerProductSpace squareMatrix (SquareMatrix.transpose squareMatrix)
+    then
+        Ok squareMatrix
+
+    else
+        Err "A^TA /= AA^T"
 
 
 {-| Put a matrix into Upper Triangular Form

@@ -74,17 +74,21 @@ type UnitaryMatrix number
 
 {-| Determine whether a matirx is unitary
 -}
-isUnitary : InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Bool
+isUnitary : InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float))
 isUnitary matrix =
     InvertableMatrix.invert RowVector.complexInnerProductSpace matrix
         |> Result.andThen (\inverse -> multiply (UnitaryMatrix inverse) (UnitaryMatrix matrix))
         |> (\resultMatrix ->
                 case resultMatrix of
                     Ok resultM ->
-                        equal.eq resultM (identity (dimension resultM))
+                        if equal.eq resultM (identity (dimension resultM)) then
+                            Ok matrix
 
-                    Err _ ->
-                        False
+                        else
+                            Err "Inverse of A multiplied by A does not equal the Identity matrix"
+
+                    Err error ->
+                        Err error
            )
 
 

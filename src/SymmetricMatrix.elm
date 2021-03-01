@@ -54,7 +54,6 @@ import ComplexNumbers
 import Field
 import NormalMatrix
 import RowVector
-import SquareMatrix
 
 
 {-| Symmetric Matrix type
@@ -65,9 +64,13 @@ type SymmetricMatrix a
 
 {-| Predicate to determine if Matrix is symmetric
 -}
-isSymmetric : NormalMatrix.NormalMatrix a -> Bool
-isSymmetric (NormalMatrix.NormalMatrix matrix) =
-    SquareMatrix.transpose matrix == matrix
+isSymmetric : NormalMatrix.NormalMatrix a -> Result String (NormalMatrix.NormalMatrix a)
+isSymmetric matrix =
+    if NormalMatrix.transpose matrix == matrix then
+        Ok matrix
+
+    else
+        Err "A^T /= A"
 
 
 {-| Perform the adjoint operation on a Complex Numbered Matrix

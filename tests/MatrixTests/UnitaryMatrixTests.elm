@@ -1,10 +1,8 @@
 module MatrixTests.UnitaryMatrixTests exposing (suite)
 
 import ComplexNumbers
-import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import Imaginary
-import Internal.Vector
 import InvertableMatrix
 import Matrix
 import NormalMatrix
@@ -114,5 +112,5 @@ suite =
                     isUnitary =
                         UnitaryMatrix.isUnitary matrix
                 in
-                Expect.true "is unitary" isUnitary
+                Expect.equal (Ok matrix) isUnitary
         ]

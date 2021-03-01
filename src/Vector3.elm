@@ -14,7 +14,6 @@ module Vector3 exposing
 
 import AbelianGroup
 import CommutativeDivisionRing
-import Internal.Vector
 import Parser exposing ((|.), (|=))
 import Vector
 

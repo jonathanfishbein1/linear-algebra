@@ -8,7 +8,7 @@ module SquareMatrix exposing
     , createMatrixFromColumnVectors
     , identity
     , dimension
-    , isSquareMatrix
+    , isSquare
     , normReal
     , normComplex
     , distanceReal
@@ -17,6 +17,7 @@ module SquareMatrix exposing
     , getDiagonalProduct
     , subMatrix
     , transpose
+    , all
     , scalarMultiplication
     , adjoint
     , map
@@ -60,7 +61,7 @@ module SquareMatrix exposing
 # Matrix Predicates and Properties
 
 @docs dimension
-@docs isSquareMatrix
+@docs isSquare
 @docs normReal
 @docs normComplex
 @docs distanceReal
@@ -69,6 +70,7 @@ module SquareMatrix exposing
 @docs getDiagonalProduct
 @docs subMatrix
 @docs transpose
+@docs all
 
 
 # Unitary Operations
@@ -153,9 +155,13 @@ dimension (SquareMatrix matrix) =
 
 {-| Determine whether a matirx is square
 -}
-isSquareMatrix : Matrix.Matrix a -> Bool
-isSquareMatrix matrix =
-    Matrix.mDimension matrix == Matrix.nDimension matrix
+isSquare : Matrix.Matrix a -> Result String (Matrix.Matrix a)
+isSquare matrix =
+    if Matrix.mDimension matrix == Matrix.nDimension matrix then
+        Ok matrix
+
+    else
+        Err "Number of rows must equal number of columns"
 
 
 {-| Calculate the norm of a Matrix
@@ -194,24 +200,36 @@ distanceComplex (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
 
 {-| Predicate if matrix is right stochastic
 -}
-isRightStochastic : SquareMatrix (Real.Real Float) -> Bool
+isRightStochastic : SquareMatrix (Real.Real Float) -> Result String (SquareMatrix (Real.Real Float))
 isRightStochastic (SquareMatrix (Matrix.Matrix listOfRowVectors)) =
-    List.all
-        (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
-        listOfRowVectors
+    if
+        List.all
+            (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
+            listOfRowVectors
+    then
+        Ok (SquareMatrix (Matrix.Matrix listOfRowVectors))
+
+    else
+        Err "Matrix is not Right Stochastic"
 
 
 {-| Predicate if matrix is left stochastic
 -}
-isLeftStochastic : SquareMatrix (Real.Real Float) -> Bool
-isLeftStochastic (SquareMatrix matrix) =
+isLeftStochastic : SquareMatrix (Real.Real Float) -> Result String (SquareMatrix (Real.Real Float))
+isLeftStochastic matrix =
     let
-        (Matrix.Matrix transposedListOfRowVectors) =
-            Matrix.transpose matrix
+        (SquareMatrix (Matrix.Matrix transposedListOfRowVectors)) =
+            transpose matrix
     in
-    List.all
-        (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
-        transposedListOfRowVectors
+    if
+        List.all
+            (\rowVector -> Real.equal.eq (RowVector.sum Real.sumMonoid rowVector) Real.one)
+            transposedListOfRowVectors
+    then
+        Ok matrix
+
+    else
+        Err "Matrix is not Left Stochastic"
 
 
 {-| Real Numbered Inner Product Space for Matrix
@@ -246,12 +264,15 @@ dotProduct vectorInnerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrix
     in
     case productMatrix of
         Ok pMatrix ->
-            if isSquareMatrix pMatrix then
-                Matrix.getDiagonalProduct vectorInnerProductSpace.vectorSpace.field pMatrix
-                    |> Result.fromMaybe "Index out of range"
+            case isSquare pMatrix of
+                Ok _ ->
+                    Matrix.getDiagonalProduct vectorInnerProductSpace.vectorSpace.field pMatrix
+                        |> Result.fromMaybe "Index out of range"
 
-            else
-                Err "Must be Square Matrix"
+                Err error ->
+                    "Must be Square Matrix"
+                        ++ error
+                        |> Err
 
         Err err ->
             Err err
@@ -420,3 +441,10 @@ empty : SquareMatrix a
 empty =
     Matrix.empty
         |> SquareMatrix
+
+
+{-| Predicate to determine if all values in the matric satisfy the given predicate
+-}
+all : (a -> Bool) -> SquareMatrix a -> Bool
+all predicate (SquareMatrix matrix) =
+    Matrix.all predicate matrix

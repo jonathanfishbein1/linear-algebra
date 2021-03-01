@@ -569,7 +569,7 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ one, one ]
                             ]
                 in
-                Expect.true "matrix is square" (SquareMatrix.isSquareMatrix matrix)
+                Expect.equal (Ok matrix) (SquareMatrix.isSquare matrix)
         , Test.fuzz2
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))

@@ -5,7 +5,6 @@ import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import Field
 import Imaginary
-import Internal.Vector
 import InvertableMatrix
 import Matrix
 import NormalMatrix

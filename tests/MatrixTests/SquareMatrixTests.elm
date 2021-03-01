@@ -1,9 +1,7 @@
 module MatrixTests.SquareMatrixTests exposing (suite)
 
-import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import Fuzz
-import Internal.Vector
 import Matrix
 import Real
 import RowVector
@@ -32,7 +30,7 @@ suite =
                     isRightStochastic =
                         SquareMatrix.isRightStochastic matrix
                 in
-                Expect.true "Is Right Stochastic" isRightStochastic
+                Expect.equal (Ok matrix) isRightStochastic
         , Test.test
             "tests left stochastic"
           <|
@@ -50,7 +48,7 @@ suite =
                     isLeftStochastic =
                         SquareMatrix.isLeftStochastic matrix
                 in
-                Expect.true "Is Left Stochastic" isLeftStochastic
+                Expect.equal (Ok matrix) isLeftStochastic
         , Test.fuzz
             (Fuzz.map Basics.toFloat Fuzz.int)
             "tests dot product is nondegenerative"

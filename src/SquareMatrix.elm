@@ -153,9 +153,13 @@ dimension (SquareMatrix matrix) =
 
 {-| Determine whether a matirx is square
 -}
-isSquare : Matrix.Matrix a -> Bool
+isSquare : Matrix.Matrix a -> Result String ()
 isSquare matrix =
-    Matrix.mDimension matrix == Matrix.nDimension matrix
+    if Matrix.mDimension matrix == Matrix.nDimension matrix then
+        Ok ()
+
+    else
+        Err "Number of rows must equal number of columns"
 
 
 {-| Calculate the norm of a Matrix
@@ -246,12 +250,15 @@ dotProduct vectorInnerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrix
     in
     case productMatrix of
         Ok pMatrix ->
-            if isSquare pMatrix then
-                Matrix.getDiagonalProduct vectorInnerProductSpace.vectorSpace.field pMatrix
-                    |> Result.fromMaybe "Index out of range"
+            case isSquare pMatrix of
+                Ok _ ->
+                    Matrix.getDiagonalProduct vectorInnerProductSpace.vectorSpace.field pMatrix
+                        |> Result.fromMaybe "Index out of range"
 
-            else
-                Err "Must be Square Matrix"
+                Err error ->
+                    "Must be Square Matrix"
+                        ++ error
+                        |> Err
 
         Err err ->
             Err err

@@ -193,13 +193,13 @@ scalarMultiplication field scalar (NormalMatrix matrix) =
 
 {-| Predicate to determine if Matrix is normal
 -}
-isNormal : RowVector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Result String ()
+isNormal : RowVector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Result String (SquareMatrix.SquareMatrix a)
 isNormal innerProductSpace squareMatrix =
     if
         SquareMatrix.multiply innerProductSpace (SquareMatrix.transpose squareMatrix) squareMatrix
             == SquareMatrix.multiply innerProductSpace squareMatrix (SquareMatrix.transpose squareMatrix)
     then
-        Ok ()
+        Ok squareMatrix
 
     else
         Err "A^TA /= AA^T"

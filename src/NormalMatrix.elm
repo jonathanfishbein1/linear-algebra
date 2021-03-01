@@ -193,10 +193,16 @@ scalarMultiplication field scalar (NormalMatrix matrix) =
 
 {-| Predicate to determine if Matrix is normal
 -}
-isNormal : RowVector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
+isNormal : RowVector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Result String ()
 isNormal innerProductSpace squareMatrix =
-    SquareMatrix.multiply innerProductSpace (SquareMatrix.transpose squareMatrix) squareMatrix
-        == SquareMatrix.multiply innerProductSpace squareMatrix (SquareMatrix.transpose squareMatrix)
+    if
+        SquareMatrix.multiply innerProductSpace (SquareMatrix.transpose squareMatrix) squareMatrix
+            == SquareMatrix.multiply innerProductSpace squareMatrix (SquareMatrix.transpose squareMatrix)
+    then
+        Ok ()
+
+    else
+        Err "A^TA /= AA^T"
 
 
 {-| Put a matrix into Upper Triangular Form

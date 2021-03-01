@@ -57,10 +57,10 @@ type HermitianMatrix number
 
 {-| Predicate to determine if Matrix is Hermitian
 -}
-isHermitian : SymmetricMatrix.SymmetricMatrix (ComplexNumbers.ComplexNumber number) -> Result String ()
+isHermitian : SymmetricMatrix.SymmetricMatrix (ComplexNumbers.ComplexNumber number) -> Result String (SymmetricMatrix.SymmetricMatrix (ComplexNumbers.ComplexNumber number))
 isHermitian matrix =
     if SymmetricMatrix.adjoint matrix == matrix then
-        Ok ()
+        Ok matrix
 
     else
         Err "Adjoint of A not equal to A"

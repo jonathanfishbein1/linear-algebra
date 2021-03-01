@@ -64,10 +64,10 @@ type SymmetricMatrix a
 
 {-| Predicate to determine if Matrix is symmetric
 -}
-isSymmetric : NormalMatrix.NormalMatrix a -> Result String ()
+isSymmetric : NormalMatrix.NormalMatrix a -> Result String (NormalMatrix.NormalMatrix a)
 isSymmetric matrix =
     if NormalMatrix.transpose matrix == matrix then
-        Ok ()
+        Ok matrix
 
     else
         Err "A^T /= A"

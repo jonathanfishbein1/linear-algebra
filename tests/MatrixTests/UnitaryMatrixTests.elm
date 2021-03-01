@@ -114,5 +114,5 @@ suite =
                     isUnitary =
                         UnitaryMatrix.isUnitary matrix
                 in
-                Expect.true "is unitary" isUnitary
+                Expect.equal (Ok matrix) isUnitary
         ]

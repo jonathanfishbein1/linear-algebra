@@ -8,6 +8,7 @@ module HermitianMatrix exposing
     , multiplyMatrixVector
     , subtract
     , getAt
+    , setAt
     )
 
 {-| A module for Hermitian Matrix
@@ -40,6 +41,7 @@ module HermitianMatrix exposing
 # Manipulation
 
 @docs getAt
+@docs setAt
 
 -}
 
@@ -78,6 +80,14 @@ dimension (HermitianMatrix matrix) =
 getAt : ( Int, Int ) -> HermitianMatrix number -> Maybe (ComplexNumbers.ComplexNumber number)
 getAt ( rowIndex, columnIndex ) (HermitianMatrix matrix) =
     SymmetricMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Set the value in a Hermitian Matrix at the specified row and column
+-}
+setAt : ( Int, Int ) -> ComplexNumbers.ComplexNumber number -> HermitianMatrix number -> HermitianMatrix number
+setAt tup element (HermitianMatrix matrix) =
+    SymmetricMatrix.setAt tup element matrix
+        |> HermitianMatrix
 
 
 {-| Hermitian Matrix Hermitian Matrix multiplication

@@ -9,6 +9,7 @@ module SymmetricMatrix exposing
     , multiplyMatrixVector
     , subtract
     , getAt
+    , setAt
     )
 
 {-| A module for Symmetric Matrix
@@ -46,6 +47,7 @@ module SymmetricMatrix exposing
 # Manipulation
 
 @docs getAt
+@docs setAt
 
 -}
 
@@ -107,6 +109,14 @@ multiply innerProductSpace (SymmetricMatrix matrixOne) (SymmetricMatrix matrixTw
 getAt : ( Int, Int ) -> SymmetricMatrix a -> Maybe a
 getAt ( rowIndex, columnIndex ) (SymmetricMatrix matrix) =
     NormalMatrix.getAt ( rowIndex, columnIndex ) matrix
+
+
+{-| Set the value in a Symmetric Matrix at the specified row and column
+-}
+setAt : ( Int, Int ) -> a -> SymmetricMatrix a -> SymmetricMatrix a
+setAt tup element (SymmetricMatrix matrix) =
+    NormalMatrix.setAt tup element matrix
+        |> SymmetricMatrix
 
 
 {-| Multiply a ColumnVector by a Matrix

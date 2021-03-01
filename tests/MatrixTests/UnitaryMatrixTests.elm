@@ -1,10 +1,8 @@
 module MatrixTests.UnitaryMatrixTests exposing (suite)
 
 import ComplexNumbers
-import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import Imaginary
-import Internal.Vector
 import InvertableMatrix
 import Matrix
 import NormalMatrix

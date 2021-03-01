@@ -5,7 +5,6 @@ import Expect
 import Fuzz
 import Imaginary
 import Internal.Matrix
-import Internal.Vector
 import Real
 import RowVector
 import Test

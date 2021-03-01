@@ -1,8 +1,7 @@
 module MatrixTests.DoublyStochasticMatrixTests exposing (suite)
 
-import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
+import DoublyStochasticMatrix
 import Expect
-import Internal.Vector
 import Matrix
 import Real
 import RowVector

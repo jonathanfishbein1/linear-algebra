@@ -5,7 +5,6 @@ import ComplexNumbers
 import Expect
 import Fuzz
 import Imaginary
-import Internal.Vector
 import Matrix
 import Real
 import RowVector

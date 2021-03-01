@@ -1,9 +1,7 @@
 module MatrixTests.SquareMatrixTests exposing (suite)
 
-import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import Fuzz
-import Internal.Vector
 import Matrix
 import Real
 import RowVector

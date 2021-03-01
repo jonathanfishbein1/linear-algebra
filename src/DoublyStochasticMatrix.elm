@@ -29,7 +29,6 @@ module DoublyStochasticMatrix exposing
 
 -}
 
-import Matrix
 import Real
 import RowVector
 import SquareMatrix

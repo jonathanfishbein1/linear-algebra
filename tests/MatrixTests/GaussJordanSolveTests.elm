@@ -2,7 +2,6 @@ module MatrixTests.GaussJordanSolveTests exposing (suite)
 
 import ColumnVector
 import Expect
-import Internal.Vector
 import Matrix
 import Real
 import RowVector

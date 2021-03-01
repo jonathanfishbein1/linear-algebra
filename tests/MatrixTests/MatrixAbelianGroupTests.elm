@@ -3,7 +3,6 @@ module MatrixTests.MatrixAbelianGroupTests exposing (suite)
 import ComplexNumbers
 import Expect
 import Imaginary
-import Internal.Vector
 import Matrix
 import Real
 import RowVector

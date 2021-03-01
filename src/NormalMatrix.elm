@@ -92,7 +92,6 @@ module NormalMatrix exposing
 import ColumnVector
 import ComplexNumbers
 import Field
-import Matrix
 import RowVector
 import SquareMatrix
 import Typeclasses.Classes.Equality

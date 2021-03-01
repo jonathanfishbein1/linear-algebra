@@ -17,6 +17,7 @@ module SquareMatrix exposing
     , getDiagonalProduct
     , subMatrix
     , transpose
+    , all
     , scalarMultiplication
     , adjoint
     , map
@@ -32,7 +33,6 @@ module SquareMatrix exposing
     , equalImplementation
     , gaussJordan
     , upperTriangle
-    , all
     )
 
 {-| A module for Square Matrix
@@ -70,6 +70,7 @@ module SquareMatrix exposing
 @docs getDiagonalProduct
 @docs subMatrix
 @docs transpose
+@docs all
 
 
 # Unitary Operations

@@ -5,6 +5,8 @@ module ColumnVector exposing
     , conjugate
     , lengthReal
     , lengthComplex
+    , normaliseReal
+    , normaliseComplex
     , add
     , dotProduct
     , distanceReal
@@ -33,6 +35,8 @@ module ColumnVector exposing
 @docs conjugate
 @docs lengthReal
 @docs lengthComplex
+@docs normaliseReal
+@docs normaliseComplex
 
 
 # Binary Operations
@@ -366,4 +370,20 @@ conjugate :
     -> ColumnVector (ComplexNumbers.ComplexNumber number)
 conjugate (ColumnVector vector) =
     Internal.Vector.conjugate vector
+        |> ColumnVector
+
+
+{-| Adjust a real valued column vector so that its length is exactly one
+-}
+normaliseReal : ColumnVector (Real.Real Float) -> ColumnVector (Real.Real Float)
+normaliseReal (ColumnVector v) =
+    Internal.Vector.normaliseReal v
+        |> ColumnVector
+
+
+{-| Adjust a complex valued column vector so that its length is exactly one
+-}
+normaliseComplex : ColumnVector (ComplexNumbers.ComplexNumber Float) -> ColumnVector (ComplexNumbers.ComplexNumber Float)
+normaliseComplex (ColumnVector v) =
+    Internal.Vector.normaliseComplex v
         |> ColumnVector

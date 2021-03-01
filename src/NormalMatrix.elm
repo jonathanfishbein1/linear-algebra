@@ -194,8 +194,9 @@ scalarMultiplication field scalar (NormalMatrix matrix) =
 {-| Predicate to determine if Matrix is normal
 -}
 isNormal : RowVector.InnerProductSpace a -> SquareMatrix.SquareMatrix a -> Bool
-isNormal innerProductSpace (SquareMatrix.SquareMatrix matrix) =
-    Matrix.multiply innerProductSpace (Matrix.transpose matrix) matrix == Matrix.multiply innerProductSpace matrix (Matrix.transpose matrix)
+isNormal innerProductSpace squareMatrix =
+    SquareMatrix.multiply innerProductSpace (SquareMatrix.transpose squareMatrix) squareMatrix
+        == SquareMatrix.multiply innerProductSpace squareMatrix (SquareMatrix.transpose squareMatrix)
 
 
 {-| Put a matrix into Upper Triangular Form

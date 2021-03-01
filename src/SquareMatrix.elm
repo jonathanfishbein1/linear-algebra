@@ -153,10 +153,10 @@ dimension (SquareMatrix matrix) =
 
 {-| Determine whether a matirx is square
 -}
-isSquare : Matrix.Matrix a -> Result String ()
+isSquare : Matrix.Matrix a -> Result String (Matrix.Matrix a)
 isSquare matrix =
     if Matrix.mDimension matrix == Matrix.nDimension matrix then
-        Ok ()
+        Ok matrix
 
     else
         Err "Number of rows must equal number of columns"

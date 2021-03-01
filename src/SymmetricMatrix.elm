@@ -64,9 +64,13 @@ type SymmetricMatrix a
 
 {-| Predicate to determine if Matrix is symmetric
 -}
-isSymmetric : NormalMatrix.NormalMatrix a -> Bool
+isSymmetric : NormalMatrix.NormalMatrix a -> Result String ()
 isSymmetric matrix =
-    NormalMatrix.transpose matrix == matrix
+    if NormalMatrix.transpose matrix == matrix then
+        Ok ()
+
+    else
+        Err "A^T /= A"
 
 
 {-| Perform the adjoint operation on a Complex Numbered Matrix

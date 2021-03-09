@@ -2,8 +2,8 @@ module DoublyStochasticMatrix exposing
     ( DoublyStochasticMatrix(..)
     , isDoublyStochastic
     , multiply
-    , setAt
     , multiplyIfCan
+    , setAt
     )
 
 {-| A module for Doubly Stochastic Matrix
@@ -22,6 +22,7 @@ module DoublyStochasticMatrix exposing
 # Binary Operations
 
 @docs multiply
+@docs multiplyIfCan
 
 
 # Manipulation

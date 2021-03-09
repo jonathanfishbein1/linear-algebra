@@ -6,11 +6,11 @@ module UnitaryMatrix exposing
     , dimension
     , scalarMultiplication
     , multiply
+    , multiplyIfCan
     , multiplyMatrixVector
     , getAt
     , setAt
     , equal
-    , multiplyIfCan
     )
 
 {-| A module for Unitary Matrix
@@ -45,6 +45,7 @@ module UnitaryMatrix exposing
 # Binary Operations
 
 @docs multiply
+@docs multiplyIfCan
 @docs multiplyMatrixVector
 
 

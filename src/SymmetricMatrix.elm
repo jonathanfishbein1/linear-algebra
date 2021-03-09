@@ -5,11 +5,11 @@ module SymmetricMatrix exposing
     , isSymmetric
     , scalarMultiplication
     , adjoint
+    , multiplyIfCan
     , multiplyMatrixVector
     , subtract
     , getAt
     , setAt
-    , multiplyIfCan
     )
 
 {-| A module for Symmetric Matrix
@@ -39,7 +39,7 @@ module SymmetricMatrix exposing
 
 # Binary Operations
 
-@docs multiply
+@docs multiplyIfCan
 @docs multiplyMatrixVector
 @docs subtract
 

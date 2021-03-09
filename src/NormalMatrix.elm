@@ -12,6 +12,7 @@ module NormalMatrix exposing
     , adjoint
     , add
     , multiply
+    , multiplyIfCan
     , multiplyMatrixVector
     , subtract
     , getAt
@@ -21,7 +22,6 @@ module NormalMatrix exposing
     , equalImplementation
     , gaussJordan
     , upperTriangle
-    , multiplyIfCan
     )
 
 {-| A module for Normal Matrix
@@ -62,6 +62,7 @@ module NormalMatrix exposing
 
 @docs add
 @docs multiply
+@docs multiplyIfCan
 @docs multiplyMatrixVector
 @docs subtract
 

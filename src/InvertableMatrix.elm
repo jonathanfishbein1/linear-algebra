@@ -9,13 +9,13 @@ module InvertableMatrix exposing
     , invert
     , add
     , multiply
+    , multiplyIfCan
     , multiplyMatrixVector
     , getAt
     , setAt
     , equal
     , equalImplementation
     , projXOntoSubspace
-    , multiplyIfCan
     )
 
 {-| A module for Invertable Matrix
@@ -53,6 +53,7 @@ module InvertableMatrix exposing
 @docs invert
 @docs add
 @docs multiply
+@docs multiplyIfCan
 @docs multiplyMatrixVector
 
 

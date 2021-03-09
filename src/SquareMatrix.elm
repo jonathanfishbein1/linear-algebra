@@ -23,6 +23,7 @@ module SquareMatrix exposing
     , map
     , dotProduct
     , multiply
+    , multiplyIfCan
     , multiplyMatrixVector
     , add
     , subtract
@@ -33,7 +34,6 @@ module SquareMatrix exposing
     , equalImplementation
     , gaussJordan
     , upperTriangle
-    , multiplyIfCan
     )
 
 {-| A module for Square Matrix
@@ -85,6 +85,7 @@ module SquareMatrix exposing
 
 @docs dotProduct
 @docs multiply
+@docs multiplyIfCan
 @docs multiplyMatrixVector
 @docs add
 @docs subtract

@@ -33,6 +33,7 @@ module SquareMatrix exposing
     , equalImplementation
     , gaussJordan
     , upperTriangle
+    , multiplyIfCan
     )
 
 {-| A module for Square Matrix
@@ -315,8 +316,20 @@ multiply :
     RowVector.InnerProductSpace a
     -> SquareMatrix a
     -> SquareMatrix a
-    -> Result String (SquareMatrix a)
+    -> SquareMatrix a
 multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.multiply innerProductSpace matrixOne matrixTwo
+        |> SquareMatrix
+
+
+{-| Square Matrix Square Matrix multiplication
+-}
+multiplyIfCan :
+    RowVector.InnerProductSpace a
+    -> SquareMatrix a
+    -> SquareMatrix a
+    -> Result String (SquareMatrix a)
+multiplyIfCan innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     Matrix.multiplyIfCan innerProductSpace matrixOne matrixTwo
         |> Result.map SquareMatrix
 

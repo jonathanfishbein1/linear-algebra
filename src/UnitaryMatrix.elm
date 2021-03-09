@@ -10,6 +10,7 @@ module UnitaryMatrix exposing
     , getAt
     , setAt
     , equal
+    , multiplyIfCan
     )
 
 {-| A module for Unitary Matrix
@@ -77,7 +78,7 @@ type UnitaryMatrix number
 isUnitary : InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float) -> Result String (InvertableMatrix.InvertableMatrix (ComplexNumbers.ComplexNumber Float))
 isUnitary matrix =
     InvertableMatrix.invert RowVector.complexInnerProductSpace matrix
-        |> Result.andThen (\inverse -> multiply (UnitaryMatrix inverse) (UnitaryMatrix matrix))
+        |> Result.andThen (\inverse -> multiplyIfCan (UnitaryMatrix inverse) (UnitaryMatrix matrix))
         |> (\resultMatrix ->
                 case resultMatrix of
                     Ok resultM ->
@@ -114,14 +115,25 @@ setAt tup element (UnitaryMatrix matrix) =
         |> UnitaryMatrix
 
 
-{-| Unitary Matrix Unitary Matrix multiplication
+{-| Square Matrix Square Matrix multiplication
 -}
 multiply :
     UnitaryMatrix Float
     -> UnitaryMatrix Float
-    -> Result String (UnitaryMatrix Float)
+    -> UnitaryMatrix Float
 multiply (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
     InvertableMatrix.multiply RowVector.complexInnerProductSpace matrixOne matrixTwo
+        |> UnitaryMatrix
+
+
+{-| Unitary Matrix Unitary Matrix multiplication
+-}
+multiplyIfCan :
+    UnitaryMatrix Float
+    -> UnitaryMatrix Float
+    -> Result String (UnitaryMatrix Float)
+multiplyIfCan (UnitaryMatrix matrixOne) (UnitaryMatrix matrixTwo) =
+    InvertableMatrix.multiplyIfCan RowVector.complexInnerProductSpace matrixOne matrixTwo
         |> Result.map UnitaryMatrix
 
 

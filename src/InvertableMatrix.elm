@@ -15,6 +15,7 @@ module InvertableMatrix exposing
     , equal
     , equalImplementation
     , projXOntoSubspace
+    , multiplyIfCan
     )
 
 {-| A module for Invertable Matrix
@@ -174,15 +175,27 @@ add field (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
         |> InvertableMatrix
 
 
-{-| Invertable Matrix Invertable Matrix multiplication
+{-| Square Matrix Square Matrix multiplication
 -}
 multiply :
     RowVector.InnerProductSpace a
     -> InvertableMatrix a
     -> InvertableMatrix a
-    -> Result String (InvertableMatrix a)
+    -> InvertableMatrix a
 multiply innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
     NormalMatrix.multiply innerProductSpace matrixOne matrixTwo
+        |> InvertableMatrix
+
+
+{-| Invertable Matrix Invertable Matrix multiplication
+-}
+multiplyIfCan :
+    RowVector.InnerProductSpace a
+    -> InvertableMatrix a
+    -> InvertableMatrix a
+    -> Result String (InvertableMatrix a)
+multiplyIfCan innerProductSpace (InvertableMatrix matrixOne) (InvertableMatrix matrixTwo) =
+    NormalMatrix.multiplyIfCan innerProductSpace matrixOne matrixTwo
         |> Result.map InvertableMatrix
 
 
@@ -209,11 +222,11 @@ projXOntoSubspace innerProductSpace columnVectorBasis x =
             NormalMatrix.transpose matrix
 
         transformationMatrix =
-            NormalMatrix.multiply innerProductSpace transposeMatrix matrix
+            NormalMatrix.multiplyIfCan innerProductSpace transposeMatrix matrix
                 |> Result.map InvertableMatrix
                 |> Result.andThen (invert innerProductSpace)
-                |> Result.andThen (\(InvertableMatrix invMatrix) -> NormalMatrix.multiply innerProductSpace matrix invMatrix)
-                |> Result.andThen (\res -> NormalMatrix.multiply innerProductSpace res transposeMatrix)
+                |> Result.andThen (\(InvertableMatrix invMatrix) -> NormalMatrix.multiplyIfCan innerProductSpace matrix invMatrix)
+                |> Result.andThen (\res -> NormalMatrix.multiplyIfCan innerProductSpace res transposeMatrix)
     in
     Result.andThen (\tMatrix -> NormalMatrix.multiplyMatrixVector innerProductSpace tMatrix x) transformationMatrix
 

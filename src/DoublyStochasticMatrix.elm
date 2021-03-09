@@ -3,6 +3,7 @@ module DoublyStochasticMatrix exposing
     , isDoublyStochastic
     , multiply
     , setAt
+    , multiplyIfCan
     )
 
 {-| A module for Doubly Stochastic Matrix
@@ -71,24 +72,25 @@ isDoublyStochastic matrix =
             )
 
 
-
--- case SquareMatrix.isRightStochastic (SquareMatrix.SquareMatrix matrix)
--- if SquareMatrix.isRightStochastic (SquareMatrix.SquareMatrix matrix) && SquareMatrix.isLeftStochastic (SquareMatrix.SquareMatrix matrix) then
---     Matrix.all
---         (Real.greaterThan Real.zero)
---         matrix
--- else
---     False
-
-
-{-| Doubly Stochastic Matrixx Doubly Stochastic Matrix multiplication
+{-| Square Matrix Square Matrix multiplication
 -}
 multiply :
     DoublyStochasticMatrix
     -> DoublyStochasticMatrix
-    -> Result String DoublyStochasticMatrix
+    -> DoublyStochasticMatrix
 multiply (DoublyStochasticMatrix matrixOne) (DoublyStochasticMatrix matrixTwo) =
     SquareMatrix.multiply RowVector.realInnerProductSpace matrixOne matrixTwo
+        |> DoublyStochasticMatrix
+
+
+{-| Doubly Stochastic Matrixx Doubly Stochastic Matrix multiplication
+-}
+multiplyIfCan :
+    DoublyStochasticMatrix
+    -> DoublyStochasticMatrix
+    -> Result String DoublyStochasticMatrix
+multiplyIfCan (DoublyStochasticMatrix matrixOne) (DoublyStochasticMatrix matrixTwo) =
+    SquareMatrix.multiplyIfCan RowVector.realInnerProductSpace matrixOne matrixTwo
         |> Result.map DoublyStochasticMatrix
 
 

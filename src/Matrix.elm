@@ -21,6 +21,7 @@ module Matrix exposing
     , subtract
     , multiplyMatrixVector
     , multiply
+    , multiplyIfCan
     , tensorProduct
     , commuter
     , areBasis
@@ -69,7 +70,6 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
-    , multiplyIfCan
     )
 
 {-| A module for Matrix
@@ -115,6 +115,7 @@ module Matrix exposing
 @docs subtract
 @docs multiplyMatrixVector
 @docs multiply
+@docs multiplyIfCan
 @docs tensorProduct
 @docs commuter
 
@@ -259,7 +260,7 @@ type alias MatrixAlgebra a =
         RowVector.InnerProductSpace a
         -> Matrix a
         -> Matrix a
-        -> Result String (Matrix a)
+        -> Matrix a
     }
 
 
@@ -380,7 +381,7 @@ complexMatrixSpace =
 realMatrixAlgebra : MatrixAlgebra (Real.Real Float)
 realMatrixAlgebra =
     { matrixSpace = realMatrixSpace
-    , multiply = multiplyIfCan
+    , multiply = multiply
     }
 
 
@@ -389,7 +390,7 @@ realMatrixAlgebra =
 complexMatrixAlgebra : MatrixAlgebra (ComplexNumbers.ComplexNumber Float)
 complexMatrixAlgebra =
     { matrixSpace = complexMatrixSpace
-    , multiply = multiplyIfCan
+    , multiply = multiply
     }
 
 

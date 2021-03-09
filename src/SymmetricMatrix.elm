@@ -5,11 +5,11 @@ module SymmetricMatrix exposing
     , isSymmetric
     , scalarMultiplication
     , adjoint
-    , multiply
     , multiplyMatrixVector
     , subtract
     , getAt
     , setAt
+    , multiplyIfCan
     )
 
 {-| A module for Symmetric Matrix
@@ -94,12 +94,12 @@ dimension (SymmetricMatrix matrix) =
 
 {-| Square Matrix Square Matrix multiplication
 -}
-multiply :
+multiplyIfCan :
     RowVector.InnerProductSpace a
     -> SymmetricMatrix a
     -> SymmetricMatrix a
     -> Result String (SymmetricMatrix a)
-multiply innerProductSpace (SymmetricMatrix matrixOne) (SymmetricMatrix matrixTwo) =
+multiplyIfCan innerProductSpace (SymmetricMatrix matrixOne) (SymmetricMatrix matrixTwo) =
     NormalMatrix.multiplyIfCan innerProductSpace matrixOne matrixTwo
         |> Result.map SymmetricMatrix
 

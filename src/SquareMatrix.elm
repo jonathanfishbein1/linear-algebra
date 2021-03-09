@@ -260,7 +260,7 @@ dotProduct : RowVector.InnerProductSpace a -> SquareMatrix a -> SquareMatrix a -
 dotProduct vectorInnerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     let
         productMatrix =
-            Matrix.multiply vectorInnerProductSpace matrixOne matrixTwo
+            Matrix.multiplyIfCan vectorInnerProductSpace matrixOne matrixTwo
     in
     case productMatrix of
         Ok pMatrix ->
@@ -317,7 +317,7 @@ multiply :
     -> SquareMatrix a
     -> Result String (SquareMatrix a)
 multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
-    Matrix.multiply innerProductSpace matrixOne matrixTwo
+    Matrix.multiplyIfCan innerProductSpace matrixOne matrixTwo
         |> Result.map SquareMatrix
 
 

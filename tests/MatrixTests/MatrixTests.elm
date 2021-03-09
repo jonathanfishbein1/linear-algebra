@@ -907,11 +907,11 @@ suite =
                         Matrix.Matrix [ v2 ]
 
                     cTimesm1Timem2 =
-                        Matrix.multiply RowVector.realInnerProductSpace m1 m2
+                        Matrix.multiplyIfCan RowVector.realInnerProductSpace m1 m2
                             |> Result.map (Matrix.scalarMultiplication Real.field one)
 
                     cTimesm1ThenTimesm2 =
-                        Matrix.multiply RowVector.realInnerProductSpace (Matrix.scalarMultiplication Real.field one m1) m2
+                        Matrix.multiplyIfCan RowVector.realInnerProductSpace (Matrix.scalarMultiplication Real.field one m1) m2
                 in
                 Expect.equal cTimesm1Timem2 cTimesm1ThenTimesm2
         , Test.fuzz3

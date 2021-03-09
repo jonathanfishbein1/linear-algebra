@@ -69,6 +69,7 @@ module Matrix exposing
     , printComplexMatrix
     , readRealMatrix
     , readComplexMatrix
+    , multiplyIfCan
     )
 
 {-| A module for Matrix
@@ -379,7 +380,7 @@ complexMatrixSpace =
 realMatrixAlgebra : MatrixAlgebra (Real.Real Float)
 realMatrixAlgebra =
     { matrixSpace = realMatrixSpace
-    , multiply = multiply
+    , multiply = multiplyIfCan
     }
 
 
@@ -388,7 +389,7 @@ realMatrixAlgebra =
 complexMatrixAlgebra : MatrixAlgebra (ComplexNumbers.ComplexNumber Float)
 complexMatrixAlgebra =
     { matrixSpace = complexMatrixSpace
-    , multiply = multiply
+    , multiply = multiplyIfCan
     }
 
 
@@ -605,24 +606,29 @@ multiply :
     RowVector.InnerProductSpace a
     -> Matrix a
     -> Matrix a
+    -> Matrix a
+multiply innerProductSpace (Matrix listOfVectorsOne) matrixTwo =
+    let
+        (Matrix listOfVectorsTranspose) =
+            transpose matrixTwo
+    in
+    Internal.Matrix.map2VectorCartesian
+        innerProductSpace
+        listOfVectorsOne
+        listOfVectorsTranspose
+        |> Matrix
+
+
+{-| Matrix Matrix multiplication
+-}
+multiplyIfCan :
+    RowVector.InnerProductSpace a
+    -> Matrix a
+    -> Matrix a
     -> Result String (Matrix a)
-multiply innerProductSpace (Matrix matrixOne) matrixTwo =
+multiplyIfCan innerProductSpace (Matrix matrixOne) matrixTwo =
     if nDimension (Matrix matrixOne) == mDimension matrixTwo then
-        let
-            (Matrix matrixTranspose) =
-                transpose matrixTwo
-
-            listOfVectors =
-                matrixTranspose
-
-            listOfVectorsOne =
-                matrixOne
-        in
-        Internal.Matrix.map2VectorCartesian
-            innerProductSpace
-            listOfVectorsOne
-            listOfVectors
-            |> Matrix
+        multiply innerProductSpace (Matrix matrixOne) matrixTwo
             |> Ok
 
     else
@@ -835,7 +841,7 @@ solve { eq } innerProductSpace matrix constants =
     if anyAllZeroExceptAugmentedSide then
         let
             matrixTransposeMatrix =
-                multiply innerProductSpace (transpose matrix) matrix
+                multiplyIfCan innerProductSpace (transpose matrix) matrix
 
             matrixTransposeB =
                 multiplyMatrixVector innerProductSpace (transpose matrix) constants
@@ -1057,8 +1063,8 @@ setAt ( rowIndex, columnIndex ) element (Matrix listOfRowVectors) =
 commuter : RowVector.InnerProductSpace a -> Matrix a -> Matrix a -> Result String (Matrix a)
 commuter innerProductSpace matrixOne matrixTwo =
     Result.map2 (subtract innerProductSpace.vectorSpace.field)
-        (multiply innerProductSpace matrixOne matrixTwo)
-        (multiply innerProductSpace matrixTwo matrixOne)
+        (multiplyIfCan innerProductSpace matrixOne matrixTwo)
+        (multiplyIfCan innerProductSpace matrixTwo matrixOne)
 
 
 {-| Print a Real matrix to a string

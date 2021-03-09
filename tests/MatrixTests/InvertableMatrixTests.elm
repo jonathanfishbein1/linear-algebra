@@ -135,7 +135,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     matrixInverseProduct =
-                        Matrix.multiply RowVector.realInnerProductSpace matrix inverse
+                        Matrix.multiplyIfCan RowVector.realInnerProductSpace matrix inverse
                 in
                 Expect.equal matrixInverseProduct (Ok identity)
         , Test.test
@@ -164,7 +164,7 @@ suite =
                             |> Matrix.map Real.Real
 
                     inverseMatrixProduct =
-                        Matrix.multiply RowVector.realInnerProductSpace inverse matrix
+                        Matrix.multiplyIfCan RowVector.realInnerProductSpace inverse matrix
                 in
                 Expect.equal inverseMatrixProduct (Ok identity)
         , Test.test

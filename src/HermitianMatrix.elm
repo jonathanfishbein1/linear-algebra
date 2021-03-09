@@ -4,7 +4,7 @@ module HermitianMatrix exposing
     , dimension
     , identity
     , scalarMultiplication
-    , multiply
+    , multiplyIfCan
     , multiplyMatrixVector
     , subtract
     , getAt
@@ -33,7 +33,7 @@ module HermitianMatrix exposing
 
 # Binary Operations
 
-@docs multiply
+@docs multiplyIfCan
 @docs multiplyMatrixVector
 @docs subtract
 
@@ -92,12 +92,12 @@ setAt tup element (HermitianMatrix matrix) =
 
 {-| Hermitian Matrix Hermitian Matrix multiplication
 -}
-multiply :
+multiplyIfCan :
     HermitianMatrix Float
     -> HermitianMatrix Float
     -> Result String (HermitianMatrix Float)
-multiply (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
-    SymmetricMatrix.multiply RowVector.complexInnerProductSpace matrixOne matrixTwo
+multiplyIfCan (HermitianMatrix matrixOne) (HermitianMatrix matrixTwo) =
+    SymmetricMatrix.multiplyIfCan RowVector.complexInnerProductSpace matrixOne matrixTwo
         |> Result.map HermitianMatrix
 
 

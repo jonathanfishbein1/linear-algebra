@@ -23,6 +23,7 @@ module SquareMatrix exposing
     , map
     , dotProduct
     , multiply
+    , multiplyIfCan
     , multiplyMatrixVector
     , add
     , subtract
@@ -84,6 +85,7 @@ module SquareMatrix exposing
 
 @docs dotProduct
 @docs multiply
+@docs multiplyIfCan
 @docs multiplyMatrixVector
 @docs add
 @docs subtract
@@ -260,7 +262,7 @@ dotProduct : RowVector.InnerProductSpace a -> SquareMatrix a -> SquareMatrix a -
 dotProduct vectorInnerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     let
         productMatrix =
-            Matrix.multiply vectorInnerProductSpace matrixOne matrixTwo
+            Matrix.multiplyIfCan vectorInnerProductSpace matrixOne matrixTwo
     in
     case productMatrix of
         Ok pMatrix ->
@@ -315,9 +317,21 @@ multiply :
     RowVector.InnerProductSpace a
     -> SquareMatrix a
     -> SquareMatrix a
-    -> Result String (SquareMatrix a)
+    -> SquareMatrix a
 multiply innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
     Matrix.multiply innerProductSpace matrixOne matrixTwo
+        |> SquareMatrix
+
+
+{-| Square Matrix Square Matrix multiplication
+-}
+multiplyIfCan :
+    RowVector.InnerProductSpace a
+    -> SquareMatrix a
+    -> SquareMatrix a
+    -> Result String (SquareMatrix a)
+multiplyIfCan innerProductSpace (SquareMatrix matrixOne) (SquareMatrix matrixTwo) =
+    Matrix.multiplyIfCan innerProductSpace matrixOne matrixTwo
         |> Result.map SquareMatrix
 
 

@@ -12,6 +12,7 @@ module NormalMatrix exposing
     , adjoint
     , add
     , multiply
+    , multiplyIfCan
     , multiplyMatrixVector
     , subtract
     , getAt
@@ -61,6 +62,7 @@ module NormalMatrix exposing
 
 @docs add
 @docs multiply
+@docs multiplyIfCan
 @docs multiplyMatrixVector
 @docs subtract
 
@@ -134,9 +136,21 @@ multiply :
     RowVector.InnerProductSpace a
     -> NormalMatrix a
     -> NormalMatrix a
-    -> Result String (NormalMatrix a)
+    -> NormalMatrix a
 multiply innerProductSpace (NormalMatrix matrixOne) (NormalMatrix matrixTwo) =
     SquareMatrix.multiply innerProductSpace matrixOne matrixTwo
+        |> NormalMatrix
+
+
+{-| Square Matrix Square Matrix multiplication
+-}
+multiplyIfCan :
+    RowVector.InnerProductSpace a
+    -> NormalMatrix a
+    -> NormalMatrix a
+    -> Result String (NormalMatrix a)
+multiplyIfCan innerProductSpace (NormalMatrix matrixOne) (NormalMatrix matrixTwo) =
+    SquareMatrix.multiplyIfCan innerProductSpace matrixOne matrixTwo
         |> Result.map NormalMatrix
 
 

@@ -100,7 +100,7 @@ multiply :
     -> SymmetricMatrix a
     -> Result String (SymmetricMatrix a)
 multiply innerProductSpace (SymmetricMatrix matrixOne) (SymmetricMatrix matrixTwo) =
-    NormalMatrix.multiply innerProductSpace matrixOne matrixTwo
+    NormalMatrix.multiplyIfCan innerProductSpace matrixOne matrixTwo
         |> Result.map SymmetricMatrix
 
 

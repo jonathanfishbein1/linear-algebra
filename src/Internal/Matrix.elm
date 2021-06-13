@@ -34,8 +34,8 @@ findPivot { field } listOfRowVectors initialRowIndex =
         (\currentRowIndexIteration ->
             List.Extra.getAt currentRowIndexIteration listOfRowVectors
                 |> Maybe.andThen (RowVector.getAt initialRowIndex)
-                |> Maybe.withDefault monoid.identity
-                |> (/=) monoid.identity
+                |> Maybe.map ((/=) monoid.identity)
+                |> Maybe.withDefault False
         )
         (List.range initialRowIndex (List.length listOfRowVectors - 1))
 

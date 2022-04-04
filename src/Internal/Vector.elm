@@ -37,6 +37,7 @@ module Internal.Vector exposing
     , concat
     , map
     , pure
+    , andMapZip
     , andMap
     , map2
     , andThen
@@ -121,6 +122,7 @@ module Internal.Vector exposing
 @docs concat
 @docs map
 @docs pure
+@docs andMapZip
 @docs andMap
 @docs map2
 @docs andThen
@@ -456,12 +458,8 @@ distanceComplex vectorOne vectorTwo =
 {-| Calculate the tensor product of two vectors
 -}
 tensorProduct : Field.Field a -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
-tensorProduct field vectorOne vectorTwo =
-    andThen
-        (\vectorOneElement ->
-            scalarMultiplication field vectorOneElement vectorTwo
-        )
-        vectorOne
+tensorProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) vectorOne vectorTwo =
+    andMap vectorTwo (map ((commutativeDivisionRing.multiplication.monoid.semigroup)) vectorOne) 
 
 
 {-| Map over a vector
@@ -486,12 +484,26 @@ pure a =
     Vector.Vector [ a ]
 
 
-{-| Apply for Vector.Vector
+{-| Apply for Vector.Vector using zip like implementation
 -}
-andMap : Vector.Vector a -> Vector.Vector (a -> b) -> Vector.Vector b
-andMap vector fVector =
+andMapZip : Vector.Vector a -> Vector.Vector (a -> b) -> Vector.Vector b
+andMapZip vector fVector =
     map2 Basics.identity fVector vector
 
+{-| Apply for Vector.Vector using Cartesian product like implementation
+-}
+andMap : Vector.Vector a -> Vector.Vector (a -> b) -> Vector.Vector b
+andMap vectorOne (Vector.Vector fList) =
+    List.concatMap
+        (\func ->
+            let
+                (Vector.Vector result) =
+                    map func vectorOne
+            in
+            result
+        )
+        fList
+        |> Vector.Vector
 
 {-| andThen for Vector.Vector
 -}

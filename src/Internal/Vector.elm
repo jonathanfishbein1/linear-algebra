@@ -505,12 +505,12 @@ andMap vectorOne fVector =
 {-| andThen for Vector.Vector
 -}
 andThen : (a -> Vector.Vector b) -> Vector.Vector a -> Vector.Vector b
-andThen fVector (Vector.Vector list) =
+andThen fReturnVector (Vector.Vector list) =
     List.concatMap
         (\x ->
             let
                 (Vector.Vector result) =
-                    fVector x
+                    fReturnVector x
             in
             result
         )

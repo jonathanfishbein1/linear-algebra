@@ -93,4 +93,87 @@ suite =
                         Matrix.andMap pureOne (Matrix.pure <| Basics.always one)
                 in
                 Expect.equal leftSide rightSide
+
+    ,Test.fuzz
+            Fuzz.int
+            "tests first applicative law for Matrix zip list implementation"
+          <|
+            \one ->
+                let
+                    mIdentity =
+                        Matrix.pure identity
+
+                    m =
+                        Matrix.pure one
+
+                    mApplied =
+                        Matrix.andMapZip m mIdentity
+                in
+                Expect.equal mApplied m
+        , Test.fuzz
+            Fuzz.int
+            "tests second applicative law for Matrix zip list implementation"
+          <|
+            \one ->
+                let
+                    f =
+                        (<<)
+
+                    fPure =
+                        Matrix.pure f
+
+                    u =
+                        Matrix.pure identity
+
+                    v =
+                        Matrix.pure identity
+
+                    w =
+                        Matrix.Matrix [ RowVector.RowVector <| Vector.Vector [ one ] ]
+
+                    leftSide =
+                        Matrix.andMapZip w (Matrix.andMapZip v (Matrix.andMapZip u fPure))
+
+                    rightSide =
+                        Matrix.andMapZip (Matrix.andMapZip w v) u
+                in
+                Expect.equal leftSide rightSide
+        , Test.fuzz
+            Fuzz.int
+            "tests third applicative law for Matrix zip list implementation"
+          <|
+            \one ->
+                let
+                    f =
+                        (*) 2
+
+                    pureF =
+                        Matrix.pure f
+
+                    pureOne =
+                        Matrix.pure one
+
+                    mApplied =
+                        Matrix.andMapZip pureOne pureF
+                in
+                Expect.equal mApplied (Matrix.pure <| f one)
+        , Test.fuzz
+            Fuzz.int
+            "tests fourth applicative law for Matrix zip list implementation"
+          <|
+            \one ->
+                let
+                    pureOne =
+                        Matrix.pure identity
+
+                    pureTwo =
+                        Matrix.pure one
+
+                    leftSide =
+                        Matrix.andMapZip pureTwo pureOne
+
+                    rightSide =
+                        Matrix.andMapZip pureOne (Matrix.pure <| Basics.always one)
+                in
+                Expect.equal leftSide rightSide
         ]

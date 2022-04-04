@@ -53,6 +53,7 @@ module Matrix exposing
     , appendHorizontal
     , map
     , pure
+    , andMapZip
     , andMap
     , andThen
     , map2
@@ -159,6 +160,7 @@ module Matrix exposing
 @docs appendHorizontal
 @docs map
 @docs pure
+@docs andMapZip
 @docs andMap
 @docs andThen
 @docs map2
@@ -639,12 +641,8 @@ multiplyIfCan innerProductSpace (Matrix matrixOne) matrixTwo =
 {-| Calculate the tensor product of two Matricies
 -}
 tensorProduct : Field.Field a -> Matrix a -> Matrix a -> Matrix a
-tensorProduct field matrixOne matrixTwo =
-    andThen
-        (\matrixOneElement ->
-            scalarMultiplication field matrixOneElement matrixTwo
-        )
-        matrixOne
+tensorProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) matrixOne matrixTwo =
+    andMap matrixTwo (map commutativeDivisionRing.multiplication.monoid.semigroup matrixOne)
 
 
 {-| Map over a Matrix
@@ -671,17 +669,26 @@ pure a =
     Matrix [ RowVector.pure a ]
 
 
-{-| Apply for Matrix
+{-| Apply for Matrix using zip like implementation
 -}
-andMap : Matrix a -> Matrix (a -> b) -> Matrix b
-andMap fMatrix matrix =
+andMapZip : Matrix a -> Matrix (a -> b) -> Matrix b
+andMapZip fMatrix matrix =
     map2 Basics.identity matrix fMatrix
 
+{-| Apply for Matrix using Cartesian product like implementation
+-}
+andMap : Matrix a -> Matrix (a -> b) -> Matrix b
+andMap matrixOne fMatrix =
+   andThen
+        (\func ->
+            map func matrixOne
+        )
+        fMatrix
 
 {-| Monad bind for Matrix
 -}
 andThen : (a -> Matrix b) -> Matrix a -> Matrix b
-andThen fMatrix (Matrix listOfRowVectors) =
+andThen fReturnMatrix (Matrix listOfRowVectors) =
     List.concatMap
         (\(RowVector.RowVector (Vector.Vector listOfElements)) ->
             let
@@ -690,7 +697,7 @@ andThen fMatrix (Matrix listOfRowVectors) =
                         (\element ->
                             let
                                 (Matrix resultInner) =
-                                    fMatrix element
+                                    fReturnMatrix element
                             in
                             resultInner
                         )

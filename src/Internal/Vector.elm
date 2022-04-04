@@ -459,7 +459,7 @@ distanceComplex vectorOne vectorTwo =
 -}
 tensorProduct : Field.Field a -> Vector.Vector a -> Vector.Vector a -> Vector.Vector a
 tensorProduct (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) vectorOne vectorTwo =
-    andMap vectorTwo (map ((commutativeDivisionRing.multiplication.monoid.semigroup)) vectorOne) 
+    andMap vectorTwo (map commutativeDivisionRing.multiplication.monoid.semigroup vectorOne)
 
 
 {-| Map over a vector
@@ -490,20 +490,17 @@ andMapZip : Vector.Vector a -> Vector.Vector (a -> b) -> Vector.Vector b
 andMapZip vector fVector =
     map2 Basics.identity fVector vector
 
+
 {-| Apply for Vector.Vector using Cartesian product like implementation
 -}
 andMap : Vector.Vector a -> Vector.Vector (a -> b) -> Vector.Vector b
-andMap vectorOne (Vector.Vector fList) =
-    List.concatMap
+andMap vectorOne fVector =
+    andThen
         (\func ->
-            let
-                (Vector.Vector result) =
-                    map func vectorOne
-            in
-            result
+            map func vectorOne
         )
-        fList
-        |> Vector.Vector
+        fVector
+
 
 {-| andThen for Vector.Vector
 -}

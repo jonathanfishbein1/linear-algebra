@@ -42,7 +42,11 @@ suite =
                     result =
                         Real.equal.eq Real.zero aDotACrossB && Real.equal.eq Real.zero bDotACrossB
                 in
-                Expect.true "a X b is orthagonal to both a and b" result
+                if result then
+                    Expect.pass
+
+                else
+                    Expect.fail "a X b is not orthagonal to both a and b"
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -79,5 +83,9 @@ suite =
                     angle =
                         Internal.Vector.angleBetween aVector bVector
                 in
-                Expect.true "length of cross product is the length of the two vectors times the sin of the angle between them" (Real.equal.eq aCrossBLength (Real.multiply (Real.multiply aLength bLength) (Real.map Basics.sin angle)))
+                if Real.equal.eq aCrossBLength (Real.multiply (Real.multiply aLength bLength) (Real.map Basics.sin angle)) then
+                    Expect.pass
+
+                else
+                    Expect.fail "length of cross product is not the length of the two vectors times the sin of the angle between them"
         ]

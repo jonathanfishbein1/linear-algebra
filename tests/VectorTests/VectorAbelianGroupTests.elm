@@ -14,8 +14,8 @@ suite : Test.Test
 suite =
     Test.describe "Vector Abelian Group Tests"
         [ Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests vector inverse"
           <|
             \one two ->

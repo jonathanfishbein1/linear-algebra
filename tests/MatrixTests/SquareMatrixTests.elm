@@ -166,7 +166,7 @@ suite =
                 aDotB
                     |> Expect.equal bDotA
         , Test.fuzz
-            Fuzz.float
+            Fuzz.niceFloat
             "tests matrix norm is nondegenerative"
           <|
             \one ->
@@ -226,8 +226,8 @@ suite =
                     Err err ->
                         Expect.fail err
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests matrix norm respects scalar multiplication"
           <|
             \one two ->

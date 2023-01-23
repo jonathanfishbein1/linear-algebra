@@ -14,8 +14,8 @@ suite : Test.Test
 suite =
     Test.describe "Vector Abelian Group Tests"
         [ Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests Vector add is commutative"
           <|
             \one two ->
@@ -108,5 +108,9 @@ suite =
                         Internal.Vector.add ComplexNumbers.field w x
                             |> Internal.Vector.add ComplexNumbers.field v
                 in
-                Expect.true "vectors sums equal" ((Internal.Vector.equal ComplexNumbers.equal.eq).eq vPlusWPlusX wPlusXPlusV)
+                if (Internal.Vector.equal ComplexNumbers.equal.eq).eq vPlusWPlusX wPlusXPlusV then
+                    Expect.pass
+
+                else
+                    Expect.fail "vectors sums not equal"
         ]

@@ -29,10 +29,14 @@ suite =
                                 )
                             ]
                 in
-                Expect.true "equal" ((Internal.Vector.equal ComplexNumbers.equal.eq).eq (Internal.Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v)
+                if (Internal.Vector.equal ComplexNumbers.equal.eq).eq (Internal.Vector.map (ComplexNumbers.multiply ComplexNumbers.one) v) v then
+                    Expect.pass
+
+                else
+                    Expect.fail "not equal"
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests scalar multiplication respects complex multiplication"
           <|
             \one two ->
@@ -124,7 +128,11 @@ suite =
                     result =
                         (Internal.Vector.equal ComplexNumbers.equal.eq).eq cvPlusW cVPluscW
                 in
-                Expect.true "All elements equal" result
+                if result then
+                    Expect.pass
+
+                else
+                    Expect.fail "not all elements equal"
         , Test.fuzz2
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -173,5 +181,9 @@ suite =
                     result =
                         (Internal.Vector.equal ComplexNumbers.equal.eq).eq c1VPlusc2V c1Plusc2V
                 in
-                Expect.true "All elements equal" result
+                if result then
+                    Expect.pass
+
+                else
+                    Expect.fail "not all elements equal"
         ]

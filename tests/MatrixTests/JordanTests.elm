@@ -99,5 +99,9 @@ suite =
                             , RowVector.RowVector <| Vector.Vector [ ComplexNumbers.zero, ComplexNumbers.one ]
                             ]
                 in
-                Expect.true "matricies equal" ((Matrix.equal ComplexNumbers.equal.eq).eq reducedRowEchelonFormMatrix expected)
+                if (Matrix.equal ComplexNumbers.equal.eq).eq reducedRowEchelonFormMatrix expected then
+                    Expect.pass
+
+                else
+                    Expect.fail "matricies not equal"
         ]

@@ -12,7 +12,7 @@ suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
         [ Test.fuzz
-            Fuzz.float
+            Fuzz.niceFloat
             "tests Matrix empty or identity value for vertical append right"
           <|
             \one ->
@@ -28,7 +28,7 @@ suite =
                 Matrix.concatVertical.semigroup.prepend m Matrix.concatVertical.identity
                     |> Expect.equal m
         , Test.fuzz
-            Fuzz.float
+            Fuzz.niceFloat
             "tests Matrix empty or identity value for vertical append left"
           <|
             \one ->
@@ -85,7 +85,7 @@ suite =
                 Matrix.concatVertical.concat listOfMonoids
                     |> Expect.equal expected
         , Test.fuzz
-            Fuzz.float
+            Fuzz.niceFloat
             "tests Matrix empty or identity value for horizontal append right"
           <|
             \one ->
@@ -101,7 +101,7 @@ suite =
                 Matrix.concatHorizontal.semigroup.prepend m Matrix.concatHorizontal.identity
                     |> Expect.equal m
         , Test.fuzz
-            Fuzz.float
+            Fuzz.niceFloat
             "tests Matrix empty or identity value for horizontal append left"
           <|
             \one ->

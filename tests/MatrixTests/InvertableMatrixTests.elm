@@ -229,7 +229,11 @@ suite =
                 in
                 case determinantComplex of
                     Ok dComplex ->
-                        Expect.true "determinants are equal" (ComplexNumbers.equal.eq dComplex expectedDeterminant)
+                        if ComplexNumbers.equal.eq dComplex expectedDeterminant then
+                            Expect.pass
+
+                        else
+                            Expect.fail "determinants are not equal"
 
                     _ ->
                         Expect.fail "determinants not equal"
@@ -331,7 +335,11 @@ suite =
                 in
                 case inverseComplex of
                     Ok result ->
-                        Expect.true "matrices are equal" ((InvertableMatrix.equal ComplexNumbers.equal.eq).eq result expectedInverse)
+                        if (InvertableMatrix.equal ComplexNumbers.equal.eq).eq result expectedInverse then
+                            Expect.pass
+
+                        else
+                            Expect.fail "matrices are not equal"
 
                     Err error ->
                         Expect.fail error

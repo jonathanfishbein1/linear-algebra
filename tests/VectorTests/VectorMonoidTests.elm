@@ -14,8 +14,8 @@ suite : Test.Test
 suite =
     Test.describe "The LinearAlgebra module"
         [ Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests empty vector is additive identity"
           <|
             \one two ->
@@ -32,8 +32,8 @@ suite =
                 Internal.Vector.add ComplexNumbers.field (Vector.Vector [ ComplexNumbers.zero ]) w
                     |> Expect.equal w
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests Vector empty or identity value right"
           <|
             \one two ->
@@ -47,10 +47,14 @@ suite =
                                 )
                             ]
                 in
-                Expect.true "vectors equal" ((Internal.Vector.equal ComplexNumbers.equal.eq).eq (Internal.Vector.concat.semigroup v Internal.Vector.concat.identity) v)
+                if (Internal.Vector.equal ComplexNumbers.equal.eq).eq (Internal.Vector.concat.semigroup v Internal.Vector.concat.identity) v then
+                    Expect.pass
+
+                else
+                    Expect.fail "vectors not equal"
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests Vector empty or identity value left"
           <|
             \one two ->
@@ -64,7 +68,11 @@ suite =
                                 )
                             ]
                 in
-                Expect.true "vectors equal" ((Internal.Vector.equal ComplexNumbers.equal.eq).eq (Internal.Vector.concat.semigroup Internal.Vector.concat.identity v) v)
+                if (Internal.Vector.equal ComplexNumbers.equal.eq).eq (Internal.Vector.concat.semigroup Internal.Vector.concat.identity v) v then
+                    Expect.pass
+
+                else
+                    Expect.fail "vectors not equal"
         , Test.fuzz3
             (Fuzz.map Real.Real Fuzz.int)
             (Fuzz.map Real.Real Fuzz.int)

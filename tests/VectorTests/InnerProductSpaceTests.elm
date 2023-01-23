@@ -14,7 +14,7 @@ suite : Test.Test
 suite =
     Test.describe "Inner Product Vector Space"
         [ Test.fuzz
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests dot product is nondegenerative"
           <|
             \one ->
@@ -60,7 +60,11 @@ suite =
                     aDotCPlusBDotC =
                         Real.add aDotC bDotC
                 in
-                Expect.true "dot product respects addition" (Real.equal.eq aDotCPlusBDotC aPlusBDotc)
+                if Real.equal.eq aDotCPlusBDotC aPlusBDotc then
+                    Expect.pass
+
+                else
+                    Expect.fail "dot product does not respect addition"
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -84,7 +88,11 @@ suite =
                     aDotBTimesThree =
                         Real.multiply (Internal.Vector.dotProduct Real.field a b) three
                 in
-                Expect.true "dot product respects scalar multiplication" (Real.equal.eq aDotBTimesThree threeTimesADotB)
+                if Real.equal.eq aDotBTimesThree threeTimesADotB then
+                    Expect.pass
+
+                else
+                    Expect.fail "dot product does not respect scalar multiplication"
         , Test.fuzz2
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -122,7 +130,7 @@ suite =
                 in
                 Expect.equal squareRootADotA aLength
         , Test.fuzz
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests vector length is nondegenerative"
           <|
             \one ->
@@ -240,7 +248,7 @@ suite =
                 in
                 Expect.equal squareRootADotA aLength
         , Test.fuzz
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests complex vector length is nondegenerative"
           <|
             \one ->
@@ -298,7 +306,7 @@ suite =
                 absXDotY
                     |> Expect.atMost lengthOfXTimesLengthOfY
         , Test.fuzz
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests distance is nondegenerative"
           <|
             \one ->

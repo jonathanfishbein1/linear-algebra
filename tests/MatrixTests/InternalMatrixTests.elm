@@ -180,7 +180,11 @@ suite =
                 in
                 case firstElement of
                     Just element ->
-                        Expect.true "matrix scale scales first element to one " (Real.equal.eq element Real.one)
+                        if Real.equal.eq element Real.one then
+                            Expect.pass
+
+                        else
+                            Expect.fail "matrix does not scale scales first element to one "
 
                     Nothing ->
                         Expect.fail "error"
@@ -218,7 +222,11 @@ suite =
                 in
                 case firstElement of
                     Just element ->
-                        Expect.true "ComplexNumber is equal to one " (ComplexNumbers.equal.eq element ComplexNumbers.one)
+                        if ComplexNumbers.equal.eq element ComplexNumbers.one then
+                            Expect.pass
+
+                        else
+                            Expect.fail "ComplexNumber is not equal to one "
 
                     Nothing ->
                         Expect.fail "error"
@@ -301,7 +309,11 @@ suite =
                 in
                 case secondElement of
                     Just element ->
-                        Expect.true "matrix scale scales second element by first" (Real.equal.eq element (Real.divide two one))
+                        if Real.equal.eq element (Real.divide two one) then
+                            Expect.pass
+
+                        else
+                            Expect.fail "matrix does not scale scales second element by first"
 
                     Nothing ->
                         Expect.fail "error"
@@ -330,7 +342,11 @@ suite =
                 in
                 case firstElementSecondRow of
                     Just element ->
-                        Expect.true "matrix subrow has zero under pivot entry" (Real.equal.eq element Real.zero)
+                        if Real.equal.eq element Real.zero then
+                            Expect.pass
+
+                        else
+                            Expect.fail "matrix subrow does not have zero under pivot entry"
 
                     Nothing ->
                         Expect.fail "error"
@@ -373,7 +389,11 @@ suite =
                 in
                 case firstElementSecondRow of
                     Just element ->
-                        Expect.true "equal" (ComplexNumbers.equal.eq element ComplexNumbers.zero)
+                        if ComplexNumbers.equal.eq element ComplexNumbers.zero then
+                            Expect.pass
+
+                        else
+                            Expect.fail "not equal"
 
                     Nothing ->
                         Expect.fail "error"

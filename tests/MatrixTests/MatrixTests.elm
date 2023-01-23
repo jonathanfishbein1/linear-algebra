@@ -59,7 +59,11 @@ suite =
                             |> ColumnVector.map Real.Real
                         ]
                 in
-                Expect.true "Two vectors are linearly independent" (Matrix.areLinearlyIndependent RowVector.realInnerProductSpace listOfVectors)
+                if Matrix.areLinearlyIndependent RowVector.realInnerProductSpace listOfVectors then
+                    Expect.pass
+
+                else
+                    Expect.fail "Two vectors are not linearly independent"
         , Test.test
             "tests matrix linearlyIndependent with two colinear vectors"
           <|
@@ -82,7 +86,11 @@ suite =
                             |> ColumnVector.map Real.Real
                         ]
                 in
-                Expect.false "Two vectors are linearly dependent" (Matrix.areLinearlyIndependent RowVector.realInnerProductSpace listOfVectors)
+                if not (Matrix.areLinearlyIndependent RowVector.realInnerProductSpace listOfVectors) then
+                    Expect.pass
+
+                else
+                    Expect.fail "Two vectors are linearly dependent"
         , Test.test "tests matrix doesSetSpanSpace with standard basis vectors" <|
             \_ ->
                 let
@@ -252,7 +260,11 @@ suite =
                     result =
                         Matrix.areBasis RowVector.realInnerProductSpace r2 listOfVectors
                 in
-                Expect.true "Vectors are basis for R2" result
+                if result then
+                    Expect.pass
+
+                else
+                    Expect.fail "Vectors are not a basis for R2"
         , Test.test
             "tests matrix areBasis with zero vectors"
           <|
@@ -273,7 +285,11 @@ suite =
                     result =
                         Matrix.areBasis RowVector.realInnerProductSpace r2 listOfVectors
                 in
-                Expect.false "Vectors are not basis for R2" result
+                if not result then
+                    Expect.pass
+
+                else
+                    Expect.fail "Vectors are basis for R2"
         , Test.test
             "tests matrix areBasis with standard basis vectors 3 dimensions"
           <|
@@ -309,7 +325,11 @@ suite =
                     result =
                         Matrix.areBasis RowVector.realInnerProductSpace r3 listOfVectors
                 in
-                Expect.false "Vectors are not basis for R3" result
+                if not result then
+                    Expect.pass
+
+                else
+                    Expect.fail "Vectors are basis for R3"
         , Test.test
             "tests matrix areBasis with identity matrix 3 dimensions"
           <|
@@ -348,7 +368,11 @@ suite =
                     result =
                         Matrix.areBasis RowVector.realInnerProductSpace r3 listOfVectors
                 in
-                Expect.true "Vectors are basis fro R3" result
+                if result then
+                    Expect.pass
+
+                else
+                    Expect.fail "Vectors are not a basis for R3"
         , Test.test
             "tests matrix areBasis with three vectors"
           <|
@@ -384,7 +408,11 @@ suite =
                     result =
                         Matrix.areBasis RowVector.realInnerProductSpace r3 listOfVectors
                 in
-                Expect.false "Vectors are not basis R3" result
+                if not result then
+                    Expect.pass
+
+                else
+                    Expect.fail "Vectors are basis R3"
         , Test.test
             "tests matrix areBasis with three vectors testing r2"
           <|
@@ -420,7 +448,11 @@ suite =
                     result =
                         Matrix.areBasis RowVector.realInnerProductSpace r2 listOfVectors
                 in
-                Expect.false "Vectors are not basis for R2" result
+                if not result then
+                    Expect.pass
+
+                else
+                    Expect.fail "Vectors are basis for R2"
         , Test.test
             "tests matrix areBasis with three dimensional vector against R2"
           <|
@@ -449,7 +481,11 @@ suite =
                     result =
                         Matrix.areBasis RowVector.realInnerProductSpace r2 listOfVectors
                 in
-                Expect.false "Vectos are not basis for R2" result
+                if not result then
+                    Expect.pass
+
+                else
+                    Expect.fail "Vectos are basis for R2"
         , Test.test
             "tests matrix nullity with infinite solutions"
           <|
@@ -519,8 +555,8 @@ suite =
                 in
                 Expect.equal printedMatrix "Matrix [ RowVector Vector.Vector [Real.Real 0, Real.Real 1] ] ]"
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "read Matrix"
           <|
             \one two ->
@@ -955,7 +991,11 @@ suite =
                     matrixSumTensorProductIKJK =
                         Matrix.add Real.field tensorProductIK tensorProductJK
                 in
-                Expect.true "matricies equal" ((Matrix.equal Real.equal.eq).eq tensorProductIJK matrixSumTensorProductIKJK)
+                if (Matrix.equal Real.equal.eq).eq tensorProductIJK matrixSumTensorProductIKJK then
+                    Expect.pass
+
+                else
+                    Expect.fail "matricies not equal"
         , Test.test
             "tests areRowEquivalent"
           <|
@@ -978,7 +1018,11 @@ suite =
                             |> Matrix.map Real.Real
                             |> Matrix.scalarMultiplication Real.field (Real.Real 2)
                 in
-                Expect.true "Are row equivalent" (Matrix.areRowEquivalent RowVector.realVectorSpace matrixOne matrixTwo)
+                if Matrix.areRowEquivalent RowVector.realVectorSpace matrixOne matrixTwo then
+                    Expect.pass
+
+                else
+                    Expect.fail "are not row equivalent"
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))

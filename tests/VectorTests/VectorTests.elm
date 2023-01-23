@@ -14,8 +14,8 @@ suite : Test.Test
 suite =
     Test.describe "The Vector module"
         [ Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests hadamard vector multiplication is commutative"
           <|
             \one two ->
@@ -38,7 +38,11 @@ suite =
                             b
                             a
                 in
-                Expect.true "hadamard vector multiplication is commutative" ((Internal.Vector.equal Real.equal.eq).eq aHadamardB bhadamardA)
+                if (Internal.Vector.equal Real.equal.eq).eq aHadamardB bhadamardA then
+                    Expect.pass
+
+                else
+                    Expect.fail "hadamard vector multiplication is not commutative"
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -68,7 +72,11 @@ suite =
                             a
                             (Internal.Vector.hadamardMultiplication Real.field b c)
                 in
-                Expect.true "hadamard vector multiplication is associative" ((Internal.Vector.equal Real.equal.eq).eq aHadamardBHadamardC bHadamardCHadamardA)
+                if (Internal.Vector.equal Real.equal.eq).eq aHadamardBHadamardC bHadamardCHadamardA then
+                    Expect.pass
+
+                else
+                    Expect.fail "hadamard vector multiplication is not associative"
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -98,7 +106,11 @@ suite =
                             (Internal.Vector.hadamardMultiplication Real.field a b)
                             (Internal.Vector.hadamardMultiplication Real.field a c)
                 in
-                Expect.true "hadamard vector multiplication is distributative over addition" ((Internal.Vector.equal Real.equal.eq).eq aHadamardSumBC sumAHadamardBAHadamardC)
+                if (Internal.Vector.equal Real.equal.eq).eq aHadamardSumBC sumAHadamardBAHadamardC then
+                    Expect.pass
+
+                else
+                    Expect.fail "hadamard vector multiplication is not distributative over addition"
         , Test.fuzz
             (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
             "tests unit vector length is 1"
@@ -112,7 +124,11 @@ suite =
                         Internal.Vector.normaliseReal a
                             |> Internal.Vector.lengthReal
                 in
-                Expect.true "unit vector length is 1" (Real.equal.eq normalisedALength Real.one)
+                if Real.equal.eq normalisedALength Real.one then
+                    Expect.pass
+
+                else
+                    Expect.fail "unit vector length is not 1"
         , Test.fuzz
             (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
             "tests complex unit vector length is 1"
@@ -133,11 +149,14 @@ suite =
                         Internal.Vector.normaliseComplex a
                             |> Internal.Vector.lengthComplex
                 in
-                Expect.true "complex unit vector length is 1"
-                    (Real.equal.eq normalisedALength Real.one)
+                if Real.equal.eq normalisedALength Real.one then
+                    Expect.pass
+
+                else
+                    Expect.fail "complex unit vector length is not 1"
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests realVectorSubspace"
           <|
             \one two ->
@@ -158,11 +177,14 @@ suite =
                     isSubspace =
                         Internal.Vector.vectorSubspace Real.field Internal.Vector.realAbelianGroup scalar vectors predicates
                 in
-                isSubspace
-                    |> Expect.true "is a subspace"
+                if isSubspace then
+                    Expect.pass
+
+                else
+                    Expect.fail "is not a subspace"
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests realVectorSubspace x > 10 not a subspace"
           <|
             \one two ->
@@ -181,11 +203,14 @@ suite =
                     isSubspace =
                         Internal.Vector.vectorSubspace Real.field Internal.Vector.realAbelianGroup scalar vectors predicates
                 in
-                isSubspace
-                    |> Expect.false "is not a subspace"
+                if isSubspace then
+                    Expect.pass
+
+                else
+                    Expect.fail "is not a subspace"
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests complexVectorSubspace"
           <|
             \one two ->
@@ -211,11 +236,14 @@ suite =
                     isSubspace =
                         Internal.Vector.vectorSubspace ComplexNumbers.field Internal.Vector.complexAbelianGroup scalar vectors predicates
                 in
-                isSubspace
-                    |> Expect.true "is a subspace"
+                if isSubspace then
+                    Expect.pass
+
+                else
+                    Expect.fail "is not a subspace"
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             "tests complexVectorSubspace x > zero not a subspace"
           <|
             \one two ->
@@ -245,8 +273,11 @@ suite =
                     isSubspace =
                         Internal.Vector.vectorSubspace ComplexNumbers.field Internal.Vector.complexAbelianGroup scalar vectors predicates
                 in
-                isSubspace
-                    |> Expect.false "is not a subspace"
+                if isSubspace then
+                    Expect.pass
+
+                else
+                    Expect.fail "is not a subspace"
         , Test.fuzz3
             Fuzz.int
             Fuzz.int
@@ -270,8 +301,8 @@ suite =
                 in
                 Expect.equal (Internal.Vector.getAt 0 vector) (Just one)
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "read Vector"
           <|
             \one two ->
@@ -287,8 +318,8 @@ suite =
                 in
                 Expect.equal readVector (Ok vector)
         , Test.fuzz2
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests subtractRealVectors"
           <|
             \one two ->
@@ -350,7 +381,11 @@ suite =
                     vectorSumTensorProductIKJK =
                         Internal.Vector.add Real.field tensorProductIK tensorProductJK
                 in
-                Expect.true "tensor product respects addition" ((Internal.Vector.equal Real.equal.eq).eq tensorProductIJK vectorSumTensorProductIKJK)
+                if (Internal.Vector.equal Real.equal.eq).eq tensorProductIJK vectorSumTensorProductIKJK then
+                    Expect.pass
+
+                else
+                    Expect.fail "tensor product does not respect addition"
         , Test.fuzz3
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
             (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
@@ -398,5 +433,9 @@ suite =
                     cScalarMultiplicationVectorJTensorProductVectorK =
                         Internal.Vector.tensorProduct ComplexNumbers.field cScalarMultiplicationVectorJ vectorK
                 in
-                Expect.true "vectors equal" ((Internal.Vector.equal ComplexNumbers.equal.eq).eq cScalarMultiplicationtensorProductJK cScalarMultiplicationVectorJTensorProductVectorK)
+                if (Internal.Vector.equal ComplexNumbers.equal.eq).eq cScalarMultiplicationtensorProductJK cScalarMultiplicationVectorJTensorProductVectorK then
+                    Expect.pass
+
+                else
+                    Expect.fail "vectors not equal"
         ]

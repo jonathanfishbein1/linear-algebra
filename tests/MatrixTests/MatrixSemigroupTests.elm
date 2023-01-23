@@ -15,9 +15,9 @@ suite : Test.Test
 suite =
     Test.describe "Matrix Semigroup Tests"
         [ Test.fuzz3
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
-            (Fuzz.map Real.Real Fuzz.float)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests Matrix add is commutative"
           <|
             \one two three ->

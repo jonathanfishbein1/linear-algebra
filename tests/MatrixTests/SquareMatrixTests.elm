@@ -207,15 +207,16 @@ suite =
 
                     aPlusBLength =
                         SquareMatrix.normReal (SquareMatrix.add Real.field a b)
-
-                    lengthAPlusLengthB =
-                        Result.map2
-                            Real.add
-                            (SquareMatrix.normReal a)
-                            (SquareMatrix.normReal b)
                 in
                 case aPlusBLength of
                     Ok (Real.Real aBLength) ->
+                        let
+                            lengthAPlusLengthB =
+                                Result.map2
+                                    Real.add
+                                    (SquareMatrix.normReal a)
+                                    (SquareMatrix.normReal b)
+                        in
                         case lengthAPlusLengthB of
                             Ok (Real.Real otherLength) ->
                                 Expect.atMost otherLength aBLength
@@ -240,14 +241,15 @@ suite =
                     legnthOfTwoTimesA =
                         SquareMatrix.normReal (SquareMatrix.scalarMultiplication Real.field two a)
                             |> Result.map Real.real
-
-                    lengthOfATimesTwo =
-                        Result.map
-                            (Real.multiply two >> Real.real >> Basics.abs)
-                            (SquareMatrix.normReal a)
                 in
                 case legnthOfTwoTimesA of
                     Ok twoAL ->
+                        let
+                            lengthOfATimesTwo =
+                                Result.map
+                                    (Real.multiply two >> Real.real >> Basics.abs)
+                                    (SquareMatrix.normReal a)
+                        in
                         case lengthOfATimesTwo of
                             Ok lTimesTwo ->
                                 Expect.within (Expect.Absolute 0.1) twoAL lTimesTwo

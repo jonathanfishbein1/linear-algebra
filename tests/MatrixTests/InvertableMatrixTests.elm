@@ -322,18 +322,19 @@ suite =
                             (Imaginary.Imaginary
                                 (Real.Real -(3 / 10))
                             )
-
-                    expectedInverse =
-                        Matrix.Matrix
-                            [ RowVector.RowVector <| Vector.Vector [ expectedComplexNumberR1C1, expectedComplexNumberR1C2 ]
-                            , RowVector.RowVector <| Vector.Vector [ expectedComplexNumberR2C1, expectedComplexNumberR2C2 ]
-                            ]
-                            |> SquareMatrix.SquareMatrix
-                            |> NormalMatrix.NormalMatrix
-                            |> InvertableMatrix.InvertableMatrix
                 in
                 case inverseComplex of
                     Ok result ->
+                        let
+                            expectedInverse =
+                                Matrix.Matrix
+                                    [ RowVector.RowVector <| Vector.Vector [ expectedComplexNumberR1C1, expectedComplexNumberR1C2 ]
+                                    , RowVector.RowVector <| Vector.Vector [ expectedComplexNumberR2C1, expectedComplexNumberR2C2 ]
+                                    ]
+                                    |> SquareMatrix.SquareMatrix
+                                    |> NormalMatrix.NormalMatrix
+                                    |> InvertableMatrix.InvertableMatrix
+                        in
                         if (InvertableMatrix.equal ComplexNumbers.equal.eq).eq result expectedInverse then
                             Expect.pass
 

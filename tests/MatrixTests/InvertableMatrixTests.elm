@@ -216,18 +216,19 @@ suite =
 
                     determinantComplex =
                         InvertableMatrix.determinant RowVector.complexVectorSpace matrix
-
-                    expectedDeterminant =
-                        ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                -2
-                            )
-                            (Imaginary.Imaginary
-                                (Real.Real 4)
-                            )
                 in
                 case determinantComplex of
                     Ok dComplex ->
+                        let
+                            expectedDeterminant =
+                                ComplexNumbers.ComplexNumber
+                                    (Real.Real
+                                        -2
+                                    )
+                                    (Imaginary.Imaginary
+                                        (Real.Real 4)
+                                    )
+                        in
                         if ComplexNumbers.equal.eq dComplex expectedDeterminant then
                             Expect.pass
 
@@ -286,46 +287,46 @@ suite =
 
                     inverseComplex =
                         InvertableMatrix.invert RowVector.complexInnerProductSpace matrix
-
-                    expectedComplexNumberR1C1 =
-                        ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                -(2 / 5)
-                            )
-                            (Imaginary.Imaginary
-                                (Real.Real -(4 / 5))
-                            )
-
-                    expectedComplexNumberR1C2 =
-                        ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                (1 / 5)
-                            )
-                            (Imaginary.Imaginary
-                                (Real.Real (2 / 5))
-                            )
-
-                    expectedComplexNumberR2C1 =
-                        ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                (3 / 10)
-                            )
-                            (Imaginary.Imaginary
-                                (Real.Real (3 / 5))
-                            )
-
-                    expectedComplexNumberR2C2 =
-                        ComplexNumbers.ComplexNumber
-                            (Real.Real
-                                (1 / 10)
-                            )
-                            (Imaginary.Imaginary
-                                (Real.Real -(3 / 10))
-                            )
                 in
                 case inverseComplex of
                     Ok result ->
                         let
+                            expectedComplexNumberR1C1 =
+                                ComplexNumbers.ComplexNumber
+                                    (Real.Real
+                                        -(2 / 5)
+                                    )
+                                    (Imaginary.Imaginary
+                                        (Real.Real -(4 / 5))
+                                    )
+
+                            expectedComplexNumberR1C2 =
+                                ComplexNumbers.ComplexNumber
+                                    (Real.Real
+                                        (1 / 5)
+                                    )
+                                    (Imaginary.Imaginary
+                                        (Real.Real (2 / 5))
+                                    )
+
+                            expectedComplexNumberR2C1 =
+                                ComplexNumbers.ComplexNumber
+                                    (Real.Real
+                                        (3 / 10)
+                                    )
+                                    (Imaginary.Imaginary
+                                        (Real.Real (3 / 5))
+                                    )
+
+                            expectedComplexNumberR2C2 =
+                                ComplexNumbers.ComplexNumber
+                                    (Real.Real
+                                        (1 / 10)
+                                    )
+                                    (Imaginary.Imaginary
+                                        (Real.Real -(3 / 10))
+                                    )
+
                             expectedInverse =
                                 Matrix.Matrix
                                     [ RowVector.RowVector <| Vector.Vector [ expectedComplexNumberR1C1, expectedComplexNumberR1C2 ]

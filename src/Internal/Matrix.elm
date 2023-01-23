@@ -47,22 +47,22 @@ subtractRow :
     -> RowVector.RowVector a
     -> RowVector.RowVector a
 subtractRow { abelianGroup, field } r currentRow nextRow =
-    let
-        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
-            field
-
-        (AbelianGroup.AbelianGroup groupAddition) =
-            commutativeDivisionRing.addition
-
-        (AbelianGroup.AbelianGroup vectorGroup) =
-            abelianGroup
-    in
     RowVector.getAt r nextRow
         |> Maybe.andThen
             (\nElement ->
                 RowVector.getAt r currentRow
                     |> Maybe.map
                         (\currentElement ->
+                            let
+                                (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+                                    field
+
+                                (AbelianGroup.AbelianGroup groupAddition) =
+                                    commutativeDivisionRing.addition
+
+                                (AbelianGroup.AbelianGroup vectorGroup) =
+                                    abelianGroup
+                            in
                             vectorGroup.inverse
                                 (if currentElement == groupAddition.monoid.identity then
                                     currentRow
@@ -83,18 +83,18 @@ subtractRow { abelianGroup, field } r currentRow nextRow =
 -}
 scale : RowVector.VectorSpace a -> Int -> RowVector.RowVector a -> RowVector.RowVector a
 scale { field } rowIndex rowVector =
-    let
-        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
-            field
-
-        (AbelianGroup.AbelianGroup groupAddition) =
-            commutativeDivisionRing.addition
-    in
     RowVector.getAt rowIndex rowVector
         |> Maybe.map
             (\elementAtRowIndex ->
                 RowVector.map
                     (\rowElement ->
+                        let
+                            (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+                                field
+
+                            (AbelianGroup.AbelianGroup groupAddition) =
+                                commutativeDivisionRing.addition
+                        in
                         if elementAtRowIndex == groupAddition.monoid.identity then
                             rowElement
 
@@ -132,20 +132,21 @@ reduceRowBackwards vectorSpace rowIndex listOfVectors =
 
 diagonal : CommutativeDivisionRing.CommutativeDivisionRing a -> Int -> Int -> a
 diagonal (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing) columnIndex rowIndex =
-    let
-        (AbelianGroup.AbelianGroup group) =
-            commutativeDivisionRing.addition
-
-        additionMonoid =
-            group.monoid
-
-        multiplicationMonoid =
-            commutativeDivisionRing.multiplication.monoid
-    in
     if columnIndex == rowIndex then
+        let
+            multiplicationMonoid =
+                commutativeDivisionRing.multiplication.monoid
+        in
         multiplicationMonoid.identity
 
     else
+        let
+            (AbelianGroup.AbelianGroup group) =
+                commutativeDivisionRing.addition
+
+            additionMonoid =
+                group.monoid
+        in
         additionMonoid.identity
 
 
@@ -179,15 +180,6 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
     let
         firstPivot =
             findPivot vectorSpace listOfVectors rowIndex
-
-        (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
-            vectorSpace.field
-
-        (AbelianGroup.AbelianGroup group) =
-            commutativeDivisionRing.addition
-
-        monoid =
-            group.monoid
     in
     case firstPivot of
         Just fPivot ->
@@ -203,15 +195,12 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
                     List.drop (rowIndex + 1) swappedListOfVectors
                         |> List.map
                             (subtractRow vectorSpace rowIndex currentRow)
-
-                newMatrixReduceRow =
-                    List.concat
-                        [ List.take rowIndex swappedListOfVectors
-                        , [ currentRow ]
-                        , nextRows
-                        ]
             in
-            newMatrixReduceRow
+            List.concat
+                [ List.take rowIndex swappedListOfVectors
+                , [ currentRow ]
+                , nextRows
+                ]
 
         Nothing ->
             if rowIndex == (List.length listOfVectors - 1) then
@@ -219,6 +208,15 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
 
             else
                 let
+                    (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
+                        vectorSpace.field
+
+                    (AbelianGroup.AbelianGroup group) =
+                        commutativeDivisionRing.addition
+
+                    monoid =
+                        group.monoid
+
                     nextNonZero =
                         List.Extra.getAt rowIndex listOfVectors
                             |> Maybe.andThen
@@ -233,12 +231,9 @@ calculateUpperTriangularFormRectangle vectorSpace rowIndex listOfVectors =
                         List.drop nextNonZero listOfVectors
                             |> List.map
                                 (subtractRow vectorSpace nextNonZero currentRow)
-
-                    newMatrixReduceRow =
-                        List.concat
-                            [ List.take rowIndex listOfVectors
-                            , [ currentRow ]
-                            , nextRows
-                            ]
                 in
-                newMatrixReduceRow
+                List.concat
+                    [ List.take rowIndex listOfVectors
+                    , [ currentRow ]
+                    , nextRows
+                    ]

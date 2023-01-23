@@ -1,6 +1,7 @@
 module Vector3 exposing
     ( Vector3(..)
-    , cross, vector3ToVector
+    , cross
+    , vector3ToVector
     )
 
 {-| A module for Vectors
@@ -9,6 +10,12 @@ module Vector3 exposing
 # Types
 
 @docs Vector3
+
+
+# Operations
+
+@docs cross
+@docs vector3ToVector
 
 -}
 

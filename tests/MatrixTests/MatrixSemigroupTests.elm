@@ -1,4 +1,4 @@
-module MatrixTests.MatrixSemigroupTests exposing (..)
+module MatrixTests.MatrixSemigroupTests exposing (suite)
 
 import ComplexNumbers
 import Expect

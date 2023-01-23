@@ -4,6 +4,7 @@ module Matrix exposing
     , Consistancy(..)
     , VectorDimension(..)
     , MatrixSpace
+    , MatrixAlgebra
     , identity
     , zeros
     , createMatrixFromColumnVectors
@@ -83,6 +84,7 @@ module Matrix exposing
 @docs Consistancy
 @docs VectorDimension
 @docs MatrixSpace
+@docs MatrixAlgebra
 
 
 # Values
@@ -675,15 +677,17 @@ andMapZip : Matrix a -> Matrix (a -> b) -> Matrix b
 andMapZip fMatrix matrix =
     map2 Basics.identity matrix fMatrix
 
+
 {-| Apply for Matrix using Cartesian product like implementation
 -}
 andMap : Matrix a -> Matrix (a -> b) -> Matrix b
 andMap matrixOne fMatrix =
-   andThen
+    andThen
         (\func ->
             map func matrixOne
         )
         fMatrix
+
 
 {-| Monad bind for Matrix
 -}
@@ -813,21 +817,11 @@ solve { eq } innerProductSpace matrix constants =
         (Matrix listOfRowVectorsRREF) =
             gaussJordan innerProductSpace.vectorSpace augmentedMatrix
 
-        (Matrix variableSide) =
-            coefficientMatrix (Matrix listOfRowVectorsRREF)
-
         (Field.Field (CommutativeDivisionRing.CommutativeDivisionRing commutativeDivisionRing)) =
             innerProductSpace.vectorSpace.field
 
         (AbelianGroup.AbelianGroup additionGroup) =
             commutativeDivisionRing.addition
-
-        notConstrainedEnough =
-            variableSide
-                |> List.any
-                    (\row ->
-                        RowVector.count ((/=) additionGroup.monoid.identity) row > 1
-                    )
 
         anyAllZeroExceptAugmentedSide =
             listOfRowVectorsRREF
@@ -839,12 +833,6 @@ solve { eq } innerProductSpace matrix constants =
                             && innerProductSpace.length (RowVector.RowVector (Vector.Vector row))
                             /= Real.zero
                     )
-
-        solution =
-            List.foldl
-                (\(RowVector.RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
-                []
-                listOfRowVectorsRREF
     in
     if anyAllZeroExceptAugmentedSide then
         let
@@ -876,24 +864,43 @@ solve { eq } innerProductSpace matrix constants =
                 )
             )
 
-    else if notConstrainedEnough then
-        let
-            rnk =
-                rank innerProductSpace (Matrix listOfRowVectorsRREF)
-
-            nullity =
-                nDimension (Matrix listOfRowVectorsRREF) - rnk
-        in
-        InfiniteSolutions { nullity = nullity, rank = rnk }
-            |> Consistant
-
     else
-        UniqueSolution
-            (solution
-                |> Vector.Vector
-                |> ColumnVector.ColumnVector
-            )
-            |> Consistant
+        let
+            (Matrix variableSide) =
+                coefficientMatrix (Matrix listOfRowVectorsRREF)
+
+            notConstrainedEnough =
+                variableSide
+                    |> List.any
+                        (\row ->
+                            RowVector.count ((/=) additionGroup.monoid.identity) row > 1
+                        )
+        in
+        if notConstrainedEnough then
+            let
+                rnk =
+                    rank innerProductSpace (Matrix listOfRowVectorsRREF)
+
+                nullity =
+                    nDimension (Matrix listOfRowVectorsRREF) - rnk
+            in
+            InfiniteSolutions { nullity = nullity, rank = rnk }
+                |> Consistant
+
+        else
+            let
+                solution =
+                    List.foldl
+                        (\(RowVector.RowVector (Vector.Vector row)) acc -> acc ++ List.drop (List.length row - 1) row)
+                        []
+                        listOfRowVectorsRREF
+            in
+            UniqueSolution
+                (solution
+                    |> Vector.Vector
+                    |> ColumnVector.ColumnVector
+                )
+                |> Consistant
 
 
 {-| Predicate to determine if a list of Vectors are linearly independent

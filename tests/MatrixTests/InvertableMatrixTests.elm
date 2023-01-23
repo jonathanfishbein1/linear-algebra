@@ -1,7 +1,6 @@
 module MatrixTests.InvertableMatrixTests exposing (suite)
 
 import ComplexNumbers
-import DoublyStochasticMatrix exposing (DoublyStochasticMatrix(..))
 import Expect
 import Field
 import Imaginary

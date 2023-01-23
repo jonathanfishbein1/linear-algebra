@@ -59,7 +59,6 @@ module Internal.Vector exposing
 
 # Types
 
-@docs Vector.Vector
 @docs Scalar
 @docs VectorSpace
 @docs InnerProductSpace

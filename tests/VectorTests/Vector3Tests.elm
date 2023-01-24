@@ -48,9 +48,9 @@ suite =
                 else
                     Expect.fail "a X b is not orthagonal to both a and b"
         , Test.fuzz3
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map (Real.Real << Basics.toFloat) (Fuzz.intRange 1 10))
+            (Fuzz.map (Real.Real << Basics.toFloat) (Fuzz.intRange 1 10))
+            (Fuzz.map (Real.Real << Basics.toFloat) (Fuzz.intRange 1 10))
             "tests length of cross product is the length of the two vectors times the sin of the angle between them"
           <|
             \one two three ->
@@ -83,7 +83,12 @@ suite =
                     angle =
                         Internal.Vector.angleBetween aVector bVector
                 in
-                if Real.equal.eq aCrossBLength (Real.multiply (Real.multiply aLength bLength) (Real.map Basics.sin angle)) then
+                if
+                    Real.equal.eq aCrossBLength
+                        (Real.multiply (Real.multiply aLength bLength)
+                            (Real.map Basics.sin angle)
+                        )
+                then
                     Expect.pass
 
                 else

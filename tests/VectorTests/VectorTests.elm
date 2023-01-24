@@ -183,8 +183,8 @@ suite =
                 else
                     Expect.fail "is not a subspace"
         , Test.fuzz2
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests realVectorSubspace x > 10 not a subspace"
           <|
             \one two ->
@@ -203,11 +203,11 @@ suite =
                     isSubspace =
                         Internal.Vector.vectorSubspace Real.field Internal.Vector.realAbelianGroup scalar vectors predicates
                 in
-                if isSubspace then
+                if not isSubspace then
                     Expect.pass
 
                 else
-                    Expect.fail "is not a subspace"
+                    Expect.fail "is a subspace"
         , Test.fuzz2
             (Fuzz.map Real.Real Fuzz.niceFloat)
             (Fuzz.map Real.Real Fuzz.niceFloat)
@@ -242,8 +242,8 @@ suite =
                 else
                     Expect.fail "is not a subspace"
         , Test.fuzz2
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real Fuzz.niceFloat)
+            (Fuzz.map Real.Real Fuzz.niceFloat)
             "tests complexVectorSubspace x > zero not a subspace"
           <|
             \one two ->
@@ -273,11 +273,11 @@ suite =
                     isSubspace =
                         Internal.Vector.vectorSubspace ComplexNumbers.field Internal.Vector.complexAbelianGroup scalar vectors predicates
                 in
-                if isSubspace then
+                if not isSubspace then
                     Expect.pass
 
                 else
-                    Expect.fail "is not a subspace"
+                    Expect.fail "is a subspace"
         , Test.fuzz3
             Fuzz.int
             Fuzz.int

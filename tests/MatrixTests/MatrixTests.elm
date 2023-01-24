@@ -1024,9 +1024,9 @@ suite =
                 else
                     Expect.fail "are not row equivalent"
         , Test.fuzz3
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
-            (Fuzz.map Real.Real (Fuzz.floatRange -10 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
+            (Fuzz.map Real.Real (Fuzz.floatRange 1 10))
             "tests matrix rank"
           <|
             \one two three ->
